@@ -11,7 +11,6 @@ The teacher is then at the conclusion of an exam able to review and
 grade the exam.
 
 [A sample student use-case:](https://github.com/student-capture/student-capture/issues/1)
-
 + Students navigate to the course on the particular Learning Management System
 + When a student starts an exam, he or she is unable to pause, rewind or delay
   the exam.
@@ -34,7 +33,6 @@ grade the exam.
     + Review the teacher feedback
     + Review their grade (if set on a per-question basis)
 
----
 
 # Background
 
