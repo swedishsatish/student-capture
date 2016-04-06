@@ -15,10 +15,10 @@ grade the exam.
 + When a student starts an exam, he or she is unable to pause, rewind or delay
   the exam.
 + Within the user interface, inside a frame the course tutor presents
-  [in a videoformat] a question to the student. For an example: A police
+  (in a videoformat) a question to the student. For an example: A police
   cadet is shown a demonstration which becomes hostile and loud and is
   escalating toward violence. Based on their safety regulations
-  [supplied outside the system and previous to the examination], the
+  (supplied outside the system and previous to the examination), the
   police cadet has to make a quick decision which could in real-life
   have severe consequences. The lecturer poses the
   question/situation. 
@@ -26,7 +26,7 @@ grade the exam.
   specified set of time the student is recorded.
 + After the elapsed, previously specified time frame, the student
   webcam is activated and the student is being recorded
-  [arguably the student should be able to view themselves live].
+  (arguably the student should be able to view themselves live).
 + After having been graded the student may, for each submitted answer:
     + View the question that corresponds with the particular answer
     + Watch their own recording
@@ -104,7 +104,7 @@ difficult concepts, and students who might struggle and fail to
 complete tasks set as homework can be coached and get the immediate
 classroom support they need.
 
-This means that they [the students] get less frustrated and therefore
+This means that they (the students) get less frustrated and therefore
 less likely to drop out of their studies.  The infrastructure and the
 technology needed to present lectures in a flipped classroom format
 are readily available and in use at
@@ -158,7 +158,7 @@ course structure, including online equizzes during the course as well
 as other forms of formative and summative assessment.
 
 That said, most forms of assessment are still only using a single form
-of modality: the written form.  At HUMfak [the humanities faculty],
+of modality: the written form.  At HUMfak (the humanities faculty),
 several teachers are currently using audio/video tools for formative
 and summative assessment. These tools include:
 
