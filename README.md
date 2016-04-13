@@ -150,19 +150,21 @@ maintained, and lecturers can then feel satisfied that they are using
 digital tools, and students have thus entered into the realms of
 modern technology.
 
-Sad times, me [the product owner] thinks! If we want to raise a
+Sad times, me (the product owner) thinks! If we want to raise a
 generation of students who can think critically and do more than
 repeat facts, we need to drastically change our entire exam and
-assessment system.  Universities are meant to produce well-rounded and
+assessment system. Universities are meant to produce well-rounded and
 intelligent individuals who can work productively and contribute to
-society. Yet in actual fact, student are lavished with the best grades
-based on how well they can memorise huge numbers of facts and
-arguments. So long as they can regurgitate them sufficiently well in a
-five- hour period, it matters not at all to our system whether they're
-retained for even a day afterwards.  At Umeå University, there are
-some lecturers who have incorporated continuous assessment into the
-course structure, including online equizzes during the course as well
-as other forms of formative and summative assessment.
+society.
+s
+Yet in actual fact, student are lavished with the best grades based on
+how well they can memorise huge numbers of facts and arguments. So
+long as they can regurgitate them sufficiently well in a five- hour
+period, it matters not at all to our system whether they're retained
+for even a day afterwards.  At Umeå University, there are some
+lecturers who have incorporated continuous assessment into the course
+structure, including online e-quizzes during the course as well as
+other forms of formative and summative assessment.
 
 That said, most forms of assessment are still only using a single form
 of modality: the written form.  At HUMfak (the humanities faculty),
@@ -191,6 +193,8 @@ To get up and running there are a few things that you will want to know,
 3. How can I work independently on a feature and test it without
    breaking the build?
 4. How can I integrate my changes with the rest of the system?
+5. How do I clean up after myself after commiting my changes to the
+   master branch?
 
 ## How do I know what to do?
 
