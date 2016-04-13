@@ -1,6 +1,12 @@
 Student Capture
 ===============
 
+# Getting started
+
+The first few sections describe the project, refer to the later
+sections for
+[getting started (link to relevant sections)](#how-do-i-get-started).
+
 # What is it?
 
 Student capture is an online software application that enables student
@@ -40,9 +46,10 @@ At most universities around the world, the standard lecture-based
 course with a memory test exam at the end is the default norm. It is a
 norm which has been in place for several decades, especially for
 foundation level undergraduate courses. In many of our courses, here
-at [Umeå University](http://www.umu.se/english/?languageId=1), students are often assigned readings from a
-textbook prior to class. During class, they are lectured on the
-material in the book, or surrounding the book.
+at [Umeå University](http://www.umu.se/english/?languageId=1),
+students are often assigned readings from a textbook prior to
+class. During class, they are lectured on the material in the book, or
+surrounding the book.
 
 Most courses are examined after a specific time period, using
 memory-based exams where students are sat in isolation ready to
@@ -174,3 +181,85 @@ Powerpoints and then add audio and video of themselves giving the
 presentation. What is missing for a lot of staff is the aspect of
 monitoring students. In order words, the desire to record audio and
 video but in an exam environment.
+
+# How do I get started?
+
+To get up and running there are a few things that you will want to know,
+
+1. How do I know what to do? [1](#how-do-i-know-what-to-do-?)
+2. How do I know where to store my high-level documentation (for posterity)?
+3. How can I work independently on a feature and test it without
+   breaking the build?
+4. How can I integrate my changes with the rest of the system?
+
+## How do I know what to do?
+
+You are ready to get started with contributing, but you have no idea
+what has yet to be done, what tasks and user stories to address later
+and how those tasks are prioritized.
+
+You will want to see
+
++ What should be done on the next sprint?
++ What items may we use this sprint?
++ What is someone else already working on?
++ What has already been done?
+
+Given the scale of the project you will want to get a third-party
+extension called "[Zenhub](https://www.zenhub.io/)" which is a
+browser-extension. 
+
+We use [Zenhub](https://www.zenhub.io/) to find answers to the
+questions that we just posed.
+
+Without Zenhub we can only view our issues in an unsorted manner and
+we can only organize them through the use of coloured labels which
+causes a cognitive overhead for all.
+
+![Github default interface](img/github-plain-issues.png)
+
+The above figure shows how the issues (created at the start of the
+project) are without any priority and there is no immediate feedback
+as to their current state.
+
+With [Zenhub](https://www.zenhub.io/) the above view allows us to
+observe how each issue is catalogued (here all the tasks are in
+the backlog, notice how an icon has appeared below the title
+of the issue):
+
+![Zenhub issues](img/zenhub-issues.png)
+
+The other _important_ Zenhub feature is "boards",
+
+![Zenhub boards tab](img/zenhub-boards-tab.png)
+
+It is in the
+[boards tab](https://github.com/student-capture/student-capture#boards)
+that we organize our work,
+
+![Boards](img/zenhub-boards.png)
+
+The above image was captured at the start of the very first sprint on
+the project, so all _real_ issues are stored in the backlog in their
+order of priority (high-priority at the top. Low priority at the
+bottom). Maintaining the backlog and selecting user stories for the
+current sprint is mainly the responsibility of the product owners.
+
+The "To Do" list are all tasks that are to be completed _this_ sprint.
+"In progress" are the tasks that someone is working on (they have
+"claimed" it) and the "Done" list is all the tasks that have been
+completed.
+
+There is also an "Epic", but describing those is outside the scope of this
+document and is excellently described in the
+[official documentation](https://www.zenhub.io/blog/working-with-epics-in-github/).
+You do _not_ need to understand Epics to get started.
+
+You now know the answer to all of these questions,
+
++ What should be done on the next sprint?
++ What items may we use this sprint?
++ What is someone else already working on?
++ What has already been done?
+
+
