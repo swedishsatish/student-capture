@@ -186,7 +186,7 @@ video but in an exam environment.
 
 To get up and running there are a few things that you will want to know,
 
-1. How do I know what to do? [1](#how-do-i-know-what-to-do-?)
+1. How do I know what to do? [1](#how-do-i-know-what-to-do)
 2. How do I know where to store my high-level documentation (for posterity)?
 3. How can I work independently on a feature and test it without
    breaking the build?
@@ -212,9 +212,9 @@ browser-extension.
 We use [Zenhub](https://www.zenhub.io/) to find answers to the
 questions that we just posed.
 
-Without Zenhub we can only view our issues in an unsorted manner and
-we can only organize them through the use of coloured labels which
-causes a cognitive overhead for all.
+Without [Zenhub](https://www.zenhub.io/) we can only view our issues
+in an unsorted manner and we can only organize them through the use of
+coloured labels which causes a cognitive overhead for all.
 
 ![Github default interface](img/github-plain-issues.png)
 
@@ -229,7 +229,7 @@ of the issue):
 
 ![Zenhub issues](img/zenhub-issues.png)
 
-The other _important_ Zenhub feature is "boards",
+The other _important_ Zenhub feature is "**boards**",
 
 ![Zenhub boards tab](img/zenhub-boards-tab.png)
 
@@ -245,12 +245,12 @@ order of priority (high-priority at the top. Low priority at the
 bottom). Maintaining the backlog and selecting user stories for the
 current sprint is mainly the responsibility of the product owners.
 
-The "To Do" list are all tasks that are to be completed _this_ sprint.
-"In progress" are the tasks that someone is working on (they have
-"claimed" it) and the "Done" list is all the tasks that have been
+The "**To Do**" list are all tasks that are to be completed _this_ sprint.
+"**In progress**" are the tasks that someone is working on (they have
+"_claimed_" it) and the "**Done**" list is all the tasks that have been
 completed.
 
-There is also an "Epic", but describing those is outside the scope of this
+There is also an "**Epic**" shown in the image, but describing those is outside the scope of this
 document and is excellently described in the
 [official documentation](https://www.zenhub.io/blog/working-with-epics-in-github/).
 You do _not_ need to understand Epics to get started.
