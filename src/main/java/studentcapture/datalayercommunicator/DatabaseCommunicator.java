@@ -1,6 +1,8 @@
 package studentcapture.datalayercommunicator;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 
@@ -74,9 +76,17 @@ public class DatabaseCommunicator {
     public String returnGrade(int studID, int assignmentID) {
         connectToDB();
         String getGrade = "SELECT grade FROM submission WHERE (studentid = ? AND assignmentid = ?)";
-        String grade = jdbcTemplate.queryForObject(getGrade, new Object[] {studID, assignmentID},
-                String.class);
-        grade = grade.trim();
+        String grade;
+        try {
+            grade = jdbcTemplate.queryForObject(getGrade, new Object[] {studID, assignmentID},
+                    String.class);
+            grade = grade.trim();
+        }catch (IncorrectResultSizeDataAccessException e){
+            grade = "Missing grade";
+        }catch (DataAccessException e1){
+            grade = "Missing grade";
+        }
+
         return grade;
     }
 
