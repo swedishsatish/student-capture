@@ -19,7 +19,6 @@ public class Assignment {
             return null;
         }
 
-
         public boolean updateAssignment(String assignmentID, String assignmentTitle,
                                         String startDate, String endDate, int minTime, int maxTime,
                                         boolean published){
