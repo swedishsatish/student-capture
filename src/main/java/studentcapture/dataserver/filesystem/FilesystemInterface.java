@@ -1,6 +1,8 @@
 package studentcapture.dataserver.filesystem;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 public class FilesystemInterface {
 
@@ -46,9 +48,41 @@ public class FilesystemInterface {
      * @param userId
      * @return video or null if it doesn't exist. 
      */
-   public FileInputStream getStudentVideo(String courseCode, int courseId, 
-		   int assignmentID, int userID) {
-	   return null;
-   }
+	public FileInputStream getStudentVideo(String courseCode, int courseId, 
+		   int assignmentId, int userId) {
+	   String path = FilesystemInterface.generatePath(courseCode, courseId, 
+			   assignmentId, userId) + FilesystemConstants
+			   .SUBMISSION_VIDEO_FILENAME;
+	   
+	   try {
+			return new FileInputStream(path);
+		} catch (FileNotFoundException e) {
+			// TODO
+			return null;
+		}
+   	}
 	
+	/**
+     * store the students video for an assignment at a course.
+     * 
+     * 
+     * @param courseCode the code for the course. 
+     * @param courseID course id from the database
+     * @param assigmentId from database
+     * @param userId from database
+     * @return true if video was stored successfully
+     */
+	public FileOutputStream storeStudentVideo(String courseCode, int courseId, 
+		   int assignmentId, int userId) {
+		String path = FilesystemInterface.generatePath(courseCode, courseId, 
+			   assignmentId, userId) + FilesystemConstants
+			   .SUBMISSION_VIDEO_FILENAME;
+	   
+	   	try {
+		   return new FileOutputStream(path);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
+	}
 }
