@@ -7,6 +7,7 @@ html, body {
 
 p {
 	font-family: 'Libre Baskerville', serif;
+	color: #424242;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -45,13 +46,17 @@ h1, h2, h3, h4, h5, h6 {
 	margin-left:2%;
 	margin-top:1%;
 	background-color: #FAFAFA;
+	border-radius: 5px;
+	overflow:scroll;
 }
 
-.navigation {
-	height: calc( 100% - 40px );
+.innerContent {
+	margin:30px;
 }
 
 #desktopNavigation {
+	height: calc( 100% - 40px );
+	overflow: scroll;
 	background-color: #2E8697;
 	border-right: 2px solid #2E8697;
 	margin:0;
@@ -60,18 +65,16 @@ h1, h2, h3, h4, h5, h6 {
 .menuItem {
 	margin-top: 5%;
 	margin-left: 3%;
-	height:34px;
-	width:100%;
-	min-width: 100px;
-	background-color:#076172;
+	height:24px;
 	text-transform: uppercase;
   	cursor: pointer;
   	text-indent: 10px;
+  	border-bottom: 2px solid #4F9FAE;
 }
 
 .navigationText {
-	line-height: 34px;
-	font-weight: 600;
+	line-height: 24px;
+	font-weight: 300;
 }
 
 #footer {
@@ -112,31 +115,3 @@ h1, h2, h3, h4, h5, h6 {
     color: white;
 }
 
-/* IKONER FÖR LISTAN*/
-
-/*
-li.course::before,
-li.assignment::before,
-li.task::before {
-    content: "⌚ ";
-    color: gray;
-    width: 18px;
-    display: inline-block;
-}
-li.active.course::before {
-    content: "! ";
-    color: orange;
-}
-li.active.assignment::before {
-    content: "✘ ";
-    color: blue;
-}
-li.active.task::before {
-    content: "✔ ";
-    color: blue;
-}
-li::before {
-    font-size: 20px;
-    font-weight: 600;
-}
-*/
