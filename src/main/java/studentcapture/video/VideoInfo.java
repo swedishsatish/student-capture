@@ -6,9 +6,7 @@ package studentcapture.video;
 public class VideoInfo {
 
     private UserData ud;
-
     private Long videoSize;
-
     private VideoTypeEnum vidType;
 
     public UserData getUd() {
