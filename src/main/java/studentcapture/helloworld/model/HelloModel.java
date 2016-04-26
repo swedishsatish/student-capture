@@ -5,6 +5,8 @@ public class HelloModel {
 
 	private String message = "None";
 
+	private String message = "None";
+
 	public String getGreeting() {
 		return greeting;
 	}
