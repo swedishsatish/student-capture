@@ -12,14 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "feedback")
 public class FeedbackFetchingController {
 
-    @RequestMapping(value = "postInfo", method = RequestMethod.POST)
+    @RequestMapping(value = "get", method = RequestMethod.GET)
     public void handleFeedbackRequestFromStudent() {
 
     }
 
-
-
-
-
-
-    }
+}

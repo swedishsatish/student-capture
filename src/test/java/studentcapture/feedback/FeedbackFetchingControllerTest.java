@@ -10,6 +10,7 @@ import org.springframework.web.context.WebApplicationContext;
 import studentcapture.config.StudentCaptureApplicationTests;
 
 import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,8 +31,8 @@ public class FeedbackFetchingControllerTest extends StudentCaptureApplicationTes
 
 
     @Test
-    public void shouldBeAbleToMakeSimplePostRequest() throws Exception {
-        mockMvc.perform(post("/feedback/postInfo"))
+    public void shouldBeAbleToHandleSimpleGetRequest() throws Exception {
+        mockMvc.perform(get("/feedback/get"))
                 .andExpect(status().isOk());
     }
 }
