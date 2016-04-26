@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<!-- This thymeleaf dependency has to be here for serving the html file via Spring MVC -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student-capture</title>
+</head>
+<body>
+<h1>You can log in here:</h1>
+<form th:action="@{/login}" method="POST">
+        <label for="username">User Name:</label>
+        <input id="username" name="username" type="text"/>
+        <label for="password">Password:</label>
+        <input id="password" name="password" type="password"/>
+        <input type="submit" value="Log In"/>
+      </form>
+</body>
+</html>
