@@ -1,4 +1,4 @@
-package studentcapture.datalayercommunicator;
+package studentcapture.dataserver.database;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
