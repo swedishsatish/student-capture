@@ -1,6 +1,7 @@
 package model;
 
 import org.junit.Test;
+import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.helloworld.model.ExamModel;
 
 import java.util.InputMismatchException;
@@ -12,7 +13,12 @@ import static org.junit.Assert.assertEquals;
  */
 public class ExamModelTest {
 
-    private ExamModel examModel = new ExamModel(2016, "jan", 22, 15, 0, 120, 300);
+    private ExamModel examModel = new ExamModel("Test", 2016, "jan", 22, 15, 0, 120, 300);
+
+    @Test
+    public void titleShouldBeTest() {
+        assertEquals("Test", examModel.title());
+    }
 
     @Test
     public void yearShouldBe2016() {
@@ -51,42 +57,42 @@ public class ExamModelTest {
 
     @Test(expected = InputMismatchException.class)
     public void shouldThrowInputMismatchExceptionBecauseNotValidMonth() {
-        ExamModel wrongMonthExam = new ExamModel(2016, "notAMonth", 22, 15, 0, 120, 300);
+        ExamModel wrongMonthExam = new ExamModel("Test", 2016, "notAMonth", 22, 15, 0, 120, 300);
     }
 
     @Test(expected = InputMismatchException.class)
     public void shouldBe28DaysInFeb() {
-        ExamModel twoManyDaysInFebModel = new ExamModel(2015, "feb", 30, 15, 0, 120, 300);
+        ExamModel twoManyDaysInFebModel = new ExamModel("Test", 2015, "feb", 30, 15, 0, 120, 300);
     }
 
     @Test
     public void shouldBe29DaysInFebLeapYear() {
-        ExamModel learYearModel = new ExamModel(2016, "feb", 29, 15, 0, 120, 300);
+        ExamModel learYearModel = new ExamModel("Test", 2016, "feb", 29, 15, 0, 120, 300);
         assertEquals(29, learYearModel.day());
     }
 
     @Test(expected = InputMismatchException.class)
     public void hourShouldBeUnder23() {
-        ExamModel wrongHourModel = new ExamModel(2016, "apr", 22, 24, 0, 120, 300);
+        ExamModel wrongHourModel = new ExamModel("Test", 2016, "apr", 22, 24, 0, 120, 300);
     }
 
     @Test(expected = InputMismatchException.class)
     public void hourShouldBeAtleast0() {
-        ExamModel wrongHourModel = new ExamModel(2016, "mar", 22, -1, 0, 120, 300);
+        ExamModel wrongHourModel = new ExamModel("Test", 2016, "mar", 22, -1, 0, 120, 300);
     }
 
     @Test(expected = InputMismatchException.class)
     public void minuteShouldBeUnder59() {
-        ExamModel wrongMinuteModel = new ExamModel(2016, "dec", 10, 20, 60, 120, 300);
+        ExamModel wrongMinuteModel = new ExamModel("Test", 2016, "dec", 10, 20, 60, 120, 300);
     }
 
     @Test(expected = InputMismatchException.class)
     public void minuteShouldBeAtleast0() {
-        ExamModel wrongMinuteModel = new ExamModel(2016, "nov", 10, 15, -1, 120, 300);
+        ExamModel wrongMinuteModel = new ExamModel("Test", 2016, "nov", 10, 15, -1, 120, 300);
     }
 
     @Test(expected = InputMismatchException.class)
     public void minTimeShouldBeSmallerThanMaxTime() {
-        ExamModel minTimeIsLargerThanMaxTimeModel = new ExamModel(2016, "may", 10, 15, 0, 300, 120);
+        ExamModel minTimeIsLargerThanMaxTimeModel = new ExamModel("Test", 2016, "may", 10, 15, 0, 300, 120);
     }
 }
