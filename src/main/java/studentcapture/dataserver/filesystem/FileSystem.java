@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-public class FilesystemInterface {
+public class FileSystem {
 
 	/**
 	 * Generates a string representing a path to an assignments directory on 
@@ -15,7 +15,7 @@ public class FilesystemInterface {
 	 * @param assignmentId	assignments unique database id
 	 * @return				path to directory
 	 */
-	public static String generatePath(String courseCode, int courseId, int assignmentId) {
+	protected static String generatePath(String courseCode, int courseId, int assignmentId) {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseCode
 				+ "/" + courseId + "/" + assignmentId + "/";
 		
@@ -32,7 +32,7 @@ public class FilesystemInterface {
 	 * @param studentId		students unique database id
 	 * @return				path to directory
 	 */
-	public static String generatePath(String courseCode, int courseId, 
+	protected static String generatePath(String courseCode, int courseId,
 			int assignmentId, int studentId) {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseCode
 				+ "/" + courseId + "/" + assignmentId + "/" + studentId + "/";
@@ -48,9 +48,9 @@ public class FilesystemInterface {
      * @param userId
      * @return video or null if it doesn't exist. 
      */
-	public FileInputStream getStudentVideo(String courseCode, int courseId, 
+	protected FileInputStream getStudentVideo(String courseCode, int courseId,
 		   int assignmentId, int userId) {
-	   String path = FilesystemInterface.generatePath(courseCode, courseId, 
+	   String path = FileSystem.generatePath(courseCode, courseId,
 			   assignmentId, userId) + FilesystemConstants
 			   .SUBMISSION_VIDEO_FILENAME;
 	   
@@ -65,16 +65,15 @@ public class FilesystemInterface {
 	/**
      * store the students video for an assignment at a course.
      * 
-     * 
      * @param courseCode the code for the course. 
      * @param courseID course id from the database
      * @param assigmentId from database
      * @param userId from database
      * @return true if video was stored successfully
      */
-	public FileOutputStream storeStudentVideo(String courseCode, int courseId, 
+	protected FileOutputStream storeStudentVideo(String courseCode, int courseId,
 		   int assignmentId, int userId) {
-		String path = FilesystemInterface.generatePath(courseCode, courseId, 
+		String path = FileSystem.generatePath(courseCode, courseId,
 			   assignmentId, userId) + FilesystemConstants
 			   .SUBMISSION_VIDEO_FILENAME;
 	   
