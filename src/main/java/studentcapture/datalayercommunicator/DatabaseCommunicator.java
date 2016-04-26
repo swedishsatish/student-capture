@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class DatabaseCommunicator {
 
     private BasicDataSource dataSource = new BasicDataSource();
+
     private JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
     /**
@@ -80,12 +81,18 @@ public class DatabaseCommunicator {
         try {
             grade = jdbcTemplate.queryForObject(getGrade, new Object[] {studID, assignmentID},
                     String.class);
-            grade = grade.trim();
+            if (grade == null) {
+                grade = "Missing grade";
+            } else {
+                grade = grade.trim();
+            }
         }catch (IncorrectResultSizeDataAccessException e){
-            grade = "Missing grade";
+            grade = "No submission for this user ID and/or assignment ID";
         }catch (DataAccessException e1){
-            grade = "Missing grade";
+            grade = "No submission for this user ID and/or assignment ID";
         }
+
+
 
         return grade;
     }

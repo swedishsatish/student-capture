@@ -17,20 +17,25 @@ public class DatabaseCommunicatorTest {
     }
 
     @Test
-    public void shouldReturnMissingGradeNoAssignment() throws Exception {
-        assertEquals("Missing grade", dlc.returnGrade(1337, 5));
+    public void shouldReturnNoGradeWhenAssignmentNotExists() throws Exception {
+        assertEquals("No submission for this user ID and/or assignment ID", dlc.returnGrade(1337, 5));
     }
 
 
     @Test
-    public void shouldReturnMissingGradeNoUser() throws Exception {
-        assertEquals("Missing grade", dlc.returnGrade(5, 10));
+    public void shouldReturnNoGradeUserNotExists() throws Exception {
+        assertEquals("No submission for this user ID and/or assignment ID", dlc.returnGrade(5, 10));
     }
 
+
+    @Test
+    public void shouldReturnNoGradeUserAndAssignmentNotExists() throws Exception {
+        assertEquals("No submission for this user ID and/or assignment ID", dlc.returnGrade(5, 5));
+    }
 
     @Test
     public void shouldReturnMissingGrade() throws Exception {
-        assertEquals("Missing grade", dlc.returnGrade(5, 5));
+        assertEquals("Missing grade", dlc.returnGrade(1337, 11));
     }
 
 }
