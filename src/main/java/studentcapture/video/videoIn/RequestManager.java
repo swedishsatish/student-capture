@@ -1,24 +1,22 @@
 package studentcapture.video.videoIn;
 
-import org.springframework.core.ExceptionDepthComparator;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URL;
 
 /**
- * Created by leo on 2016-04-26.
+ * Created by c13ljn on 2016-04-26.
  */
 @RestController
 public class RequestManager {
 
     /**
-     * Request the url to upload a video to, given some "metadata".
+     * Request a URL to upload a video to.
      *
-     * @param userID The users ID.
-     * @param courseID The courses ID.
-     * @param examID The exams ID.
-     * @return The url to upload a video to.
-     * @throws Exception Throws an exception if the user is not a valid user.
+     * @param userID The ID of the user.
+     * @param courseID The ID of the course.
+     * @param examID The ID of the exam.
+     * @return The URL to upload a video to.
+     * @throws Exception Throws an exception if the user is not certified to upload a video.
      */
     @CrossOrigin()
     @RequestMapping(value="/video/inrequest", method = RequestMethod.GET)
@@ -29,32 +27,31 @@ public class RequestManager {
     ) throws Exception {
 
         if (!validUser(userID, courseID, examID)) {
-            throw new Exception("Not a valid user.");
+            throw new Exception("Request not valid.");
         }
 
-        String uploadURL = "/video/upload/" + "RANDOM_UNIQUE_STRING";
-
-        // TODO
-        createVidInfo();
+        String uploadURL = "/uploadVideo/" + hashCodeGenerator(userID);
 
         return uploadURL;
     }
 
     /**
-     * Method for requesting a URL to a specific video.
-     * @param userID The users ID.
-     * @param courseID The courses ID.
-     * @param examID The exams ID.
-     * @return The url to a video for the user to see in the browser.
+     * Request a URL to get a specific video.
+     * @param userID The ID of the user.
+     * @param courseID The ID of the course.
+     * @param examID The ID of the exam.
+     * @return The URL to a video for the user to see in the browser.
      */
-    //TODO GETVideo method
     @CrossOrigin()
     @RequestMapping(value="/video/outrequest", method = RequestMethod.GET)
     public String requestGETVideo(
             @RequestParam("userID") String userID,
             @RequestParam("courseID") String courseID,
             @RequestParam("examID") String examID
-    ){
+    ) {
+
+        //TODO: GETVideo method
+
         return "";
     }
 
@@ -63,13 +60,24 @@ public class RequestManager {
      * @return
      */
     private boolean validUser(String userID, String courseID, String examID) {
+        // TODO: Check if valid user
         return ((userID == "user") && (courseID == "5DV151") && (examID == "1337"));
     }
 
-    /**
-     * Creates vidinfo object for fetching
-     */
-    private void createVidInfo(){
-        //TODO give video queue information about a new upload!!!!
+    // TODO: Make more complex
+    protected static String hashCodeGenerator(String userID){
+        int hashCode = 13;
+        hashCode = 31 * hashCode + (int)userID.charAt(1);
+        hashCode = 31 * hashCode + (int)userID.charAt(2);
+        hashCode = 31 * hashCode + (int)userID.charAt(3);
+        hashCode = 31 * hashCode + (int)userID.charAt(4);
+        hashCode = 31 * hashCode + (int)userID.charAt(3);
+        hashCode = 31 * hashCode + (int)userID.charAt(2);
+        hashCode = 31 * hashCode + (int)userID.charAt(1);
+
+        String temp = Integer.toString(hashCode);
+
+        return temp;
     }
+
 }
