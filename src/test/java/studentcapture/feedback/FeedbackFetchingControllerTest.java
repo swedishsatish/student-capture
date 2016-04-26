@@ -53,4 +53,14 @@ public class FeedbackFetchingControllerTest extends StudentCaptureApplicationTes
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.feedback").value("vg"));
     }
+
+    @Test
+    public void shouldRespondWithErrorIfNoFeedback() throws Exception {
+        mockMvc.perform(get("/feedback/get")
+                .param("name", "Olle")
+                .param("course", "PVT")
+                .param("exam", "Exam 1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.error").value("student not found"));
+    }
 }

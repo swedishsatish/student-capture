@@ -2,6 +2,7 @@ package studentcapture.feedback;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -13,8 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class FeedbackFetchingController {
 
     @RequestMapping(value = "get", method = RequestMethod.GET)
-    public String handleFeedbackRequestFromStudent() {
-        return "{feedback: vg}";
+    public String handleFeedbackRequestFromStudent(@RequestParam(value = "name", required = false) String name) {
+        String responseToWeb;
+
+        if (name == "Olle") {
+            responseToWeb = "{error:student not found}";
+        }else{
+            responseToWeb = "{feedback: vg}";
+        }
+        return responseToWeb;
     }
 
 }
