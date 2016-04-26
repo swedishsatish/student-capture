@@ -87,3 +87,56 @@ h1, h2, h3, h4, h5, h6 {
 	line-height: 50px;
 	margin:0;
 }
+
+/* ERIK MENYGREJER */
+
+#desktopNavigation ul {
+	list-style-type:none;
+	list-style-position: inside;
+
+}
+#desktopNavigation ul ul{
+	font-size: 100%;
+}
+
+.invisible {
+    display: none;
+}
+.done {
+    margin-left:0px;
+}
+#desktopNavigation li {
+    color: gray;
+}
+#desktopNavigation li.active {
+    color: white;
+}
+
+/* IKONER FÖR LISTAN*/
+
+/*
+li.course::before,
+li.assignment::before,
+li.task::before {
+    content: "⌚ ";
+    color: gray;
+    width: 18px;
+    display: inline-block;
+}
+li.active.course::before {
+    content: "! ";
+    color: orange;
+}
+li.active.assignment::before {
+    content: "✘ ";
+    color: blue;
+}
+li.active.task::before {
+    content: "✔ ";
+    color: blue;
+}
+li::before {
+    font-size: 20px;
+    font-weight: 600;
+}
+*/

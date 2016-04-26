@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <!-- Meta data -->
+    <meta charset="utf-8">
+    <title>Student Capture</title>
+    <meta name="Description" content="First Draft">
+    <meta name="Author" content="Filip Golles">
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT  Montserrat-->
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+
+    <!-- FONT  Open Sans -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,600&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+    <!-- FONT  Libre Baskerville-->
+    <link href='https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+   
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- Scripts -->
+    <script src="build/react.js"></script>
+    <script src="build/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+    <script src="src/communicationsLibrary.js"></script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/favicon.png">
+  </head>
+
+  <!-- Primary Page Layout -->
+  <body>
+    <div class="container">
+        <div class="row">
+            <div class="twelve columns header" id="desktopHeader"></div>
+            <script type="text/babel" src="src/profile.js"></script>
+        </div>
+
+        <div class="three columns navigation" id="desktopNavigation"></div>
+        <script type="text/babel" src="src/menu.js"></script>
+
+        <div class="nine columns" id="courseContent"></div>
+        <script type="text/babel" src="src/courseContent.js"></script>
+    </div>
+
+    <div class="footer" id="footer">
+        <script type="text/babel" src="src/footer.js"></script>
+    </div>  
+    <header class="row" id="page-head"><h2>Student Capture</h2></header>
+    <nav id="desktopNavigation" class="three columns navigation"></nav>
+    <article id="courseContent" class="nine columns"></article>
+</body>
+</html>
