@@ -66,13 +66,23 @@ public class ExamModelTest {
     }
 
     @Test(expected = InputMismatchException.class)
-    public void hourShouldBeBetween00And23() {
+    public void hourShouldBeUnder23() {
         ExamModel wrongHourModel = new ExamModel(2016, "apr", 22, 24, 0, 120, 300);
     }
 
     @Test(expected = InputMismatchException.class)
-    public void minuteShouldBeBetween00And59() {
+    public void hourShouldBeAtleast0() {
+        ExamModel wrongHourModel = new ExamModel(2016, "mar", 22, -1, 0, 120, 300);
+    }
+
+    @Test(expected = InputMismatchException.class)
+    public void minuteShouldBeUnder59() {
         ExamModel wrongMinuteModel = new ExamModel(2016, "dec", 10, 20, 60, 120, 300);
+    }
+
+    @Test(expected = InputMismatchException.class)
+    public void minuteShouldBeAtleast0() {
+        ExamModel wrongMinuteModel = new ExamModel(2016, "nov", 10, 15, -1, 120, 300);
     }
 
     @Test(expected = InputMismatchException.class)
