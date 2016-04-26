@@ -20,9 +20,9 @@ public class RequestManager {
      * @return The url to upload a video to.
      * @throws Exception Throws an exception if the user is not a valid user.
      */
-    @CrossOrigin
+    @CrossOrigin()
     @RequestMapping(value="/video/inrequest", method = RequestMethod.GET)
-    public String requestUpload(
+    public String requestPOSTVideo(
             @RequestParam("userID") String userID,
             @RequestParam("courseID") String courseID,
             @RequestParam("examID") String examID
@@ -38,6 +38,24 @@ public class RequestManager {
         createVidInfo();
 
         return uploadURL;
+    }
+
+    /**
+     * Method for requesting a URL to a specific video.
+     * @param userID The users ID.
+     * @param courseID The courses ID.
+     * @param examID The exams ID.
+     * @return The url to a video for the user to see in the browser.
+     */
+    //TODO GETVideo method
+    @CrossOrigin()
+    @RequestMapping(value="/video/outrequest", method = RequestMethod.GET)
+    public String requestGETVideo(
+            @RequestParam("userID") String userID,
+            @RequestParam("courseID") String courseID,
+            @RequestParam("examID") String examID
+    ){
+        return "";
     }
 
     /**

@@ -39,6 +39,7 @@ public class VideoInController {
         }
         idList.remove(id);
 
+
         // Now it's up to Connect and Uploader(Calle & Co)
 
 
@@ -66,7 +67,7 @@ public class VideoInController {
     }
 
     @CrossOrigin()
-    @RequestMapping(value = "/requestUpload", method = RequestMethod.GET, headers = "content-type=multipart/form-data")
+    @RequestMapping(value = "/requestUpload", method = RequestMethod.GET)
     public String requestUpload(
             @RequestParam("userID") String userID,
             @RequestParam("courseID") Long courseID,
@@ -76,7 +77,7 @@ public class VideoInController {
         // TODO Verify user
 
 
-        String id = userID + "_" + videoName + "_" + (new UID()).toString();
+        String id = "UserId=" + userID + "CourseID=" + courseID + "VideoName=" + videoName + "RequestID=" + (new UID()).toString();
         idList.add(id);
 
         return id;
