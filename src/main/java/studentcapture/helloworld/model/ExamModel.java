@@ -27,6 +27,7 @@ public class ExamModel {
         validMonths.put("dec", Calendar.DECEMBER);
     }
 
+    private String title;
     private int year;
     private String month;
     private int  day;
@@ -35,9 +36,10 @@ public class ExamModel {
     private int minTimeSeconds;
     private int maxTimeSeconds;
 
-    public ExamModel(int year, String month, int day, int hour, int minute, int minTimeSeconds, int maxTimeSeconds)
-            throws InputMismatchException
+    public ExamModel(String title, int year, String month, int day, int hour, int minute, int minTimeSeconds,
+                     int maxTimeSeconds) throws InputMismatchException
     {
+        this.title = title;
         this.year = year;
         this.month = validateMonth(month);
         this.day = validateDay(year, month, day);
@@ -47,6 +49,10 @@ public class ExamModel {
         this.maxTimeSeconds = maxTimeSeconds;
 
         validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
+    }
+
+    public String title() {
+        return title;
     }
 
     public int year() {
