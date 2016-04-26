@@ -52,6 +52,6 @@ public class RequestManager {
      * Creates vidinfo object for fetching
      */
     private void createVidInfo(){
-        //TODO give videoqueue information about a new upload!!!!
+        //TODO give video queue information about a new upload!!!!
     }
 }
