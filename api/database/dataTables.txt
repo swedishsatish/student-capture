@@ -1,0 +1,70 @@
+-- All queries to create the database
+CREATE TABLE IF NOT EXISTS User (
+				UserID	SERIAL PRIMARY KEY,
+				FirstName	TEXT NOT NULL,
+				LastName	TEXT NOT NULL,
+				Personnummer	CHAR(10) NOT NULL,
+				CasID	CHAR(10) NOT NULL,
+				Password	CHAR
+				);
+				
+CREATE TABLE IF NOT EXISTS Course (
+				CourseID	SERIAL PRIMARY KEY,
+				Term	CHAR(6) NOT NULL,
+				CourseCode CHAR(6) NOT NULL,
+				CourseName TEXT
+				);
+
+CREATE TABLE IF NOT EXISTS Participant (
+				UserID INT references User(UserID),
+				CourseID INT references Course(CourseID),
+				Position TEXT NOT NULL
+				);
+				
+-- CREATE TYPE Role AS ENUM ('Teacher', 'Student', 'Assistant');				
+				
+CREATE TABLE IF NOT EXISTS Assignment (
+				AssignmentID	SERIAL PRIMARY KEY,
+				CourseID INT references Course(CourseID) NOT NULL,
+				StartDate timestamp  NOT NULL,
+				EndDate timestamp NOT NULL,
+				PathToVideo	TEXT	NOT NULL,
+				Published boolean	
+				);			
+				
+CREATE TABLE IF NOT EXISTS Submission (
+				AssignmentID	INT references Assignment(AssignmentID) NOT NULL,
+				StudentID INT references User(UserID) NOT NULL,
+				PathToVideo	TEXT,
+				Grade	CHAR (3),
+				TeacherID	INT references User(UserID) NOT NULL
+				);								
+				
+
+-- serial	4 bytes	autoincrementing integer	1 to 2147483647
+-- bigserial	8 bytes	large autoincrementing integer	1 to 9223372036854775807
+
+-- Insert and Update queries
+INSERT 	INTO User (FirstName, Lastname, Personnummer, CasID, Password) 
+		VALUES ("FirstName", "Lastname", "Personnummer, CasID, Password);
+
+INSERT 	INTO Course (Term, CourseCode, CourseName) 
+		VALUES ("Term", "CourseCode", "CourseName");
+		
+INSERT 	INTO Participant (UserID, CourseID, Position) 
+		VALUES  ("UserID", "CourseID", "Position");		
+		
+INSERT 	INTO Assignment (CourseID, StartDate, EndDate, PathToVideo) 
+		VALUES ("CourseID", "StartDate", "EndDate", "PathToVideo");	
+		
+INSERT 	INTO Submission (AssignmentID, StudentID, PathToVideo) 
+		VALUES  ("AssignmentID", "StudentID", "PathToVideo");				
+
+UPDATE 	Submission (Grade, TeacherID) = ("Grade", "TeacherID")
+		WHERE AssignmentID = "AssignmentID" AND StudentID = "StudentID";
+							
+							
+			
+								
+
+					
