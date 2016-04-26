@@ -8,7 +8,7 @@ public class FilesystemTest {
 
 	@Test
 	public void testGeneratePathWithoutStudent() {
-		String path = FilesystemInterface.generatePath("5DV151", 1, 123);
+		String path = FileSystem.generatePath("5DV151", 1, 123);
 		
 		assertEquals(path, FilesystemConstants.FILESYSTEM_PATH 
 					 + "/5DV151/1/123/");
@@ -16,7 +16,7 @@ public class FilesystemTest {
 	
 	@Test
 	public void testGeneratePathWithStudent() {
-		String path = Filesystem.generatePath("5DV151", 1, 123, 654);
+		String path = FileSystem.generatePath("5DV151", 1, 123, 654);
 		
 		assertEquals(path, FilesystemConstants.FILESYSTEM_PATH 
 					 + "/5DV151/1/123/654/");
