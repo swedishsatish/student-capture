@@ -24,8 +24,36 @@ public class VideoOutController {
      * @return Inlined video to the client if video exists on disk.
      */
     @RequestMapping(value = "/videoDownload", method = RequestMethod.GET, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> handleVideoUpload() {
-        String filename = "/video.webm";
+    public ResponseEntity<InputStreamResource> handleVideoUpload(@PathVariable("video") String videoName) {
+        String filename = "video.webm";
+        String filepath = StudentCaptureApplication.ROOT;
+        ResponseEntity responseEntity = null;
+        byte []file = null;
+
+        File video = new File(filepath+filename);
+
+        if(video.exists()) {
+            try {
+                byte []out = FileCopyUtils.copyToByteArray(video);
+                HttpHeaders responseHeaders = new HttpHeaders();
+                responseHeaders.add("content-disposition", "inline; filename="+filename);
+
+                responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
+            } catch (IOException e) {
+                responseEntity = new ResponseEntity("Error getting file", HttpStatus.OK);
+            }
+        } else {
+            responseEntity = new ResponseEntity("File not found", HttpStatus.OK);
+        }
+
+        return responseEntity;
+    }
+
+    @RequestMapping(value = "/videoDownload/{video}", method = RequestMethod.GET, produces = "video/webm")
+    public ResponseEntity<InputStreamResource> handleVideDl(@PathVariable("video") String videoName) {
+        String filename = "/"+videoName+".webm";
+        System.out.println(filename);
+
         String filepath = StudentCaptureApplication.ROOT;
         ResponseEntity responseEntity = null;
         byte []file = null;
