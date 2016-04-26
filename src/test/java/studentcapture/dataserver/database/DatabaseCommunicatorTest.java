@@ -1,4 +1,4 @@
-package studentcapture.datalayercommunicator;
+package studentcapture.dataserver.database;
 
 import org.junit.Test;
 

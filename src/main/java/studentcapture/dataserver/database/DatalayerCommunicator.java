@@ -1,9 +1,10 @@
-package studentcapture.datalayercommunicator;
+package studentcapture.dataserver.database;
 
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import studentcapture.dataserver.database.DatabaseCommunicator;
 
 /**
  * Created by c12osn on 2016-04-22.
