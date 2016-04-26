@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class FeedbackFetchingController {
 
     @RequestMapping(value = "get", method = RequestMethod.GET)
-    public void handleFeedbackRequestFromStudent() {
-
+    public String handleFeedbackRequestFromStudent() {
+        return "{feedback: vg}";
     }
 
 }

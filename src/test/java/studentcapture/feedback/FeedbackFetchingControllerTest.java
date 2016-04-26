@@ -12,6 +12,7 @@ import studentcapture.config.StudentCaptureApplicationTests;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -34,5 +35,22 @@ public class FeedbackFetchingControllerTest extends StudentCaptureApplicationTes
     public void shouldBeAbleToHandleSimpleGetRequest() throws Exception {
         mockMvc.perform(get("/feedback/get"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldBeAbleToHandleGetRequestWithParams() throws Exception {
+        mockMvc.perform(get("/feedback/get")
+                .param("name", "Anna"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldRespondWithFeedback() throws Exception {
+        mockMvc.perform(get("/feedback/get")
+                .param("name", "Anna")
+                .param("course", "PVT")
+                .param("exam", "Exam 1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.feedback").value("vg"));
     }
 }
