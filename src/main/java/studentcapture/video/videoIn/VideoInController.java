@@ -13,23 +13,23 @@ public class VideoInController {
 
     /**
      * Example method.
-     *
+     * <p/>
      * Will save video at location StudentCaptureApplication.ROOT and videoName as filename.
      *
      * @return Status 200 if success. Status 400 on bad request. Status 500 on bad values.
      */
     @CrossOrigin()
     @RequestMapping(value = "/uploadVideo", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
-    public ResponseEntity<String> handleVideoUpload(@RequestParam("userID" ) String userID,
-                                    @RequestParam("videoName") String videoName,
-                                    @RequestParam("video") MultipartFile video) {
-        if(!video.isEmpty()) {
+    public ResponseEntity<String> handleVideoUpload(@RequestParam("userID") String userID,
+                                                    @RequestParam("videoName") String videoName,
+                                                    @RequestParam("video") MultipartFile video) {
+        if (!video.isEmpty()) {
             try {
                 /// Send to db and fs.
 
                 BufferedOutputStream stream = new BufferedOutputStream(
                         new FileOutputStream(
-                                new File(StudentCaptureApplication.ROOT+"/" +videoName)));
+                                new File(StudentCaptureApplication.ROOT + "/" + videoName)));
 
 
                 FileCopyUtils.copy(video.getInputStream(), stream);
