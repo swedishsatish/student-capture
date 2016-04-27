@@ -28,7 +28,9 @@ public class VideoInController {
             @RequestParam("videoName") String videoName,
             @RequestParam("video") MultipartFile video) {
 
-        String temp = RequestManager.hashCodeGenerator(userID);
+
+        // Check if url{id} is generated correctly, first done in Request-Manager
+        String temp = HashCodeGenerator.generateHash(userID);
         if (!temp.equals(id)) {
             System.err.println("No request done.");
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
