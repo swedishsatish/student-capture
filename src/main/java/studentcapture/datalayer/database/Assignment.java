@@ -1,4 +1,4 @@
-package studentcapture.dataserver.database;
+package studentcapture.datalayer.database;
 
 import java.util.List;
 

@@ -1,53 +1,34 @@
-package studentcapture.dataserver.database;
+package studentcapture.datalayer.database;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 
 /**
  * Created by c13gan on 2016-04-25.
  */
-
+@Repository
 public class DatabaseCommunicator {
 
-    private BasicDataSource dataSource = new BasicDataSource();
-    private JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
-    /**
-     * Connects to the database in use in MC343. Call this function in the beginning of every method
-     */
-    public void connectToDB() {
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUsername("postgres_user");
-        dataSource.setPassword("postgres");
-        dataSource.setUrl("jdbc:postgresql://int-nat.cs.umu.se:25432/postgres_db");
-        dataSource.setMaxActive(10);
-        dataSource.setMaxIdle(5);
-        dataSource.setInitialSize(5);
-        dataSource.setValidationQuery("SELECT 1");
+    @Autowired
+    protected JdbcTemplate jdbcTemplate;
 
-        jdbcTemplate.setDataSource(dataSource);
-    }
-
-    /*  // TODO tried to test to connect to a DB from the database course, unsuccessfully
-      public void testDB ()  {
-          dataSource.setDriverClassName("org.postgresql.Driver");
-          dataSource.setUsername("c5dv119_vt16_c13gan");
-          dataSource.setPassword(password);
-          dataSource.setUrl("jdbc:postgresql://postgres.cs.umu.se/c5dv119_vt16_c13gan");
-          dataSource.setMaxActive(10);
-          dataSource.setMaxIdle(5);
-          dataSource.setInitialSize(5);
-          dataSource.setValidationQuery("SELECT 1");
-
-          jdbcTemplate.setDataSource(dataSource);
-      }*/
 
     /**
      * Just a method we used to insert some of the testvalues, feel free to add more or remove them from the DB
      */
     public void insertTestValues() {
-        connectToDB();
+        //connectToDB();
         jdbcTemplate.update("INSERT INTO users (userid , firstname , lastname , personnummer , casid , password) " +
                 "VALUES ('1337',   'Gustav',   'Gustavsson','1234567890', 'c13ggn', 'X')"
 
@@ -72,11 +53,25 @@ public class DatabaseCommunicator {
      * @return              The grade for that specific assignment and user or //TODO what if no grade exists
      */
     public String returnGrade(int studID, int assignmentID) {
-        connectToDB();
+       // connectToDB();
         String getGrade = "SELECT grade FROM submission WHERE (studentid = ? AND assignmentid = ?)";
-        String grade = jdbcTemplate.queryForObject(getGrade, new Object[] {studID, assignmentID},
-                String.class);
-        grade = grade.trim();
+        String grade;
+        try {
+            grade = jdbcTemplate.queryForObject(getGrade, new Object[] {studID, assignmentID},
+                    String.class);
+            if (grade == null) {
+                grade = "Missing grade";
+            } else {
+                grade = grade.trim();
+            }
+        }catch (IncorrectResultSizeDataAccessException e){
+            grade = "No submission for this user ID and/or assignment ID";
+        }catch (DataAccessException e1){
+            grade = "No submission for this user ID and/or assignment ID";
+        }
+
+
+
         return grade;
     }
 

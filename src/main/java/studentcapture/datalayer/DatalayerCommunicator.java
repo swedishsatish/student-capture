@@ -1,10 +1,13 @@
-package studentcapture.dataserver.database;
+package studentcapture.datalayer;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import studentcapture.dataserver.database.DatabaseCommunicator;
+import studentcapture.datalayer.database.DatabaseCommunicator;
+
+import javax.xml.crypto.Data;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -14,6 +17,9 @@ import studentcapture.dataserver.database.DatabaseCommunicator;
 public class DatalayerCommunicator {
 
 
+
+    @Autowired
+    private DatabaseCommunicator dbc;
     // Not that into what this stuff do, but
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.POST)
@@ -36,5 +42,11 @@ public class DatalayerCommunicator {
 
         // What is returned to the calling address
         return returnData;
+    }
+
+    @RequestMapping("Test")
+    public String test(){
+
+        return dbc.returnGrade(1337,10);
     }
 }

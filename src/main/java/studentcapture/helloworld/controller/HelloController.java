@@ -13,7 +13,7 @@ public class HelloController {
 	private HelloModel model = new HelloModel();
 	private TestModel testModel = new TestModel();
 
-	@RequestMapping(value = "hello", method = RequestMethod.GET)
+	@RequestMapping(value = "hellows", method = RequestMethod.GET)
 	public HelloModel hello() {
 		return model;
 	}
@@ -26,7 +26,10 @@ public class HelloController {
 	}
 
 	@RequestMapping(value = "message", method = RequestMethod.GET)
-	public TestModel message() { return testModel; }
+	public HelloModel msgget(@RequestParam(value="msg", required = false) String msg) {
+		model.setMessage(msg);
+		return model;
+	}
 
 	@RequestMapping(value = "message", method = RequestMethod.POST)
 	public void message(@RequestParam(value="message", required = false) String message){

@@ -1,0 +1,37 @@
+Video Module API:
+
+This API will be changed, please visit this API file if questions arise.
+
+/**
+ * Request a URL to upload a video to.
+ *
+ * @param userID The ID of the user.
+ * @param courseID The ID of the course.
+ * @param examID The ID of the exam.
+ * @return The URL to upload a video to.
+ * @throws Exception Throws an exception if the user is not certified to upload a video.
+ */
+@CrossOrigin()
+@RequestMapping(value="/video/inrequest", method = RequestMethod.GET)
+
+public String requestPOSTVideo(
+            @RequestParam("userID") String userID,
+            @RequestParam("courseID") String courseID,
+            @RequestParam("examID") String examID)
+
+
+
+/**
+ * Request a URL to get a specific video.
+ * @param userID The ID of the user.
+ * @param courseID The ID of the course.
+ * @param examID The ID of the exam.
+ * @return The URL to a video for the user to see in the browser.
+ */
+@CrossOrigin()
+@RequestMapping(value="/video/outrequest", method = RequestMethod.GET)
+
+public String requestGETVideo(
+            @RequestParam("userID") String userID,
+            @RequestParam("courseID") String courseID,
+            @RequestParam("examID") String examID)
