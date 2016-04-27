@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS Submission (
 				StudentID INT references User(UserID) NOT NULL,
 				PathToVideo	TEXT,
 				Grade	CHAR (3),
-				TeacherID	INT references User(UserID) NOT NULL
+				TeacherID	INT references User(UserID)
 				);
 
 
