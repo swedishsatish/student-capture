@@ -5,18 +5,6 @@ CREATE TABLE IF NOT EXISTS Users (
     PersNr       CHAR(10)       NOT NULL
     );
 
-CREATE TABLE IF NOT EXISTS CASLogin (
-    CASId        TEXT        PRIMARY KEY,
-    UserId       INT         references Users(UserId)
-    );
-
-CREATE TABLE IF NOT EXISTS UserLogin (
-    UserName    VARCHAR(32)    PRIMARY KEY,
-    Password    CHAR(64)       NOT NULL,
-    Salt        CHAR(16)       NOT NULL,
-    UserId      INT            references Users(UserId)
-    );
-
 CREATE TABLE IF NOT EXISTS Course (
     CourseId    SERIAL         PRIMARY KEY,
     Year        INT            NOT NULL,
@@ -35,92 +23,41 @@ CREATE TABLE IF NOT EXISTS Participant (
 CREATE TABLE IF NOT EXISTS Assignment (
     AssignmentId      SERIAL         PRIMARY KEY,
     CourseId          INT            references Course(CourseId) NOT NULL,
+    Title			  TEXT			 NOT NULL,
     StartDate         timestamp      NOT NULL,
     EndDate           timestamp      NOT NULL,
     MinTime           INT            NOT NULL,
     MaxTime           INT            NOT NULL,
-    VideoLength       INT            NOT NULL,
     Published         boolean        NOT NULL
     );
 
 CREATE TABLE IF NOT EXISTS Submission (
     AssignmentId		INT          references Assignment(AssignmentId) NOT NULL,
     StudentId           INT          references Users(UserId) NOT NULL,
-    SubmissionLength    INT          NOT NULL,
     SubmissionDate      timestamp    NOT NULL,
     Grade               VARCHAR (3),
     TeacherId           INT          references Users(UserId),
-    FeedbackLength      INT,
     PRIMARY KEY (AssignmentId, StudentId)
     );
-
-/*
--- All queries to create the database
-CREATE TABLE IF NOT EXISTS User (
-				UserID	SERIAL PRIMARY KEY,
-				FirstName	TEXT NOT NULL,
-				LastName	TEXT NOT NULL,
-				Personnummer	CHAR(10) NOT NULL,
-				CasID	CHAR(10) NOT NULL,
-				Password	CHAR
-				);
-
-CREATE TABLE IF NOT EXISTS Course (
-				CourseID	SERIAL PRIMARY KEY,
-				Term	CHAR(6) NOT NULL,
-				CourseCode CHAR(6) NOT NULL,
-				CourseName TEXT
-				);
-
-CREATE TABLE IF NOT EXISTS Participant (
-				UserID INT references User(UserID),
-				CourseID INT references Course(CourseID),
-				Position TEXT NOT NULL
-				);
-
--- CREATE TYPE Role AS ENUM ('Teacher', 'Student', 'Assistant');
-
-CREATE TABLE IF NOT EXISTS Assignment (
-				AssignmentID	SERIAL PRIMARY KEY,
-				CourseID INT references Course(CourseID) NOT NULL,
-				StartDate timestamp  NOT NULL,
-				EndDate timestamp NOT NULL,
-				PathToVideo	TEXT	NOT NULL,
-				Published boolean
-				);
-
-CREATE TABLE IF NOT EXISTS Submission (
-				AssignmentID	INT references Assignment(AssignmentID) NOT NULL,
-				StudentID INT references User(UserID) NOT NULL,
-				PathToVideo	TEXT,
-				Grade	CHAR (3),
-				TeacherID	INT references User(UserID) NOT NULL
-				);
-
 
 -- serial	4 bytes	autoincrementing integer	1 to 2147483647
 -- bigserial	8 bytes	large autoincrementing integer	1 to 9223372036854775807
 
 -- Insert and Update queries
-INSERT 	INTO User (FirstName, Lastname, Personnummer, CasID, Password)
-		VALUES ("FirstName", "Lastname", "Personnummer, CasID, Password);
+INSERT 	INTO User (FirstName, Lastname, Personnummer)
+		VALUES ("FirstName", "Lastname", "Personnummer");
 
-INSERT 	INTO Course (Term, CourseCode, CourseName)
-		VALUES ("Term", "CourseCode", "CourseName");
+INSERT 	INTO Course (Term, CourseCode, CourseName, Year)
+		VALUES ("Term", "CourseCode", "CourseName", "Year");
 
-INSERT 	INTO Participant (UserID, CourseID, Position)
-		VALUES  ("UserID", "CourseID", "Position");
+INSERT 	INTO Participant (UserID, CourseID, Function)
+		VALUES  ("UserID", "CourseID", "Function");
 
-INSERT 	INTO Assignment (CourseID, StartDate, EndDate, PathToVideo)
-		VALUES ("CourseID", "StartDate", "EndDate", "PathToVideo");
+INSERT 	INTO Assignment (CourseID, StartDate, EndDate, Title, MinTime, MaxTime, Published)
+		VALUES ("CourseID", "StartDate", "EndDate", "Title", "MinTime", "MaxTime", "Published");
 
-INSERT 	INTO Submission (AssignmentID, StudentID, PathToVideo)
-		VALUES  ("AssignmentID", "StudentID", "PathToVideo");
+INSERT 	INTO Submission (AssignmentID, StudentID, SubmissionDate)
+		VALUES  ("AssignmentID", "StudentID", "SubmissionDate");
 
 UPDATE 	Submission (Grade, TeacherID) = ("Grade", "TeacherID")
 		WHERE AssignmentID = "AssignmentID" AND StudentID = "StudentID";
-*/
-
-
-
-
