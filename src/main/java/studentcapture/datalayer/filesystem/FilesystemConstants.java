@@ -1,4 +1,4 @@
-package studentcapture.dataserver.filesystem;
+package studentcapture.datalayer.filesystem;
 
 public final class FilesystemConstants {
 	public final static String FILESYSTEM_PATH = ""; //TODO MooseFS directory

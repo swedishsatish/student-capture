@@ -1,6 +1,4 @@
-package studentcapture.dataserver.database;
-
-import static org.junit.Assert.*;
+package studentcapture.datalayer.database;
 
 /**
  * Created by c12ton on 4/26/16.
