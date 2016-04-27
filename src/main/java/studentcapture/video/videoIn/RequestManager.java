@@ -1,6 +1,15 @@
 package studentcapture.video.videoIn;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import studentcapture.config.StudentCaptureApplication;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 
 
 /**
@@ -36,6 +45,45 @@ public class RequestManager {
     }
 
     /**
+     * Request a post of a testing video.E
+     * @return The video.
+     */
+    @CrossOrigin()
+    @RequestMapping(value="/video/posttest", method = RequestMethod.GET)
+    public MultipartFile requestPostTestVideo(
+            @RequestParam("videoName") String videoName,
+            @RequestParam("videoTest")MultipartFile videoTest
+    ) {
+
+        if (!videoTest.isEmpty()) {
+            try {
+
+
+                BufferedOutputStream stream = new BufferedOutputStream(
+                        new FileOutputStream(
+                                new File(StudentCaptureApplication.ROOT + "/" + videoName)));
+
+
+                FileCopyUtils.copy(videoTest.getInputStream(), stream);
+                stream.close();
+            } catch (Exception e) {
+
+                System.err.println("Failed to upload file.");
+                return null;
+            }
+        } else {
+            System.err.println("Bad file.");
+            return null;
+        }
+
+        return videoTest;
+    }
+
+
+
+
+
+    /**
      * Request a URL to get a specific video.
      * @param userID The ID of the user.
      * @param courseID The ID of the course.
@@ -55,6 +103,7 @@ public class RequestManager {
         return "";
     }
 
+ 
     /**
      * Checks that a user is valid to upload a video.
      * @return
