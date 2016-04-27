@@ -8,7 +8,7 @@ import java.util.InputMismatchException;
 /**
  * Created by root on 4/25/16.
  */
-public class ExamModel {
+public class AssignmentModel {
 
     private static HashMap<String, Integer> validMonths;
     static {
@@ -36,8 +36,8 @@ public class ExamModel {
     private int minTimeSeconds;
     private int maxTimeSeconds;
 
-    public ExamModel(String title, int year, String month, int day, int hour, int minute, int minTimeSeconds,
-                     int maxTimeSeconds) throws InputMismatchException
+    public AssignmentModel(String title, int year, String month, int day, int hour, int minute, int minTimeSeconds,
+                           int maxTimeSeconds) throws InputMismatchException
     {
         this.title = title;
         this.year = year;
@@ -51,36 +51,81 @@ public class ExamModel {
         validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
     }
 
-    public String title() {
+    public AssignmentModel() {
+        this.title = "Defualt Assignment";
+        this.year = 2000;
+        this.month = "jan";
+        this.day = 0;
+        this.hour = 0;
+        this.minute = 0;
+        this.minTimeSeconds = 0;
+        this.maxTimeSeconds = 0;
+    }
+
+    public String getTitle() {
         return title;
     }
 
-    public int year() {
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getYear() {
         return year;
     }
 
-    public String month() {
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public String getMonth() {
         return month;
     }
 
-    public int day() {
+    public void setMonth(String month) throws InputMismatchException {
+        this.month = validateMonth(month);
+    }
+
+    public int getDay() {
         return day;
     }
 
-    public int hour() {
+    public void setDay(int day) throws InputMismatchException {
+        this.day = validateDay(year, month, day);
+    }
+
+    public int getHour() {
         return hour;
     }
 
-    public int minute() {
+    public void setHour(int hour) throws InputMismatchException {
+        this.hour = validateHour(hour);
+    }
+
+    public int getMinute() {
         return minute;
     }
 
-    public int minTimeSeconds() {
+    public void setMinute(int minute) throws InputMismatchException {
+        this.minute = validateMinute(minute);
+    }
+
+    public int getMinTimeSeconds() {
         return minTimeSeconds;
     }
 
-    public int maxTimeSeconds() {
+    public void setMinTimeSeconds(int minTimeSeconds) throws  InputMismatchException {
+        this.minTimeSeconds = minTimeSeconds;
+        validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
+    }
+
+    public int getMaxTimeSeconds() {
         return maxTimeSeconds;
+    }
+
+    public void setMaxTimeSeconds(int maxTimeSeconds) throws  InputMismatchException {
+        this.maxTimeSeconds = maxTimeSeconds;
+        validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
     }
 
     private String validateMonth(String month) throws InputMismatchException{
@@ -131,7 +176,7 @@ public class ExamModel {
     }
 
     private void validateMinMaxTimeSeconds(int minTimeSeconds, int maxTimeSeconds) {
-        if (minTimeSeconds > maxTimeSeconds) {
+        if ((minTimeSeconds > maxTimeSeconds) && (maxTimeSeconds != 0)) {
             throw new InputMismatchException("Minimum time can't be larger than max time, input was, min: " +
                     minTimeSeconds + " max: " + maxTimeSeconds);
         }
