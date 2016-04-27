@@ -12,6 +12,7 @@ import java.util.List;
 
 public class Submission {
 
+    // Use this template to send queries to the database
     @Autowired
     protected JdbcTemplate jdbcTemplate;
 

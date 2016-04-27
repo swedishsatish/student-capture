@@ -5,9 +5,6 @@ import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import studentcapture.datalayer.database.DatabaseCommunicator;
-
-import javax.xml.crypto.Data;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -19,7 +16,7 @@ public class DatalayerCommunicator {
 
 
     @Autowired
-    private DatabaseCommunicator dbc;
+    // private DatabaseCommunicator dbc;
     // Not that into what this stuff do, but
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.POST)
@@ -32,8 +29,8 @@ public class DatalayerCommunicator {
 
 
         // Do your DB and filesystem calls
-        DatabaseCommunicator dbc = new DatabaseCommunicator();
-        String grade = dbc.returnGrade(1, 2);
+        // DatabaseCommunicator dbc = new DatabaseCommunicator();
+        // String grade = dbc.returnGrade(1, 2);
 
         // Add what you want to return to the map here
         // EX: returndata.add("nyckel", variabel);
@@ -44,9 +41,4 @@ public class DatalayerCommunicator {
         return returnData;
     }
 
-    @RequestMapping("Test")
-    public String test(){
-
-        return dbc.returnGrade(1337,10);
-    }
 }
