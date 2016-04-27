@@ -45,7 +45,8 @@ public class FeedbackController {
         try {
             response = requestSender.getForObject(targetUrl, String.class);
         } catch (RestClientException e) {
-            System.out.println("Error sending request to Datalayer");
+            //TODO Maybe not good to send exceptions to browser?
+            response = "{error:" + e.getMessage() + "}";
         }
         return response;
     }

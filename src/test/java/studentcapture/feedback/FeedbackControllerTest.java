@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -62,5 +63,25 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
                 .andExpect(jsonPath("$.grade").value("VG"))
                 .andExpect(jsonPath("$.feedback").value("Mycket fint ritat"));
     }
+
+    @Test
+    public void shouldReturnErrorWhenRequestFail() throws Exception {
+        URI targetUrl = UriComponentsBuilder.fromUriString("https://localhost:8443")
+                .path("DB/getGrade")
+                .queryParam("userID", "Anna")
+                .queryParam("assID", "1")
+                .build()
+                .toUri();
+
+        when(templateMock.getForObject(targetUrl, String.class)).thenThrow(new RestClientException("Exception message"));
+        mockMvc.perform(get("/feedback/get")
+                .param("userID", "Anna")
+                .param("assID", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.error").value("Exception message"));
+    }
+
+
+
 
 }
