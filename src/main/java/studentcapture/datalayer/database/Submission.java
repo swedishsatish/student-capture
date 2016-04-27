@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Date;
 
 import java.util.List;
 
+@Repository
 public class Submission {
 
     // This template should be used to send queries to the database
@@ -106,8 +109,36 @@ public class Submission {
 
      */
 
-    protected List<Object> getGrade(String studentID, String assID) {
-        return null;
+    protected ArrayList<Object> getGrade(String studentID, String assID) {
+        int studIDInt = Integer.parseInt(studentID);
+        int assIDInt = Integer.parseInt(assID);
+        ArrayList returnValues = new ArrayList<Object>();
+        String getGrade = "SELECT grade FROM submission WHERE (studentid = ? AND assignmentid = ?)";
+        String grade;
+        try {
+            grade = jdbcTemplate.queryForObject(getGrade, new Object[] {studIDInt, assIDInt},
+                    String.class);
+            if (grade == null) {
+                grade = "Missing grade";
+            } else {
+                grade = grade.trim();
+            }
+        }catch (IncorrectResultSizeDataAccessException e){
+            grade = "No submission for this user ID and/or assignment ID";
+        }catch (DataAccessException e1){
+            grade = "No submission for this user ID and/or assignment ID";
+        }
+        returnValues.add(grade);
+        return returnValues;
+    }
+
+    public String getString() {
+        return "vg";
+    }
+
+    public DataSource getDatasource() {
+        return jdbcTemplate.getDataSource();
+
     }
 
     /**

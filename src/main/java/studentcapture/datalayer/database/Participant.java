@@ -1,8 +1,11 @@
 package studentcapture.datalayer.database;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,13 +33,25 @@ public class Participant {
      * @return              true if insertion worked, else false
 
      */
-
-    private boolean addParticipant(String CAS_ID, String CourseID, String function){
-
-        //TODO
-
-        return true;
-
+    
+    private static final String addParticipantStatement = "INSERT INTO Participant VALUES (?,?,?)";
+    private boolean addParticipant(int studentId, int courseId, String function) {
+        boolean result;
+        try {
+            int rowsAffected = jdbcTemplate.update(addParticipantStatement, 
+            		new Object[] {studentId, courseId});
+            if(rowsAffected == 1) {
+            	result = true;
+            } else {
+            	result = false;
+            }
+        }catch (IncorrectResultSizeDataAccessException e){
+            result = false;
+        }catch (DataAccessException e1){
+            result = false;
+        }
+        
+        return result;
     }
 
 
@@ -57,7 +72,7 @@ public class Participant {
 
     private String getFunctionForParticipant(String CAS_ID, String CourseID){
 
-        //TODO
+        //TODO "SELECT Position FROM Participant WHERE (UserId=? AND CourseId=?)"
 
         return "";
 
@@ -79,7 +94,7 @@ public class Participant {
 
     private List<Object> getAllParticipantsFromCourse(String CourseID){
 
-        //TODO
+        //TODO "SELECT * FROM Participant WHERE (CourseId=?)"
 
         return null;
 
@@ -101,7 +116,7 @@ public class Participant {
 
     private List<Object> getAllCoursesForParticipant(String CAS_ID){
 
-        //TODO
+        //TODO "SELECT CourseId,Position FROM Participant WHERE (UserId=?)"
 
         return null;
 
@@ -125,7 +140,7 @@ public class Participant {
 
     private boolean removeUser(String CAS_ID, String CourseID){
 
-        //TODO
+        //TODO "DELETE FROM Participant WHERE (UserId=? AND CourseId=?)"
 
         return true;
 
