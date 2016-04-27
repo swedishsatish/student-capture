@@ -2,6 +2,7 @@ package studentcapture.feedback;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,9 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Created by c12osn on 2016-04-26.
- */
+
 public class FeedbackControllerTest extends StudentCaptureApplicationTests {
 
     @Autowired
@@ -36,48 +35,28 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }
-
-
-    @Test
-    public void shouldBeAbleToHandleSimpleGetRequest() throws Exception {
-        mockMvc.perform(get("/feedback/get"))
-                .andExpect(status().isOk());
+        Mockito.reset(templateMock);
     }
 
     @Test
-    public void shouldBeAbleToHandleGetRequestWithParams() throws Exception {
-        mockMvc.perform(get("/feedback/get")
-                .param("name", "Anna"))
-                .andExpect(status().isOk());
+    public void shouldRespondToGet() throws Exception {
+        mockMvc.perform(get("/feedback/get")).andExpect(status().isOk());
     }
 
     @Test
     public void shouldRespondWithFeedback() throws Exception {
-        mockMvc.perform(get("/feedback/get")
-                .param("name", "Anna")
-                .param("course", "PVT")
-                .param("exam", "Exam 1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.feedback").value("vg"));
-    }
-
-    @Test
-    public void shouldRespondWithErrorIfNoFeedback() throws Exception {
         HashMap<String, String> params = new HashMap<>();
-        params.put("courseID", "2");
-        params.put("studentID", "3");
-        params.put("examID", "1");
-
-        when(templateMock.getForObject("http://localhost:8080/DB/getGrade", String.class, params)).thenReturn("{grade:VG}");
-        System.out.println("HELOLOLOLLOLLOLL");
-        System.out.println(System.identityHashCode(templateMock));
-
+        params.put("courseID", "1");
+        params.put("studentID", "2");
+        params.put("examID", "3");
+        when(templateMock.getForObject("http://localhost:8080/DB/getGrade", String.class, params)).thenReturn("{grade:VG, feedback:Mycket fint ritat}");
         mockMvc.perform(get("/feedback/get")
-                .param("name", "Olle")
-                .param("course", "PVT")
-                .param("exam", "Exam 1"))
+                .param("courseID", "1")
+                .param("studentID", "2")
+                .param("examID", "3"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.grade").value("VG"));
+                .andExpect(jsonPath("$.grade").value("VG"))
+                .andExpect(jsonPath("$.feedback").value("Mycket fint ritat"));
     }
+
 }

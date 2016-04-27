@@ -20,8 +20,10 @@ import java.util.HashMap;
 @RequestMapping(value = "feedback")
 public class FeedbackController {
 
+
+
     @Autowired
-    RestTemplate requestSender;
+    private RestTemplate requestSender;
 
     @RequestMapping(value = "get", method = RequestMethod.GET)
     public String handleFeedbackRequestFromStudent(@RequestParam(value = "courseID", required = false) String course,
@@ -32,9 +34,8 @@ public class FeedbackController {
         params.put("courseID", course);
         params.put("studentID", student);
         params.put("examID", exam);
-        System.out.println("HELOLOLOLLOLLOLL");
-        System.out.println(System.identityHashCode(requestSender));
         return requestSender.getForObject("http://localhost:8080/DB/getGrade", String.class, params);
     }
+
 
 }
