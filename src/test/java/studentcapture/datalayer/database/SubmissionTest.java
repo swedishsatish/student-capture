@@ -23,19 +23,6 @@ public class SubmissionTest extends StudentCaptureApplicationTests {
         assertEquals("vg",(String)test.get(0));
     }
 
-    @Test
-    public void testSubmissionConnection() throws Exception {
-        assertEquals("vg", dlc.getString());
-    }
-    @Test
-    public void testCorrectDatasource() throws Exception {
-        for(String s : dlc.getDatasource().getConnection().getClientInfo().stringPropertyNames()){
-            System.out.println(s);
-            System.out.println(dlc.getDatasource().getConnection().getClientInfo().getProperty(s));
-        }
-
-    }
-
     /*@Test
     public void shouldReturnNoGradeWhenAssignmentNotExists() throws Exception {
         assertEquals("No submission for this user ID and/or assignment ID", dlc.returnGrade(1337, 5));
