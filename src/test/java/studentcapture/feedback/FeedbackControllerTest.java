@@ -42,8 +42,14 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
     }
 
     @Test
-    public void shouldRespondToGet() throws Exception {
-        mockMvc.perform(get("/feedback/get")).andExpect(status().isOk());
+    public void shouldRespondWithErrorWithoutParams() throws Exception {
+        mockMvc.perform(get("/feedback/get")).andExpect(status().is4xxClientError());
+    }
+    @Test
+    public void shouldRespondOkWithParams() throws Exception {
+        mockMvc.perform(get("/feedback/get")
+                .param("userID", "Anna")
+                .param("assID", "1")).andExpect(status().isOk());
     }
 
     @Test

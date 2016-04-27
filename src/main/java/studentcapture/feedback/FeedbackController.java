@@ -31,8 +31,8 @@ public class FeedbackController {
     private RestTemplate requestSender;
 
     @RequestMapping(value = "get", method = RequestMethod.GET)
-    public String handleFeedbackRequestFromStudent(@RequestParam(value = "userID", required = false) String userID,
-                                                   @RequestParam(value = "assID", required = false) String assID) {
+    public String handleFeedbackRequestFromStudent(@RequestParam(value = "userID", required = true) String userID,
+                                                   @RequestParam(value = "assID", required = true) String assID) {
         //TODO Unsafe data needs to be cleaned
 
         URI targetUrl = UriComponentsBuilder.fromUriString("https://localhost:8443")
