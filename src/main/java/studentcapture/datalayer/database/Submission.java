@@ -11,6 +11,7 @@ import studentcapture.datalayer.database.Participant.ParticipantWrapper;
 import javax.sql.DataSource;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Repository
@@ -28,18 +29,15 @@ public class Submission {
 
      * @param studentID Unique identifier for the student submitting
 
-     * @param date Date of the submission
-
      * @return True if everything went well, otherwise false
 
      */
 
-    protected boolean addSubmission(String assID, String studentID, Date date) {
+    protected boolean addSubmission(String assID, String studentID) {
         return true;
     }
 
-    /**
-
+     /**
      * Add a grade for a submission
 
      * @param assID Unique identifier for the assignment with the submission being graded
@@ -50,14 +48,19 @@ public class Submission {
 
      * @param grade The grade of the submission
 
-     * @param date Date of the grading
-
      * @return True if everything went well, otherwise false
 
      */
 
-    protected boolean gradeSubmission(String assID, String teacherID, String studentID, String grade, Date date) {
-        return false;
+    protected boolean setGrade(String assID, String teacherID, String studentID, String grade) {
+    	String setGrade = "UPDATE Submission (Grade, TeacherID, Date) = (?, ?, ?) WHERE (AssignmentID = ?) AND (StudentID = ?)";
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+    	Date date = new Date();
+    	int updatedRows = jdbcTemplate.update(setGrade, new Object[] {grade, teacherID, dateFormat.format(date),assID, studentID});
+    	if (updatedRows == 1)
+    		return true;
+    	else
+    		return false;
     }
 
     /**
