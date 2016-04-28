@@ -20,10 +20,9 @@ public class DatalayerCommunicator {
     private Submission dbc;
     // Not that into what this stuff do, but
     @CrossOrigin()
-    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.POST)
-    public MultiValueMap getGrade(@RequestParam(value = "name", required = false) String name,
-                                  @RequestParam(value = "course", required = false) String course,
-                                  @RequestParam(value = "exam", required = false) String exam) {
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
+    public MultiValueMap getGrade(@RequestParam(value = "userID", required = false) String userID,
+                                  @RequestParam(value = "assID", required = false) String assID) {
 
         // Creates the object that should be returned
         LinkedMultiValueMap<String, String> returnData = new LinkedMultiValueMap<String, String>();
@@ -38,7 +37,9 @@ public class DatalayerCommunicator {
 
 
         // What is returned to the calling address
+        returnData.add("grade", (String) dbc.getGrade(userID, assID).get(0));
         return returnData;
     }
+
 
 }
