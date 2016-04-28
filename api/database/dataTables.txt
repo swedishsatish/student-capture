@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS Course (
     CourseName  TEXT
     );
 
-CREATE TYPE IF NOT EXISTS role AS ENUM ('Teacher', 'Student', 'Assistant');
+CREATE TYPE role AS ENUM ('Teacher', 'Student', 'Assistant');
 CREATE TABLE IF NOT EXISTS Participant (
     UserId       INT           references Users(UserId),
     CourseId     VARCHAR(10)   references Course(CourseId),
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS Participant (
 CREATE TABLE IF NOT EXISTS Assignment (
     AssignmentId      SERIAL         PRIMARY KEY,
     CourseId          VARCHAR(10)    references Course(CourseId) NOT NULL,
-    Titl	      TEXT	     NOT NULL,
+    Title	      TEXT	     NOT NULL,
     StartDate         timestamp      NOT NULL,
     EndDate           timestamp      NOT NULL,
     MinTime           INT            NOT NULL,
@@ -43,22 +43,3 @@ CREATE TABLE IF NOT EXISTS Submission (
 
 -- serial	4 bytes	autoincrementing integer	1 to 2147483647
 -- bigserial	8 bytes	large autoincrementing integer	1 to 9223372036854775807
-
--- Insert and Update queries
-INSERT 	INTO User (FirstName, Lastname, Personnummer)
-		VALUES ("FirstName", "Lastname", "Personnummer");
-
-INSERT 	INTO Course (Term, CourseCode, CourseName, Year)
-		VALUES ("Term", "CourseCode", "CourseName", "Year");
-
-INSERT 	INTO Participant (UserID, CourseID, Function)
-		VALUES  ("UserID", "CourseID", "Function");
-
-INSERT 	INTO Assignment (CourseID, StartDate, EndDate, Title, MinTime, MaxTime, Published)
-		VALUES ("CourseID", "StartDate", "EndDate", "Title", "MinTime", "MaxTime", "Published");
-
-INSERT 	INTO Submission (AssignmentID, StudentID, SubmissionDate)
-		VALUES  ("AssignmentID", "StudentID", "SubmissionDate");
-
-UPDATE 	Submission (Grade, TeacherID) = ("Grade", "TeacherID")
-		WHERE AssignmentID = "AssignmentID" AND StudentID = "StudentID";
