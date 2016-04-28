@@ -1,5 +1,10 @@
 package studentcapture.datalayer.database;
 
+<<<<<<< HEAD
+import org.junit.Before;
+import studentcapture.config.StudentCaptureApplicationTests;
+
+=======
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import studentcapture.config.StudentCaptureApplicationTests;
@@ -10,10 +15,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+>>>>>>> 17312bcfbb7b7c56550b01f1de7657ec69c2e440
 /**
  * Created by S&E on 4/27/16.
  */
 public class AssignmentTest extends StudentCaptureApplicationTests {
+<<<<<<< HEAD
+
+
+    @Before
+    public void setup(){
+
+    }
+=======
+>>>>>>> 17312bcfbb7b7c56550b01f1de7657ec69c2e440
 
     @Autowired
     Assignment ass;
@@ -21,6 +36,14 @@ public class AssignmentTest extends StudentCaptureApplicationTests {
 
     /*@Test
     public void testCreateAssignment() throws Exception {
+<<<<<<< HEAD
+    }
+
+
+
+    @org.junit.Test
+    public void testGetAssignmentInfo() throws Exception {
+=======
 
     }*/
 
@@ -33,6 +56,7 @@ public class AssignmentTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testGetAssignmentReturnsNotNUll() {
+>>>>>>> 17312bcfbb7b7c56550b01f1de7657ec69c2e440
 
         actual = ass.getAssignmentInfo(10);
 

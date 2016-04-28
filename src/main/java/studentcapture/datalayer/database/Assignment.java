@@ -3,6 +3,13 @@ package studentcapture.datalayer.database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+<<<<<<< HEAD
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+=======
+>>>>>>> 17312bcfbb7b7c56550b01f1de7657ec69c2e440
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +24,20 @@ public class Assignment {
     @Autowired
     protected JdbcTemplate jdbcTemplate;
 
-    public int createAssignment(String courseID, String assignmentTitle,
-                                String startDate, String endDate, int minTime, int maxTime,
-                                boolean published){
+
+    /**
+     *
+     * @param courseID
+     * @param assignmentTitle
+     * @param startDate
+     * @param endDate
+     * @param minTime
+     * @param maxTime
+     * @param published
+     * @return
+     */
+    public int createAssignment(String courseID, String assignmentTitle, String startDate, String endDate,
+                                String minTime, String maxTime, boolean published){
         //TODO
         return 0;
     }
