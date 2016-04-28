@@ -17,6 +17,10 @@ var mediaRecorder;
  * @param theStream - the media stream to record.
  */
 function startRecording(theStream) {
+
+
+
+
 	var chunkSize = 100;
 	recordedBlobs = [];
 	
@@ -26,11 +30,19 @@ function startRecording(theStream) {
 	}	
 	
 	try {
+
 		mediaRecorder = new MediaRecorder(theStream, options);
+
+        var logParagraph = document.createElement("P");
+        var t = document.createTextNode("du spelas in NU");
+        logParagraph.appendChild(t);
+        document.body.appendChild(logParagraph);
+
+
 	} catch (e0) {
 		console.log('Unable to create MediaRecorder with options Object: ', e0);
 		console.log('\nblabla\n', theStream);
-		try {
+        try {
 			options = {mimeType: 'video/webm,codecs=vp9'};
 			mediaRecorder = new MediaRecorder(theStream, options);
 		} catch (e1) {
@@ -38,6 +50,9 @@ function startRecording(theStream) {
 			try {
 				options = 'video/vp8'; // Chrome 47
 				mediaRecorder = new MediaRecorder(theStream, options);
+
+
+
 			} catch (e2) {
 				alert('MediaRecorder is not supported by this browser.\n\n' +
 				    'Try Firefox 29 or later, or Chrome 47 or later, '+
