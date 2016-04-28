@@ -112,32 +112,37 @@ public class Submission {
     protected ArrayList<Object> getGrade(String studentID, String assID) {
         int studIDInt = Integer.parseInt(studentID);
         int assIDInt = Integer.parseInt(assID);
-        ArrayList returnValues = new ArrayList<Object>();
+        ArrayList<Object> returnValues = new ArrayList(3);
+        ArrayList<String> queriesToSend = new ArrayList(3);
         String getGrade = "SELECT grade FROM submission WHERE (studentid = ? AND assignmentid = ?)";
-        String grade;
-        try {
-            grade = jdbcTemplate.queryForObject(getGrade, new Object[] {studIDInt, assIDInt},
-                    String.class);
-            if (grade == null) {
-                grade = "Missing grade";
-            } else {
-                grade = grade.trim();
+        queriesToSend.add(getGrade);
+        String getTimeStamp = "SELECT submissiondate FROM submission WHERE (studentid = ? AND assignmentid = ?)";
+        queriesToSend.add(getTimeStamp);
+        String getTeacherName = "SELECT firstname FROM submission JOIN users ON (techerid = userid) WHERE (studentid = ? AND assignment = ?)";
+        queriesToSend.add(getTeacherName);
+
+
+        String getData = "SELECT grade, submissiondate, firstname FROM submission JOIN users ON (teacherid = userid)" +
+                " WHERE (assignmentid = ? AND studentid = ?);";
+
+        for (String s : queriesToSend) {
+            try {
+                String grade = jdbcTemplate.queryForObject(s, new Object[]{studIDInt, assIDInt}, String.class);
+                if (grade == null) {
+                    returnValues.add("Missing grade");
+                } else {
+                    grade = grade.trim();
+                    returnValues.add(grade);
+                }
+            } catch (IncorrectResultSizeDataAccessException e) {
+                returnValues.add("Query found no data");
+                break;
+            } catch (DataAccessException e1) {
+                returnValues.add("Dataaccess");
+                break;
             }
-        }catch (IncorrectResultSizeDataAccessException e){
-            grade = "No submission for this user ID and/or assignment ID";
-        }catch (DataAccessException e1){
-            grade = "No submission for this user ID and/or assignment ID";
         }
-        returnValues.add(grade);
         return returnValues;
-    }
-
-    public String getString() {
-        return "vg";
-    }
-
-    public DataSource getDatasource() {
-        return jdbcTemplate.getDataSource();
 
     }
 
