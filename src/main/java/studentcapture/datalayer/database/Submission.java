@@ -6,11 +6,15 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.datalayer.database.Participant.ParticipantWrapper;
+
 import javax.sql.DataSource;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class Submission {
@@ -155,9 +159,34 @@ public class Submission {
      * @return A list of ungraded submissions for the assignment
 
      */
+    private final static String getAllUngradedStatement = "SELECT * FROM "
+    		+ "Submission WHERE (AssignmentId=?) AND (Grade IS NULL)";
+    protected List<SubmissionWrapper> getAllUngraded(String assId) {
+    	List<SubmissionWrapper> submissions = new ArrayList<>();
 
-    protected List<Object> getAllUngraded(String assID) {
-        return null;
+    	try {
+	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+	    			getAllSubmissionsStatement, new Object[] {assId});
+	    	for (Map<String, Object> row : rows) {
+	    		SubmissionWrapper submission = new SubmissionWrapper();
+	    		submission.assignmentId = (int) row.get("AssignmentId");
+	    		submission.studentId = (int) row.get("StudentId");
+	    		submission.teacherId = (int) row.get("TeacherId");
+	    		submission.grade = (String) row.get("teacherId");
+	    		submission.submissionTime = (Timestamp)
+	    				row.get("SubmissionTime");
+	    		submissions.add(submission);
+	    	}
+
+	    } catch (IncorrectResultSizeDataAccessException e){
+			//TODO
+		    return null;
+		} catch (DataAccessException e1){
+			//TODO
+			return null;
+		}
+
+        return submissions;
     }
 
     /**
@@ -170,9 +199,42 @@ public class Submission {
 
      */
 
-    protected List<Object> getAllSubmissions(String assID) {
-        return null;
+    private final static String getAllSubmissionsStatement = "SELECT * FROM "
+    		+ "Submission WHERE (AssignmentId=?)";
+    protected List<SubmissionWrapper> getAllSubmissions(String assId) {
+    	List<SubmissionWrapper> submissions = new ArrayList<>();
+
+    	try {
+	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+	    			getAllSubmissionsStatement, new Object[] {assId});
+	    	for (Map<String, Object> row : rows) {
+	    		SubmissionWrapper submission = new SubmissionWrapper();
+	    		submission.assignmentId = (int) row.get("AssignmentId");
+	    		submission.studentId = (int) row.get("StudentId");
+	    		submission.teacherId = (int) row.get("TeacherId");
+	    		submission.grade = (String) row.get("teacherId");
+	    		submission.submissionTime = (Timestamp)
+	    				row.get("SubmissionTime");
+	    		submissions.add(submission);
+	    	}
+
+	    } catch (IncorrectResultSizeDataAccessException e){
+			//TODO
+		    return null;
+		} catch (DataAccessException e1){
+			//TODO
+			return null;
+		}
+
+        return submissions;
     }
 
+    public class SubmissionWrapper {
+    	public int assignmentId;
+    	public int studentId;
+    	public Timestamp submissionTime;
+    	public String grade;
+    	public int teacherId;
+    }
 }
 
