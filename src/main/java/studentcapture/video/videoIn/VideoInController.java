@@ -5,7 +5,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.config.StudentCaptureApplication;
-
+import java.security.SecureRandom;
+import java.math.BigInteger;
 
 import java.io.*;
 
@@ -44,7 +45,7 @@ public class VideoInController {
 
                 BufferedOutputStream stream = new BufferedOutputStream(
                         new FileOutputStream(
-                                new File(StudentCaptureApplication.ROOT + "/" + videoName)));
+                                new File(StudentCaptureApplication.ROOT + "/" + randomizeFilename(userID))));
 
                 FileCopyUtils.copy(video.getInputStream(), stream);
                 stream.close();
@@ -58,6 +59,13 @@ public class VideoInController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+
+    private String randomizeFilename(String userID) {
+        SecureRandom random = new SecureRandom();
+
+        return "video_" + userID  + "_" + new BigInteger(130, random).toString(32).substring(0, 5)+ ".webm";
     }
 
 
