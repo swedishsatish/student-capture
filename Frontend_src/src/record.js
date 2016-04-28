@@ -9,6 +9,9 @@
 
 var recordedBlobs;
 var mediaRecorder;
+var par = document.createElement("P");
+var t = document.createTextNode("RECORDING");
+
 
 /**
  * This function starts a recording of the stream. 
@@ -33,12 +36,6 @@ function startRecording(theStream) {
 
 		mediaRecorder = new MediaRecorder(theStream, options);
 
-        var logParagraph = document.createElement("P");
-        var t = document.createTextNode("du spelas in NU");
-        logParagraph.appendChild(t);
-        document.body.appendChild(logParagraph);
-
-
 	} catch (e0) {
 		console.log('Unable to create MediaRecorder with options Object: ', e0);
 		console.log('\nblabla\n', theStream);
@@ -58,15 +55,16 @@ function startRecording(theStream) {
 				    'Try Firefox 29 or later, or Chrome 47 or later, '+
 				    'Enable experimental Web Platform features enabled from chrome://flags.');
 				console.error('Exception while creating MediaRecorder:', e2);
-				return;
 			}
 		}
+		return false;
   	}
 	console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
 	mediaRecorder.onstop = handleStop;
 	mediaRecorder.ondataavailable = handleDataAvailable;
-	mediaRecorder.start(chunkSize); // collect 10ms of data
+	mediaRecorder.start(chunkSize);
 	console.log('MediaRecorder started', mediaRecorder);
+	return true;
 }
 
 /**
@@ -91,4 +89,17 @@ function handleDataAvailable(event) {
 /*Handles a stop in the recording*/
 function handleStop(event) {
   console.log('Recording stopped!', event);
+}
+
+function recordFeedback(visability) {
+
+
+
+    if (visability) {
+        par.appendChild(t);
+        document.body.appendChild(par);
+
+    } else {
+        par.removeChild(t);
+    }
 }

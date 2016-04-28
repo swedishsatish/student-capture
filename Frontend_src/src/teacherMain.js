@@ -9,7 +9,10 @@ var theBlob;
 
 
 
-recordButton.onclick = function() {startRecording(getStream())};
+recordButton.onclick = function() {
+    recordFeedback(true);
+    startRecording(getStream())
+};
 stopRecordButton.onclick = function() {finilize()};
 postButton.onclick = function () {postToServer(theBlob,"user","5DV121","1337")};
 
@@ -19,4 +22,5 @@ startStream('video#gum');
 
 function finilize(){
 	theBlob = stopRecording();
+	recordFeedback(false);
 }

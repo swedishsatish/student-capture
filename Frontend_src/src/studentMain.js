@@ -17,7 +17,9 @@ startStream('video#gum');
 
 setTimeout(function(){
     console.log("starting");
-    startRecording(getStream());
+    if(startRecording(getStream())) {
+        recordFeedback(true);
+    }
 }, 3000);
 
 
@@ -25,9 +27,8 @@ setTimeout(function(){
 
 function finilize(){
 	var theBlob;
-
+    console.log("finilize")
 	theBlob = stopRecording();
-	//recordedVideo.src = window.URL.createObjectURL(theBlob);
-	//recordedVideo.controls = true;
 	postToServer(theBlob,"user","5DV121","1337");
+	recordFeedback(false);
 }
