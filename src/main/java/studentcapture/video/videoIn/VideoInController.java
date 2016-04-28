@@ -61,12 +61,8 @@ public class VideoInController {
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
-
     private String randomizeFilename(String userID) {
         SecureRandom random = new SecureRandom();
-
         return "video_" + userID  + "_" + new BigInteger(130, random).toString(32).substring(0, 5)+ ".webm";
     }
-
-
 }
