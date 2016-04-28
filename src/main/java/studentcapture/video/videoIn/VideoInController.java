@@ -8,6 +8,10 @@ import studentcapture.config.StudentCaptureApplication;
 
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 
 @RestController
@@ -26,6 +30,7 @@ public class VideoInController {
             @PathVariable("id") String id,
             @RequestParam("userID") String userID,
             @RequestParam("videoName") String videoName,
+            @RequestParam("videoType") String videoType,
             @RequestParam("video") MultipartFile video) {
 
 
@@ -34,14 +39,43 @@ public class VideoInController {
         if (!temp.equals(id)) {
             System.err.println("No request done.");
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        } else if (!videoType.equals("question") && !videoType.equals("answer") && !videoType.equals("feedback")) {
+            System.err.println("Wrong video type. Videotype: " + videoType);
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
+        String request = "localhost:8181/DB/" + videoType;
 
+        String urlParameters = "userID=" + userID + "&videoName=" + videoName + "&video=" + video;
+        byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
+        int postDataLength = postData.length;
+
+        URL url = null;
+
+        HttpURLConnection conn = null;
+        try {
+            url = new URL(request);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setInstanceFollowRedirects(false);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("charset", "utf-8");
+            conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
+            conn.setUseCaches(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
+            wr.write(postData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         // TODO: Calle & Co: store info to DB and store video in FS
 
-        if (!video.isEmpty()) {
+        /*if (!video.isEmpty()) {
             try {
 
 
@@ -60,7 +94,8 @@ public class VideoInController {
         } else {
             System.err.println("Bad file.");
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        }
+        }*/
+
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
