@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS Users (
     UserId       SERIAL         PRIMARY KEY,
     FirstName    VARCHAR(64)    NOT NULL,
     LastName     VARCHAR(64)    NOT NULL,
-    PersNr       CHAR(10)       NOT NULL
+    PersNr       CHAR(10)       NOT NULL,
+    Pswd         TEXT           NOT NULL
     );
 
 CREATE TABLE IF NOT EXISTS Course (
