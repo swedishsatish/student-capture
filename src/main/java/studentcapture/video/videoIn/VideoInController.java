@@ -28,13 +28,11 @@ public class VideoInController {
             @RequestParam("videoName") String videoName,
             @RequestParam("video") MultipartFile video) {
 
-        String temp = RequestManager.hashCodeGenerator(userID);
+        String temp = RequestManager.hashCodeGenerator("user");
         if (!temp.equals(id)) {
             System.err.println("No request done.");
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
-
-
 
 
         // TODO: Calle & Co: store info to DB and store video in FS
@@ -42,11 +40,9 @@ public class VideoInController {
         if (!video.isEmpty()) {
             try {
 
-
                 BufferedOutputStream stream = new BufferedOutputStream(
                         new FileOutputStream(
                                 new File(StudentCaptureApplication.ROOT + "/" + videoName)));
-
 
                 FileCopyUtils.copy(video.getInputStream(), stream);
                 stream.close();
