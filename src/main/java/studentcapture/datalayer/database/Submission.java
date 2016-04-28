@@ -113,7 +113,7 @@ public class Submission {
 
      */
 
-    protected Hashtable<String,Object> getGrade(String studentID, String assID) {
+    public Hashtable<String,Object> getGrade(String studentID, String assID) {
         int studIDInt = Integer.parseInt(studentID);
         int assIDInt = Integer.parseInt(assID);
         Hashtable<String,Object> returnValues = new Hashtable<>(3);

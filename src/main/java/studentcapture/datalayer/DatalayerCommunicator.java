@@ -1,7 +1,6 @@
 package studentcapture.datalayer;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.FileInputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Submission;
+import studentcapture.datalayer.filesystem.FilesystemInterface;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -23,30 +23,29 @@ public class DatalayerCommunicator {
 
 
     @Autowired
-    private Submission dbc;
+    private Submission submission;
     @Autowired
-    private Assignment ass;
-
-    // Not that into what this stuff do, but
+    private Assignment assignment;
+    //@Autowired
+    FilesystemInterface fsi;
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.POST)
-    public MultiValueMap getGrade(@RequestParam(value = "name", required = false) String name,
-                                  @RequestParam(value = "course", required = false) String course,
-                                  @RequestParam(value = "exam", required = false) String exam) {
-
-        // Creates the object that should be returned
-        LinkedMultiValueMap<String, String> returnData = new LinkedMultiValueMap<String, String>();
+    public MultiValueMap getGrade(@RequestParam(value = "studentID", required = false) String studentID,
+                                  @RequestParam(value = "courseCode", required = false) String courseCode,
+                                  @RequestParam(value = "courseID", required = false) String courseID,
+                                  @RequestParam(value = "assignmentID", required = false) String assignmentID) {
 
 
-        // Do your DB and filesystem calls
-        //String grade = dbc.returnGrade(1, 2);
+        LinkedMultiValueMap<String, Object> returnData = new LinkedMultiValueMap<>();
 
-        // Add what you want to return to the map here
-        // EX: returndata.add("nyckel", variabel);
-        // EX: returndata.add("grade", grade);
+        returnData.add("grade", submission.getGrade(studentID, assignmentID).get("grade"));
+        returnData.add("time", submission.getGrade(studentID, assignmentID).get("time"));
+        returnData.add("teacher",  submission.getGrade(studentID, assignmentID).get("teacher"));
+        FileInputStream fs = fsi.getStudentVideo(courseCode,Integer.parseInt(courseID),Integer.parseInt(assignmentID),
+                Integer.parseInt(studentID));
 
+        returnData.add("video", fs);
 
-        // What is returned to the calling address
         return returnData;
     }
 
