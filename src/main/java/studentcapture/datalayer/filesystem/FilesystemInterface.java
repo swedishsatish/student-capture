@@ -94,7 +94,7 @@ public class FilesystemInterface {
 			   .SUBMISSION_VIDEO_FILENAME;
 
         try {
-            storeVideo(source,path);
+            storeFile(source,path);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -105,24 +105,23 @@ public class FilesystemInterface {
 
 
     /**
-     * Stores video at given path, if path doesn't exist it will be
+     * Stores file at given path, if path doesn't exist it will be
      * created.
-     * Throws exception in case of I/O issues.
+     *
      * @throws IOException in case that it can't create a folder at given path
      * @param source the video file to be stored
      * @param des destination for the video file
      */
-    private static void storeVideo(File source, String des) throws IOException {
+    private static void storeFile(File source, String des) throws IOException {
 
         File desFile = new File(des+"/" + source.getName());
 
         FileOutputStream outStream = new FileOutputStream(desFile);
         FileInputStream inStream   = new FileInputStream(source);
 
-        FileChannel inputChannel   =  inStream.getChannel();
+        FileChannel inputChannel   = inStream.getChannel();
         FileChannel outputChannel  = outStream.getChannel();
 
         outputChannel.transferFrom(inputChannel,0,inputChannel.size());
     }
-
 }
