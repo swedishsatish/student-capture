@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.context.WebApplicationContext;
+import studentcapture.config.StudentCaptureApplication;
 import studentcapture.config.StudentCaptureApplicationTests;
 
 import java.io.*;
@@ -29,17 +30,17 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testUploadCorrectHeaderAndEmptyBody() throws Exception {
-        mockMvc.perform(post("/uploadVideo")
+        mockMvc.perform(post("/uploadVideo/bugsbunny.webm")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testCorrectRequestWithWrongHeader() throws Exception {
-        byte []fileContent = FileCopyUtils.copyToByteArray(new File("/home/c13/c13fmg/edu/pvt/video.webm"));
+        byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
-        mockMvc.perform(fileUpload("/uploadVideo")
-                .file(new MockMultipartFile("video", fileContent))
+        mockMvc.perform(fileUpload("/uploadVideo/bugsbunny.webm")
+                .file(new MockMultipartFile("bugsbunny", fileContent))
                 .param("userID", "luddzz1337")
                 .param("videoName", "video.webm")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -48,54 +49,54 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testUploadWrongHeaderAndEmptyBody() throws Exception {
-        mockMvc.perform(post("/uploadVideo")
+        mockMvc.perform(post("/uploadVideo/bugsbunny.webm")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnsupportedMediaType());
     }
 
     @Test
-    public void testCorrectVideoUpload() throws Exception {
-        byte []fileContent = FileCopyUtils.copyToByteArray(new File("/home/c13/c13fmg/edu/pvt/video.webm"));
+    public void testCorrectVideoUploadWithoutRequest() throws Exception {
+        byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
-        mockMvc.perform(fileUpload("/uploadVideo")
+        mockMvc.perform(fileUpload("/uploadVideo/bugsbunny.webm")
                 .file(new MockMultipartFile("video", fileContent))
                 .param("userID", "luddzz1337")
-                .param("videoName", "video.webm")
+                .param("videoName", "bugsbunny.webm")
                 .contentType("multipart/form-data"))
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testUploadWithWrongAmountOfParams() throws Exception {
-        byte []fileContent = FileCopyUtils.copyToByteArray(new File("/home/c13/c13fmg/edu/pvt/video.webm"));
+        byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
-        mockMvc.perform(fileUpload("/uploadVideo")
+        mockMvc.perform(fileUpload("/uploadVideo/bugsbunny.webm")
                 .file(new MockMultipartFile("video", fileContent))
-                .param("videoName", "video.webm")
+                .param("videoName", "bugsbunny.webm")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testUploadWithWrongParamNames() throws Exception {
-        byte []fileContent = FileCopyUtils.copyToByteArray(new File("/home/c13/c13fmg/edu/pvt/video.webm"));
+        byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
-        mockMvc.perform(fileUpload("/uploadVideo")
+        mockMvc.perform(fileUpload("/uploadVideo/bugsbunny.webm")
                 .file(new MockMultipartFile("video", fileContent))
                 .param("userIDddd", "luddzz1337")
-                .param("videoName", "video.webm")
+                .param("videoName", "bugsbunny.webm")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testUploadWithWrongParamValues() throws Exception {
-        byte []fileContent = FileCopyUtils.copyToByteArray(new File("/home/c13/c13fmg/edu/pvt/video.webm"));
+        byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
-        mockMvc.perform(fileUpload("/uploadVideo")
+        mockMvc.perform(fileUpload("/uploadVideo/bugsbunny.webm")
                 .file(new MockMultipartFile("videoName", fileContent))
                 .param("userID", "luddzz1337")
-                .param("video", "video.webm")
+                .param("video", "bugsbunny.webm")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isInternalServerError());
     }
@@ -104,10 +105,10 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testUploadWithEmptyVideo() throws Exception {
         byte []fileContent = {};
 
-        mockMvc.perform(fileUpload("/uploadVideo")
+        mockMvc.perform(fileUpload("/uploadVideo/bugsbunny.webm")
                 .file(new MockMultipartFile("video", fileContent))
                 .param("userID", "luddzz1337")
-                .param("videoName", "video.webm")
+                .param("videoName", "bugsbunny.webm")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isBadRequest());
     }

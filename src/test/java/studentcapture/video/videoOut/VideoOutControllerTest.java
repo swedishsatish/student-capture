@@ -30,7 +30,7 @@ public class VideoOutControllerTest extends StudentCaptureApplicationTests {
     @Test
     public void testVideoDownload() throws Exception {
 
-        mockMvc.perform(get("/videoDownload"))
+        mockMvc.perform(get("/videoDownload/bugsbunny"))
                 .andExpect(status().isOk())
                 .andExpect(
                         content().contentType("video/webm"));
