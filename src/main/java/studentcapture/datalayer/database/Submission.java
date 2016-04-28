@@ -7,10 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.Date;
-
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class Submission {
@@ -109,42 +106,77 @@ public class Submission {
 
      */
 
-    protected ArrayList<Object> getGrade(String studentID, String assID) {
+    protected Hashtable<String,Object> getGrade(String studentID, String assID) {
         int studIDInt = Integer.parseInt(studentID);
         int assIDInt = Integer.parseInt(assID);
-        ArrayList<Object> returnValues = new ArrayList(3);
-        ArrayList<String> queriesToSend = new ArrayList(3);
-        String getGrade = "SELECT grade FROM submission WHERE (studentid = ? AND assignmentid = ?)";
+        Hashtable<String,Object> returnValues = new Hashtable<>(3);
+        ArrayList<String[]> queriesToSend = new ArrayList(3);
+
+        String getGrade[] = {"grade", "SELECT grade FROM submission WHERE (studentid = ? AND assignmentid = ?)"};
+        String getTimeStamp[] ={"time", "SELECT submissiondate FROM submission WHERE (studentid = ? AND assignmentid = ?)"};
+        String getTeacherName[] = { "teacher","SELECT firstname FROM submission JOIN users ON (teacherid = userid) WHERE (studentid = ? AND assignmentid = ?)"};
         queriesToSend.add(getGrade);
-        String getTimeStamp = "SELECT submissiondate FROM submission WHERE (studentid = ? AND assignmentid = ?)";
         queriesToSend.add(getTimeStamp);
-        String getTeacherName = "SELECT firstname FROM submission JOIN users ON (techerid = userid) WHERE (studentid = ? AND assignment = ?)";
         queriesToSend.add(getTeacherName);
 
 
-        String getData = "SELECT grade, submissiondate, firstname FROM submission JOIN users ON (teacherid = userid)" +
-                " WHERE (assignmentid = ? AND studentid = ?);";
-
-        for (String s : queriesToSend) {
+        for (String s[] : queriesToSend) {
             try {
-                String grade = jdbcTemplate.queryForObject(s, new Object[]{studIDInt, assIDInt}, String.class);
+                String grade = null;
+                if(s[0].equals("teacher") && !checkTeacherId(assIDInt)){
+                    returnValues.put(s[0],"Missing Grader");
+
+                }else{
+
+                     grade = jdbcTemplate.queryForObject(s[1], new Object[]{studIDInt, assIDInt}, String.class);
+                }
                 if (grade == null) {
-                    returnValues.add("Missing grade");
+                    switch (s[0]){
+
+                        case "grade" :
+                            returnValues.put(s[0],"Missing grade");
+                            break;
+                        case "time" :
+                            returnValues.put(s[0],"No timestamp found");
+                            break;
+                        case "teacher" :
+                            returnValues.put(s[0],"Missing Grader");
+                            break;
+
+                        default:
+                            returnValues.put(s[0],"Invalid query key, See Submission.java");
+                            break;
+
+                    }
                 } else {
                     grade = grade.trim();
-                    returnValues.add(grade);
+                    returnValues.put(s[0],grade);
                 }
             } catch (IncorrectResultSizeDataAccessException e) {
-                returnValues.add("Query found no data");
-                break;
+                returnValues.put(s[0],"Query found no data");
             } catch (DataAccessException e1) {
-                returnValues.add("Dataaccess");
-                break;
+                returnValues.put(s[0],"Dataaccess not found");
+
             }
         }
         return returnValues;
 
     }
+
+    /**
+     * Checks if the submission has a grader
+     *
+     * @param assID ID of the assignment.
+     * @return      true if a teacherid exists, else false.
+     */
+    public boolean checkTeacherId(int assID){
+
+        String checkForTeacher = "SELECT teacherid FROM submission WHERE ( assignmentid = ?)";
+        return jdbcTemplate.queryForObject(checkForTeacher, new Object[]{assID}, String.class) != null;
+
+
+    }
+
 
     /**
 
