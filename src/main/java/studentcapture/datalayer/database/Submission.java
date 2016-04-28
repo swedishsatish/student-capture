@@ -11,11 +11,7 @@ import studentcapture.datalayer.database.Participant.ParticipantWrapper;
 import javax.sql.DataSource;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class Submission {
@@ -124,9 +120,7 @@ public class Submission {
         String getTimeStamp[] ={"time", "SELECT submissiondate FROM submission WHERE (studentid = ? AND assignmentid = ?)"};
         String getTeacherName[] = { "teacher","SELECT firstname FROM submission JOIN users ON (teacherid = userid) WHERE (studentid = ? AND assignmentid = ?)"};
         queriesToSend.add(getGrade);
-        String getTimeStamp = "SELECT submissiondate FROM submission WHERE (studentid = ? AND assignmentid = ?)";
         queriesToSend.add(getTimeStamp);
-        String getTeacherName = "SELECT firstname FROM submission JOIN users ON (techerid = userid) WHERE (studentid = ? AND assignment = ?)";
         queriesToSend.add(getTeacherName);
 
 
