@@ -1,10 +1,24 @@
 package studentcapture.datalayer.filesystem;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.*;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 
+/**
+ * Interface to mangae the file system moosefs.
+ *
+ * Folders are structured as followed:
+ *
+ *  courseCode
+ *   courseID
+ *     assignmentID
+ *      //assigment.avi
+ *     studentID
+ *        ansID
+ *          //ans.avi
+ */
 public class FilesystemInterface {
+
 
 	/**
 	 * Generates a string representing a path to an assignments directory on 
@@ -63,26 +77,51 @@ public class FilesystemInterface {
    	}
 	
 	/**
-     * store the students video for an assignment at a course.
-     * 
-     * 
+     * Store the students video for an assignment at a course.
+	 * If student folder doesn't exist a folder will be created.
+     *
      * @param courseCode the code for the course. 
      * @param courseID course id from the database
      * @param assigmentId from database
      * @param userId from database
      * @return true if video was stored successfully
      */
-	public FileOutputStream storeStudentVideo(String courseCode, int courseId, 
-		   int assignmentId, int userId) {
-		String path = FilesystemInterface.generatePath(courseCode, courseId, 
+	public static boolean storeStudentVideo(String courseCode, int courseId,
+		   int assignmentId, int userId, File source) {
+
+        String path = FilesystemInterface.generatePath(courseCode, courseId,
 			   assignmentId, userId) + FilesystemConstants
 			   .SUBMISSION_VIDEO_FILENAME;
-	   
-	   	try {
-		   return new FileOutputStream(path);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			return null;
-		}
+
+        try {
+            storeFile(source,path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
 	}
+
+
+    /**
+     * Stores file at given path, if path doesn't exist it will be
+     * created.
+     *
+     * @throws IOException in case that it can't create a folder at given path
+     * @param source the video file to be stored
+     * @param des destination for the video file
+     */
+    private static void storeFile(File source, String des) throws IOException {
+
+        File desFile = new File(des+"/" + source.getName());
+
+        FileOutputStream outStream = new FileOutputStream(desFile);
+        FileInputStream inStream   = new FileInputStream(source);
+
+        FileChannel inputChannel   = inStream.getChannel();
+        FileChannel outputChannel  = outStream.getChannel();
+
+        outputChannel.transferFrom(inputChannel,0,inputChannel.size());
+    }
 }
