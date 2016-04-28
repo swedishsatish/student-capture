@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -109,7 +108,8 @@ public class Submission {
      * @return A list containing the grade, date, and grader
 
      */
-    public ArrayList<Object> getGrade(String studentID, String assID) {
+
+    protected ArrayList<Object> getGrade(String studentID, String assID) {
         int studIDInt = Integer.parseInt(studentID);
         int assIDInt = Integer.parseInt(assID);
         ArrayList<Object> returnValues = new ArrayList(3);
@@ -143,6 +143,7 @@ public class Submission {
             }
         }
         return returnValues;
+
     }
 
     /**

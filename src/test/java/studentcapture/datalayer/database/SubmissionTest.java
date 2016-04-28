@@ -29,8 +29,8 @@ public class SubmissionTest extends StudentCaptureApplicationTests {
     public void setUp() throws Exception {
 
         //INSERTING A USER
-        jdbcTemplate.update("INSERT INTO users (userid , firstname , lastname , persnr ) " +
-                "VALUES ('1337', 'Gustav', 'Gustavsson','1234567890')");
+        jdbcTemplate.update("INSERT INTO users (userid , firstname , lastname , persnr, pswd ) " +
+                "VALUES ('1337', 'Gustav', 'Gustavsson','1234567890', 'X')");
 
         //INSERTING A COURSE
         jdbcTemplate.update("INSERT INTO course (courseid , year , term , coursecode , coursename ) " +
@@ -98,6 +98,3 @@ public class SubmissionTest extends StudentCaptureApplicationTests {
     }
 
 }
-
-
-

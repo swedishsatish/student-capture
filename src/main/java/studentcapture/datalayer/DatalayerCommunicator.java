@@ -6,10 +6,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import studentcapture.datalayer.database.Assignment;
-<<<<<<< HEAD
-=======
 import studentcapture.datalayer.database.Submission;
->>>>>>> 17312bcfbb7b7c56550b01f1de7657ec69c2e440
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -21,14 +18,10 @@ public class DatalayerCommunicator {
 
 
     @Autowired
-<<<<<<< HEAD
-    Assignment ass;
-    //private DatabaseCommunicator dbc;
-=======
     private Submission dbc;
     @Autowired
     private Assignment ass;
->>>>>>> 17312bcfbb7b7c56550b01f1de7657ec69c2e440
+
     // Not that into what this stuff do, but
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.POST)
