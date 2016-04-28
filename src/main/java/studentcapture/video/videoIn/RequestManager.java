@@ -1,6 +1,13 @@
 package studentcapture.video.videoIn;
 
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.SystemPropertyUtils;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 
 /**
@@ -23,14 +30,16 @@ public class RequestManager {
     public String requestPOSTVideo(
             @RequestParam("userID") String userID,
             @RequestParam("courseID") String courseID,
-            @RequestParam("examID") String examID
-    ) throws Exception {
+            @RequestParam("examID") String examID) {
 
+
+        // TODO: FIX PLZ
         if (!validUser(userID, courseID, examID)) {
-            throw new Exception("Request not valid.");
+             //   throw new Exception("Request not valid.");
         }
 
         String uploadURL = "/uploadVideo/" + HashCodeGenerator.generateHash(userID);
+
 
         return uploadURL;
     }
@@ -47,8 +56,7 @@ public class RequestManager {
     public String requestGETVideo(
             @RequestParam("userID") String userID,
             @RequestParam("courseID") String courseID,
-            @RequestParam("examID") String examID
-    ) {
+            @RequestParam("examID") String examID) {
 
         //TODO: GETVideo method
 

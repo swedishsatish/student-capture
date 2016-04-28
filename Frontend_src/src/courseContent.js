@@ -14,6 +14,7 @@ var UserGist = React.createClass({
         lastGistUrl: lastGist.html_url
       });
     }.bind(this));
+
   },
 
   componentWillUnmount: function() {
@@ -64,40 +65,87 @@ var UserGist = React.createClass({
     xhr = null;
   }
 },
+startRecording: function () {
+  var options = {mimeType: 'video/webm'};
+  recordedBlobs = [];
+  try {
+    mediaRecorder = new MediaRecorder(window.stream, options);
+  } catch (e0) {
+    console.log('Unable to create MediaRecorder with options Object: ', e0);
+    try {
+      options = {mimeType: 'video/webm,codecs=vp9'};
+      mediaRecorder = new MediaRecorder(window.stream, options);
+    } catch (e1) {
+      console.log('Unable to create MediaRecorder with options Object: ', e1);
+      try {
+        options = 'video/vp8'; // Chrome 47
+        mediaRecorder = new MediaRecorder(window.stream, options);
+      } catch (e2) {
+        alert('MediaRecorder is not supported by this browser.\n\n' +
+            'Try Firefox 29 or later, or Chrome 47 or later, with Enable experimental Web Platform features enabled from chrome://flags.');
+        console.error('Exception while creating MediaRecorder:', e2);
+        return;
+      }
+    }
+  }
+  console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
+  recordButton.textContent = 'Stop Recording';
+
+  downloadButton.disabled = true;
+  mediaRecorder.onstop = handleStop;
+  mediaRecorder.ondataavailable = handleDataAvailable;
+  mediaRecorder.start(10); // collect 10ms of data
+  console.log('MediaRecorder started', mediaRecorder);
+},
+
+handleSourceOpen: function (event) {
+  console.log('MediaSource opened');
+  sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp8"');
+  console.log('Source buffer: ', sourceBuffer);
+},
+
+ handleDataAvailable: function(event) {
+  if (event.data && event.data.size > 0) {
+    recordedBlobs.push(event.data);
+  }
+},
+ handleStop: function(event) {
+  console.log('Recorder stopped: ', event);
+},
+
+ toggleRecording: function() {
+  if (recordButton.textContent === 'Start Recording') {
+    startRecording();
+  } else {
+    stopRecording();
+    recordButton.textContent = 'Start Recording';
+
+    downloadButton.disabled = false;
+  }
+},
+
+ stopRecording: function() {
+  mediaRecorder.stop();
+  console.log('Recorded Blobs: ', recordedBlobs);
+  recordedVideo.controls = true;
+	play();
+},
+
+ play: function() {
+  var superBuffer = new Blob(recordedBlobs, {type: 'video/webm'});
+  recordedVideo.src = window.URL.createObjectURL(superBuffer);
+},
   render: function() {
+
     return (
-      <div>
-        {this.state.username}'s last gist is
-        <a href={this.state.lastGistUrl}>here</a>.
+      <div id="videoDivFrame">
 
-
-
-
-          		<h1>Spike - Media</h1>
-          		<p><strong>This demo requires Firefox 29 or later, or Chrome 47 or later</	strong></p>
-
-            <video width="320" height="240" controls src="https://storm.cs.umu.se:8443/videoDownload/bugsbunny" type="video/webm" />
-
-            <button onClick={this.handleClick} id="record">Start Recording</button>
-            <button id="download" disabled>Upload</button>
-
-
-      	<button onClick={this.POSTtoserver} id="POSTVideo">POST Video</button>
-
-      	<input type="text" id="videoname" name="Video: " />
-
-
-      	<button id="GETVideo">GET Video</button>
-
-
-
-      <p>Uploaded Videos </p>
-        <p>Your browser does not support iframes.</p>
-
+            <iframe src="video.html"></iframe>
 
         </div>
     );
   }
 });
+
 
 ReactDOM.render(<UserGist source="https://api.github.com/users/octocat/gists" />, document.getElementById('courseContent'));
