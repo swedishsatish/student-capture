@@ -3,8 +3,10 @@ package studentcapture.video.videoIn;
 import org.springframework.http.*;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.config.StudentCaptureApplication;
+import studentcapture.video.VideoInfo;
 
 
 import java.io.*;
@@ -44,58 +46,13 @@ public class VideoInController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
-        String request = "localhost:8181/DB/" + videoType;
+        final String uri = "localhost:8181/DB/" + videoType;
 
-        String urlParameters = "userID=" + userID + "&videoName=" + videoName + "&video=" + video;
-        byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-        int postDataLength = postData.length;
+        VideoInfo newVid = new VideoInfo(video, userID, videoName);
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.postForObject(uri, newVid, String.class);
 
-        URL url = null;
-
-        HttpURLConnection conn = null;
-        try {
-            url = new URL(request);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setInstanceFollowRedirects(false);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestProperty("charset", "utf-8");
-            conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-            conn.setUseCaches(false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
-            wr.write(postData);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        // TODO: Calle & Co: store info to DB and store video in FS
-
-        /*if (!video.isEmpty()) {
-            try {
-
-
-                BufferedOutputStream stream = new BufferedOutputStream(
-                        new FileOutputStream(
-                                new File(StudentCaptureApplication.ROOT + "/" + videoName)));
-
-
-                FileCopyUtils.copy(video.getInputStream(), stream);
-                stream.close();
-            } catch (Exception e) {
-
-                System.err.println("Failed to upload file.");
-                return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-            }
-        } else {
-            System.err.println("Bad file.");
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        }*/
-
+        System.out.println(result);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

@@ -1,10 +1,20 @@
 package studentcapture.datalayer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import studentcapture.config.StudentCaptureApplication;
+import studentcapture.video.VideoInfo;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -39,6 +49,53 @@ public class DatalayerCommunicator {
 
         // What is returned to the calling address
         return returnData;
+    }
+
+    @CrossOrigin()
+    @RequestMapping(value = "/upload/question", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
+    public ResponseEntity<String> uploadQuestion(@RequestBody VideoInfo videoToUpload)
+    {
+        System.out.println("SUCCESS");
+        return uploadVideo(videoToUpload, "");
+    }
+
+    @CrossOrigin()
+    @RequestMapping(value = "/upload/answer", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
+    public ResponseEntity<String> uploadAnswer(@RequestBody VideoInfo videoToUpload)
+    {
+        System.out.println("SUCCESS");
+        return uploadVideo(videoToUpload, "");
+    }
+
+    @CrossOrigin()
+    @RequestMapping(value = "/upload/feedback", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
+    public ResponseEntity<String> uploadFeedback(@RequestBody VideoInfo videoToUpload)
+    {
+        System.out.println("SUCCESS");
+        return uploadVideo(videoToUpload, "");
+    }
+
+    public ResponseEntity<String> uploadVideo (VideoInfo videoToUpload, String uploadPath) {
+        MultipartFile video = videoToUpload.getVideoFile();
+        if (!video.isEmpty()) {
+            try {
+                BufferedOutputStream stream = new BufferedOutputStream(
+                        new FileOutputStream(
+                                new File(uploadPath)));
+
+
+                FileCopyUtils.copy(video.getInputStream(), stream);
+                stream.close();
+            } catch (Exception e) {
+
+                System.err.println("Failed to upload file.");
+                return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            System.err.println("Bad file.");
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
 }
