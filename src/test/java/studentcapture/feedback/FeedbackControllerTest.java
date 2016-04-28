@@ -100,4 +100,15 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void shouldReturnJsonOnError() throws Exception {
+        URI targetUrl = getUri();
+        when(templateMock.getForObject(targetUrl, HashMap.class)).thenThrow(new RestClientException("Exception message"));
+        mockMvc.perform(get("/feedback/get")
+                .param("userID", "Anna")
+                .param("assID", "1"))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
+    }
 }
