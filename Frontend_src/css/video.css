@@ -1,0 +1,7 @@
+iframe {
+   border: medium double rgb(250,0,255);
+   width: auto;
+}
+ video {
+     object-fit: cover;
+ }

@@ -17,6 +17,7 @@
 
 /* globals MediaRecorder */
 
+/*
 var mediaSource = new MediaSource();
 mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
 var mediaRecorder;
@@ -32,14 +33,15 @@ var downloadButton = document.querySelector('button#download');
 
 var POSTButton = document.querySelector('button#POSTVideo');
 
-var GETButton = document.querySelector('button#GETVideo');
-
 
 
 recordButton.onclick = toggleRecording;
+
 downloadButton.onclick = download;
+
+
 POSTButton.onclick = POSTtoserver;
-GETButton.onclick = getVideo;
+
 
 
 // window.isSecureContext could be used for Chrome
@@ -180,51 +182,67 @@ function getVideo() {
 }
     xhr.open(method, url, true);
     xhr.send();
-    
 
 
 }
 
 function POSTtoserver() {
-    var blob = new Blob(recordedBlobs, {type: 'video/webm'});
-    var data = new FormData();
-    var url = "https://localhost:8443/uploadVideo/";
-    var params = "studentVideo=video";
-    var method = "POST";
-    
-    data.append("video", blob);
-    data.append("videoName", "video.webm");
-    data.append("userID", "Ludvigo1232355");
-    
     var xhr = new XMLHttpRequest();
-  
-  if ("withCredentials" in xhr) 
-  {
-    // XHR for Chrome/Firefox/Opera/Safari.
-    xhr.open(method, url, true);
-    //xhr.onreadystatechange = function() {};
-    //xhr.open("POST", url, true);
-    //Send the proper header information along with the request
-    //xhr.setRequestHeader("Content-type", "multipart/form-data; boundary=frontier");
-    xhr.send(data);
-    
-  }
-  
-  else if (typeof XDomainRequest != "undefined")
-  {
-  
-    // XDomainRequest for IE.
-    xhr = new XDomainRequest();
-    xhr.open(method, url);
-    //xhr.open("POST", url, true);
-    //Send the proper header information along with the request
-    //xhr.setRequestHeader("Content-type", "multipart/form-data; boundary=frontier");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            var blob = new Blob(recordedBlobs, {type: 'video/webm'});
+            var dataPOST = new FormData();
 
-    xhr.send(data);
-  } else {
-    // CORS not supported.
-    xhr = null;
-  }
+            console.log(xhr.responseText);
+
+            var urlPOST = "https://localhost:8443/uploadVideo/plopp";
+            var methodPOST = "POST";
+
+
+            dataPOST.append("video", blob);
+            dataPOST.append("videoName", "video.webm");
+            dataPOST.append("userID", "user");
+
+            var xhrPOST = new XMLHttpRequest();
+
+            if ("withCredentials" in xhr) {
+                // XHR for Chrome/Firefox/Opera/Safari.
+                xhrPOST.open(methodPOST, urlPOST, true);
+                //xhr.onreadystatechange = function() {};
+                //xhr.open("POST", url, true);
+                //Send the proper header information along with the request
+                //xhr.setRequestHeader("Content-type", "multipart/form-data; boundary=frontier");
+                xhrPOST.send(dataPOST);
+
+            } else if (typeof XDomainRequest != "undefined") {
+
+                // XDomainRequest for IE.
+                xhrPOST = new XDomainRequest();
+                xhrPOST.open(methodPOST, urlPOST);
+                //xhr.open("POST", url, true);
+                //Send the proper header information along with the request
+                //xhr.setRequestHeader("Content-type", "multipart/form-data; boundary=frontier");
+
+                xhrPOST.send(dataPOST);
+            } else {
+                // CORS not supported.
+                xhrPOST = null;
+            }
+        }
+    }
+
+        var userID = "user";
+        var courseID = "5DV121";
+        var examID = "1337";
+
+
+        var url = "https://localhost:8443/video/inrequest?userID=" + userID +"&courseID=" + courseID+ "&examID=" + examID;
+        var method = "GET";
+
+        xhr.open(method, url, true);
+
+        xhr.send();
+
 }
 
 function download() {
@@ -254,4 +272,69 @@ function download() {
     //document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   }, 100);
+}
+
+*/
+
+var recordButton = document.querySelector('button#record');
+var stopRecordButton = document.querySelector('button#stopRecord');
+var recordedVideo = document.querySelector('video#recorded');
+
+recordButton.onclick = function() {startRecording(getStream())};
+stopRecordButton.onclick = function() {stopAndPlay()};
+
+
+startStream('video#gum');
+
+function stopAndPlay(){
+	var theBlob;
+
+	theBlob = stopRecording();
+	recordedVideo.src = window.URL.createObjectURL(theBlob);
+	recordedVideo.controls = true;
+	POSTtoserver(theBlob);
+}
+
+function POSTtoserver(blob) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            var dataPOST = new FormData();
+
+            console.log(xhr.responseText);
+
+            var urlPOST = "https://localhost:8443" + xhr.responseText;
+            var methodPOST = "POST";
+
+            dataPOST.append("video", blob);
+            dataPOST.append("videoName", "video.webm");
+            dataPOST.append("userID", "user");
+
+            var xhrPOST = new XMLHttpRequest();
+
+            if ("withCredentials" in xhr) { // Chrome, Firefox, Opera
+                xhrPOST.open(methodPOST, urlPOST, true);
+                xhrPOST.send(dataPOST);
+
+            } else if (typeof XDomainRequest != "undefined") { // IE
+                xhrPOST = new XDomainRequest();
+                xhrPOST.open(methodPOST, urlPOST);
+                xhrPOST.send(dataPOST);
+            } else { //None
+                xhrPOST = null;
+            }
+        }
+    }
+
+        var userID = "user";
+        var courseID = "5DV121";
+        var examID = "1337";
+
+        var url = "https://localhost:8443/video/inrequest?userID=" + userID +"&courseID=" + courseID+ "&examID=" + examID;
+        var method = "GET";
+
+        xhr.open(method, url, true);
+
+        xhr.send();
+
 }
