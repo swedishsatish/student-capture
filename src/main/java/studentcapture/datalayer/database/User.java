@@ -1,10 +1,15 @@
 package studentcapture.datalayer.database;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.util.List;
 
 public class User {
 
-
+    // Use this template to send queries to the database
+    @Autowired
+    protected JdbcTemplate jdbcTemplate;
 
     /**
 
