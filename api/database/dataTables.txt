@@ -1,3 +1,6 @@
+-- This line removes old tables, it's in a comment for safety reasons. Please make sure it's safe before uncommenting!
+-- drop table assignment, course, submission, participant, users cascade;
+
 CREATE TABLE IF NOT EXISTS Users (
     UserId       SERIAL         PRIMARY KEY,
     FirstName    VARCHAR(64)    NOT NULL,
