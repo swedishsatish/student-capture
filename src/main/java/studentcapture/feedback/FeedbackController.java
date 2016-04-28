@@ -31,7 +31,7 @@ public class FeedbackController {
     private RestTemplate requestSender;
 
     @RequestMapping(value = "get", method = RequestMethod.GET)
-    public String handleFeedbackRequestFromStudent(@RequestParam(value = "userID", required = true) String userID,
+    public HashMap handleFeedbackRequestFromStudent(@RequestParam(value = "userID", required = true) String userID,
                                                    @RequestParam(value = "assID", required = true) String assID) {
         //TODO Unsafe data needs to be cleaned
 
@@ -41,12 +41,12 @@ public class FeedbackController {
                 .queryParam("assID", assID)
                 .build()
                 .toUri();
-        String response = null;
+        HashMap<String, String> response = new HashMap<String, String>();
         try {
-            response = requestSender.getForObject(targetUrl, String.class);
+            response = requestSender.getForObject(targetUrl, HashMap.class);
         } catch (RestClientException e) {
             //TODO Maybe not good to send exceptions to browser?
-            response = "{error:" + e.getMessage() + "}";
+            response.put("error", e.getMessage());
         }
         return response;
     }
