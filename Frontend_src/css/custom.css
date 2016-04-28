@@ -87,3 +87,16 @@ h1, h2, h3, h4, h5, h6 {
 	line-height: 50px;
 	margin:0;
 }
+
+#videoDivFrame {
+    height: calc( 100% - 70px );
+    width: 100%;
+
+}
+
+iframe {
+    height: inherit;
+    width: inherit;
+    overflow: hidden;
+    border: 0px;
+}
