@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class Submission {
@@ -161,7 +162,7 @@ public class Submission {
      */
     private final static String getAllUngradedStatement = "SELECT * FROM "
     		+ "Submission WHERE (AssignmentId=?) AND (Grade IS NULL)";
-    protected List<SubmissionWrapper> getAllUngraded(String assId) {
+    protected Optional<List<SubmissionWrapper>> getAllUngraded(String assId) {
     	List<SubmissionWrapper> submissions = new ArrayList<>();
 
     	try {
@@ -180,13 +181,13 @@ public class Submission {
 
 	    } catch (IncorrectResultSizeDataAccessException e){
 			//TODO
-		    return null;
+		    return Optional.empty();
 		} catch (DataAccessException e1){
 			//TODO
-			return null;
+			return Optional.empty();
 		}
 
-        return submissions;
+        return Optional.of(submissions);
     }
 
     /**
@@ -201,7 +202,7 @@ public class Submission {
 
     private final static String getAllSubmissionsStatement = "SELECT * FROM "
     		+ "Submission WHERE (AssignmentId=?)";
-    protected List<SubmissionWrapper> getAllSubmissions(String assId) {
+    protected Optional<List<SubmissionWrapper>> getAllSubmissions(String assId) {
     	List<SubmissionWrapper> submissions = new ArrayList<>();
 
     	try {
@@ -220,13 +221,13 @@ public class Submission {
 
 	    } catch (IncorrectResultSizeDataAccessException e){
 			//TODO
-		    return null;
+		    return Optional.empty();
 		} catch (DataAccessException e1){
 			//TODO
-			return null;
+			return Optional.empty();
 		}
 
-        return submissions;
+        return Optional.of(submissions);
     }
 
     public class SubmissionWrapper {
