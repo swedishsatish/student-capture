@@ -11,11 +11,8 @@ import studentcapture.datalayer.database.Participant.ParticipantWrapper;
 import javax.sql.DataSource;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Repository
 public class Submission {
@@ -25,10 +22,15 @@ public class Submission {
     protected JdbcTemplate jdbcTemplate;
 
     /**
+
      * Add a new submission for an assignment
+
      * @param assID Unique identifier for the assignment we're submitting to
+
      * @param studentID Unique identifier for the student submitting
+
      * @return True if everything went well, otherwise false
+
      */
 
     protected boolean addSubmission(String assID, String studentID) {
@@ -37,11 +39,17 @@ public class Submission {
 
      /**
      * Add a grade for a submission
+
      * @param assID Unique identifier for the assignment with the submission being graded
+
      * @param teacherID Unique identifier for the teacher grading
+
      * @param studentID Unique identifier for the student being graded
+
      * @param grade The grade of the submission
+
      * @return True if everything went well, otherwise false
+
      */
 
     protected boolean setGrade(String assID, String teacherID, String studentID, String grade) {
@@ -56,10 +64,15 @@ public class Submission {
     }
 
     /**
+
      * Remove a submission
+
      * @param assID Unique identifier for the assignment with the submission being removed
+
      * @param studentID Unique identifier for the student whose submission is removed
+
      * @return True if everything went well, otherwise false
+
      */
 
     protected boolean removeSubmission(String assID, String studentID) {
@@ -67,43 +80,90 @@ public class Submission {
     }
 
     /**
-     * Get information about the grade of a submission
-     * @param assID Unique identifier for the assignment submission grade bra
-     * @param studentID Unique identifier for the student associated with the submission
-     * @return A list containing the grade, date, and grader
+
+     * Changes the grade of a submission
+
+     * @param assID Unique identifier for the assignment with the submission being graded
+
+     * @param teacherID Unique identifier of the teacher updating
+
+     * @param studentID Unique identifier for the student
+
+     * @param grade The new grade of the submission
+
+     * @param date The date the grade was updated
+
+     * @return True if everything went well, otherwise false
+
      */
 
-    protected ArrayList<Object> getGrade(String studentID, String assID) {
+    protected boolean updateGrade(String assID, String teacherID, String studentID, String grade, Date date) {
+        return true;
+    }
+
+    /**
+
+     * Get information about the grade of a submission
+
+     * @param assID Unique identifier for the assignment submission grade bra
+
+     * @param studentID Unique identifier for the student associated with the submission
+
+     * @return A list containing the grade, date, and grader
+
+     */
+
+    protected Hashtable<String,Object> getGrade(String studentID, String assID) {
         int studIDInt = Integer.parseInt(studentID);
         int assIDInt = Integer.parseInt(assID);
-        ArrayList<Object> returnValues = new ArrayList(3);
-        ArrayList<String> queriesToSend = new ArrayList(3);
-        String getGrade = "SELECT grade FROM submission WHERE (studentid = ? AND assignmentid = ?)";
+        Hashtable<String,Object> returnValues = new Hashtable<>(3);
+        ArrayList<String[]> queriesToSend = new ArrayList(3);
+
+        String getGrade[] = {"grade", "SELECT grade FROM submission WHERE (studentid = ? AND assignmentid = ?)"};
+        String getTimeStamp[] ={"time", "SELECT submissiondate FROM submission WHERE (studentid = ? AND assignmentid = ?)"};
+        String getTeacherName[] = { "teacher","SELECT firstname FROM submission JOIN users ON (teacherid = userid) WHERE (studentid = ? AND assignmentid = ?)"};
         queriesToSend.add(getGrade);
-        String getTimeStamp = "SELECT submissiondate FROM submission WHERE (studentid = ? AND assignmentid = ?)";
         queriesToSend.add(getTimeStamp);
-        String getTeacherName = "SELECT firstname FROM submission JOIN users ON (techerid = userid) WHERE (studentid = ? AND assignment = ?)";
         queriesToSend.add(getTeacherName);
 
 
-        String getData = "SELECT grade, submissiondate, firstname FROM submission JOIN users ON (teacherid = userid)" +
-                " WHERE (assignmentid = ? AND studentid = ?);";
-
-        for (String s : queriesToSend) {
+        for (String s[] : queriesToSend) {
             try {
-                String grade = jdbcTemplate.queryForObject(s, new Object[]{studIDInt, assIDInt}, String.class);
+                String grade = null;
+                if(s[0].equals("teacher") && !checkTeacherId(assIDInt)){
+                    returnValues.put(s[0],"Missing Grader");
+
+                }else{
+
+                     grade = jdbcTemplate.queryForObject(s[1], new Object[]{studIDInt, assIDInt}, String.class);
+                }
                 if (grade == null) {
-                    returnValues.add("Missing grade");
+                    switch (s[0]){
+
+                        case "grade" :
+                            returnValues.put(s[0],"Missing grade");
+                            break;
+                        case "time" :
+                            returnValues.put(s[0],"No timestamp found");
+                            break;
+                        case "teacher" :
+                            returnValues.put(s[0],"Missing Grader");
+                            break;
+
+                        default:
+                            returnValues.put(s[0],"Invalid query key, See Submission.java");
+                            break;
+
+                    }
                 } else {
                     grade = grade.trim();
-                    returnValues.add(grade);
+                    returnValues.put(s[0],grade);
                 }
             } catch (IncorrectResultSizeDataAccessException e) {
-                returnValues.add("Query found no data");
-                break;
+                returnValues.put(s[0],"Query found no data");
             } catch (DataAccessException e1) {
-                returnValues.add("Dataaccess");
-                break;
+                returnValues.put(s[0],"Dataaccess not found");
+
             }
         }
         return returnValues;
@@ -111,9 +171,28 @@ public class Submission {
     }
 
     /**
+     * Checks if the submission has a grader
+     *
+     * @param assID ID of the assignment.
+     * @return      true if a teacherid exists, else false.
+     */
+    public boolean checkTeacherId(int assID){
+
+        String checkForTeacher = "SELECT teacherid FROM submission WHERE ( assignmentid = ?)";
+        return jdbcTemplate.queryForObject(checkForTeacher, new Object[]{assID}, String.class) != null;
+
+
+    }
+
+
+    /**
+
      * Get all ungraded submissions for an assignment
+
      * @param assID The assignment to get submissions for
+
      * @return A list of ungraded submissions for the assignment
+
      */
     private final static String getAllUngradedStatement = "SELECT * FROM "
     		+ "Submission WHERE (AssignmentId=?) AND (Grade IS NULL)";
@@ -146,9 +225,13 @@ public class Submission {
     }
 
     /**
+
      * Get all submissions for an assignment
+
      * @param assID The assignment to get submissions for
+
      * @return A list of submissions for the assignment
+
      */
 
     private final static String getAllSubmissionsStatement = "SELECT * FROM "
