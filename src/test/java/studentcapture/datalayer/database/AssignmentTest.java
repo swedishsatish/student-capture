@@ -5,7 +5,7 @@ import studentcapture.config.StudentCaptureApplicationTests;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import studentcapture.config.StudentCaptureApplicationTests;
-import sun.jvm.hotspot.utilities.Assert;
+//import sun.jvm.hotspot.utilities.Assert;
 
 import java.util.ArrayList;
 
