@@ -5,12 +5,11 @@ import studentcapture.config.StudentCaptureApplicationTests;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import studentcapture.config.StudentCaptureApplicationTests;
+import sun.jvm.hotspot.utilities.Assert;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -23,13 +22,25 @@ public class AssignmentTest extends StudentCaptureApplicationTests {
     Assignment ass;
     ArrayList actual;
 
-    /*@Test
+    @Test
     public void testCreateAssignment() throws Exception {
+        String courseID = "qwe";
+        String assignmentTitle = "PVT";
+        String startDate = "2016-10-19 11:12:12+02";
+        String endDate = "2016-10-19 11:14:12+02";
+        String minTime = "180";
+        String maxTime = "360";
+        boolean published = false;
 
+        int assID = ass.createAssignment(courseID, assignmentTitle, startDate, endDate, minTime, maxTime, published);
+
+        System.out.println(assID + "awdawd");
+
+        assertNotNull(assID);
     }
 
 
-
+    /*
     @org.junit.Test
     public void testGetAssignmentInfo() throws Exception {
 
