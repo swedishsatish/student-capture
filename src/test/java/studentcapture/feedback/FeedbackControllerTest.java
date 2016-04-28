@@ -67,8 +67,10 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
     @Test
     public void shouldRespondWithFeedback() throws Exception {
         URI targetUrl = getUri();
-
-        when(templateMock.getForObject(targetUrl, String.class)).thenReturn("{grade:VG, feedback:Mycket fint ritat}");
+        HashMap response = new HashMap();
+        response.put("grade", "VG");
+        response.put("feedback", "Mycket fint ritat");
+        when(templateMock.getForObject(targetUrl, HashMap.class)).thenReturn(response);
         mockMvc.perform(get("/feedback/get")
                 .param("userID", "Anna")
                 .param("assID", "1"))
@@ -81,7 +83,7 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
     public void shouldReturnErrorWhenRequestFail() throws Exception {
         URI targetUrl = getUri();
 
-        when(templateMock.getForObject(targetUrl, String.class)).thenThrow(new RestClientException("Exception message"));
+        when(templateMock.getForObject(targetUrl, HashMap.class)).thenThrow(new RestClientException("Exception message"));
         mockMvc.perform(get("/feedback/get")
                 .param("userID", "Anna")
                 .param("assID", "1"))
