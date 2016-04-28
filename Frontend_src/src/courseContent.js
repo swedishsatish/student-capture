@@ -140,7 +140,9 @@ handleSourceOpen: function (event) {
     return (
       <div id="videoDivFrame">
 
-            <iframe src="video.html"></iframe>
+            <iframe name="videoplay" src="teacherVideo.html"></iframe>
+
+            <p><a href="studentVideo.html" target="videoPlay">StudentVideo</a></p>
 
         </div>
     );
