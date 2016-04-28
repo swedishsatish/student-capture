@@ -52,7 +52,6 @@ public class VideoOutController {
     @RequestMapping(value = "/videoDownload/{video}", method = RequestMethod.GET, produces = "video/webm")
     public ResponseEntity<InputStreamResource> handleVideDl(@PathVariable("video") String videoName) {
         String filename = "/"+videoName+".webm";
-        System.out.println(filename);
 
         String filepath = StudentCaptureApplication.ROOT;
         ResponseEntity responseEntity = null;
