@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Submission;
 
 /**
@@ -18,6 +19,8 @@ public class DatalayerCommunicator {
 
     @Autowired
     private Submission dbc;
+    @Autowired
+    private Assignment ass;
     // Not that into what this stuff do, but
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
