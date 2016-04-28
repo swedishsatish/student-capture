@@ -44,14 +44,14 @@ public class AssignmentTest extends StudentCaptureApplicationTests {
         ArrayList expected = new ArrayList<String>();
         expected.add("enkurs");
         expected.add("titel");
-        expected.add("datum");
-        expected.add("datum2");
-        expected.add("tid");
-        expected.add("tid3");
+        expected.add("2016-01-01 12:12:12");
+        expected.add("2016-01-01 12:12:13");
+        expected.add("1");
+        expected.add("2");
 
         actual = ass.getAssignmentInfo(10);
 
-        //assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     /*@Test
