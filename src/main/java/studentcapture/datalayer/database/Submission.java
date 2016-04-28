@@ -30,8 +30,25 @@ public class Submission {
 
      */
 
+    private static final String addSubmissionStatement =
+            "INSERT INTO Submission (AssignmentID, StudentID, SubmissionDate) VALUES  (?,?,?)";
     protected boolean addSubmission(String assID, String studentID, Date date) {
-        return true;
+        boolean result;
+        try {
+            int rowsAffected = jdbcTemplate.update(addSubmissionStatement,
+                    new Object[] {assID, studentID, date});
+            if(rowsAffected == 1) {
+                result = true;
+            } else {
+                result = false;
+            }
+        }catch (IncorrectResultSizeDataAccessException e){
+            result = false;
+        }catch (DataAccessException e1){
+            result = false;
+        }
+
+        return result;
     }
 
     /**
