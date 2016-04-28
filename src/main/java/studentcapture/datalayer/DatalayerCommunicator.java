@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import studentcapture.datalayer.database.Assignment;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -16,6 +17,7 @@ public class DatalayerCommunicator {
 
 
     @Autowired
+    Assignment ass;
     //private DatabaseCommunicator dbc;
     // Not that into what this stuff do, but
     @CrossOrigin()
@@ -40,5 +42,33 @@ public class DatalayerCommunicator {
         // What is returned to the calling address
         return returnData;
     }
+
+
+    /**
+     *
+     * @param courseID
+     * @param assignmentTitle
+     * @param startDate
+     * @param endDate
+     * @param minTime
+     * @param maxTime
+     * @param published
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
+    public int createAssignment(@RequestParam(value = "courseID") String courseID,
+                                @RequestParam(value = "assignmentTitle") String assignmentTitle,
+                                @RequestParam(value = "startDate") String startDate,
+                                @RequestParam(value = "endDate") String endDate,
+                                @RequestParam(value = "minTime") String minTime,
+                                @RequestParam(value = "maxTime") String maxTime,
+                                @RequestParam(value = "published") boolean published){
+
+        //int returnResult = ass.createAssignment(courseID, assignmentTitle, startDate, endDate, minTime, maxTime, published);
+
+        return 1234;//returnResult;
+    }
+
 
 }
