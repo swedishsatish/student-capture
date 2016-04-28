@@ -15,7 +15,7 @@ public class DatalayerCommunicator {
 
 
 
-    @Autowired
+    
     // private DatabaseCommunicator dbc;
     // Not that into what this stuff do, but
     @CrossOrigin()
