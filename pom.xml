@@ -71,6 +71,11 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>studentcapture.config</groupId>
+			<artifactId>student-capture</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
