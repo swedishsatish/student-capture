@@ -168,80 +168,89 @@ public class Submission {
      * @return A list of ungraded submissions for the assignment
      */
     private final static String getAllUngradedStatement = "SELECT * FROM "
-            + "Submission WHERE (AssignmentId=?) AND (Grade IS NULL)";
+    		+ "Submission WHERE (AssignmentId=?) AND (Grade IS NULL)";
+    protected Optional<List<SubmissionWrapper>> getAllUngraded(int assId) {
+    	List<SubmissionWrapper> submissions = new ArrayList<>();
 
-    protected Optional<List<SubmissionWrapper>> getAllUngraded(String assId) {
-        List<SubmissionWrapper> submissions = new ArrayList<>();
+    	try {
+	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+	    			getAllSubmissionsStatement, new Object[] {assId});
+	    	for (Map<String, Object> row : rows) {
+	    		SubmissionWrapper submission = new SubmissionWrapper();
+	    		submission.assignmentId = (int) row.get("AssignmentId");
+	    		submission.studentId = (int) row.get("StudentId");
+	    		submission.teacherId = Optional.of((int) row.get("TeacherId"));
+	    		submission.grade = Optional.of((String) row.get("Grade"));
+	    		submission.submissionTime = (Timestamp)
+	    				row.get("SubmissionTime");
+	    		submissions.add(submission);
+	    	}
 
-        try {
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-                    getAllSubmissionsStatement, new Object[]{assId});
-            for (Map<String, Object> row : rows) {
-                SubmissionWrapper submission = new SubmissionWrapper();
-                submission.assignmentId = (int) row.get("AssignmentId");
-                submission.studentId = (int) row.get("StudentId");
-                submission.teacherId = (int) row.get("TeacherId");
-                submission.grade = (String) row.get("teacherId");
-                submission.submissionTime = (Timestamp)
-                        row.get("SubmissionTime");
-                submissions.add(submission);
-            }
-
-        } catch (IncorrectResultSizeDataAccessException e) {
-            //TODO
-            return Optional.empty();
-        } catch (DataAccessException e1) {
-            //TODO
-            return Optional.empty();
-        }
+	    } catch (IncorrectResultSizeDataAccessException e){
+			//TODO
+		    return Optional.empty();
+		} catch (DataAccessException e1){
+			//TODO
+			return Optional.empty();
+		}
 
         return Optional.of(submissions);
     }
 
     /**
+
      * Get all submissions for an assignment
-     *
+
      * @param assID The assignment to get submissions for
+
      * @return A list of submissions for the assignment
+
      */
 
     private final static String getAllSubmissionsStatement = "SELECT * FROM "
-            + "Submission WHERE (AssignmentId=?)";
+    		+ "Submission WHERE (AssignmentId=?)";
+    protected Optional<List<SubmissionWrapper>> getAllSubmissions(int assId) {
+    	List<SubmissionWrapper> submissions = new ArrayList<>();
 
-    protected Optional<List<SubmissionWrapper>> getAllSubmissions(String assId) {
-        List<SubmissionWrapper> submissions = new ArrayList<>();
+    	try {
+	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+	    			getAllSubmissionsStatement, new Object[] {assId});
+	    	for (Map<String, Object> row : rows) {
+	    		SubmissionWrapper submission = new SubmissionWrapper();
+	    		submission.assignmentId = (int) row.get("AssignmentId");
+	    		submission.studentId = (int) row.get("StudentId");
+	    		try {
+	    			submission.teacherId = Optional.of((int) row.get("TeacherId"));
+	    		} catch (NullPointerException e) {
+	    			submission.teacherId = Optional.empty();
+	    		}
+	    		try {
+	    			submission.grade = Optional.of((String) row.get("Grade"));
+	    		} catch (NullPointerException e) {
+	    			submission.grade = Optional.empty();
+	    		}
+	    		submission.submissionTime = (Timestamp)
+	    				row.get("SubmissionTime");
+	    		submissions.add(submission);
+	    	}
 
-        try {
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-                    getAllSubmissionsStatement, new Object[]{assId});
-            for (Map<String, Object> row : rows) {
-                SubmissionWrapper submission = new SubmissionWrapper();
-                submission.assignmentId = (int) row.get("AssignmentId");
-                submission.studentId = (int) row.get("StudentId");
-                submission.teacherId = (int) row.get("TeacherId");
-                submission.grade = (String) row.get("teacherId");
-                submission.submissionTime = (Timestamp)
-                        row.get("SubmissionTime");
-                submissions.add(submission);
-            }
-
-        } catch (IncorrectResultSizeDataAccessException e) {
-            //TODO
-            return Optional.empty();
-        } catch (DataAccessException e1) {
-            //TODO
-            return Optional.empty();
-        }
+	    } catch (IncorrectResultSizeDataAccessException e){
+			//TODO
+		    return Optional.empty();
+		} catch (DataAccessException e1){
+			//TODO
+			return Optional.empty();
+		}
 
         return Optional.of(submissions);
     }
 
     public class SubmissionWrapper {
-        public int assignmentId;
-        public int studentId;
-        public Timestamp submissionTime;
-        public String grade;
-        public int teacherId;
+    	public int assignmentId;
+    	public int studentId;
+    	public Timestamp submissionTime;
+    	public Optional<String> grade;
+    	public Optional<Integer> teacherId;
     }
 }
 
