@@ -1,19 +1,20 @@
 package studentcapture.datalayer;
 
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Scanner;
-
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-
 import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.Submission;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
+import studentcapture.video.VideoInfo;
+
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -76,42 +77,55 @@ public class DatalayerCommunicator {
 
         return 1234;//returnResult;
     }
+
     /**
      * Save grade for a submission
-     * @param assID
-     * @param teacherID
-     * @param studentID
-     * @param grade
-     * @return
+     * @param gradeObject Contains assID, teacherID, studentID, grade
+     * @return false if any value is null or update failed. Otherwise true
      */
     @CrossOrigin
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
-    public boolean setGrade(@RequestParam(value = "assID") String assID,
-            				@RequestParam(value = "teacherID") String teacherID,
-            				@RequestParam(value = "studentID") String studentID,
-            				@RequestParam(value = "grade") String grade) {
+    public boolean setGrade(@RequestParam(value = "gradeObject") JSONObject gradeObject) {
+
+        String assID = gradeObject.getString("assID");
+        String teacherID = gradeObject.getString("teacherID");
+        String studentID = gradeObject.getString("studentID");
+        String grade = gradeObject.getString("grade");
+        if(assID == null || teacherID == null || studentID == null || grade == null)
+            return false;
 
         return submission.setGrade(Integer.parseInt(assID), teacherID, studentID, grade);
     }
-    
+
     /**
      * Give feedback for a submission
-     * @param assID
-     * @param teacherID
-     * @param studentID
-     //* @param feedbackVideo	Can be null
-     //* @param feedbackText	Can be null
-     * @return
+     * @param feedbackObject Contains assID, teacherID, studentID, feedbackVideo, feedbackText
+     * @return false if specific values are null or update failed. Otherwise true
      */
     @CrossOrigin
-    @RequestMapping(value = "/giveFeedback", method = RequestMethod.POST)
-    public boolean giveFeedback(@RequestParam(value = "assID") int assID,
-            				@RequestParam(value = "teacherID") String teacherID,
-            				@RequestParam(value = "studentID") String studentID/*,
-            				@RequestParam(value = "feedbackVideo") video feedbackVideo,
-            				@RequestParam(value = "feedbackText") text feedbackText*/){
-    	
-    	return false;
+    @RequestMapping(value = "/setFeedback", method = RequestMethod.POST)
+    public boolean setFeedback(@RequestParam(value = "feedbackObject") VideoInfo feedbackObject){
+
+        /*String assID = feedbackObject.get
+        String teacherID = feedbackObject.getString("teacherID");
+        String studentID = feedbackObject.getString("studentID");
+        Multipartfile feedbackVideo = feedbackObject.getString("feedbackVideo");
+        String feedbackText = feedbackObject.getString("feedbackText");
+        if(assID == null || teacherID == null || studentID == null)
+            return false;
+        int feedback = 0;
+    	if(feedbackVideo != null) {
+            // Call to filesystem API save feedback video
+            feedback++;
+        }
+        if(feedbackText != null) {
+            // Call to filesystem API save feedback text
+            feedback++;
+        }
+        if(feedback == 0)
+            return false;
+        else
+            return true;*/
     }
 
     /**
