@@ -64,17 +64,25 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
-    public int createAssignment(@RequestParam(value = "courseID") String courseID,
+    public int createAssignment(//@RequestBody AssigmentModel assignment){ //will be used after merge
+                                @RequestParam(value = "courseID") String courseID,
                                 @RequestParam(value = "assignmentTitle") String assignmentTitle,
                                 @RequestParam(value = "startDate") String startDate,
                                 @RequestParam(value = "endDate") String endDate,
-                                @RequestParam(value = "minTime") String minTime,
-                                @RequestParam(value = "maxTime") String maxTime,
+                                @RequestParam(value = "minTime") int minTime,
+                                @RequestParam(value = "maxTime") int maxTime,
                                 @RequestParam(value = "published") boolean published){
+        int returnResult;
 
-        //int returnResult = ass.createAssignment(courseID, assignmentTitle, startDate, endDate, minTime, maxTime, published);
+        try{
+            returnResult = assignment.createAssignment(courseID, assignmentTitle,
+                    startDate, endDate, minTime, maxTime, published);
+        } catch (IllegalArgumentException e) {
+            //TODO return smarter error msg
+            return -1;
+        }
 
-        return 1234;//returnResult;
+        return returnResult;
     }
     /**
      * Save grade for a submission
