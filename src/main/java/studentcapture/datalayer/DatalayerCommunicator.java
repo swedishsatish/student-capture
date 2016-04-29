@@ -23,7 +23,7 @@ import java.io.FileOutputStream;
 @RestController
 @RequestMapping(value = "DB")
 public class DatalayerCommunicator {
-    @Autowired
+//    @Autowired
 //private DatabaseCommunicator dbc;
 // Not that into what this stuff do, but
     @CrossOrigin()
@@ -43,21 +43,21 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/upload/question", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
     public ResponseEntity<String> uploadQuestion(@RequestBody VideoInfo videoToUpload) {
         System.out.println("SUCCESS");
-        return uploadVideo(videoToUpload, "");
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @CrossOrigin()
     @RequestMapping(value = "/upload/answer", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
     public ResponseEntity<String> uploadAnswer(@RequestBody VideoInfo videoToUpload) {
         System.out.println("SUCCESS");
-        return uploadVideo(videoToUpload, "");
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @CrossOrigin()
     @RequestMapping(value = "/upload/feedback", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
     public ResponseEntity<String> uploadFeedback(@RequestBody VideoInfo videoToUpload) {
         System.out.println("SUCCESS");
-        return uploadVideo(videoToUpload, "");
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     public ResponseEntity<String> uploadVideo(VideoInfo videoToUpload, String uploadPath) {
