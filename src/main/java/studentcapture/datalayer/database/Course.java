@@ -1,6 +1,8 @@
 package studentcapture.datalayer.database;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -86,6 +88,33 @@ public class Course {
 
         return false; //TODO
 
+    }
+
+    /**
+     * Fetches the code for a course.
+     * Useful when constructing a file path.
+     * @param courseId Unique identifier for the course
+     * @return course code
+     */
+    public String getCourseCodeFromId(String courseId){
+        String query = "SELECT coursecode FROM Course WHERE courseid = '?';";
+        String courseCode;
+
+        try {
+            courseCode = jdbcTemplate.queryForObject(query, new Object[]{courseId}, String.class);
+
+            if (courseCode == null) {
+                courseCode = "Missing value";
+            } else {
+                courseCode = courseCode.trim();
+            }
+        } catch (IncorrectResultSizeDataAccessException up) {
+            throw up;
+        } catch (DataAccessException down) {
+            throw down;
+        }
+
+        return courseCode;
     }
 
 
