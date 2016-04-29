@@ -8,34 +8,56 @@ import java.util.*;
  */
 public class AssignmentModel {
 
+    private int courseID;
     private String title;
     private String info;
     private int minTimeSeconds;
     private int maxTimeSeconds;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private boolean published;
 
     public AssignmentModel(String title, String info, int minTimeSeconds, int maxTimeSeconds, String startDate,
-                           String endDate) throws InputMismatchException
+                           String endDate, boolean published) throws InputMismatchException
     {
+        this.courseID = 1; //should be changed.
         this.title = title;
         this.info = info;
         this.minTimeSeconds = minTimeSeconds;
         this.maxTimeSeconds = maxTimeSeconds;
         this.startDate = LocalDateTime.parse(startDate);
         this.endDate = LocalDateTime.parse(endDate);
+        this.published = published;
 
         validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
         validateStartEndTime(this.startDate, this.endDate);
     }
 
     public AssignmentModel() {
+        this.courseID = 1; //should be changed.
         this.title = "Defualt Assignment";
         this.info = "Defualt Info";
         this.minTimeSeconds = 0;
         this.maxTimeSeconds = 0;
         this.startDate = LocalDateTime.parse("2000-10-12T10:00");
         this.endDate = LocalDateTime.parse("2000-10-13T10:00");
+        this.published = false;
+    }
+
+    public int getCourseID() {
+        return courseID;
+    }
+
+    public void setCourseID(int courseID) {
+        this.courseID = courseID;
+    }
+
+    public boolean getPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
     }
 
     public String getTitle() {
@@ -72,8 +94,8 @@ public class AssignmentModel {
         validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
     }
 
-    public LocalDateTime getEndDate() {
-        return endDate;
+    public String getEndDate() {
+        return endDate.toString();
     }
 
     public void setEndDate(String endDate) {
@@ -81,8 +103,8 @@ public class AssignmentModel {
         validateStartEndTime(this.startDate, this.endDate);
     }
 
-    public LocalDateTime getStartDate() {
-        return startDate;
+    public String getStartDate() {
+        return startDate.toString();
     }
 
     public void setStartDate(String startDate) {

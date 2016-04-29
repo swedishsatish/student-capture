@@ -1,19 +1,25 @@
 package studentcapture.video.videoIn;
 
-import org.springframework.core.io.InputStreamResource;
+<<<<<<< Temporary merge branch 1
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.SystemPropertyUtils;
+=======
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
+>>>>>>> Temporary merge branch 2
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.config.StudentCaptureApplication;
-import studentcapture.video.UserData;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.net.URL;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 
 /**
@@ -36,14 +42,16 @@ public class RequestManager {
     public String requestPOSTVideo(
             @RequestParam("userID") String userID,
             @RequestParam("courseID") String courseID,
-            @RequestParam("examID") String examID
-    ) throws Exception {
+            @RequestParam("examID") String examID) {
 
+
+        // TODO: FIX PLZ
         if (!validUser(userID, courseID, examID)) {
-            throw new Exception("Request not valid.");
+             //   throw new Exception("Request not valid.");
         }
 
         String uploadURL = "/uploadVideo/" + HashCodeGenerator.generateHash(userID);
+
 
         return uploadURL;
     }
@@ -92,8 +100,7 @@ public class RequestManager {
     public String requestGETVideo(
             @RequestParam("userID") String userID,
             @RequestParam("courseID") String courseID,
-            @RequestParam("examID") String examID
-    ) {
+            @RequestParam("examID") String examID) {
 
         //TODO: GETVideo method
 
