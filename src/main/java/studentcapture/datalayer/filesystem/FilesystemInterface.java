@@ -53,7 +53,41 @@ public class FilesystemInterface {
 		
 		return path;
 	}
-	
+
+    /**
+     * Starts a FileInputStream to an assignment video.
+     * @param courseCode    Courses 6 character identifier.
+     * @param courseId      Courses unique database id.
+     * @param assignmentId  Assignments unique database id.
+     * @return FileInputStream to the Assignment video.
+     * @throws FileNotFoundException If the file does not exist.
+     */
+	public FileInputStream getAssignmentVideo(String courseCode,
+                                              String courseId,
+                                              int assignmentId)
+                                              throws FileNotFoundException {
+        String path = generatePath(courseCode, courseId, assignmentId);
+        return new FileInputStream(path);
+    }
+
+    /**
+     * Returns the size of a specific video file.
+     *
+     * @param courseCode    Courses 6 character identifier.
+     * @param courseId      Courses unique database id.
+     * @param assignmentId  Assignments unique database id.
+     * @return              Video file size.
+     */
+    public int getAssignmentVideoFileSize(String courseCode,
+                                          String courseId,
+                                          int assignmentId) {
+        String path = generatePath(courseCode, courseId, assignmentId)
+                        + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
+        File f = new File(path);
+        return (int)f.length();
+    }
+
+
 	/**
      * starts a stream to student video for a specific assignment at a course.
      * 
@@ -77,10 +111,10 @@ public class FilesystemInterface {
    	}
 
     /**
-     *
-     * @param courseCode
-     * @param courseId
-     * @param assignmentId
+     * Fetches an assignment's description from the file system.
+     * @param courseCode Identifies the course associated with the assignment
+     * @param courseId Identifies the instance of the course
+     * @param assignmentId Unique code of the assignment
      * @return
      */
     public FileInputStream getAssignmentDescription(String courseCode, String courseId, int assignmentId) {
