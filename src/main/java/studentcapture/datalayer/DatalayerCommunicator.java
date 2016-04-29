@@ -26,8 +26,7 @@ public class DatalayerCommunicator {
     private Submission submission;
     @Autowired
     private Assignment assignment;
-    //@Autowired
-    FilesystemInterface fsi;
+
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.POST)
     public MultiValueMap getGrade(@RequestParam(value = "studentID", required = false) String studentID,
@@ -35,16 +34,12 @@ public class DatalayerCommunicator {
                                   @RequestParam(value = "courseID", required = false) String courseID,
                                   @RequestParam(value = "assignmentID", required = false) String assignmentID) {
 
-
         LinkedMultiValueMap<String, Object> returnData = new LinkedMultiValueMap<>();
 
         returnData.add("grade", submission.getGrade(studentID, assignmentID).get("grade"));
         returnData.add("time", submission.getGrade(studentID, assignmentID).get("time"));
         returnData.add("teacher",  submission.getGrade(studentID, assignmentID).get("teacher"));
-        FileInputStream fs = fsi.getStudentVideo(courseCode,Integer.parseInt(courseID),Integer.parseInt(assignmentID),
-                Integer.parseInt(studentID));
 
-        returnData.add("video", fs);
 
         return returnData;
     }
