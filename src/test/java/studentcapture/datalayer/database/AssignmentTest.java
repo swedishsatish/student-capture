@@ -22,25 +22,13 @@ public class AssignmentTest extends StudentCaptureApplicationTests {
     Assignment ass;
     ArrayList actual;
 
+    /*
     @Test
     public void testCreateAssignment() throws Exception {
-        String courseID = "qwe";
-        String assignmentTitle = "PVT";
-        String startDate = "2016-10-19 11:12:12+02";
-        String endDate = "2016-10-19 11:14:12+02";
-        String minTime = "180";
-        String maxTime = "360";
-        boolean published = false;
-
-        int assID = ass.createAssignment(courseID, assignmentTitle, startDate, endDate, minTime, maxTime, published);
-
-        System.out.println(assID + "awdawd");
-
-        assertNotNull(assID);
     }
 
 
-    /*
+
     @org.junit.Test
     public void testGetAssignmentInfo() throws Exception {
 
