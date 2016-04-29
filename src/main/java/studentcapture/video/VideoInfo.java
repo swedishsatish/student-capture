@@ -1,35 +1,77 @@
 package studentcapture.video;
 
+import org.springframework.web.multipart.MultipartFile;
+
 /**
  * Created by Beaverulf on 26/04/16.
  */
 public class VideoInfo {
+    private String courseID;
+    private String assignmentID;
+    private String studentID;
+    private String title;
+    private String startDate;
+    private String endDate;
+    private String minTime;
+    private String maxTime;
+    private String published;
+    private MultipartFile videoFile;
 
-    private UserData ud;
-    private Long videoSize;
-    private VideoTypeEnum vidType;
-
-    public UserData getUd() {
-        return ud;
+    public VideoInfo(String title, String startDate, String endDate, String minTime, String maxTime, String published, String courseID, MultipartFile video) {
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.minTime = minTime;
+        this.maxTime = maxTime;
+        this.published = published;
+        this.courseID = courseID;
+        this.videoFile = video;
     }
 
-    public void setUd(UserData ud) {
-        this.ud = ud;
+    public VideoInfo(String courseID, String assignmentID, String studentID, MultipartFile videoFile) {
+        this.courseID = courseID;
+        this.assignmentID = assignmentID;
+        this.studentID = studentID;
+        this.videoFile = videoFile;
     }
 
-    public Long getVideoSize() {
-        return videoSize;
+    public String getCourseID() {
+        return courseID;
     }
 
-    public void setVideoSize(Long videoSize) {
-        this.videoSize = videoSize;
+    public String getAssignmentID() {
+        return assignmentID;
     }
 
-    public VideoTypeEnum getVidType() {
-        return vidType;
+    public String getStudentID() {
+        return studentID;
     }
 
-    public void setVidType(VideoTypeEnum vidType) {
-        this.vidType = vidType;
+    public String getTitle() {
+        return title;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public String getMinTime() {
+        return minTime;
+    }
+
+    public String getMaxTime() {
+        return maxTime;
+    }
+
+    public String getPublished() {
+        return published;
+    }
+
+    public MultipartFile getVideoFile() {
+        return videoFile;
     }
 }

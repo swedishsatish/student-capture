@@ -14,6 +14,9 @@ public class Course {
     @Autowired
     protected JdbcTemplate jdbcTemplate;
 
+    // This template should be used to send queries to the database
+    @Autowired
+    protected JdbcTemplate jdbcTemplate;
     /**
 
      * Attempts to add a course to the database.
