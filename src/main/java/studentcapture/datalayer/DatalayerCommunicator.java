@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.Submission;
+import studentcapture.datalayer.database.User;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.video.VideoInfo;
 
@@ -42,6 +43,9 @@ public class DatalayerCommunicator {
     private Assignment assignment;
     @Autowired
     private Course course;
+    @Autowired
+    private User user;
+
     //@Autowired
     FilesystemInterface fsi;
     @CrossOrigin()
@@ -213,5 +217,19 @@ public class DatalayerCommunicator {
 
         results.add(description);
         return results;
+    }
+
+
+    /**
+     * Check if given user name and password exist in database.
+     * @param username a unique user name.
+     * @param pswd password for the unique username
+     * @return true  if correct user password and username is given otherwise false
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public boolean login(@RequestParam(value = "username") String username,
+                         @RequestParam(value = "pswd") String pswd) {
+        return   user.userExist(username,pswd);
     }
 }
