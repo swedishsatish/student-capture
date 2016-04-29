@@ -8,8 +8,56 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+    <script>
+
+        function searchAjax() {
+            var search = {}
+            search["title"] = $("#title").val();
+            search["info"] = $("#info").val();
+            search["minTimeSeconds"] = $("#minTimeSeconds").val();
+            search["maxTimeSeconds"] = $("#maxTimeSeconds").val();
+            search["startDate"] = $("#startDate").val();
+            search["endDate"] = $("#endDate").val();
+
+            $.ajax({
+                type : "POST",
+                contentType : "application/json",
+                url : "assignment",
+                data : JSON.stringify(search),
+                dataType : 'json',
+                timeout : 100000,
+                success : function(data) {
+                    console.log("SUCCESS: ", data);
+                    alert(JSON.stringify(data));
+                },
+                error : function(e) {
+                    console.log("ERROR: ", e);
+                    alert(JSON.stringify(data));
+                },
+                done : function(e) {
+                    console.log("DONE");
+                }
+            });
+        }
+    </script>
 </head>
 <body>
 <h1>Welcome to Student-capture!</h1>
+<form id="form" action="assignment" method="post">
+    Title:
+    <input id="title" type="text" /><br/>
+    Info:
+    <input id="info" type="text" /><br/>
+    Start time:
+    <input id="startDate" type="datetime-local" /><br/>
+    End time:
+    <input id="endDate" type="datetime-local" /><br/>
+    minTimeSeconds:
+    <input id="minTimeSeconds" type="text" /><br/>
+    maxTimeSeconds:
+    <input id="maxTimeSeconds" type="text" /><br/>
+
+    <input name="submit" type="button" value="submit" onclick="searchAjax()"/>
+</form>
 </body>
 </html>
