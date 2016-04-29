@@ -84,8 +84,8 @@ public class DatalayerCommunicator {
             				@RequestParam(value = "teacherID") String teacherID,
             				@RequestParam(value = "studentID") String studentID,
             				@RequestParam(value = "grade") String grade) {
-    	
-    	return false;
+
+        return submission.setGrade(Integer.parseInt(assID), teacherID, studentID, grade);
     }
     
     /**
@@ -93,13 +93,13 @@ public class DatalayerCommunicator {
      * @param assID
      * @param teacherID
      * @param studentID
-     * @param feedbackVideo	Can be null
-     * @param feedbackText	Can be null
+     //* @param feedbackVideo	Can be null
+     //* @param feedbackText	Can be null
      * @return
      */
     @CrossOrigin
     @RequestMapping(value = "/giveFeedback", method = RequestMethod.POST)
-    public boolean giveFeedback(@RequestParam(value = "assID") String assID,
+    public boolean giveFeedback(@RequestParam(value = "assID") int assID,
             				@RequestParam(value = "teacherID") String teacherID,
             				@RequestParam(value = "studentID") String studentID/*,
             				@RequestParam(value = "feedbackVideo") video feedbackVideo,

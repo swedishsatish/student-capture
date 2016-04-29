@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import studentcapture.config.StudentCaptureApplicationTests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,5 +37,25 @@ public class DatalayerCommunicatorTest extends StudentCaptureApplicationTests {
 
         // Throws exception if fail
         assertEquals(Integer.parseInt(resStr), 1234);
+    }
+
+    @org.junit.Test
+    public void setGradeCorrectValues() throws Exception {
+	MvcResult result = mockMvc.perform(post("/DB/setGrade").param("assID", "12").param("teacherID", "abc1234")
+                .param("studentID", "xyzw4321").param("grade", "g"))
+                .andExpect(status().isOk())
+                .andReturn();
+        String resStr = result.getResponse().getContentAsString();
+        System.out.println(resStr);
+	assertTrue(result.equals(true));
+    }
+
+    @org.junit.Test
+    public void setGradeIncorrectValues() throws Exception {
+        MvcResult result = mockMvc.perform(post("/DB/setGrade").param("assID", null).param("teacherID", "abc1234")
+                .param("studentID", "xyzw4321").param("grade", "g"))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertTrue(result.equals(true));
     }
 }

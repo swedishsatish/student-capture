@@ -43,11 +43,14 @@ public class Submission {
      * @return True if everything went well, otherwise false
      */
 
-    protected boolean setGrade(String assID, String teacherID, String studentID, String grade) {
-        String setGrade = "UPDATE Submission (Grade, TeacherID, Date) = (?, ?, ?) WHERE (AssignmentID = ?) AND (StudentID = ?)";
+    public boolean setGrade(int assID, String teacherID, String studentID, String grade) {
+        String setGrade = "UPDATE Submission (Grade, TeacherID, Date) = (?, ?, ?) WHERE AssignmentID = ? AND StudentID = ?";
+        //String setGrade = "UPDATE Submission SET Grade = ?, TeacherID = ?, Date = ? WHERE AssignmentID = ? AND StudentID = ?";
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         Date date = new Date();
+        System.out.println("POINT OF FAILURE");
         int updatedRows = jdbcTemplate.update(setGrade, new Object[]{grade, teacherID, dateFormat.format(date), assID, studentID});
+        System.out.println("UPDATED ROWS: " + updatedRows);
         if (updatedRows == 1)
             return true;
         else
