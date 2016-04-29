@@ -77,10 +77,10 @@ public class FilesystemInterface {
    	}
 
     /**
-     *
-     * @param courseCode
-     * @param courseId
-     * @param assignmentId
+     * Fetches an assignment's description from the file system.
+     * @param courseCode Identifies the course associated with the assignment
+     * @param courseId Identifies the instance of the course
+     * @param assignmentId Unique code of the assignment
      * @return
      */
     public FileInputStream getAssignmentDescription(String courseCode, String courseId, int assignmentId) {
