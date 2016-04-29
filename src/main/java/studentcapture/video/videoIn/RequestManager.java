@@ -1,16 +1,18 @@
 package studentcapture.video.videoIn;
 
-<<<<<<< Temporary merge branch 1
+
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.SystemPropertyUtils;
-=======
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
->>>>>>> Temporary merge branch 2
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.config.StudentCaptureApplication;
+import studentcapture.video.UserData;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -19,6 +21,7 @@ import java.io.FileOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
 import java.util.Map;
 
 
