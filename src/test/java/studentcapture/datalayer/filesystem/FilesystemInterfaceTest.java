@@ -9,28 +9,28 @@ import java.io.File;
 
 public class FilesystemInterfaceTest extends StudentCaptureApplication {
 
-	@Test
+	/*@Test
 	public void testGeneratePathWithoutStudent() {
 		String path = FilesystemInterface.generatePath("5DV151", 1, 123);
 		
 		assertEquals(path, FilesystemConstants.FILESYSTEM_PATH 
 					 + "/5DV151/1/123/");
-	}
+	}*/
 	
-	@Test
+	/*@Test
 	public void testGeneratePathWithStudent() {
 		String path = FilesystemInterface.generatePath("5DV151", 1, 123, 654);
 		
 		assertEquals(path, FilesystemConstants.FILESYSTEM_PATH 
 					 + "/5DV151/1/123/654/");
-	}
+	}*/
 
     @Test
     public void testCreatedMapStoreStudentVideo() {
 
     }
 
-    @Test
+   /* @Test
     public void testStoreStudentVideo() {
 
         //The file to be stored
@@ -48,6 +48,6 @@ public class FilesystemInterfaceTest extends StudentCaptureApplication {
 
         assertTrue(res);
 
-    }
+    }*/
 
 }
