@@ -1,45 +1,55 @@
 package studentcapture.datalayer.database;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.SQLWarningException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
-
+@Repository
 public class User {
 
+
+    private final String SQL_ADD_USR = "INSERT INTO users"
+                                       + " (username, firstname, lastname, persnr, pswd)"
+                                        + " VALUES (?, ?, ?, ?, ?);";
+
+    private final String REM_USR_STATEMENT = "";
 
     // This template should be used to send queries to the database
     @Autowired
     protected JdbcTemplate jdbcTemplate;
 
     /**
-
      * Add a new user to the User-table in the database.
-
      *
-
      * @param fName     First name of a user
-
      * @param lName     Last name of a user
-
      * @param pNr       Person-Number
-
-     * @param pWord     Password
-
-     * @param casID     unique identifier for a person
-
+     * @param pwd       Password
+     * @param userName  unique user name
+     * @param userID    unique identifier for a person
      * @return          true if success, else false.
 
      */
+    public boolean addUser(String userName, String fName, String lName, String pNr, String pwd) {
 
-    public boolean addUser(String fName, String lName, String pNr,
+        Object[] values = new Object[] {userName, fName,lName,pNr,pwd};
+        Object[] types = new Object[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
+                                      Types.CHAR,Types.VARCHAR};
 
-                           String pWord, String casID) {
+        try {
 
-        //TODO
+            jdbcTemplate.update(SQL_ADD_USR, values);
 
-        return false;
-
+        } catch (DataIntegrityViolationException e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
     }
 
 

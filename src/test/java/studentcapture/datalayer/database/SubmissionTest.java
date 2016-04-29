@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import studentcapture.config.StudentCaptureApplicationTests;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -23,7 +24,7 @@ public class SubmissionTest extends StudentCaptureApplicationTests {
     // TODO: Replace jdbctemplate with appropriate class for inserting values into the database
     @Autowired
     JdbcTemplate jdbcTemplate;
-    ArrayList theGrade;
+    Hashtable theGrade;
 
     @Before
     public void setUp() throws Exception {
@@ -47,8 +48,8 @@ public class SubmissionTest extends StudentCaptureApplicationTests {
                 "VALUES ('10', '1337', '2018-10-19 10:23:55', 'vg', '1337');");
 
         //INSERTING A SUBMISSION WITHOUT GRADE
-        jdbcTemplate.update("INSERT INTO Submission (assignmentid, studentid, submissiondate, teacherid) " +
-                "VALUES ('11', '1337', '2018-10-19 10:23:55', '1337');");
+        jdbcTemplate.update("INSERT INTO Submission (assignmentid, studentid, submissiondate) " +
+                "VALUES ('11', '1337', '2018-10-19 10:23:55');");
     }
 
     @After
@@ -68,33 +69,50 @@ public class SubmissionTest extends StudentCaptureApplicationTests {
     @Test
     public void shouldReturnGrade() throws Exception {
         theGrade = sub.getGrade("1337", "10");
-        assertEquals("vg",theGrade.get(0));
+        assertEquals("vg",theGrade.get("grade"));
     }
 
     @Test
     public void shouldReturnNothingWhenAssignmentNotExists() throws Exception {
         theGrade = sub.getGrade("1337", "5");
-        assertEquals("Query found no data", theGrade.get(0));
+        assertEquals("Query found no data", theGrade.get("grade"));
     }
 
 
     @Test
     public void shouldReturnNothingGradeUserNotExists() throws Exception {
         theGrade = sub.getGrade("5", "10");
-        assertEquals("Query found no data", theGrade.get(0));
+        assertEquals("Query found no data", theGrade.get("grade"));
     }
 
 
     @Test
     public void shouldReturnNothingGradeUserAndAssignmentNotExists() throws Exception {
         theGrade = sub.getGrade("5", "5");
-        assertEquals("Query found no data", theGrade.get(0));
+        assertEquals("Query found no data", theGrade.get("grade"));
     }
 
     @Test
     public void shouldReturnMissingGrade() throws Exception {
         theGrade = sub.getGrade("1337", "11");
-        assertEquals("Missing grade", theGrade.get(0));
+        assertEquals("Missing grade", theGrade.get("grade"));
     }
 
+    @Test
+    public void shouldReturnCorrectTimeStamp() {
+        theGrade = sub.getGrade("1337", "10");
+        assertEquals("2018-10-19 10:23:55", theGrade.get("time"));
+    }
+
+    @Test
+    public void shouldReturnCorrectGrader() {
+        theGrade = sub.getGrade("1337", "10");
+        assertEquals("Gustav", theGrade.get("teacher"));
+    }
+
+    @Test
+    public void shouldReturnNoGraderOnNoGrade() throws Exception {
+        theGrade = sub.getGrade("1337","11");
+        assertEquals("Missing Grader", theGrade.get("teacher"));
+    }
 }
