@@ -7,9 +7,8 @@ var recordedVideo = document.querySelector('video#recorded');
 
 
 
-
 //recordButton.onclick = function() {startRecording(getStream())};
-stopRecordButton.onclick = function() {finilize()};
+stopRecordButton.onclick = finalizeRecording;
 
 
 startStream('video#gum');
@@ -27,11 +26,13 @@ setTimeout(function(){
 
 
 
-function finilize(){
+function finalizeRecording(){
 	var theBlob;
-    console.log("finilize")
+    console.log("finalizeRecording")
 	theBlob = stopRecording();
 	postToServer(theBlob,"user","5DV121","1337");
 	recordFeedback(false);
 	document.getElementById("stopRecord").disabled = true;
+
 }
+

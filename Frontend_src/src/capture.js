@@ -27,14 +27,19 @@ var gumVideo;
  * 								the stream. Example: video#streamFrame
  */
 function startStream(videoFrame){
-	/*Get the video frame*/
-	gumVideo = document.querySelector(videoFrame);
-		
-	/*Start the stream*/
-	navigator.getUserMedia = navigator.getUserMedia ||
-  		navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-  		
-  	navigator.getUserMedia(constraints, successCallback, errorCallback);
+	try {
+        /*Get the video frame*/
+        gumVideo = document.querySelector(videoFrame);
+
+        /*Start the stream*/
+        navigator.getUserMedia = navigator.getUserMedia ||
+            navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+        navigator.getUserMedia(constraints, successCallback, errorCallback);
+        return true;
+    } catch (err) {
+        return false;
+    }
 }
 
 /**
@@ -54,7 +59,7 @@ function pause(){
 }
 
 function successCallback(stream) {
-	console.log('getUserMedia() got stream: ', stream);
+//	console.log('getUserMedia() got stream: ', stream);
   	window.stream = stream;
 
 	if (window.URL) {
@@ -66,7 +71,7 @@ function successCallback(stream) {
 }
 
 function errorCallback(error) {
-	console.log('navigator.getUserMedia error: ', error);
+//	console.log('navigator.getUserMedia error: ', error);
 }
 
 

@@ -1,18 +1,15 @@
 var recordButton = document.querySelector('button#record');
 var postButton = document.querySelector('button#post');
 var recordedVideo = document.querySelector('video#recorded');
-var theBlob;
-
+var blob;
 
 recordButton.onclick = function() {
-
-
     toggle();
 };
 
 
 postButton.onclick = function () {
-    postToServer(theBlob,"user","5DV121","1337")
+    postToServer(blob,"user","5DV121","1337")
     document.getElementById("post").disabled = true;
 
 };
@@ -22,16 +19,18 @@ startStream('video#gum');
 
 function finilize(){
 
-	theBlob = stopRecording();
-
-	console.log(theBlob);
+	blob = stopRecording();
 	recordFeedback(false);
-	play();
+	try {
+	    play(blob);
+    } catch (err) {
+        return false;
+    }
 }
 
-function play() {
+function play(blob) {
 
-  recordedVideo.src = window.URL.createObjectURL(theBlob);
+  recordedVideo.src = window.URL.createObjectURL(blob);
 }
 
 function toggle() {
@@ -49,3 +48,5 @@ function toggle() {
 
   }
 }
+
+

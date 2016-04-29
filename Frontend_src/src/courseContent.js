@@ -21,7 +21,6 @@ var UserGist = React.createClass({
     this.serverRequest.abort();
   },
   render: function() {
-
     return (
       <div id="videoDivFrame">
             <iframe name="videoplay" src="teacherVideo.html"></iframe>

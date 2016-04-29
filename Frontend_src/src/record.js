@@ -10,7 +10,10 @@
 var recordedBlobs;
 var mediaRecorder;
 var par = document.createElement("P");
+par.setAttribute("ID", "recordPar")
+
 var t = document.createTextNode("RECORDING");
+
 
 
 /**
@@ -20,9 +23,6 @@ var t = document.createTextNode("RECORDING");
  * @param theStream - the media stream to record.
  */
 function startRecording(theStream) {
-
-
-
 
 	var chunkSize = 100;
 	recordedBlobs = [];
@@ -37,13 +37,12 @@ function startRecording(theStream) {
 		mediaRecorder = new MediaRecorder(theStream, options);
 
 	} catch (e0) {
-		console.log('Unable to create MediaRecorder with options Object: ', e0);
-		console.log('\nblabla\n', theStream);
+//		console.log('Unable to create MediaRecorder with options Object: ', e0);
         try {
 			options = {mimeType: 'video/webm,codecs=vp9'};
 			mediaRecorder = new MediaRecorder(theStream, options);
 		} catch (e1) {
-			console.log('Unable to create MediaRecorder with options Object: ', e1);
+//			console.log('Unable to create MediaRecorder with options Object: ', e1);
 			try {
 				options = 'video/vp8'; // Chrome 47
 				mediaRecorder = new MediaRecorder(theStream, options);
@@ -51,19 +50,19 @@ function startRecording(theStream) {
 
 
 			} catch (e2) {
-				alert('MediaRecorder is not supported by this browser.\n\n' +
-				    'Try Firefox 29 or later, or Chrome 47 or later, '+
-				    'Enable experimental Web Platform features enabled from chrome://flags.');
-				console.error('Exception while creating MediaRecorder:', e2);
+//				console.log('MediaRecorder is not supported by this browser.\n\n' +
+//				    'Try Firefox 29 or later, or Chrome 47 or later, '+
+//				    'Enable experimental Web Platform features enabled from chrome://flags.');
+//				console.error('Exception while creating MediaRecorder:', e2);
 			}
 		}
 		return false;
   	}
-	console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
+//	console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
 	mediaRecorder.onstop = handleStop;
 	mediaRecorder.ondataavailable = handleDataAvailable;
 	mediaRecorder.start(chunkSize);
-	console.log('MediaRecorder started', mediaRecorder);
+//	console.log('MediaRecorder started', mediaRecorder);
 	return true;
 }
 
@@ -73,10 +72,14 @@ function startRecording(theStream) {
  * @returns the recording, as a webm blob.
  */
 function stopRecording() {
-  mediaRecorder.stop();
-  console.log('Recorded Blobs: ', recordedBlobs);
-  
-  return new Blob(recordedBlobs, {type: 'video/webm'});
+    try {
+        mediaRecorder.stop();
+
+        return new Blob(recordedBlobs, {type: 'video/webm'});
+    } catch (err) {
+//        console.log("false ");
+        return false;
+    }
 }
 
 /*Funtion to handle all the blob parts of the recording*/
@@ -88,18 +91,19 @@ function handleDataAvailable(event) {
 
 /*Handles a stop in the recording*/
 function handleStop(event) {
-  console.log('Recording stopped!', event);
+//  console.log('Recording stopped!', event);
 }
 
-function recordFeedback(visability) {
-
-
-
-    if (visability) {
+function recordFeedback(visibility) {
+    if (visibility) {
         par.appendChild(t);
         document.body.appendChild(par);
-
+        return true;
     } else {
-        par.removeChild(t);
+        if (par.hasChildNodes()) {
+            par.removeChild(t);
+            return false;
+        }
+        return true;
     }
 }
