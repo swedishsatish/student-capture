@@ -3,19 +3,19 @@ package model;
 import org.junit.Test;
 import studentcapture.assignment.AssignmentModel;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 import java.util.InputMismatchException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by root on 4/25/16.
  */
 public class AssignmentModelTest {
 
-    private AssignmentModel assignmentModel = new AssignmentModel("Test", "Info", 120, 300, "2016-01-22T15:00", "2016-01-24T10:00");
+    private AssignmentModel assignmentModel = new AssignmentModel("Test", "Info", 120, 300, "2016-01-22T15:00", "2016-01-24T10:00", true);
 
     @Test
     public void titleShouldBeTest() {
@@ -40,58 +40,25 @@ public class AssignmentModelTest {
     }
 
     @Test
-    public void yearShouldBe2016() {
-        assertEquals(2016, assignmentModel.getStartDate().getYear());
+    public void publishedShouldBeTrue() {
+        assertTrue(assignmentModel.getPublished());
     }
 
     @Test
-    public void yearShouldBe2015() {
-        assignmentModel.setStartDate("2015-10-12T12:00");
-        assertEquals(2015, assignmentModel.getStartDate().getYear());
+    public void publishedShouldBeFalse() {
+        assignmentModel.setPublished(false);
+        assertFalse(assignmentModel.getPublished());
     }
 
     @Test
-    public void monthShouldBeJan() {
-        assertEquals(1, assignmentModel.getStartDate().getMonthValue());
+    public void CourseIDShouldBe1() {
+        assertEquals(1, assignmentModel.getCourseID());
     }
 
     @Test
-    public void monthShouldBeFeb() {
-        assignmentModel.setStartDate("2015-02-12T12:00");
-        assertEquals(2, assignmentModel.getStartDate().getMonthValue());
-    }
-
-    @Test
-    public void dayShouldBe22() {
-        assertEquals(22, assignmentModel.getStartDate().getDayOfMonth());
-    }
-
-    @Test
-    public void dayShouldBe23() {
-        assignmentModel.setStartDate("2015-02-23T12:00");
-        assertEquals(23, assignmentModel.getStartDate().getDayOfMonth());
-    }
-
-    @Test
-    public void hourShouldBe15() {
-        assertEquals(15, assignmentModel.getStartDate().getHour());
-    }
-
-    @Test
-    public void hourShouldBe16() {
-        assignmentModel.setStartDate("2015-02-23T16:00");
-        assertEquals(16, assignmentModel.getStartDate().getHour());
-    }
-
-    @Test
-    public void minuteShouldBe0() {
-        assertEquals(0, assignmentModel.getStartDate().getMinute());
-    }
-
-    @Test
-    public void minuteShouldBe30() {
-        assignmentModel.setStartDate("2015-02-23T16:30");
-        assertEquals(30, assignmentModel.getStartDate().getMinute());
+    public void CourseIDShouldBe2() {
+        assignmentModel.setCourseID(2);
+        assertEquals(2, assignmentModel.getCourseID());
     }
 
     @Test
@@ -116,35 +83,34 @@ public class AssignmentModelTest {
         assertEquals(290, assignmentModel.getMaxTimeSeconds());
     }
 
+    @Test
+    public void shouldNotThrowDateTimeParseException() {
+        new AssignmentModel("Test", "info", 120, 300, "2015-01-20T10:00", "2015-01-22T10:00", true);
+    }
+
     @Test(expected = DateTimeParseException.class)
     public void shouldThrowDateTimeParseExceptionBecauseNotValidMonth() {
-        AssignmentModel wrongMonthExam = new AssignmentModel("Test", "info", 120, 300, "2015-20-20T10:00", "2015-01-20T10:00");
+        new AssignmentModel("Test", "info", 120, 300, "2015-20-20T10:00", "2015-01-20T10:00", true);
     }
 
     @Test(expected = DateTimeParseException.class)
     public void shouldBe28DaysInFeb() {
-        AssignmentModel twoManyDaysInFebModel = new AssignmentModel("Test", "info", 120, 300, "2015-02-29T10:00", "2015-01-20T10:00");
-    }
-
-    @Test
-    public void shouldBe29DaysInFebLeapYear() {
-        AssignmentModel learYearModel = new AssignmentModel("Test", "info", 120, 300, "2016-02-29T10:00", "2016-03-20T10:00");
-        assertEquals(29, learYearModel.getStartDate().getDayOfMonth());
+        new AssignmentModel("Test", "info", 120, 300, "2015-02-29T10:00", "2015-01-20T10:00", true);
     }
 
     @Test(expected = DateTimeParseException.class)
     public void hourShouldBeUnder23() {
-        AssignmentModel wrongHourModel = new AssignmentModel("Test", "info", 120, 300, "2015-01-20T24:00", "2015-01-20T10:00");
+        new AssignmentModel("Test", "info", 120, 300, "2015-01-20T24:00", "2015-01-20T10:00", true);
     }
 
     @Test(expected = DateTimeParseException.class)
     public void minuteShouldBeUnder59() {
-        AssignmentModel wrongMinuteModel = new AssignmentModel("Test", "info",  120, 300, "2015-01-20T10:60", "2015-01-20T10:00");
+        new AssignmentModel("Test", "info",  120, 300, "2015-01-20T10:60", "2015-01-20T10:00", true);
     }
 
     @Test(expected = InputMismatchException.class)
     public void minTimeShouldBeSmallerThanMaxTime() {
-        AssignmentModel minTimeIsLargerThanMaxTimeModel = new AssignmentModel("Test", "info", 300, 120, "2015-01-20T10:00", "2015-01-20T10:00");
+        new AssignmentModel("Test", "info", 300, 120, "2015-01-20T10:00", "2015-01-20T10:00", true);
     }
 
     @Test
@@ -156,6 +122,6 @@ public class AssignmentModelTest {
 
     @Test(expected = InputMismatchException.class)
     public void startDateShouldNotBeAfterEndDate() {
-        new AssignmentModel("Test", "info", 300, 120, "2015-01-22T10:00", "2015-01-20T10:00");
+        new AssignmentModel("Test", "info", 300, 120, "2015-01-22T10:00", "2015-01-20T10:00", true);
     }
 }

@@ -1,6 +1,7 @@
 package studentcapture.datalayer;
 
 import java.io.FileInputStream;
+import java.util.Hashtable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -28,7 +29,7 @@ public class DatalayerCommunicator {
     //private Assignment assignment;
 
     @CrossOrigin()
-    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.POST)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
     public MultiValueMap getGrade(@RequestParam(value = "studentID", required = false) String studentID,
                                   @RequestParam(value = "courseCode", required = false) String courseCode,
                                   @RequestParam(value = "courseID", required = false) String courseID,
@@ -36,9 +37,11 @@ public class DatalayerCommunicator {
 
         LinkedMultiValueMap<String, Object> returnData = new LinkedMultiValueMap<>();
 
-        returnData.add("grade", submission.getGrade(studentID, assignmentID).get("grade"));
-        returnData.add("time", submission.getGrade(studentID, assignmentID).get("time"));
-        returnData.add("teacher",  submission.getGrade(studentID, assignmentID).get("teacher"));
+        Hashtable<String, Object> gradeValues = submission.getGrade(studentID, assignmentID);
+
+        returnData.add("grade", gradeValues.get("grade"));
+        returnData.add("time", gradeValues.get("time"));
+        returnData.add("teacher",  gradeValues.get("teacher"));
 
 
         return returnData;

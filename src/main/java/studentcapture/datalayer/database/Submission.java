@@ -108,9 +108,7 @@ public class Submission {
                 String grade = null;
                 if (s[0].equals("teacher") && !checkTeacherId(assIDInt)) {
                     returnValues.put(s[0], "Missing Grader");
-
                 } else {
-
                     grade = jdbcTemplate.queryForObject(s[1], new Object[]{studIDInt, assIDInt}, String.class);
                 }
                 if (grade == null) {
@@ -136,7 +134,11 @@ public class Submission {
                     returnValues.put(s[0], grade);
                 }
             } catch (IncorrectResultSizeDataAccessException e) {
-                returnValues.put(s[0], "Query found no data");
+                if (s[0].equals("teacher")) {
+                    returnValues.put(s[0], "Teacher did the error");
+                } else {
+                    returnValues.put(s[0], "Query found no data");
+                }
             } catch (DataAccessException e1) {
                 returnValues.put(s[0], "Dataaccess not found");
 
@@ -154,9 +156,8 @@ public class Submission {
      */
     public boolean checkTeacherId(int assID) {
 
-        String checkForTeacher = "SELECT teacherid FROM submission WHERE ( assignmentid = ?)";
-        return jdbcTemplate.queryForObject(checkForTeacher, new Object[]{assID}, String.class) != null;
-
+        String checkForTeacher = "SELECT teacherid FROM submission WHERE (assignmentid = ?)";
+        return !jdbcTemplate.queryForList(checkForTeacher, new Object[]{assID}, String.class).isEmpty();
 
     }
 

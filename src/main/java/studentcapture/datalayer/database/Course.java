@@ -10,10 +10,9 @@ import java.util.List;
  */
 public class Course {
 
-    // Use this template to send queries to the database
+    // This template should be used to send queries to the database
     @Autowired
     protected JdbcTemplate jdbcTemplate;
-
     /**
 
      * Attempts to add a course to the database.
