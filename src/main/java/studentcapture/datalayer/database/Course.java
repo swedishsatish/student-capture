@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * Created by c13gan on 2016-04-26.
  */
+@Repository
 public class Course {
 
 

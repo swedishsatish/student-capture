@@ -1,11 +1,17 @@
 package studentcapture.datalayer;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +36,7 @@ public class DatalayerCommunicator {
     @Autowired
     private Assignment assignment;
     @Autowired
-            private Course course;
+    private Course course;
     //@Autowired
     FilesystemInterface fsi;
     @CrossOrigin()
@@ -123,7 +129,47 @@ public class DatalayerCommunicator {
     }
 
     /**
-     * Fetches information about an assignment
+     * Sends the assignment video file.
+     * @param courseCode    Courses 6 character identifier.
+     * @param courseId      Courses unique database id.
+     * @param assignmentId  Assignments unique database id.
+     * @return              The video file vie http.
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/getAssignmentVideo", method = RequestMethod.POST, produces = "video/webm")
+    public ResponseEntity<InputStreamResource> getAssignmentVideo(@RequestParam("courseCode") String courseCode,
+                                                                  @RequestParam("courseId") String courseId,
+                                                                  @RequestParam("assignmentId") int assignmentId) {
+
+        ResponseEntity<InputStreamResource> responseEntity;
+
+        try {
+            FileInputStream videoInputStream = fsi.getAssignmentVideo(courseCode,courseId,assignmentId);
+
+            byte []out = new byte[fsi.getAssignmentVideoFileSize (courseCode, courseId, assignmentId)];
+            videoInputStream.read(out);
+
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.add("content-disposition", "inline; filename=AssignmentVideo" + assignmentId);
+
+            responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
+
+        } catch (FileNotFoundException e) {
+            //TODO change HttpStatus to something bad?
+            responseEntity = new ResponseEntity("File not found.", HttpStatus.OK);
+        } catch (IOException e) {
+            //TODO change HttpStatus to something bad?
+            responseEntity = new ResponseEntity("Error getting file.", HttpStatus.OK);
+        }
+
+        return responseEntity;
+
+
+    }
+
+    /**
+     * Fetches information about an assignment.
+     * Description is mocked at the moment due to filesystem issues.
      * @param assID Unique identifier for the assignment
      * @return Array containing [course ID, assignment title, opening datetime, closing datetime, minimum video time, maximum video time, description]
      */
@@ -132,8 +178,10 @@ public class DatalayerCommunicator {
     public ArrayList<String> getAssignmentInfo(@RequestParam(value = "assID") int assID){
 
         ArrayList<String> results = assignment.getAssignmentInfo(assID);
+
         //Need the courseCode for the path
-        String courseCode = course.getCourseCodeFromId(results.get(0));
+        //code for the filesystem
+        /*String courseCode = course.getCourseCodeFromId(results.get(0));
         FileInputStream descriptionStream = fsi.getAssignmentDescription(courseCode, results.get(0), assID);
         Scanner scanner = new Scanner(descriptionStream);
         String description = "";
@@ -141,7 +189,10 @@ public class DatalayerCommunicator {
         //Construct description string
         while (scanner.hasNext()){
             description += scanner.nextLine() + "\n";
-        }
+        }*/
+
+        String description = "beskrivning";
+
         results.add(description);
         return results;
     }
