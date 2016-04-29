@@ -6,7 +6,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import studentcapture.datalayer.database.Participant.ParticipantWrapper;
+// import studentcapture.datalayer.database.Participant.ParticipantWrapper;
 
 import javax.sql.DataSource;
 
