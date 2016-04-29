@@ -24,6 +24,8 @@ import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.video.VideoInfo;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -102,39 +104,38 @@ public class DatalayerCommunicator {
 
     /**
      * Save grade for a submission
-     * @param gradeObject Contains assID, teacherID, studentID, grade
-     * @return false if any value is null or update failed. Otherwise true
+     * @param assID Assignment identification
+     * @param teacherID Teacher identification
+     * @param studentID Student identification
+     * @param grade Grade
+     * @return  True if tables were updated, else false
      */
     @CrossOrigin
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
-    public boolean setGrade(@RequestParam(value = "gradeObject") JSONObject gradeObject) {
-
-        String assID = gradeObject.getString("assID");
-        String teacherID = gradeObject.getString("teacherID");
-        String studentID = gradeObject.getString("studentID");
-        String grade = gradeObject.getString("grade");
-        if(assID == null || teacherID == null || studentID == null || grade == null)
-            return false;
+    public boolean setGrade(@RequestParam(value = "assID") String assID,
+                            @RequestParam(value = "teacherID") String teacherID,
+                            @RequestParam(value = "studentID") String studentID,
+                            @RequestParam(value = "grade") String grade) {
 
         return submission.setGrade(Integer.parseInt(assID), teacherID, studentID, grade);
     }
 
     /**
-     * Give feedback for a submission
-     * @param feedbackObject Contains assID, teacherID, studentID, feedbackVideo, feedbackText
-     * @return false if specific values are null or update failed. Otherwise true
+     * Set feedback for a submission, video and text cannot both be null
+     * @param assID Assignment identification
+     * @param teacherID Teacher identification
+     * @param studentID Student identification
+     * @param feedbackVideo Video feedback
+     * @param feedbackText Text feedback
+     * @return True if feedback was saved, else false
      */
     @CrossOrigin
     @RequestMapping(value = "/setFeedback", method = RequestMethod.POST)
-    public boolean setFeedback(@RequestParam(value = "feedbackObject") VideoInfo feedbackObject){
-
-        /*String assID = feedbackObject.get
-        String teacherID = feedbackObject.getString("teacherID");
-        String studentID = feedbackObject.getString("studentID");
-        Multipartfile feedbackVideo = feedbackObject.getString("feedbackVideo");
-        String feedbackText = feedbackObject.getString("feedbackText");
-        if(assID == null || teacherID == null || studentID == null)
-            return false;
+    public boolean setFeedback(@RequestParam(value = "assID") String assID,
+                               @RequestParam(value = "teacherID") String teacherID,
+                               @RequestParam(value = "studentID") String studentID,
+                               @RequestParam(value = "feedbackVideo") String feedbackVideo,
+                               @RequestParam(value = "feedbackText") String feedbackText) {
         int feedback = 0;
     	if(feedbackVideo != null) {
             // Call to filesystem API save feedback video
@@ -147,7 +148,7 @@ public class DatalayerCommunicator {
         if(feedback == 0)
             return false;
         else
-            return true;*/
+            return true;
     }
 
     /**
