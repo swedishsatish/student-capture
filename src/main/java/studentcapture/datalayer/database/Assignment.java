@@ -17,7 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by E&S on 4/26/16.
@@ -31,38 +36,99 @@ public class Assignment {
 
 
     /**
+     * Inserts an assignment into the database.
      *
-     * @param courseID
-     * @param assignmentTitle
-     * @param startDate
-     * @param endDate
-     * @param minTime
-     * @param maxTime
-     * @param published
-     * @return
+     * @param courseID        the courseID existing in the course-table
+     * @param assignmentTitle the title to the assignment
+     * @param startDate       the startdate of the assignment, should be on
+     *                        format "YYYY-MM-DD HH:MI:SS"
+     * @param endDate         the enddate of the assignment, should be on
+     *                        format "YYYY-MM-DD HH:MI:SS"
+     * @param minTime         minimum time for the assignment, in seconds
+     * @param maxTime         maximum time for the assignment, in seconds
+     * @param published       true if the assignment should be published
+     * @return the generated AssignmentID
+     * @throws ParseException fails if startDate or endDate is not in the
+     *                        right format
      */
-    public int createAssignment(String courseID, String assignmentTitle, String startDate, String endDate,
-                                String minTime, String maxTime, boolean published){
+    public int createAssignment(String courseID, String assignmentTitle,
+                                String startDate, String endDate,
+                                int minTime, int maxTime, boolean published)
+    throws IllegalArgumentException {
 
-        String insertQueryString = "INSERT INTO Assignment (CourseID, Title, StartDate, EndDate, MinTime, MaxTime, Published) VALUES (?,?,?,?,?,?,?);";
+        // Check dates
+        try {
+            if (!isValidDateFormat("yyyy-MM-dd HH:mm:ss", startDate)) {
+                throw new IllegalArgumentException("startDate is not in " +
+                        "format YYYY-MM-DD HH:MI:SS");
+            }
+            if (!isValidDateFormat("yyyy-MM-dd HH:mm:ss", endDate)) {
+                throw new IllegalArgumentException("endDate is not in " +
+                        "format YYYY-MM-DD HH:MI:SS");
+            }
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Date formatting failed");
+        }
 
+        // Check time
+        if (minTime >= maxTime) {
+            throw new IllegalArgumentException("minTime must be less than " +
+                    "maxTime");
+        }
+        if (minTime < 0) {
+            throw new IllegalArgumentException("minTime must be greater or " +
+                    "equal to 0");
+        }
+        if (maxTime <= 0) {
+            throw new IllegalArgumentException("maxTime must be greater " +
+                    "than 0");
+        }
+
+        // Construct query
+        String insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
+                "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
+                "Published) VALUES (DEFAULT ,?,?, " +
+                "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?,?);";
+
+        // Execute query and fetch generated AssignmentID
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps =
-                            connection.prepareStatement(insertQueryString, new String[] {"AssignmentID"});
+                            connection.prepareStatement(insertQueryString,
+                                    Statement.RETURN_GENERATED_KEYS);
                     ps.setString(1, courseID);
                     ps.setString(2, assignmentTitle);
                     ps.setString(3, startDate);
                     ps.setString(4, endDate);
-                    ps.setString(5, minTime);
-                    ps.setString(6, maxTime);
+                    ps.setInt(5, minTime);
+                    ps.setInt(6, maxTime);
                     ps.setBoolean(7, published);
                     return ps;
                 },
                 keyHolder);
 
-        return keyHolder.getKey().intValue();
+        // Return generated AssignmentID
+        return (int) keyHolder.getKeys().get("assignmentid");
+    }
+
+    /**
+     * Used to verify if a given date is in the right format.
+     *
+     * @param format The format to check against.
+     * @param value The date to check.
+     * @return True if the date follows the format, false if not.
+     */
+    private static boolean isValidDateFormat(String format, String value)
+            throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        Date date = sdf.parse(value);
+        if (value.equals(sdf.format(date))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

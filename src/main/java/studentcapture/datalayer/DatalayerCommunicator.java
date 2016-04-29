@@ -40,16 +40,12 @@ public class DatalayerCommunicator {
                                   @RequestParam(value = "courseID", required = false) String courseID,
                                   @RequestParam(value = "assignmentID", required = false) String assignmentID) {
 
-
         LinkedMultiValueMap<String, Object> returnData = new LinkedMultiValueMap<>();
 
         returnData.add("grade", submission.getGrade(studentID, assignmentID).get("grade"));
         returnData.add("time", submission.getGrade(studentID, assignmentID).get("time"));
         returnData.add("teacher",  submission.getGrade(studentID, assignmentID).get("teacher"));
-        FileInputStream fs = fsi.getStudentVideo(courseCode,courseID,Integer.parseInt(assignmentID),
-                Integer.parseInt(studentID));
 
-        returnData.add("video", fs);
 
         return returnData;
     }
@@ -103,8 +99,8 @@ public class DatalayerCommunicator {
      * @param assID
      * @param teacherID
      * @param studentID
-     * //@param feedbackVideo	Can be null
-     * //@param feedbackText	Can be null
+     * @param feedbackVideo	Can be null
+     * @param feedbackText	Can be null
      * @return
      */
     @CrossOrigin

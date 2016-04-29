@@ -34,12 +34,12 @@ public class Participant {
      * @return              true if insertion worked, else false
 
      */
-    
+
     private static final String addParticipantStatement = "INSERT INTO Participant VALUES (?,?,?)";
-    public boolean addParticipant(int userId, int courseId, String function) {
+    public boolean addParticipant(int userId, String courseId, String function) {
         boolean result;
         try {
-            int rowsAffected = jdbcTemplate.update(addParticipantStatement, 
+            int rowsAffected = jdbcTemplate.update(addParticipantStatement,
             		new Object[] {userId, courseId, function});
             if(rowsAffected == 1) {
             	result = true;
@@ -51,7 +51,7 @@ public class Participant {
         }catch (DataAccessException e1){
             result = false;
         }
-        
+
         return result;
     }
 
@@ -72,20 +72,20 @@ public class Participant {
      */
 
     private static final String getFunctionForParticipantStatement = "SELECT "
-    		+ "Position FROM Participant WHERE (UserId=? AND CourseId=?)";
-    public String getFunctionForParticipant(int userId, int courseId){
+    		+ "Function FROM Participant WHERE (UserId=? AND CourseId=?)";
+    public String getFunctionForParticipant(int userId, String courseId){
     	String result = null;
     	try {
     		result = jdbcTemplate.queryForObject(
-    				getFunctionForParticipantStatement, new Object[] 
+    				getFunctionForParticipantStatement, new Object[]
     						{userId, courseId},
-                    String.class);	
+                    String.class);
     	} catch (IncorrectResultSizeDataAccessException e){
             //TODO
         } catch (DataAccessException e1){
         	//TODO
         }
-    	
+
         return result;
 
     }
@@ -105,19 +105,19 @@ public class Participant {
      */
     private static final String getAllParticipantFromCourseStatement = "SELECT"
     		+ " * FROM Participant WHERE (CourseId=?)";
-    public List<ParticipantWrapper> getAllParticipantsFromCourse(int courseId){
+    public List<ParticipantWrapper> getAllParticipantsFromCourse(String courseId){
     	List<ParticipantWrapper> participants = new ArrayList<>();
-		try {	
+		try {
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(
 					getAllParticipantFromCourseStatement, new Object[] {courseId});
 			for (Map<String, Object> row : rows) {
 				ParticipantWrapper participant = new ParticipantWrapper();
 				participant.userId = (int) row.get("UserId");
-				participant.courseId = (int) row.get("CourseId");
+				participant.courseId = (String) row.get("CourseId");
 				participant.function = (String) row.get("Function");
 				participants.add(participant);
 			}
-		
+
 		} catch (IncorrectResultSizeDataAccessException e){
 			//TODO
 		    return null;
@@ -125,7 +125,7 @@ public class Participant {
 			//TODO
 			return null;
 		}
-    	
+
         return participants;
     }
 
@@ -147,17 +147,17 @@ public class Participant {
     		+ " CourseId,Function FROM Participant WHERE (UserId=?)";
     public List<ParticipantWrapper> getAllCoursesForParticipant(int userId) {
     	List<ParticipantWrapper> participants = new ArrayList<>();
-    
+
     	try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
 	    			getAllCoursesForParticipantStatement, new Object[] {userId});
 	    	for (Map<String, Object> row : rows) {
 	    		ParticipantWrapper participant = new ParticipantWrapper();
-	    		participant.courseId = (int) row.get("CourseId");
+	    		participant.courseId = (String) row.get("CourseId");
 	    		participant.function = (String) row.get("Function");
 	    		participants.add(participant);
 	    	}
-	
+
 	    } catch (IncorrectResultSizeDataAccessException e){
 			//TODO
 		    return null;
@@ -165,7 +165,7 @@ public class Participant {
 			//TODO
 			return null;
 		}
-    	
+
         return participants;
     }
 
@@ -187,7 +187,7 @@ public class Participant {
 
     private static final String removeParticipantStatement = "DELETE FROM "
     		+ "Participant WHERE (UserId=? AND CourseId=?)";
-    public boolean removeParticipant(int userId, int courseId){
+    public boolean removeParticipant(int userId, String courseId){
     	boolean result;
         try {
             int rowsAffected = jdbcTemplate.update(removeParticipantStatement,
@@ -207,7 +207,7 @@ public class Participant {
 
     public class ParticipantWrapper {
     	public int userId;
-    	public int courseId;
+    	public String courseId;
     	public String function;
     }
 }
