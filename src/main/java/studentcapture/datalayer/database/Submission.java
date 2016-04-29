@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Submission {
 
-    // Use this template to send queries to the database
+    // This template should be used to send queries to the database
     @Autowired
     protected JdbcTemplate jdbcTemplate;
 
@@ -30,25 +30,8 @@ public class Submission {
 
      */
 
-    private static final String addSubmissionStatement =
-            "INSERT INTO Submission (AssignmentID, StudentID, SubmissionDate) VALUES  (?,?,?)";
     protected boolean addSubmission(String assID, String studentID, Date date) {
-        boolean result;
-        try {
-            int rowsAffected = jdbcTemplate.update(addSubmissionStatement,
-                    new Object[] {assID, studentID, date});
-            if(rowsAffected == 1) {
-                result = true;
-            } else {
-                result = false;
-            }
-        }catch (IncorrectResultSizeDataAccessException e){
-            result = false;
-        }catch (DataAccessException e1){
-            result = false;
-        }
-
-        return result;
+        return true;
     }
 
     /**

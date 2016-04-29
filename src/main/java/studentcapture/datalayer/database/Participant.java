@@ -10,9 +10,10 @@ import java.util.List;
  */
 public class Participant {
 
-    // Use this template to send queries to the database
+    // This template should be used to send queries to the database
     @Autowired
     protected JdbcTemplate jdbcTemplate;
+
 
     /**
 

@@ -1,13 +1,15 @@
 package studentcapture.video.videoIn;
 
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.SystemPropertyUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import studentcapture.config.StudentCaptureApplication;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 
 
 /**
@@ -30,19 +32,56 @@ public class RequestManager {
     public String requestPOSTVideo(
             @RequestParam("userID") String userID,
             @RequestParam("courseID") String courseID,
-            @RequestParam("examID") String examID) {
+            @RequestParam("examID") String examID
+    ) throws Exception {
 
-
-        // TODO: FIX PLZ
         if (!validUser(userID, courseID, examID)) {
-             //   throw new Exception("Request not valid.");
+            throw new Exception("Request not valid.");
         }
 
         String uploadURL = "/uploadVideo/" + HashCodeGenerator.generateHash(userID);
 
-
         return uploadURL;
     }
+
+    /**
+     * Request a post of a testing video.E
+     * @return The video.
+     */
+    @CrossOrigin()
+    @RequestMapping(value="/video/posttest", method = RequestMethod.GET)
+    public MultipartFile requestPostTestVideo(
+            @RequestParam("videoName") String videoName,
+            @RequestParam("videoTest")MultipartFile videoTest
+    ) {
+
+        if (!videoTest.isEmpty()) {
+            try {
+
+
+                BufferedOutputStream stream = new BufferedOutputStream(
+                        new FileOutputStream(
+                                new File(StudentCaptureApplication.ROOT + "/" + videoName)));
+
+
+                FileCopyUtils.copy(videoTest.getInputStream(), stream);
+                stream.close();
+            } catch (Exception e) {
+
+                System.err.println("Failed to upload file.");
+                return null;
+            }
+        } else {
+            System.err.println("Bad file.");
+            return null;
+        }
+
+        return videoTest;
+    }
+
+
+
+
 
     /**
      * Request a URL to get a specific video.
@@ -56,13 +95,15 @@ public class RequestManager {
     public String requestGETVideo(
             @RequestParam("userID") String userID,
             @RequestParam("courseID") String courseID,
-            @RequestParam("examID") String examID) {
+            @RequestParam("examID") String examID
+    ) {
 
         //TODO: GETVideo method
 
         return "";
     }
 
+ 
     /**
      * Checks that a user is valid to upload a video.
      * @return
