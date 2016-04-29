@@ -9,18 +9,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import studentcapture.assignment.AssignmentModel;
+import studentcapture.lti.*;
 
 import java.util.HashMap;
 
 /**
- * Created by c12osn on 2016-04-26.
+ * Will deliver or update information about feedback on a Submission for an
+ * Assignment.
+ *
+ * @author Group4, Group6
+ * @see AssignmentModel
+ * @see FeedbackModel
+ * @version 0.2, 04/29/16
+ * @since 0.1, 04/28/16 Added "set"-mapping method.
  */
 
 @RestController
@@ -50,6 +56,36 @@ public class FeedbackController {
         }
         return response;
     }
+
+    /**
+     * Will set the given grade for the Feedback.
+     * @param feedbackModel The given feedback that will be inserted/updated.
+     * @see LTICommunicator
+     * @see FeedbackModel
+     */
+    @RequestMapping(value = "set", method = RequestMethod.POST)
+    public void setFeedback(@RequestBody FeedbackModel feedbackModel) {
+        //TODO: Set grade in Student-capture (database)
+
+
+        //TODO: Set grade in LTI.
+        try {
+            LTICommunicator.setGrade(feedbackModel);
+        }
+        catch (LTIInvalidGradeException e) {
+            //TODO: Will need to notify the client.
+            e.printStackTrace();
+        } catch (LTINullPointerException e) {
+            //TODO: Ignore.
+            e.printStackTrace();
+        } catch (LTISignatureException e) {
+            //TODO: Will need to notify system administrator.
+            e.printStackTrace();
+        }
+
+
+    }
+
 
 
 }
