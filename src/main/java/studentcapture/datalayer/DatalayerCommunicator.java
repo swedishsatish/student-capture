@@ -24,8 +24,8 @@ public class DatalayerCommunicator {
 
     @Autowired
     private Submission submission;
-    @Autowired
-    private Assignment assignment;
+    //@Autowired
+    //private Assignment assignment;
 
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.POST)
