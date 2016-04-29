@@ -70,17 +70,25 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
-    public int createAssignment(@RequestParam(value = "courseID") String courseID,
+    public int createAssignment(//@RequestBody AssigmentModel assignment){ //will be used after merge
+                                @RequestParam(value = "courseID") String courseID,
                                 @RequestParam(value = "assignmentTitle") String assignmentTitle,
                                 @RequestParam(value = "startDate") String startDate,
                                 @RequestParam(value = "endDate") String endDate,
-                                @RequestParam(value = "minTime") String minTime,
-                                @RequestParam(value = "maxTime") String maxTime,
+                                @RequestParam(value = "minTime") int minTime,
+                                @RequestParam(value = "maxTime") int maxTime,
                                 @RequestParam(value = "published") boolean published){
+        int returnResult;
 
-        //int returnResult = ass.createAssignment(courseID, assignmentTitle, startDate, endDate, minTime, maxTime, published);
+        try{
+            returnResult = assignment.createAssignment(courseID, assignmentTitle,
+                    startDate, endDate, minTime, maxTime, published);
+        } catch (IllegalArgumentException e) {
+            //TODO return smarter error msg
+            return -1;
+        }
 
-        return 1234;//returnResult;
+        return returnResult;
     }
     /**
      * Save grade for a submission
@@ -160,7 +168,8 @@ public class DatalayerCommunicator {
     }
 
     /**
-     * Fetches information about an assignment
+     * Fetches information about an assignment.
+     * Description is mocked at the moment due to filesystem issues.
      * @param assID Unique identifier for the assignment
      * @return Array containing [course ID, assignment title, opening datetime, closing datetime, minimum video time, maximum video time, description]
      */
@@ -169,8 +178,10 @@ public class DatalayerCommunicator {
     public ArrayList<String> getAssignmentInfo(@RequestParam(value = "assID") int assID){
 
         ArrayList<String> results = assignment.getAssignmentInfo(assID);
+
         //Need the courseCode for the path
-        String courseCode = course.getCourseCodeFromId(results.get(0));
+        //code for the filesystem
+        /*String courseCode = course.getCourseCodeFromId(results.get(0));
         FileInputStream descriptionStream = fsi.getAssignmentDescription(courseCode, results.get(0), assID);
         Scanner scanner = new Scanner(descriptionStream);
         String description = "";
@@ -178,7 +189,10 @@ public class DatalayerCommunicator {
         //Construct description string
         while (scanner.hasNext()){
             description += scanner.nextLine() + "\n";
-        }
+        }*/
+
+        String description = "beskrivning";
+
         results.add(description);
         return results;
     }
