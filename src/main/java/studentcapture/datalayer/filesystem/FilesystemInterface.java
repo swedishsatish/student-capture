@@ -1,8 +1,11 @@
 package studentcapture.datalayer.filesystem;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+
+import studentcapture.config.StudentCaptureApplication;
 
 public class FilesystemInterface {
 
@@ -57,7 +60,6 @@ public class FilesystemInterface {
 	   try {
 			return new FileInputStream(path);
 		} catch (FileNotFoundException e) {
-			// TODO
 			return null;
 		}
    	}
@@ -84,5 +86,23 @@ public class FilesystemInterface {
 			// TODO Auto-generated catch block
 			return null;
 		}
+	}
+	/**
+	 * Returns the size of a specific video file.
+	 * 
+     * @param courseCode    courses 6 character identifier
+     * @param courseId      courses unique database id
+     * @param assignmentId  assignments unique database id
+     * @param userId        users unique database id
+	 * @return              video file size
+	 * @author              Stefan Embretsen
+	 */
+	public int getVideoFileSize(String courseCode, int courseId, 
+           int assignmentId, int userId){
+	    String path = FilesystemInterface.generatePath(courseCode, courseId, 
+	               assignmentId, userId) + FilesystemConstants
+	               .SUBMISSION_VIDEO_FILENAME;
+	    File f = new File(path);
+	    return (int)f.length();
 	}
 }
