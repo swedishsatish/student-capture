@@ -79,7 +79,7 @@ public class VideoOutController {
 
     /**
      * Gets a specific video from the FilesystemInterface and returns 
-     * it as a byte array.
+     * it as a byte array. Deprecated method. Shall not handle files in this module.
      * 
      * @param courseCode    courses 6 character identifier
      * @param courseId      courses unique database id
@@ -88,6 +88,7 @@ public class VideoOutController {
      * @return              a video byte array
      * @author              Stefan Embretsen
      */
+    @Deprecated
     @RequestMapping(value = "/videoDownload/{courseCode}/{courseId}/{assignmentId}/{userId}",
             method = RequestMethod.GET, produces = "video/webm")
     public ResponseEntity<InputStreamResource> handleVideDl(@PathVariable("courseCode") String courseCode,
@@ -127,5 +128,6 @@ public class VideoOutController {
         
 
     }
+
 
 }

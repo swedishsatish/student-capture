@@ -1,39 +1,35 @@
 package studentcapture.video;
 
 /**
- * Created by Beaverulf on 26/04/16.
+ * Created by c13bll on 26/04/16.
  */
 public class UserData {
 
-    private String userID;
-    private Long courseID;
-    private String examID;
+    private String courseID;
+    private String courseCode;
+    private int assignmentID;
 
-
-    public UserData addExamID(String examID) {
-        this.examID = examID;
-        return this;
-    }
-
-    public UserData addCourseID(Long courseID) {
-        this.courseID = courseID;
-        return this;
-    }
-
-    public UserData addUserID(String userID){
-        this.userID = userID;
-        return this;
-    }
-
-    public String getUserID() {
-        return userID;
-    }
-
-    public Long getCourseID() {
+    public String getCourseID() {
         return courseID;
     }
 
-    public String getExamID() {
-        return examID;
+    public void setCourseID(String courseID) {
+        this.courseID = courseID;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    public int getAssignmentID() {
+        return assignmentID;
+    }
+
+    public void setAssignmentID(int assignmentID) {
+        this.assignmentID = assignmentID;
     }
 }
