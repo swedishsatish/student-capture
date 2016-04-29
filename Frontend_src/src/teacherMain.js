@@ -11,7 +11,11 @@ recordButton.onclick = function() {
 };
 
 
-postButton.onclick = function () {postToServer(theBlob,"user","5DV121","1337")};
+postButton.onclick = function () {
+    postToServer(theBlob,"user","5DV121","1337")
+    document.getElementById("post").disabled = true;
+
+};
 document.getElementById("post").disabled = true;
 startStream('video#gum');
 
