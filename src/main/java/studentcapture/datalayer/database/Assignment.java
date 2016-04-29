@@ -148,7 +148,7 @@ public class Assignment {
         // Execute query
         try {
             for (String c : columns) {
-                query = "SELECT " + c + " FROM assignment WHERE (assignmentid = ?)";
+                query = "SELECT " + c + " FROM assignment WHERE (assignmentid = ?);";
                 tempVal = jdbcTemplate.queryForObject(query, new Object[]{assignmentID}, String.class);
 
                 if (tempVal == null) {

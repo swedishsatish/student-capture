@@ -29,7 +29,7 @@ public class FilesystemInterface {
 	 * @param assignmentId	assignments unique database id
 	 * @return				path to directory
 	 */
-	public static String generatePath(String courseCode, int courseId, int assignmentId) {
+	public static String generatePath(String courseCode, String courseId, int assignmentId) {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseCode
 				+ "/" + courseId + "/" + assignmentId + "/";
 		
@@ -46,7 +46,7 @@ public class FilesystemInterface {
 	 * @param studentId		students unique database id
 	 * @return				path to directory
 	 */
-	public static String generatePath(String courseCode, int courseId, 
+	public static String generatePath(String courseCode, String courseId,
 			int assignmentId, int studentId) {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseCode
 				+ "/" + courseId + "/" + assignmentId + "/" + studentId + "/";
@@ -57,12 +57,12 @@ public class FilesystemInterface {
 	/**
      * starts a stream to student video for a specific assignment at a course.
      * 
-     * @parma courseCode the code for the course.
-     * @param courseID course id from the database
+     * @param courseCode the code for the course.
+     * @param courseId course id from the database
      * @param userId
      * @return video or null if it doesn't exist. 
      */
-	public FileInputStream getStudentVideo(String courseCode, int courseId, 
+	public FileInputStream getStudentVideo(String courseCode, String courseId,
 		   int assignmentId, int userId) {
 	   String path = FilesystemInterface.generatePath(courseCode, courseId, 
 			   assignmentId, userId) + FilesystemConstants
@@ -75,18 +75,35 @@ public class FilesystemInterface {
 			return null;
 		}
    	}
+
+    /**
+     * Fetches an assignment's description from the file system.
+     * @param courseCode Identifies the course associated with the assignment
+     * @param courseId Identifies the instance of the course
+     * @param assignmentId Unique code of the assignment
+     * @return
+     */
+    public FileInputStream getAssignmentDescription(String courseCode, String courseId, int assignmentId) {
+        String path = FilesystemInterface.generatePath(courseCode, courseId, assignmentId) + FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
+        try {
+            return new FileInputStream(path);
+        } catch (FileNotFoundException e) {
+            System.err.println("No description of the assignment was found.\n");
+            return null;
+        }
+    }
 	
 	/**
      * Store the students video for an assignment at a course.
 	 * If student folder doesn't exist a folder will be created.
      *
      * @param courseCode the code for the course. 
-     * @param courseID course id from the database
-     * @param assigmentId from database
+     * @param courseId course id from the database
+     * @param assignmentId from database
      * @param userId from database
      * @return true if video was stored successfully
      */
-	public static boolean storeStudentVideo(String courseCode, int courseId,
+	public static boolean storeStudentVideo(String courseCode, String courseId,
 		   int assignmentId, int userId, File source) {
 
         String path = FilesystemInterface.generatePath(courseCode, courseId,
