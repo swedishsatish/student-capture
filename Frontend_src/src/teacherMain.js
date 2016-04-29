@@ -12,7 +12,7 @@ recordButton.onclick = function() {
 
 
 postButton.onclick = function () {postToServer(theBlob,"user","5DV121","1337")};
-
+document.getElementById("post").disabled = true;
 startStream('video#gum');
 
 
@@ -31,14 +31,17 @@ function play() {
 }
 
 function toggle() {
+
   if (recordButton.textContent === "Start Recording") {
     if (startRecording(getStream())) {
-            recordFeedback(true);
+        recordFeedback(true);
+        document.getElementById("post").disabled = true;
     }
     recordButton.textContent = "Stop Recording";
   } else {
-
+    document.getElementById("post").disabled = false;
     finilize();
     recordButton.textContent = "Start Recording";
+
   }
 }
