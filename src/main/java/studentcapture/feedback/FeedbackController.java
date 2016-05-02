@@ -40,7 +40,6 @@ public class FeedbackController {
     public HashMap handleFeedbackRequestFromStudent(@RequestParam(value = "userID", required = true) String userID,
                                                    @RequestParam(value = "assID", required = true) String assID) {
         //TODO Unsafe data needs to be cleaned
-
         URI targetUrl = UriComponentsBuilder.fromUriString("https://localhost:8443")
                 .path("DB/getGrade")
                 .queryParam("userID", userID)

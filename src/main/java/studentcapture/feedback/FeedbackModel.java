@@ -42,14 +42,14 @@ public class FeedbackModel {
     }
 
     /**
-     * @return will set the grade of the Submission
+     * @return Returns the grade of the assignment.
      */
     public String getGrade() {
         return grade;
     }
 
     /**
-     * @param grade Returns the grade of the assignment.
+     * @param grade will set the grade of the Submission
      */
     public void setGrade(String grade) {
         this.grade = grade;
