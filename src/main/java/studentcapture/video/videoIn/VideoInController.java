@@ -84,15 +84,13 @@ public class VideoInController {
             requestParts.add("filename", filename);
 
             // Send the submission video as a POST request to DataLayerCommunicator at /DB/addSubmission
-//            String result = requestSender.postForObject(uri, requestParts, String.class);
-            ResponseEntity response = requestSender.postForEntity(uri, requestParts, ResponseEntity.class);
-            String result = response.getStatusCode().toString();
+            ResponseEntity<String> response = requestSender.postForEntity(uri, requestParts, String.class);
 
-            if(result == null) {
+            if(response == null) {
                 System.err.println("Sending data to DataLayerCommunicator failed.");
                 return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-            } else if(!result.equals("200")) {
-                System.err.println("DataLayerComunicator: "+result);
+            } else if(response.getStatusCode() != HttpStatus.OK) {
+                System.err.println("DataLayerComunicator: "+response.getStatusCode().toString());
                 return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (RestClientException e) {

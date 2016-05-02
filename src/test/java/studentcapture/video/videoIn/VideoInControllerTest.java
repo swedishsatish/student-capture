@@ -51,7 +51,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     @Test
     public void testUploadCorrectHeaderAndEmptyBody() throws Exception {
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(response);
+        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
 
         mockMvc.perform(post("/uploadVideo/"+id)
                 .contentType("multipart/form-data"))
@@ -63,7 +63,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(response);
+        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id+"asdsad")
                 .file(new MockMultipartFile("video", fileContent))
@@ -71,7 +71,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
-                .param("videoType", "answer")
+                .param("videoType", "submission")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isUnauthorized());
     }
@@ -81,7 +81,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(response);
+        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("bugsbunny", fileContent))
@@ -89,7 +89,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
-                .param("videoType", "answer")
+                .param("videoType", "submission")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnsupportedMediaType());
     }
@@ -97,7 +97,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     @Test
     public void testUploadWrongHeaderAndEmptyBody() throws Exception {
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(response);
+        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
 
         mockMvc.perform(post("/uploadVideo/"+id)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -109,7 +109,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(response);
+        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("video", fileContent))
@@ -117,7 +117,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
-                .param("videoType", "answer")
+                .param("videoType", "submission")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isOk());
     }
@@ -127,7 +127,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(response);
+        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("video", fileContent))
@@ -135,7 +135,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
-                .param("videoType", "answer")
+                .param("videoType", "submission")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isInternalServerError());
     }
@@ -145,7 +145,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(response);
+        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("video", fileContent))
@@ -153,7 +153,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
-                .param("videoType", "answer")
+                .param("videoType", "submission")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isInternalServerError());
     }
@@ -163,7 +163,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(null);
+        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("video", fileContent))
@@ -171,7 +171,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
-                .param("videoType", "answer")
+                .param("videoType", "submission")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isInternalServerError());
     }
@@ -181,14 +181,14 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT + "/bugsbunny.webm"));
 
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(response);
+        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("video", fileContent))
                 .param("userID", "user")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
-                .param("videoType", "answer")
+                .param("videoType", "submission")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isBadRequest());
     }
@@ -198,7 +198,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(response);
+        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("videoo", fileContent))
@@ -206,7 +206,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
                 .param("assignmentIDD", "1337")
                 .param("courseIDD", "5DV151")
                 .param("courseCodee", "5DV151")
-                .param("videoTypee", "answer")
+                .param("videoTypee", "submission")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isBadRequest());
     }
@@ -216,7 +216,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(response);
+        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("videoName", fileContent))
@@ -224,7 +224,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV15111111")
                 .param("courseCode", "5DV151")
-                .param("videoType", "answer")
+                .param("videoType", "submission")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isBadRequest());
     }
@@ -234,7 +234,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         byte[] fileContent = {};
 
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(response);
+        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("video", fileContent))
@@ -242,7 +242,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
-                .param("videoType", "answer")
+                .param("videoType", "submission")
                 .contentType("multipart/form-data"))
                 .andExpect(status().isNoContent());
     }
@@ -259,6 +259,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
                             .param("assignmentID", "1337")
             );
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
