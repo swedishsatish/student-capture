@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by c13gan on 2016-04-26.
@@ -36,8 +37,9 @@ public class Participant {
      */
 
     private static final String addParticipantStatement = "INSERT INTO Participant VALUES (?,?,?)";
-    public boolean addParticipant(int userId, String courseId, String function) {
+    public boolean addParticipant(String userID, String courseId, String function) {
         boolean result;
+        int userId = Integer.parseInt(userID);
         try {
             int rowsAffected = jdbcTemplate.update(addParticipantStatement,
             		new Object[] {userId, courseId, function});
@@ -73,8 +75,9 @@ public class Participant {
 
     private static final String getFunctionForParticipantStatement = "SELECT "
     		+ "Function FROM Participant WHERE (UserId=? AND CourseId=?)";
-    public String getFunctionForParticipant(int userId, String courseId){
+    public Optional<String> getFunctionForParticipant(String userID, String courseId){
     	String result = null;
+        int userId = Integer.parseInt(userID);
     	try {
     		result = jdbcTemplate.queryForObject(
     				getFunctionForParticipantStatement, new Object[]
@@ -86,8 +89,7 @@ public class Participant {
         	//TODO
         }
 
-        return result;
-
+        return Optional.of(result);
     }
 
 
@@ -105,7 +107,7 @@ public class Participant {
      */
     private static final String getAllParticipantFromCourseStatement = "SELECT"
     		+ " * FROM Participant WHERE (CourseId=?)";
-    public List<ParticipantWrapper> getAllParticipantsFromCourse(String courseId){
+    public Optional<List<ParticipantWrapper>> getAllParticipantsFromCourse(String courseId){
     	List<ParticipantWrapper> participants = new ArrayList<>();
 		try {
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(
@@ -120,13 +122,13 @@ public class Participant {
 
 		} catch (IncorrectResultSizeDataAccessException e){
 			//TODO
-		    return null;
+		    return Optional.empty();
 		} catch (DataAccessException e1){
 			//TODO
-			return null;
+			return Optional.empty();
 		}
 
-        return participants;
+        return Optional.of(participants);
     }
 
 
@@ -145,9 +147,9 @@ public class Participant {
 
     private static final String getAllCoursesForParticipantStatement = "SELECT"
     		+ " CourseId,Function FROM Participant WHERE (UserId=?)";
-    public List<ParticipantWrapper> getAllCoursesForParticipant(int userId) {
+    public Optional<List<ParticipantWrapper>> getAllCoursesForParticipant(String userID) {
     	List<ParticipantWrapper> participants = new ArrayList<>();
-
+    	int userId = Integer.parseInt(userID);
     	try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
 	    			getAllCoursesForParticipantStatement, new Object[] {userId});
@@ -160,13 +162,13 @@ public class Participant {
 
 	    } catch (IncorrectResultSizeDataAccessException e){
 			//TODO
-		    return null;
+		    return Optional.empty();
 		} catch (DataAccessException e1){
 			//TODO
-			return null;
+			return Optional.empty();
 		}
 
-        return participants;
+        return Optional.of(participants);
     }
 
 
@@ -187,8 +189,9 @@ public class Participant {
 
     private static final String removeParticipantStatement = "DELETE FROM "
     		+ "Participant WHERE (UserId=? AND CourseId=?)";
-    public boolean removeParticipant(int userId, String courseId){
+    public boolean removeParticipant(String userID, String courseId){
     	boolean result;
+    	int userId = Integer.parseInt(userID);
         try {
             int rowsAffected = jdbcTemplate.update(removeParticipantStatement,
             		new Object[] {userId, courseId});
