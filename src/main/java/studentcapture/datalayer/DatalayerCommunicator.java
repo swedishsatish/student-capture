@@ -10,9 +10,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.Submission;
+import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 import studentcapture.datalayer.database.User;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 
@@ -20,13 +22,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by c12osn on 2016-04-22.
  * Edited by c13arm, ens13ahr
  */
 @RestController
-@RequestMapping(value = "DB")
+@RequestMapping(value = "/DB")
 public class DatalayerCommunicator {
 
 
@@ -226,5 +229,27 @@ public class DatalayerCommunicator {
     public boolean login(@RequestParam(value = "username") String username,
                          @RequestParam(value = "pswd") String pswd) {
         return   user.userExist(username,pswd);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.POST,
+    value = "/getAllSubmissions")
+    @ResponseBody
+    public List<SubmissionWrapper> getAllSubmissions(
+    		@RequestParam(value="assignmentID") String assignmentID) {
+    	return submission.getAllSubmissions(assignmentID).get();
+    }
+    
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.POST,
+    value = "/getAllUngradedSubmissions")
+    @ResponseBody
+    public List<SubmissionWrapper> getAllUngradedSubmissions(
+    		@RequestParam(value="assignmentID") String assignmentID) {
+    	return submission.getAllSubmissions(assignmentID).get();
     }
 }

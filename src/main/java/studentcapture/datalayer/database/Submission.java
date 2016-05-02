@@ -209,15 +209,15 @@ public class Submission {
     	int assignmentId = Integer.parseInt(assId);
     	try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-	    			getAllSubmissionsStatement, new Object[] {assignmentId});
+	    			getAllUngradedStatement, new Object[] {assignmentId});
 	    	for (Map<String, Object> row : rows) {
 	    		SubmissionWrapper submission = new SubmissionWrapper();
 	    		submission.assignmentId = (int) row.get("AssignmentId");
 	    		submission.studentId = (int) row.get("StudentId");
 	    		submission.teacherId = Optional.of((int) row.get("TeacherId"));
 	    		submission.grade = Optional.of((String) row.get("Grade"));
-	    		submission.submissionTime = (String)
-	    				row.get("SubmissionTime");
+	    		submission.submissionDate = ((Timestamp)
+	    				row.get("SubmissionDate")).toString();
 	    		submissions.add(submission);
 	    	}
 
@@ -264,8 +264,9 @@ public class Submission {
 	    		} catch (NullPointerException e) {
 	    			submission.grade = Optional.empty();
 	    		}
-	    		submission.submissionTime = (String)
-	    				row.get("SubmissionTime");
+	    		submission.submissionDate = ((Timestamp)
+	    				row.get("SubmissionDate")).toString();
+	    		
 	    		submissions.add(submission);
 	    	}
 
@@ -283,7 +284,7 @@ public class Submission {
     public class SubmissionWrapper {
     	public int assignmentId;
     	public int studentId;
-    	public String submissionTime;
+    	public String submissionDate;
     	public Optional<String> grade;
     	public Optional<Integer> teacherId;
     }
