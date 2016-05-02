@@ -1,12 +1,5 @@
 package studentcapture.datalayer;
 
-//import org.json.JSONObject;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -16,18 +9,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.Submission;
 import studentcapture.datalayer.database.User;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
-//import studentcapture.video.VideoInfo;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
+
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -117,7 +110,7 @@ public class DatalayerCommunicator {
                             @RequestParam(value = "studentID") String studentID,
                             @RequestParam(value = "grade") String grade) {
 
-        return submission.setGrade(Integer.parseInt(assID), teacherID, studentID, grade);
+        return submission.setGrade(assID, teacherID, studentID, grade);
     }
 
     /**
@@ -134,15 +127,17 @@ public class DatalayerCommunicator {
     public boolean setFeedback(@RequestParam(value = "assID") String assID,
                                @RequestParam(value = "teacherID") String teacherID,
                                @RequestParam(value = "studentID") String studentID,
-                               @RequestParam(value = "feedbackVideo") String feedbackVideo,
-                               @RequestParam(value = "feedbackText") String feedbackText) {
+                               @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
+                               @RequestParam(value = "feedbackText") MultipartFile feedbackText,
+                               @RequestParam(value = "courseID") String courseID,
+                               @RequestParam(value = "courseCode") String courseCode) {
         int feedback = 0;
     	if(feedbackVideo != null) {
-            // Call to filesystem API save feedback video
+            fsi.storeFeedbackVideo(courseCode, courseID, assID, studentID, feedbackVideo);
             feedback++;
         }
         if(feedbackText != null) {
-            // Call to filesystem API save feedback text
+            fsi.storeFeedbackText(courseCode, courseID, assID, studentID, feedbackText);
             feedback++;
         }
         if(feedback == 0)
@@ -162,7 +157,7 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/getAssignmentVideo", method = RequestMethod.POST, produces = "video/webm")
     public ResponseEntity<InputStreamResource> getAssignmentVideo(@RequestParam("courseCode") String courseCode,
                                                                   @RequestParam("courseId") String courseId,
-                                                                  @RequestParam("assignmentId") int assignmentId) {
+                                                                  @RequestParam("assignmentId") String assignmentId) {
 
         ResponseEntity<InputStreamResource> responseEntity;
 
