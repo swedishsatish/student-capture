@@ -14,6 +14,7 @@ import studentcapture.config.StudentCaptureApplicationTests;
 
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -41,11 +42,19 @@ public class SubmissionTest  extends StudentCaptureApplicationTests {
 
     @Test
     public void shouldBeAbleToConnectToDB(){
-        when(jdbcMock.queryForObject("hej", new Object[]{1, 1}, String.class)).
-                thenReturn("{grade:hej}");
-        Hashtable<String, Object> response = sub.getGrade("1","1");
+        String sqlQuery = "SELECT grade, submissiondate as time, concat(firstname,' ', lastname) as teacher" +
+                " FROM submission JOIN users ON (teacherid = userid) WHERE (studentid = ? AND assignmentid = ?)";
 
-        assertEquals("hej", response.get("grade"));
+        Map responseFromMock = new HashMap();
+        responseFromMock.put("grade", "vg");
+        responseFromMock.put("time", "10100101");
+
+
+        when(jdbcMock.queryForMap(sqlQuery, 1, 1)).
+                thenReturn(responseFromMock);
+        Map<String, Object> response = sub.getGrade(1, 1);
+
+        assertEquals("vg", response.get("grade"));
     }
 
 }
