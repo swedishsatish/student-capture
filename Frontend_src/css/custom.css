@@ -14,7 +14,14 @@ h1, h2, h3, h4, h5, h6 {
 	font-family: 'Open Sans', sans-serif;
 	color:#FFFFFF;
 }
-
+.container h1,
+.container h2,
+.container h3,
+.container h4,
+.container h5,
+.container h6 {
+    color:#076172;
+}
 .container {
   	height: 100%;
   	width: 100%;

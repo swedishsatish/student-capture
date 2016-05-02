@@ -28,9 +28,25 @@ window.CourseContent = React.createClass({
     render: function() {
         var id = this.props.id;
         var type = this.props.type;
+        var title;
+        switch(type){
+            case "course":
+                title = <h1>{type}</h1>
+                break;
+            case "assignment":
+                title = <h2>{type}</h2>
+                break;
+            case "task":
+                title = <h3>{type}</h3>
+                break;
+            default:
+                title = <h4>{type}</h4>
+                break;
+        }
         return (
             <div>
-                ID: {id}<br />Type: {type}
+                {title}
+                ID: {id}
             </div>
         );
     }
