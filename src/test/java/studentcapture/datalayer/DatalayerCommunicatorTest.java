@@ -1,5 +1,6 @@
 package studentcapture.datalayer;
 
+import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
@@ -58,4 +59,27 @@ public class DatalayerCommunicatorTest extends StudentCaptureApplicationTests {
                 .andReturn();
         assertTrue(result.equals(true));
     }
+
+    @org.junit.Test
+    public void testLogin() throws Exception {
+        MvcResult result = mockMvc.perform(post("/DB/login")
+                .param("username","Olles")
+                .param("pswd","123A"))
+                .andExpect(status().isOk()).andReturn();
+
+        assertTrue(result.equals(true));
+    }
+
+    @org.junit.Test
+    public void testRegistration() throws Exception {
+        MvcResult result = mockMvc.perform(post("/DB/registerUser")
+                .param("userName","newusr")
+                .param("fName","firstname")
+                .param("lName","lastname")
+                .param("pNr","1993")
+                .param("pwd","123")).andExpect(status().isOk()).andReturn();
+        //tring userName, String fName, String lName, String pNr, String pwd
+        assertTrue(result.equals(true));
+    }
+
 }
