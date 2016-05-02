@@ -6,6 +6,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -33,11 +34,27 @@ public class Course {
      * @return			true if successful, else false
 
      */
+    private static final String addCourseStatement = "INSERT INTO "
+    		+ "Course VALUES (?,?,?,?,?)";
+    public boolean addCourse(String courseID, String courseCode, String year,
+    		String term, String courseName) {
+    	boolean result;
+    	int years = Integer.parseInt(year);
+        try {
+            int rowsAffected = jdbcTemplate.update(addCourseStatement,
+            		new Object[] {courseID, years, term, courseCode, courseName});
+            if(rowsAffected == 1) {
+            	result = true;
+            } else {
+            	result = false;
+            }
+        }catch (IncorrectResultSizeDataAccessException e){
+            result = false;
+        }catch (DataAccessException e1){
+            result = false;
+        }
 
-    public boolean addCourse(String courseCode, int year, String term) {
-
-        return false; //TODO
-
+        return result;
     }
 
 
@@ -66,7 +83,7 @@ public class Course {
 
      */
 
-    public List<Object> getCourse(int courseID) {
+    public List<Object> getCourse(String courseID) {
 
         return null; //TODO
 
@@ -86,10 +103,24 @@ public class Course {
 
      */
 
-    public boolean removeCourse(int courseID) {
-
-        return false; //TODO
-
+    private static final String removeCourseStatement = "DELETE FROM "
+    		+ "Course WHERE CourseID=?";
+    public boolean removeCourse(String courseID) {
+    	boolean result;
+        try {
+            int rowsAffected = jdbcTemplate.update(removeCourseStatement,
+            		new Object[] {courseID});
+            if(rowsAffected == 1) {
+            	result = true;
+            } else {
+            	result = false;
+            }
+        }catch (IncorrectResultSizeDataAccessException e){
+            result = false;
+        }catch (DataAccessException e1){
+            result = false;
+        }
+        return result;
     }
 
     /**
