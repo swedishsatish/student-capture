@@ -1,6 +1,6 @@
 package studentcapture.datalayer;
 
-import java.util.Hashtable;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ public class DatalayerCommunicator {
 
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
-    public Hashtable<String, Object> getGrade(@Valid FeedbackModel model) {
+    public Map<String, Object> getGrade(@Valid FeedbackModel model) {
         return submission.getGrade(model.getStudentID(), model.getAssignmentID());
     }
 
