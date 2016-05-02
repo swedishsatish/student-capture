@@ -32,8 +32,9 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
     private URI getUri() {
         return UriComponentsBuilder.fromUriString("https://localhost:8443")
                 .path("DB/getGrade")
-                .queryParam("userID", "Anna")
-                .queryParam("assID", "1")
+                .queryParam("studentID", "1")
+                .queryParam("assignmentID", "1")
+                .queryParam("courseID", "1")
                 .build()
                 .toUri();
     }
@@ -60,23 +61,27 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
     @Test
     public void shouldRespondOkWithParams() throws Exception {
         mockMvc.perform(get("/feedback/get")
-                .param("userID", "Anna")
-                .param("assID", "1")).andExpect(status().isOk());
+                .param("studentID", "1")
+                .param("assignmentID", "1")
+                .param("courseID", "1")).andExpect(status().isOk());
     }
 
     @Test
     public void shouldRespondWithFeedback() throws Exception {
         URI targetUrl = getUri();
         HashMap response = new HashMap();
-        response.put("grade", "VG");
-        response.put("feedback", "Mycket fint ritat");
+        response.put("teacher", "Kalle");
+        response.put("time", "13:37:00 1993");
+        response.put("grade", "MVG");
         when(templateMock.getForObject(targetUrl, HashMap.class)).thenReturn(response);
         mockMvc.perform(get("/feedback/get")
-                .param("userID", "Anna")
-                .param("assID", "1"))
+                .param("studentID", "1")
+                .param("assignmentID", "1")
+                .param("courseID", "1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.grade").value("VG"))
-                .andExpect(jsonPath("$.feedback").value("Mycket fint ritat"));
+                .andExpect(jsonPath("$.grade").value("MVG"))
+                .andExpect(jsonPath("$.teacher").value("Kalle"))
+                .andExpect(jsonPath("$.time").value("13:37:00 1993"));
     }
 
     @Test
@@ -85,8 +90,9 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
 
         when(templateMock.getForObject(targetUrl, HashMap.class)).thenThrow(new RestClientException("Exception message"));
         mockMvc.perform(get("/feedback/get")
-                .param("userID", "Anna")
-                .param("assID", "1"))
+                .param("studentID", "1")
+                .param("assignmentID", "1")
+                .param("courseID", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.error").value("Exception message"));
     }
@@ -97,8 +103,9 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
         URI targetUrl = getUri();
         when(templateMock.getForObject(targetUrl, HashMap.class)).thenReturn(new HashMap());
         mockMvc.perform(get("/feedback/get")
-                .param("userID", "Anna")
-                .param("assID", "1"))
+                .param("studentID", "1")
+                .param("assignmentID", "1")
+                .param("courseID", "1"))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
     }
@@ -108,8 +115,9 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
         URI targetUrl = getUri();
         when(templateMock.getForObject(targetUrl, HashMap.class)).thenThrow(new RestClientException("Exception message"));
         mockMvc.perform(get("/feedback/get")
-                .param("userID", "Anna")
-                .param("assID", "1"))
+                .param("studentID", "1")
+                .param("assignmentID", "1")
+                .param("courseID", "1"))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
     }
