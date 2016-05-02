@@ -1,11 +1,13 @@
 /**
- * File:	upload.js
- * Author:	Isak Hjelt
- * cs-user:	dv14iht
- * Date:	4/28/16
+ * File:    upload.js
+ * Author:  Isak Hjelt
+ * cs-user: dv14iht
+ * Date:    4/28/16
  *
  * Uploads a blob to the server.
  */
+
+"use strict";
 
 /**
  * POST a video to the server.
@@ -15,11 +17,11 @@
  * @param {string} courseID
  * @param {string} examID
  */
-function postToServer(blob,userID,courseID,assignmentID) {
+function postToServer(blob, userID, courseID, assignmentID) {
     var xhr = new XMLHttpRequest();
 
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
             var dataPOST = new FormData();
 
             console.log(xhr.responseText);
@@ -40,7 +42,7 @@ function postToServer(blob,userID,courseID,assignmentID) {
                 xhrPOST.open(methodPOST, urlPOST, true);
                 xhrPOST.send(dataPOST);
 
-            } else if (typeof XDomainRequest != "undefined") { // IE
+            } else if (typeof XDomainRequest !== "undefined") { // IE
                 xhrPOST = new XDomainRequest();
                 xhrPOST.open(methodPOST, urlPOST);
                 xhrPOST.send(dataPOST);
@@ -48,10 +50,11 @@ function postToServer(blob,userID,courseID,assignmentID) {
                 xhrPOST = null;
             }
         }
-    }
-        var url = "https://localhost:8443/video/inrequest?userID=" + userID +"&courseID=" + courseID+ "&assignmentID=" + assignmentID;
-        var method = "GET";
+    };
+    var url = "https://localhost:8443/video/inrequest?userID=" + userID + "&courseID=" + courseID +
+            "&assignmentID=" + assignmentID;
+    var method = "GET";
 
-        xhr.open(method, url, true);
-        xhr.send();
+    xhr.open(method, url, true);
+    xhr.send();
 }
