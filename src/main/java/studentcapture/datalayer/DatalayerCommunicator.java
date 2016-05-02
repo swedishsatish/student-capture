@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.Submission;
@@ -18,6 +16,7 @@ import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 import studentcapture.datalayer.database.User;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -129,8 +128,8 @@ public class DatalayerCommunicator {
     public boolean setFeedback(@RequestParam(value = "assID") String assID,
                                @RequestParam(value = "teacherID") String teacherID,
                                @RequestParam(value = "studentID") String studentID,
-                               @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
-                               @RequestParam(value = "feedbackText") MultipartFile feedbackText,
+                               @RequestParam(value = "feedbackVideo") File feedbackVideo,
+                               @RequestParam(value = "feedbackText") File feedbackText,
                                @RequestParam(value = "courseID") String courseID,
                                @RequestParam(value = "courseCode") String courseCode) {
         int feedback = 0;

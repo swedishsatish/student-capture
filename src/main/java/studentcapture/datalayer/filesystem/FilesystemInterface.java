@@ -1,7 +1,5 @@
 package studentcapture.datalayer.filesystem;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.*;
 import java.nio.channels.FileChannel;
 
@@ -165,7 +163,7 @@ public class FilesystemInterface {
 	 * @return true if video was stored successfully
 	 */
 	public static boolean storeFeedbackVideo(String courseCode, String courseId,
-											String assignmentId, String userId, MultipartFile source) {
+											String assignmentId, String userId, File source) {
 
 		String path = FilesystemInterface.generatePath(courseCode, courseId,
 				assignmentId, userId) + FilesystemConstants
@@ -191,7 +189,7 @@ public class FilesystemInterface {
 	 * @return true if video was stored successfully
 	 */
 	public static boolean storeFeedbackText(String courseCode, String courseId,
-											String assignmentId, String userId, MultipartFile source) {
+											String assignmentId, String userId, File source) {
 
 		String path = FilesystemInterface.generatePath(courseCode, courseId,
 				assignmentId, userId) + FilesystemConstants
