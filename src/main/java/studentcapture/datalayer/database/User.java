@@ -92,9 +92,7 @@ public class User {
 
     public boolean updateUser(String fName, String lName, String pNr,
                               String pWord, String casID) {
-
         //TODO
-
         return false;
 
     }

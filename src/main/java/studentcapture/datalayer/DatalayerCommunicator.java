@@ -231,6 +231,27 @@ public class DatalayerCommunicator {
     }
 
     /**
+     * Register user by given information.
+     *
+     * @param userName user name for the user to be registerd
+     * @param fName    First name
+     * @param lName    last name
+     * @param pNr      social security number
+     * @param pwd      password
+     * @return true if registration was successfull else false
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public boolean registerUser(@RequestParam(value = "userName") String userName,
+                                @RequestParam(value = "fName") String fName,
+                                @RequestParam(value = "lName") String lName,
+                                @RequestParam(value = "pNr") String pNr,
+                                @RequestParam(value = "pwd") String pwd) {
+
+        return user.addUser(userName,fName,lName,pNr,pwd);
+    }
+
+    /**
      * Returns list of all submissions made in response to a given assignment.
      *
      * @param assignmentID		assignment identifier
