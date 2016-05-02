@@ -1,7 +1,5 @@
 package studentcapture.datalayer.filesystem;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.*;
 import java.nio.channels.FileChannel;
 
@@ -22,25 +20,25 @@ public class FilesystemInterface {
 
 
 	/**
-	 * Generates a string representing a path to an assignments directory on 
+	 * Generates a string representing a path to an assignments directory on
 	 * the filesystem.
-	 * 
+	 *
 	 * @param courseCode	courses 6 character identifier
 	 * @param courseId		courses unique database id
 	 * @param assignmentId	assignments unique database id
 	 * @return				path to directory
 	 */
-	public static String generatePath(String courseCode, String courseId, String assignmentId) {
+	public static String generatePath(String courseCode, String courseId, int assignmentId) {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseCode
 				+ "/" + courseId + "/" + assignmentId + "/";
-		
+
 		return path;
 	}
-	
+
 	/**
-	 * Generates a string representing a path to the directory of a students 
+	 * Generates a string representing a path to the directory of a students
 	 * submission on an assignment on the filesystem.
-	 * 
+	 *
 	 * @param courseCode	courses 6 character identifier
 	 * @param courseId		courses unique database id
 	 * @param assignmentId	assignments unique database id
@@ -51,7 +49,7 @@ public class FilesystemInterface {
 			String assignmentId, String studentId) {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseCode
 				+ "/" + courseId + "/" + assignmentId + "/" + studentId + "/";
-		
+
 		return path;
 	}
 
@@ -65,7 +63,7 @@ public class FilesystemInterface {
      */
 	public FileInputStream getAssignmentVideo(String courseCode,
                                               String courseId,
-                                              String assignmentId)
+                                              int assignmentId)
                                               throws FileNotFoundException {
         String path = generatePath(courseCode, courseId, assignmentId);
         return new FileInputStream(path);
@@ -81,7 +79,7 @@ public class FilesystemInterface {
      */
     public int getAssignmentVideoFileSize(String courseCode,
                                           String courseId,
-                                          String assignmentId) {
+                                          int assignmentId) {
         String path = generatePath(courseCode, courseId, assignmentId)
                         + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
         File f = new File(path);
@@ -91,18 +89,18 @@ public class FilesystemInterface {
 
 	/**
      * starts a stream to student video for a specific assignment at a course.
-     * 
+     *
      * @param courseCode the code for the course.
      * @param courseId course id from the database
      * @param userId
-     * @return video or null if it doesn't exist. 
+     * @return video or null if it doesn't exist.
      */
 	public FileInputStream getStudentVideo(String courseCode, String courseId,
-										   String assignmentId, String userId) {
-	   String path = FilesystemInterface.generatePath(courseCode, courseId, 
+		   String assignmentId, String userId) {
+	   String path = FilesystemInterface.generatePath(courseCode, courseId,
 			   assignmentId, userId) + FilesystemConstants
 			   .SUBMISSION_VIDEO_FILENAME;
-	   
+
 	   try {
 			return new FileInputStream(path);
 		} catch (FileNotFoundException e) {
@@ -118,7 +116,7 @@ public class FilesystemInterface {
      * @param assignmentId Unique code of the assignment
      * @return
      */
-    public FileInputStream getAssignmentDescription(String courseCode, String courseId, String assignmentId) {
+    public FileInputStream getAssignmentDescription(String courseCode, String courseId, int assignmentId) {
         String path = FilesystemInterface.generatePath(courseCode, courseId, assignmentId) + FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
         try {
             return new FileInputStream(path);
@@ -127,18 +125,18 @@ public class FilesystemInterface {
             return null;
         }
     }
-	
+
 	/**
      * Store the students video for an assignment at a course.
 	 * If student folder doesn't exist a folder will be created.
      *
-     * @param courseCode the code for the course. 
+     * @param courseCode the code for the course.
      * @param courseId course id from the database
      * @param assignmentId from database
      * @param userId from database
      * @return true if video was stored successfully
      */
-	public boolean storeStudentVideo(String courseCode, String courseId,
+	public static boolean storeStudentVideo(String courseCode, String courseId,
 		   String assignmentId, String userId, File source) {
 
         String path = FilesystemInterface.generatePath(courseCode, courseId,
@@ -164,8 +162,8 @@ public class FilesystemInterface {
 	 * @param userId from database
 	 * @return true if video was stored successfully
 	 */
-	public boolean storeFeedbackVideo(String courseCode, String courseId,
-											String assignmentId, String userId, MultipartFile source) {
+	public static boolean storeFeedbackVideo(String courseCode, String courseId,
+											String assignmentId, String userId, File source) {
 
 		String path = FilesystemInterface.generatePath(courseCode, courseId,
 				assignmentId, userId) + FilesystemConstants
@@ -190,8 +188,8 @@ public class FilesystemInterface {
 	 * @param userId from database
 	 * @return true if video was stored successfully
 	 */
-	public boolean storeFeedbackText(String courseCode, String courseId,
-											String assignmentId, String userId, MultipartFile source) {
+	public static boolean storeFeedbackText(String courseCode, String courseId,
+											String assignmentId, String userId, File source) {
 
 		String path = FilesystemInterface.generatePath(courseCode, courseId,
 				assignmentId, userId) + FilesystemConstants
