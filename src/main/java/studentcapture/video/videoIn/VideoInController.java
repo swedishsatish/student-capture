@@ -54,7 +54,7 @@ public class VideoInController {
             // User has not been granted permission to upload files.
             System.err.println("User has not been granted permission to upload video.");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } else if (!videoType.equals("question") && !videoType.equals("answer") && !videoType.equals("feedback")) {
+        } else if (!videoType.equals("assignment") && !videoType.equals("submission") && !videoType.equals("feedback")) {
             // Request must contain the type of upload.
             System.err.println("Wrong video type. Videotype: " + videoType);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -84,12 +84,14 @@ public class VideoInController {
             requestParts.add("filename", filename);
 
             // Send the submission video as a POST request to DataLayerCommunicator at /DB/addSubmission
-            String result = requestSender.postForObject(uri, requestParts, String.class);
+//            String result = requestSender.postForObject(uri, requestParts, String.class);
+            ResponseEntity response = requestSender.postForEntity(uri, requestParts, ResponseEntity.class);
+            String result = response.getStatusCode().toString();
 
             if(result == null) {
                 System.err.println("Sending data to DataLayerCommunicator failed.");
                 return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-            } else if(!result.equals("OK")) {
+            } else if(!result.equals("200")) {
                 System.err.println("DataLayerComunicator: "+result);
                 return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
