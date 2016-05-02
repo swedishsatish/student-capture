@@ -21,7 +21,7 @@ public class RequestManager {
      *
      * @param userID The ID of the user.
      * @param courseID The ID of the course.
-     * @param examID The ID of the exam.
+     * @param assignmentID The ID of the exam.
      * @return The URL to upload a video to.
      * @throws Exception Throws an exception if the user is not certified to upload a video.
      */
@@ -30,11 +30,11 @@ public class RequestManager {
     public String requestPOSTVideo(
             @RequestParam("userID") String userID,
             @RequestParam("courseID") String courseID,
-            @RequestParam("examID") String examID) {
+            @RequestParam("assignmentID") String assignmentID) {
 
 
         // TODO: FIX PLZ
-        if (!validUser(userID, courseID, examID)) {
+        if (!validUser(userID, courseID, assignmentID)) {
              //   throw new Exception("Request not valid.");
         }
 
@@ -48,7 +48,7 @@ public class RequestManager {
      * Request a URL to get a specific video.
      * @param userID The ID of the user.
      * @param courseID The ID of the course.
-     * @param examID The ID of the exam.
+     * @param assignmentID The ID of the assignment.
      * @return The URL to a video for the user to see in the browser.
      */
     @CrossOrigin()
@@ -56,7 +56,7 @@ public class RequestManager {
     public String requestGETVideo(
             @RequestParam("userID") String userID,
             @RequestParam("courseID") String courseID,
-            @RequestParam("examID") String examID) {
+            @RequestParam("examID") String assignmentID) {
 
         //TODO: GETVideo method
 
@@ -67,9 +67,9 @@ public class RequestManager {
      * Checks that a user is valid to upload a video.
      * @return
      */
-    private boolean validUser(String userID, String courseID, String examID) {
+    private boolean validUser(String userID, String courseID, String assignmentID) {
         // TODO: Check if valid user
-        return ((userID == "user") && (courseID == "5DV151") && (examID == "1337"));
+        return ((userID == "user") && (courseID == "5DV151") && (assignmentID == "1337"));
     }
 
 }
