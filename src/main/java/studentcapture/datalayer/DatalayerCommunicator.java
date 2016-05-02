@@ -1,14 +1,19 @@
 package studentcapture.datalayer;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.Hashtable;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.multipart.MultipartFile;
 import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Submission;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
@@ -110,4 +115,33 @@ public class DatalayerCommunicator {
     	
     	return false;
     }
+
+
+    /**
+     * Add a submission to the database and filesystem.
+     *
+     * @param assignmentID
+     * @param courseID
+     * @param userID
+     * @param video
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/addSubmission/{courseCode}/{courseID}/{assignmentID}/{userID}", method = RequestMethod.POST)
+    public ResponseEntity<String> addSubmission(@PathVariable(value = "courseCode") String courseCode,
+                                                @PathVariable(value = "courseID") String courseID,
+                                                @PathVariable(value = "assignmentID") String assignmentID,
+                                                @PathVariable(value = "userID") String userID,
+                                                @RequestParam(value = "filename") String filename,
+                                                @RequestParam(value = "video") MultipartFile video) {
+
+        // ADD to database here
+
+        if(FilesystemInterface.storeStudentVideo(courseCode,courseID,assignmentID,userID,video, filename)) {
+            return new ResponseEntity<String>(HttpStatus.OK);
+        } else
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
+
 }

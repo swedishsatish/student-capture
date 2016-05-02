@@ -12,6 +12,7 @@ postButton.onclick = function () {
     postToServer(blob,"user","5DV121","1337")
     document.getElementById("post").disabled = true;
 
+
 };
 document.getElementById("post").disabled = true;
 startStream('video#gum');
