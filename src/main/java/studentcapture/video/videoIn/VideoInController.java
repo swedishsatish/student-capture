@@ -41,6 +41,7 @@ public class VideoInController {
             @RequestParam("courseCode") String courseCode,
             @RequestParam("videoType") String videoType,
             @RequestParam("video") MultipartFile video) {
+
         if(video.isEmpty()) {
             // No video was received.
             System.err.println("POST request to /uploadVideo with empty video.");
@@ -83,13 +84,13 @@ public class VideoInController {
             requestParts.add("filename", filename);
 
             // Send the submission video as a POST request to DataLayerCommunicator at /DB/addSubmission
-            ResponseEntity result = requestSender.postForObject(uri, requestParts, ResponseEntity.class);
+            String result = requestSender.postForObject(uri, requestParts, String.class);
 
             if(result == null) {
                 System.err.println("Sending data to DataLayerCommunicator failed.");
                 return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-            } else if(!result.getStatusCode().is2xxSuccessful()) {
-                System.err.println("DataLayerComunicator: "+result.getStatusCode().toString());
+            } else if(!result.equals("OK")) {
+                System.err.println("DataLayerComunicator: "+result);
                 return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (RestClientException e) {

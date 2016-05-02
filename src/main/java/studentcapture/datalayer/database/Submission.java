@@ -84,14 +84,13 @@ public class Submission {
     /**
      * Get information about the grade of a submission
      *
-     * @param assID     Unique identifier for the assignment submission grade bra
+     * @param assignmentID     Unique identifier for the assignment submission grade bra
      * @param studentID Unique identifier for the student associated with the submission
      * @return A list containing the grade, date, and grader
      */
 
-    public Hashtable<String, Object> getGrade(String studentID, String assID) {
-        int studIDInt = Integer.parseInt(studentID);
-        int assIDInt = Integer.parseInt(assID);
+    public Hashtable<String, Object> getGrade(int studentID, int assignmentID) {
+
         Hashtable<String, Object> returnValues = new Hashtable<>(3);
         ArrayList<String[]> queriesToSend = new ArrayList(3);
 
@@ -106,10 +105,10 @@ public class Submission {
         for (String s[] : queriesToSend) {
             try {
                 String grade = null;
-                if (s[0].equals("teacher") && !checkTeacherId(assIDInt)) {
+                if (s[0].equals("teacher") && !checkTeacherId(assignmentID)) {
                     returnValues.put(s[0], "Missing Grader");
                 } else {
-                    grade = jdbcTemplate.queryForObject(s[1], new Object[]{studIDInt, assIDInt}, String.class);
+                    grade = jdbcTemplate.queryForObject(s[1], new Object[]{studentID, assignmentID}, String.class);
                 }
                 if (grade == null) {
                     switch (s[0]) {

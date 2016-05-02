@@ -22,6 +22,12 @@ public class FeedbackModel {
 
     private String grade, feedbackText;
 
+    public void setTeacherID(String teacherID) {
+        this.teacherID = teacherID;
+    }
+
+    private String teacherID;
+
 
     /**
      * @return the StudentID of the feedback.
@@ -91,5 +97,12 @@ public class FeedbackModel {
      */
     public void setCourseID(int courseID) {
         this.courseID = courseID;
+    }
+
+    /**
+     * @return teacherID of the current feedback.
+     */
+    public String getTeacherID() {
+        return teacherID;
     }
 }
