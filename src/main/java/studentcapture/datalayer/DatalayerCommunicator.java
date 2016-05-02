@@ -28,13 +28,13 @@ public class DatalayerCommunicator {
 
 
 
-    //@Autowired
+    @Autowired
     private Submission submission;
     //@Autowired
     //private Assignment assignment;
 
     @CrossOrigin()
-    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.POST)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
     public MultiValueMap getGrade(@RequestParam(value = "studentID", required = false) String studentID,
                                   @RequestParam(value = "courseCode", required = false) String courseCode,
                                   @RequestParam(value = "courseID", required = false) String courseID,

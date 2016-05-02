@@ -16,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.lti.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 
 /**
@@ -36,17 +37,18 @@ public class FeedbackController {
     @Autowired
     private RestTemplate requestSender;
 
+    @CrossOrigin
     @RequestMapping(value = "get", method = RequestMethod.GET)
-    public HashMap handleFeedbackRequestFromStudent(@RequestParam(value = "userID", required = true) String userID,
-                                                   @RequestParam(value = "assID", required = true) String assID) {
+    public HashMap handleFeedbackRequestFromStudent(@Valid FeedbackModel model) {
         //TODO Unsafe data needs to be cleaned
-
         URI targetUrl = UriComponentsBuilder.fromUriString("https://localhost:8443")
                 .path("DB/getGrade")
-                .queryParam("userID", userID)
-                .queryParam("assID", assID)
+                .queryParam("studentID", model.getStudentID())
+                .queryParam("assignmentID", model.getAssignmentID())
+                .queryParam("courseID", model.getCourseID())
                 .build()
                 .toUri();
+
         HashMap<String, String> response = new HashMap<String, String>();
         try {
             response = requestSender.getForObject(targetUrl, HashMap.class);

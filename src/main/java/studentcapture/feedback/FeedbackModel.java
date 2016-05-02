@@ -1,15 +1,25 @@
 package studentcapture.feedback;
 
 
-/** This model takes care of the feedback of an assignment. It is used to gather
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+/**
+ * This model takes care of the feedback of an assignment. It is used to gather
  * all information possible.
  *
  * @author Group6
  * @version 0.1
  * @see Submission
-*/
+ */
 public class FeedbackModel {
-    private int studentID, assignmentID, courseID;
+    @NotNull @Min(1)
+    private int studentID;
+    @NotNull @Min(1)
+    private int assignmentID;
+    @NotNull @Min(1)
+    private int courseID;
+
     private String grade, feedbackText;
 
 
@@ -42,14 +52,14 @@ public class FeedbackModel {
     }
 
     /**
-     * @return will set the grade of the Submission
+     * @return Returns the grade of the assignment.
      */
     public String getGrade() {
         return grade;
     }
 
     /**
-     * @param grade Returns the grade of the assignment.
+     * @param grade will set the grade of the Submission
      */
     public void setGrade(String grade) {
         this.grade = grade;
