@@ -11,7 +11,7 @@ recordButton.onclick = function() {
 };
 
 
-postButton.onclick = function () {postToServer(theBlob,"user","5DV121","1337")};
+postButton.onclick = function () {postToServer(theBlob,"user","5DV151","1337")};
 
 startStream('video#gum');
 

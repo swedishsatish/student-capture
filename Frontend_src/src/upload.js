@@ -15,7 +15,7 @@
  * @param {string} courseID
  * @param {string} examID
  */
-function postToServer(blob,userID,courseID,examID) {
+function postToServer(blob,userID,courseID,assignmentID) {
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function() {
@@ -28,8 +28,11 @@ function postToServer(blob,userID,courseID,examID) {
             var methodPOST = "POST";
 
             dataPOST.append("video", blob);
-            dataPOST.append("videoName", "video.webm");
-            dataPOST.append("userID", "user");
+            dataPOST.append("videoType", "answer");
+            dataPOST.append("userID", userID);
+            dataPOST.append("assignmentID", assignmentID);
+            dataPOST.append("courseID", courseID);
+            dataPOST.append("courseCode", courseID);
 
             var xhrPOST = new XMLHttpRequest();
 
@@ -46,7 +49,7 @@ function postToServer(blob,userID,courseID,examID) {
             }
         }
     }
-        var url = "https://localhost:8443/video/inrequest?userID=" + userID +"&courseID=" + courseID+ "&examID=" + examID;
+        var url = "https://localhost:8443/video/inrequest?userID=" + userID +"&courseID=" + courseID+ "&assignmentID=" + assignmentID;
         var method = "GET";
 
         xhr.open(method, url, true);
