@@ -5,7 +5,9 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.*;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClientException;
@@ -15,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import studentcapture.config.StudentCaptureApplicationTests;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
@@ -120,5 +123,49 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
                 .param("courseID", "1"))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldReturnErrorWithoutVideoParams() throws Exception {
+        mockMvc.perform(get("/feedback/video"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void shouldReturnVideo() throws Exception {
+        URI targetUrl = UriComponentsBuilder.fromUriString("https://localhost:8443/videoDownload/")
+                .path("1/1/1/1/")
+                .build()
+                .toUri();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.ALL));
+        HttpEntity<String> entity = new HttpEntity(headers);
+
+        when(templateMock.exchange(targetUrl, HttpMethod.GET, entity, Object.class)).thenReturn(null);
+        mockMvc.perform(get("/feedback/video")
+                .param("studentID", "1")
+                .param("assignmentID", "1")
+                .param("courseID", "1")
+                .param("courseCode", "1"))
+                .andExpect(status().isOk());
+    }
+    @Test
+    public void shouldReturnEmptyOnVideoRequestError() throws Exception {
+        URI targetUrl = UriComponentsBuilder.fromUriString("https://localhost:8443/videoDownload/")
+                .path("1/1/1/1/")
+                .build()
+                .toUri();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.ALL));
+        HttpEntity<String> entity = new HttpEntity(headers);
+
+        when(templateMock.exchange(targetUrl, HttpMethod.GET, entity, Object.class)).thenThrow(new RestClientException("error"));
+        MvcResult res = mockMvc.perform(get("/feedback/video")
+                                .param("studentID", "1")
+                                .param("assignmentID", "1")
+                                .param("courseID", "1")
+                                .param("courseCode", "1"))
+                                .andExpect(status().isOk()).andReturn();
+        assertEquals(res.getResponse().getContentAsString(), "");
     }
 }
