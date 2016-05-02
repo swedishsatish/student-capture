@@ -1,13 +1,15 @@
 package studentcapture.datalayer;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import studentcapture.config.StudentCaptureApplicationTests;
 
+import studentcapture.config.StudentCaptureApplicationTests;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,5 +59,14 @@ public class DatalayerCommunicatorTest extends StudentCaptureApplicationTests {
                 .andExpect(status().isOk())
                 .andReturn();
         assertTrue(result.equals(true));
+    }
+    
+    @org.junit.Test
+    public void getAllSubmissionsTest() throws Exception {
+    	MvcResult result = mockMvc.perform(post("/DB/getAllSubmissions")
+    			.param("assignmentID", "1000")).andExpect(status().isOk())
+    			.andReturn();
+    	
+    	assertTrue(result.getResponse().getContentAsString().startsWith("[{\"assignmentId\":1000,\"studentId\":"));
     }
 }
