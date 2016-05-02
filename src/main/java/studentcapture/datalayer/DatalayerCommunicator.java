@@ -9,25 +9,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.Submission;
+import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 import studentcapture.datalayer.database.User;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.List;
 
 /**
  * Created by c12osn on 2016-04-22.
  * Edited by c13arm, ens13ahr
  */
 @RestController
-@RequestMapping(value = "DB")
+@RequestMapping(value = "/DB")
 public class DatalayerCommunicator {
 
 
@@ -127,8 +128,8 @@ public class DatalayerCommunicator {
     public boolean setFeedback(@RequestParam(value = "assID") String assID,
                                @RequestParam(value = "teacherID") String teacherID,
                                @RequestParam(value = "studentID") String studentID,
-                               @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
-                               @RequestParam(value = "feedbackText") MultipartFile feedbackText,
+                               @RequestParam(value = "feedbackVideo") File feedbackVideo,
+                               @RequestParam(value = "feedbackText") File feedbackText,
                                @RequestParam(value = "courseID") String courseID,
                                @RequestParam(value = "courseCode") String courseCode) {
         int feedback = 0;
@@ -157,7 +158,7 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/getAssignmentVideo", method = RequestMethod.POST, produces = "video/webm")
     public ResponseEntity<InputStreamResource> getAssignmentVideo(@RequestParam("courseCode") String courseCode,
                                                                   @RequestParam("courseId") String courseId,
-                                                                  @RequestParam("assignmentId") String assignmentId) {
+                                                                  @RequestParam("assignmentId") int assignmentId) {
 
         ResponseEntity<InputStreamResource> responseEntity;
 
@@ -229,7 +230,6 @@ public class DatalayerCommunicator {
         return   user.userExist(username,pswd);
     }
 
-
     /**
      * Register user by given information.
      *
@@ -249,5 +249,59 @@ public class DatalayerCommunicator {
                                 @RequestParam(value = "pwd") String pwd) {
 
         return user.addUser(userName,fName,lName,pNr,pwd);
+    }
+
+    /**
+     * Returns list of all submissions made in response to a given assignment.
+     *
+     * @param assignmentID		assignment identifier
+     * @return					list of submissions
+     */
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.POST,
+    value = "/getAllSubmissions")
+    @ResponseBody
+    public List<SubmissionWrapper> getAllSubmissions(
+    		@RequestParam(value="assignmentID") String assignmentID) {
+    	return submission.getAllSubmissions(assignmentID).get();
+    }
+
+    /**
+     * Returns list of all ungraded submissions made in response to a given
+     * assignment.
+     *
+     * @param assignmentID		assignment identifier
+     * @return					list of submissions
+     */
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.POST,
+    value = "/getAllUngradedSubmissions")
+    @ResponseBody
+    public List<SubmissionWrapper> getAllUngradedSubmissions(
+    		@RequestParam(value="assignmentID") String assignmentID) {
+    	return submission.getAllSubmissions(assignmentID).get();
+    }
+
+    /**
+     * Returns list of all submissions made in response to a given assignment,
+     * including students that are part of the course but has not yet made a
+     * submission.
+     *
+     * @param assignmentID		assignment identifier
+     * @return					list of submissions
+     */
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.POST,
+    value = "/getAllSubmissionsWithStudents")
+    @ResponseBody
+    public List<SubmissionWrapper> getAllSubmissionsWithStudents(
+    		@RequestParam(value="assignmentID") String assignmentID) {
+    	return submission.getAllSubmissions(assignmentID).get();
     }
 }
