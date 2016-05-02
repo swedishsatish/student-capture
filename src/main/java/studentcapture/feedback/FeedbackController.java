@@ -49,11 +49,12 @@ public class FeedbackController {
                 .build()
                 .toUri();
 
-        HashMap<String, String> response = new HashMap<String, String>();
+        HashMap<String, String> response;
         try {
             response = requestSender.getForObject(targetUrl, HashMap.class);
         } catch (RestClientException e) {
             //TODO Maybe not good to send exceptions to browser?
+            response = new HashMap<String, String>();
             response.put("error", e.getMessage());
         }
         return response;
