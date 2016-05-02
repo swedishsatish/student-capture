@@ -229,7 +229,13 @@ public class DatalayerCommunicator {
                          @RequestParam(value = "pswd") String pswd) {
         return   user.userExist(username,pswd);
     }
-    
+
+    /**
+     * Returns list of all submissions made in response to a given assignment.
+     *
+     * @param assignmentID		assignment identifier
+     * @return					list of submissions
+     */
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -240,7 +246,14 @@ public class DatalayerCommunicator {
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submission.getAllSubmissions(assignmentID).get();
     }
-    
+
+    /**
+     * Returns list of all ungraded submissions made in response to a given
+     * assignment.
+     *
+     * @param assignmentID		assignment identifier
+     * @return					list of submissions
+     */
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -248,6 +261,25 @@ public class DatalayerCommunicator {
     value = "/getAllUngradedSubmissions")
     @ResponseBody
     public List<SubmissionWrapper> getAllUngradedSubmissions(
+    		@RequestParam(value="assignmentID") String assignmentID) {
+    	return submission.getAllSubmissions(assignmentID).get();
+    }
+
+    /**
+     * Returns list of all submissions made in response to a given assignment,
+     * including students that are part of the course but has not yet made a
+     * submission.
+     *
+     * @param assignmentID		assignment identifier
+     * @return					list of submissions
+     */
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.POST,
+    value = "/getAllSubmissionsWithStudents")
+    @ResponseBody
+    public List<SubmissionWrapper> getAllSubmissionsWithStudents(
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submission.getAllSubmissions(assignmentID).get();
     }

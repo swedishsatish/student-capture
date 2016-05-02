@@ -34,7 +34,7 @@ public class Submission {
     	int studentId = Integer.parseInt(studentID);
         try {
             int rowsAffected = jdbcTemplate.update(addSubmissionStatement,
-            		new Object[] {assignmentId, studentId, 
+            		new Object[] {assignmentId, studentId,
             		new Timestamp(1000*(System.currentTimeMillis()/1000))});
             if(rowsAffected == 1) {
             	result = true;
@@ -216,8 +216,8 @@ public class Submission {
 	    		submission.studentId = (int) row.get("StudentId");
 	    		submission.teacherId = Optional.of((int) row.get("TeacherId"));
 	    		submission.grade = Optional.of((String) row.get("Grade"));
-	    		submission.submissionDate = ((Timestamp)
-	    				row.get("SubmissionDate")).toString();
+	    		submission.submissionDate = Optional.of(((Timestamp)
+	    				row.get("SubmissionDate")).toString());
 	    		submissions.add(submission);
 	    	}
 
@@ -264,9 +264,68 @@ public class Submission {
 	    		} catch (NullPointerException e) {
 	    			submission.grade = Optional.empty();
 	    		}
-	    		submission.submissionDate = ((Timestamp)
-	    				row.get("SubmissionDate")).toString();
-	    		
+	    		submission.submissionDate = Optional.of(((Timestamp)
+	    				row.get("SubmissionDate")).toString());
+
+	    		submissions.add(submission);
+	    	}
+
+	    } catch (IncorrectResultSizeDataAccessException e){
+			//TODO
+		    return Optional.empty();
+		} catch (DataAccessException e1){
+			//TODO
+			return Optional.empty();
+		}
+
+        return Optional.of(submissions);
+    }
+
+
+    /**
+	 *
+     * Get all submissions for an assignment, including students that have not
+     * yet made a submission.
+	 *
+     * @param assID The assignment to get submissions for
+     * @return A list of submissions for the assignment
+     */
+    private final static String getAllSubmissionsWithStudentsStatement =
+    		"SELECT ass.AssignmentId,par.UserId AS StudentId,sub.SubmissionDate"
+    		+ ",sub.Grade,sub.TeacherId FROM Assignment AS ass RIGHT JOIN "
+    		+ "Participant AS par ON ass.CourseId=par.CourseId LEFT JOIN "
+    		+ "Submission AS sub ON par.userId=sub.studentId WHERE "
+    		+ "(par.function='Student') AND (ass.AssignmentId=?)";
+    public Optional<List<SubmissionWrapper>> getAllSubmissionsWithStudents
+    		(String assId) {
+    	List<SubmissionWrapper> submissions = new ArrayList<>();
+    	int assignmentId = Integer.parseInt(assId);
+    	try {
+	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+	    			getAllSubmissionsWithStudentsStatement, new Object[]
+	    					{assignmentId});
+	    	for (Map<String, Object> row : rows) {
+	    		SubmissionWrapper submission = new SubmissionWrapper();
+	    		submission.assignmentId = (int) row.get("AssignmentId");
+	    		submission.studentId = (int) row.get("StudentId");
+	    		try {
+	    			submission.teacherId = Optional.of((int) row.get("TeacherId"));
+	    		} catch (NullPointerException e) {
+	    			submission.teacherId = Optional.empty();
+	    		}
+	    		try {
+	    			submission.grade = Optional.of((String) row.get("Grade"));
+	    		} catch (NullPointerException e) {
+	    			submission.grade = Optional.empty();
+	    		}
+	    		try {
+	    			submission.submissionDate = Optional.of(((Timestamp)
+		    				row.get("SubmissionDate")).toString());
+	    		} catch (NullPointerException e) {
+	    			submission.submissionDate = Optional.empty();
+	    		}
+
+
 	    		submissions.add(submission);
 	    	}
 
@@ -284,7 +343,7 @@ public class Submission {
     public class SubmissionWrapper {
     	public int assignmentId;
     	public int studentId;
-    	public String submissionDate;
+    	public Optional<String> submissionDate;
     	public Optional<String> grade;
     	public Optional<Integer> teacherId;
     }
