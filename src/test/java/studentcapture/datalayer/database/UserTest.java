@@ -3,6 +3,7 @@ package studentcapture.datalayer.database;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import studentcapture.config.StudentCaptureApplicationTests;
 
@@ -13,24 +14,43 @@ import static org.junit.Assert.*;
  */
 public class UserTest extends StudentCaptureApplicationTests {
 
+
     @Autowired
     User usr;
 
+    @Before
+    public void setUp() throws Exception {
+
+        usr = Mockito.mock(User.class);
+        Mockito.when(usr.addUser("newusr","name","lname","1993","123A"))
+                .thenReturn(true);
+
+        Mockito.when(usr.userExist("oldusr","pswd123A"))
+                .thenReturn(true);
+
+        Mockito.when(usr.addUser("oldusr","name","lname","1993","123A"))
+                .thenReturn(false);
+    }
+
+
     @Test
     public void testAddUser() {
-        boolean res = usr.addUser("Olles","heaton","persson","19890428","cheatonss");
-        assertTrue(res);
+        assertTrue(usr.addUser("newusr","name","lname","1993","123A"));
+    }
+
+
+    @Test
+    public void testAddExistingUser() {
+        assertFalse(usr.addUser("oldusr","name","lname","1993","123A"));
     }
 
     @Test
     public void testUserExist() {
-      //  usr.addUser("firstname","lastname","1993","paswd","userN","u" )
-      //  boolean res usr.addUser()
+        assertTrue(usr.userExist("oldusr","pswd123A"));
     }
 
     @Test
     public void testRemoveUser() {
         //TODO insert users
-
     }
 }
