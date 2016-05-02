@@ -9,7 +9,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import java.util.HashMap;
 import studentcapture.assignment.AssignmentModel;
-import studentcapture.datalayer.DatalayerCommunicator;
 import studentcapture.lti.*;
 
 /**
@@ -19,23 +18,25 @@ import studentcapture.lti.*;
  * @author Group4, Group6
  * @see AssignmentModel
  * @see FeedbackModel
- * @version 0.2, 04/29/16
+ * @version 0.3 05/02/16 Ongoing - Fixed db-request on set.
+ * @since 0.2, 04/29/16 Fixed model.
  * @since 0.1, 04/28/16 Added "set"-mapping method.
  */
 
 @RestController
 @RequestMapping(value = "feedback")
 public class FeedbackController {
+    private static final String dbURI = "https://localhost:8443";
+
 
     @Autowired
     private RestTemplate requestSender;
-    private DatalayerCommunicator dc;
 
     @CrossOrigin
     @RequestMapping(value = "get", method = RequestMethod.GET)
     public HashMap handleFeedbackRequestFromStudent(@Valid FeedbackModel model) {
         //TODO Unsafe data needs to be cleaned
-        URI targetUrl = UriComponentsBuilder.fromUriString("https://localhost:8443")
+        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
                 .path("DB/getGrade")
                 .queryParam("studentID", model.getStudentID())
                 .queryParam("assignmentID", model.getAssignmentID())
@@ -61,12 +62,20 @@ public class FeedbackController {
      * @see FeedbackModel
      */
     @RequestMapping(value = "set", method = RequestMethod.POST)
-    public void setFeedback(@RequestBody FeedbackModel fm) {
-        //TODO: Set grade in Student-capture (database)
-        dc.setGrade(String.valueOf(fm.getAssignmentID()),
-                    fm.getTeacherID(),
-                    String.valueOf(fm.getStudentID()),
-                    fm.getGrade());
+    public HashMap<String, String> setFeedback(@RequestBody FeedbackModel fm) {
+
+        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
+                .path("DB/setGrade")
+                .queryParam("assID", String.valueOf(fm.getAssignmentID()))
+                .queryParam("teacherID", fm.getTeacherID())
+                .queryParam("studentID", String.valueOf(fm.getStudentID()))
+                .queryParam("grade", fm.getGrade())
+                .build()
+                .toUri();
+        HashMap<String, String> addToDB = getExternalResponse(targetUrl);
+        if (addToDB.containsKey("error")) {
+            return addToDB;
+        }
 
 
         //TODO: Set grade in LTI.
@@ -84,7 +93,26 @@ public class FeedbackController {
             e.printStackTrace();
         }
 
+        return addToDB;
 
+    }
+
+
+    /**
+     * Will call an external HTTP, will save response in HashMap.
+     * @param targetUrl The URI that will be called.
+     * @return  HashMap of the response.
+     */
+    public HashMap<String, String> getExternalResponse(URI targetUrl) {
+        HashMap<String, String> response;
+        try {
+            response = requestSender.getForObject(targetUrl, HashMap.class);
+        } catch (RestClientException e) {
+            //TODO Maybe not good to send exceptions to browser?
+            response = new HashMap<String, String>();
+            response.put("error", e.getMessage());
+        }
+        return response;
     }
 
 
