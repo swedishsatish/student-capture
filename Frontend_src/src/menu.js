@@ -1,15 +1,10 @@
-var HelloMessage = React.createClass({
-  render: function() {
-    return <div>Hello {this.props.name}</div>;
-  }
-});
-ReactDOM.render(<HelloMessage name="Erik" />,
-                document.getElementById("courseContent"));
+
 
 var Tasks = React.createClass({
     handleClick: function(task, event) {
-        ReactDOM.render(<HelloMessage name={task["name"]} />,
-                            document.getElementById('courseContent'));
+        if(task["isActive"])
+            ReactDOM.render(<CourseContent id={task["_id"]} type="task" />,
+                                document.getElementById('courseContent'));
     },
     render: function() {
         var assignment = this.props.assignment;
@@ -30,9 +25,9 @@ var Assignment = React.createClass({
         return { showChildren : true };
     },
     handleClick: function(assignment,event) {
-        ReactDOM.render(<HelloMessage name={assignment["name"]} />,
-                    document.getElementById('courseContent'));
         if(this.state.showChildren && assignment["isActive"]) {
+            ReactDOM.render(<CourseContent id={assignment["_id"]} type="assignment" />,
+                            document.getElementById('courseContent'));
             event.target.nextElementSibling.className="done";
             ReactDOM.render(<Tasks assignment={assignment} />,event.target.nextElementSibling);
         } else {
@@ -67,9 +62,9 @@ var Course = React.createClass({
     },
     handleClick: function(course,event) {
         this.setState({showChildren:!this.state.showChildren});
-        ReactDOM.render(<HelloMessage name={course["name"]} />,
-                    document.getElementById('courseContent'));
         if(this.state.showChildren && course["isActive"]) {
+            ReactDOM.render(<CourseContent id={course["_id"]} type="course" />,
+                            document.getElementById('courseContent'));
             event.target.nextElementSibling.className="done";
             ReactDOM.render(<Assignments course={course} />,event.target.nextElementSibling);
         } else {
