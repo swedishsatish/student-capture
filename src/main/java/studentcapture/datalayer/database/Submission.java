@@ -121,78 +121,26 @@ public class Submission {
      * @param studentID Unique identifier for the student associated with the submission
      * @return A list containing the grade, date, and grader
      */
+    public Map<String, Object> getGrade(int studentID, int assignmentID) {
 
-    public Hashtable<String, Object> getGrade(String studentID, String assID) {
-        int studIDInt = Integer.parseInt(studentID);
-        int assIDInt = Integer.parseInt(assID);
-        Hashtable<String, Object> returnValues = new Hashtable<>(3);
-        ArrayList<String[]> queriesToSend = new ArrayList(3);
-
-        String getGrade[] = {"grade", "SELECT grade FROM submission WHERE (studentid = ? AND assignmentid = ?)"};
-        String getTimeStamp[] = {"time", "SELECT submissiondate FROM submission WHERE (studentid = ? AND assignmentid = ?)"};
-        String getTeacherName[] = {"teacher", "SELECT firstname FROM submission JOIN users ON (teacherid = userid) WHERE (studentid = ? AND assignmentid = ?)"};
-        queriesToSend.add(getGrade);
-        queriesToSend.add(getTimeStamp);
-        queriesToSend.add(getTeacherName);
-
-
-        for (String s[] : queriesToSend) {
-            try {
-                String grade = null;
-                if (s[0].equals("teacher") && !checkTeacherId(assIDInt)) {
-                    returnValues.put(s[0], "Missing Grader");
-
-                } else {
-
-                    grade = jdbcTemplate.queryForObject(s[1], new Object[]{studIDInt, assIDInt}, String.class);
-                }
-                if (grade == null) {
-                    switch (s[0]) {
-
-                        case "grade":
-                            returnValues.put(s[0], "Missing grade");
-                            break;
-                        case "time":
-                            returnValues.put(s[0], "No timestamp found");
-                            break;
-                        case "teacher":
-                            returnValues.put(s[0], "Missing Grader");
-                            break;
-
-                        default:
-                            returnValues.put(s[0], "Invalid query key, See Submission.java");
-                            break;
-
-                    }
-                } else {
-                    grade = grade.trim();
-                    returnValues.put(s[0], grade);
-                }
-            } catch (IncorrectResultSizeDataAccessException e) {
-                returnValues.put(s[0], "Query found no data");
-            } catch (DataAccessException e1) {
-                returnValues.put(s[0], "Dataaccess not found");
-
-            }
+        String query = "SELECT grade, submissiondate as time, concat(firstname,' ', lastname) as teacher" +
+                " FROM submission JOIN users ON (teacherid = userid) WHERE (studentid = ? AND assignmentid = ?)";
+        Map<String, Object> response;
+        try {
+            response = jdbcTemplate.queryForMap(query, studentID, assignmentID);
+            //return the time as string instead of timestamp
+            response.put("time", response.get("time").toString());
+        } catch (IncorrectResultSizeDataAccessException e) {
+            response = new HashMap<>();
+            //TODO create better error message
+            response.put("error", e.getMessage());
+        } catch (DataAccessException e) {
+            response = new HashMap<>();
+            //TODO create better error message
+            response.put("error", e.getMessage());
         }
-        return returnValues;
-
+        return response;
     }
-
-    /**
-     * Checks if the submission has a grader
-     *
-     * @param assID ID of the assignment.
-     * @return true if a teacherid exists, else false.
-     */
-    public boolean checkTeacherId(int assID) {
-
-        String checkForTeacher = "SELECT teacherid FROM submission WHERE ( assignmentid = ?)";
-        return jdbcTemplate.queryForObject(checkForTeacher, new Object[]{assID}, String.class) != null;
-
-
-    }
-
 
     /**
      * Get all ungraded submissions for an assignment
