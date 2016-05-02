@@ -60,8 +60,7 @@ public class VideoInController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        // Generate path and filename that will be used by the DataLayerCommunicator.
-        final String filename = randomizeFilename(userID) + fileTypeExtension;
+        // Generate path that will be used by the DataLayerCommunicator.
         final String uri = "https://localhost:8443/DB/addSubmission/" +
                 courseCode+"/"+courseID+"/"+assignmentID+"/"+userID;
 
@@ -74,23 +73,22 @@ public class VideoInController {
             ByteArrayResource videoResource = new ByteArrayResource(raw) {
                 @Override
                 public String getFilename() {
-                    return filename;
+                    return "video";
                 }
             };
 
             // Send data as a <String, Object> map so that we can receive with @RequestParam("nameOfValue")
             MultiValueMap<String, Object> requestParts = new LinkedMultiValueMap<>();
             requestParts.add("video", videoResource);
-            requestParts.add("filename", filename);
 
             // Send the submission video as a POST request to DataLayerCommunicator at /DB/addSubmission
-            ResponseEntity<String> response = requestSender.postForEntity(uri, requestParts, String.class);
+            String response = requestSender.postForObject(uri, requestParts, String.class);
 
             if(response == null) {
                 System.err.println("Sending data to DataLayerCommunicator failed.");
                 return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-            } else if(response.getStatusCode() != HttpStatus.OK) {
-                System.err.println("DataLayerComunicator: "+response.getStatusCode().toString());
+            } else if(!response.equals("OK")) {
+                System.err.println("DataLayerComunicator: "+response);
                 return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (RestClientException e) {

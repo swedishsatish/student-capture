@@ -17,6 +17,8 @@ public class Course {
 
     // This template should be used to send queries to the database
     @Autowired
+
+
     protected JdbcTemplate jdbcTemplate;
     /**
 
@@ -35,11 +37,15 @@ public class Course {
      */
 
     public boolean addCourse(String courseCode, int year, String term) {
-
-        return false; //TODO
+        return true;
 
     }
 
+    public boolean addCourseTemporaryTest(String courseCode, String year, String term,String courseID) {
+        jdbcTemplate.update("INSERT INTO course (courseid , year , term , coursecode , coursename ) VALUES (?,?,?,?,?)",courseID,2014,"nain",courseCode,"kuursen");
+        return true;
+
+    }
 
 
     /**

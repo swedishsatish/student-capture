@@ -48,15 +48,15 @@ public class FilesystemInterface {
 	 * submission on an assignment on the filesystem.
 	 *
 	 * @param courseCode	courses 6 character identifier
-	 * @param courseId		courses unique database id
-	 * @param assignmentId	assignments unique database id
-	 * @param studentId		students unique database id
+	 * @param courseID		courses unique database id
+	 * @param assignmentID	assignments unique database id
+	 * @param studentID		students unique database id
 	 * @return				path to directory
 	 */
 	public static String generatePath(String courseCode, String courseID,
-			String assignmentId, String studentID) {
+			String assignmentID, String studentID) {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseCode
-				+ "/" + courseID + "/" + assignmentId + "/" + studentID + "/";
+				+ "/" + courseID + "/" + studentID  + "/" + assignmentID + "/";
 		
 		return path;
 	}
@@ -145,14 +145,12 @@ public class FilesystemInterface {
 	 */
 	public static boolean storeStudentVideo(String courseCode, String courseID,
 											String assignmentID, String userID,
-											MultipartFile source, String filename) {
+											MultipartFile source) {
 
 		String path = FilesystemInterface.generatePath(courseCode, courseID,
-				assignmentID, userID) + FilesystemConstants
-				.SUBMISSION_VIDEO_FILENAME;
-
+				assignmentID, userID);
 		try {
-			storeFile(source ,filename,path);
+			storeFile(source ,path,FilesystemConstants.SUBMISSION_VIDEO_FILENAME);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -172,14 +170,13 @@ public class FilesystemInterface {
 	 */
 	public boolean storeFeedbackVideo(String courseCode, String courseId,
 											String assignmentId, String userId,
-									  MultipartFile source, String filename) {
+									  MultipartFile source) {
 
 		String path = FilesystemInterface.generatePath(courseCode, courseId,
-				assignmentId, userId) + FilesystemConstants
-				.FEEDBACK_VIDEO_FILENAME;
+				assignmentId, userId);
 
 		try {
-			storeFile(source,path, filename);
+			storeFile(source,path, FilesystemConstants.FEEDBACK_VIDEO_FILENAME);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -199,14 +196,13 @@ public class FilesystemInterface {
 	 */
 	public boolean storeFeedbackText(String courseCode, String courseId,
 									 String assignmentId, String userId,
-									 MultipartFile source, String filename) {
+									 MultipartFile source) {
 
 		String path = FilesystemInterface.generatePath(courseCode, courseId,
-				assignmentId, userId) + FilesystemConstants
-				.FEEDBACK_TEXT_FILENAME;
+				assignmentId, userId);
 
 		try {
-			storeFile(source,path,filename);
+			storeFile(source,path,FilesystemConstants.FEEDBACK_TEXT_FILENAME);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;

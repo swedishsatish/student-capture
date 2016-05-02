@@ -6,8 +6,6 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -60,7 +58,7 @@ public class Submission {
      * @return True if everything went well, otherwise false
      */
 
-    protected boolean setGrade(String assID, String teacherID, String studentID, String grade) {
+    public boolean setGrade(String assID, String teacherID, String studentID, String grade) {
         String setGrade = "UPDATE Submission (Grade, TeacherID, Date) = (?, ?, ?) WHERE (AssignmentID = ?) AND (StudentID = ?)";
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         Date date = new Date();

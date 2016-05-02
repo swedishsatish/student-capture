@@ -31,8 +31,8 @@ public class RequestManagerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testRequestPostTestVideo() throws Exception {
-        mockHttp.addParameter("videoName", "kuken");
-        mockHttp.addParameter("videoTest", "hejsan");
+        //mockHttp.addParameter("videoName", "kuken");
+        //mockHttp.addParameter("videoTest", "hejsan");
         //mockHttp.
     }
 
