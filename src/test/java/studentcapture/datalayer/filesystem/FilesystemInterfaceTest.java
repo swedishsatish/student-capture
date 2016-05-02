@@ -63,7 +63,7 @@ public class FilesystemInterfaceTest {
 		FilesystemInterface.storeStudentVideo(courseCode,courseID,assignmentID,userID,testFile);
 
 		File storedFile = new File(StudentCaptureApplication.ROOT+"/moose/"+courseCode+"/"+courseID+
-                "/"+userID+"/"+assignmentID+"/submission");
+                "/"+userID+"/"+assignmentID+"/submission.webm");
         assertTrue(storedFile.exists());
 	}
 
@@ -75,18 +75,9 @@ public class FilesystemInterfaceTest {
         testFile = new MockMultipartFile("mockTestFileExists", mockBytes);
         FilesystemInterface.storeStudentVideo(courseCode,courseID,assignmentID,userID,testFile);
         File storedFile = new File(StudentCaptureApplication.ROOT+"/moose/"+courseCode+"/"+courseID+
-                "/"+userID+"/"+assignmentID+"/submission");
+                "/"+userID+"/"+assignmentID+"/submission.webm");
 
         assertTrue(storedFile.exists());
-    }
-
-    @Test
-    public void shouldCatchIOException(){
-        byte[] mockBytes = {1,2,4};
-        MultipartFile testFile = new MockMultipartFile("testNoWrite", mockBytes);
-        boolean exceptionCaught = FilesystemInterface.storeStudentVideo("test_no_write","5DV151","1337","user",
-                testFile);
-        assertFalse(exceptionCaught);
     }
 
     @Test(expected = NullPointerException.class)
