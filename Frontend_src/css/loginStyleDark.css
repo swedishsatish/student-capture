@@ -28,7 +28,7 @@ form {
 /*specifies the height and background of the site*/
 html
 {
-    background-image: url("../img/IehB7.png");
+    background-image: url("../images/IehB7.png");
     height: 100%;
 }
 
@@ -58,10 +58,14 @@ h1
 
 }
 
+p{
+    color:white;
+}
+
 /*background and border for the form*/
 form
 {
-	background-image: url("../img/c2.png");
+	background-image: url("../images/c2.png");
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 
