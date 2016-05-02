@@ -14,12 +14,12 @@ h1, h2, h3, h4, h5, h6 {
 	font-family: 'Open Sans', sans-serif;
 	color:#FFFFFF;
 }
-.container h1,
-.container h2,
-.container h3,
-.container h4,
-.container h5,
-.container h6 {
+#courseContent h1,
+#courseContent h2,
+#courseContent h3,
+#courseContent h4,
+#courseContent h5,
+#courseContent h6 {
     color:#076172;
 }
 .container {
