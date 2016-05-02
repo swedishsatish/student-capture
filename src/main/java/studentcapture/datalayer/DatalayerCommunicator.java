@@ -32,8 +32,7 @@ public class DatalayerCommunicator {
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
     public Hashtable<String, Object> getGrade(@Valid FeedbackModel model) {
-        return submission.getGrade(Integer.toString(model.getStudentID()),
-                Integer.toString(model.getAssignmentID()));
+        return submission.getGrade(model.getStudentID(), model.getAssignmentID());
     }
 
 
