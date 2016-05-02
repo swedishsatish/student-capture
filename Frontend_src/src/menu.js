@@ -25,9 +25,10 @@ var Assignment = React.createClass({
         return { showChildren : true };
     },
     handleClick: function(assignment,event) {
-        if(this.state.showChildren && assignment["isActive"]) {
+        if(assignment["isActive"])
             ReactDOM.render(<CourseContent id={assignment["_id"]} type="assignment" />,
                             document.getElementById('courseContent'));
+        if(this.state.showChildren && assignment["isActive"]) {
             event.target.nextElementSibling.className="done";
             ReactDOM.render(<Tasks assignment={assignment} />,event.target.nextElementSibling);
         } else {
@@ -62,9 +63,10 @@ var Course = React.createClass({
     },
     handleClick: function(course,event) {
         this.setState({showChildren:!this.state.showChildren});
-        if(this.state.showChildren && course["isActive"]) {
+        if(course["isActive"])
             ReactDOM.render(<CourseContent id={course["_id"]} type="course" />,
                             document.getElementById('courseContent'));
+        if(this.state.showChildren && course["isActive"]) {
             event.target.nextElementSibling.className="done";
             ReactDOM.render(<Assignments course={course} />,event.target.nextElementSibling);
         } else {
