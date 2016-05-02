@@ -50,8 +50,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testUploadCorrectHeaderAndEmptyBody() throws Exception {
-        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
+        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
         mockMvc.perform(post("/uploadVideo/"+id)
                 .contentType("multipart/form-data"))
@@ -62,8 +61,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testUploadBadID() throws Exception {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
-        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
+        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id+"asdsad")
                 .file(new MockMultipartFile("video", fileContent))
@@ -80,8 +78,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testWithWrongHeader() throws Exception {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
-        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
+        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("bugsbunny", fileContent))
@@ -96,8 +93,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testUploadWrongHeaderAndEmptyBody() throws Exception {
-        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
+        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
         mockMvc.perform(post("/uploadVideo/"+id)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -108,8 +104,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testCorrectVideoUpload() throws Exception {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
-        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
+        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("video", fileContent))
@@ -126,8 +121,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testCorrectVideoUploadButFileTransferFails() throws Exception {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
-        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
+        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("Failed");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("video", fileContent))
@@ -144,8 +138,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testCorrectVideoUploadButFileTransferFails2() throws Exception {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
-        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
+        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("Server error");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("video", fileContent))
@@ -162,8 +155,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testCorrectVideoUploadButFileTransferResponseReturnsNull() throws Exception {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
-        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
+        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(null);
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("video", fileContent))
@@ -181,7 +173,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT + "/bugsbunny.webm"));
 
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
+        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("video", fileContent))
@@ -198,7 +190,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
+        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("videoo", fileContent))
@@ -215,8 +207,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testUploadWithWrongParamValues() throws Exception {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
 
-        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
+        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("videoName", fileContent))
@@ -233,8 +224,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testUploadWithEmptyVideo() throws Exception {
         byte[] fileContent = {};
 
-        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-        when(templateMock.postForEntity(any(String.class), any(LinkedMultiValueMap.class), eq(String.class))).thenReturn(response);
+        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
                 .file(new MockMultipartFile("video", fileContent))

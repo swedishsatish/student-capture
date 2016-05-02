@@ -40,7 +40,6 @@ public class User {
      * @param pNr       Person-Number
      * @param pwd       Password
      * @return          true if success, else false.
-
      */
     public boolean addUser(String userName, String fName, String lName, String pNr, String pwd) {
 
@@ -60,7 +59,6 @@ public class User {
     }
 
 
-
     /**
      * Remove a user from the User-table in the database.
      *
@@ -69,13 +67,10 @@ public class User {
      */
 
     public boolean removeUser(String casID) {
-
         //TODO
-
         return false;
 
     }
-
 
 
     /**
@@ -96,7 +91,6 @@ public class User {
         return false;
 
     }
-
 
 
     /**
@@ -132,8 +126,6 @@ public class User {
 
         @Override
         public Object mapRow(ResultSet rs, int i) throws SQLException {
-
-
             List<String> list = Arrays.asList(rs.getString("userid"),
                                               rs.getString("username"),
                                               rs.getString("lastname"),

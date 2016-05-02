@@ -6,6 +6,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -24,22 +26,20 @@ public class Submission {
      * @param studentID Unique identifier for the student submitting
      * @return True if everything went well, otherwise false
      */
-
-    private static final String addSubmissionStatement = "INSERT INTO "
-    		+ "Submission (AssignmentId,StudentId,SubmissionDate) VALUES "
-    		+ "(?,?,?)";
-    public boolean addSubmission(String assID, String studentID) {
+    public boolean addSubmission(String assignmentID,String studentID) {
         boolean result;
-        int assignmentId = Integer.parseInt(assID);
-    	int studentId = Integer.parseInt(studentID);
+        java.util.Date date = new java.util.Date(System.currentTimeMillis());
+        java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
+        timestamp.setNanos(0);
+
         try {
-            int rowsAffected = jdbcTemplate.update(addSubmissionStatement,
-            		new Object[] {assignmentId, studentId,
-            		new Timestamp(1000*(System.currentTimeMillis()/1000))});
+            int rowsAffected = jdbcTemplate.update(
+                    "INSERT INTO Submission (assignmentId, studentId, SubmissionDate) VALUES  (?,?,?)",
+                    assignmentID,studentID,timestamp);
             if(rowsAffected == 1) {
-            	result = true;
+                result = true;
             } else {
-            	result = false;
+                result = false;
             }
         }catch (IncorrectResultSizeDataAccessException e){
             result = false;
@@ -60,8 +60,8 @@ public class Submission {
      * @return True if everything went well, otherwise false
      */
 
-    public boolean setGrade(String assID, String teacherID, String studentID, String grade) {
-        String setGrade = "UPDATE Submission (Grade, TeacherID, Date) = (?, ?, ?) WHERE AssignmentID = ? AND StudentID = ?";
+    protected boolean setGrade(String assID, String teacherID, String studentID, String grade) {
+        String setGrade = "UPDATE Submission (Grade, TeacherID, Date) = (?, ?, ?) WHERE (AssignmentID = ?) AND (StudentID = ?)";
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         Date date = new Date();
         int updatedRows = jdbcTemplate.update(setGrade, new Object[]{grade, teacherID, dateFormat.format(date), assID, studentID});
@@ -119,7 +119,7 @@ public class Submission {
     /**
      * Get information about the grade of a submission
      *
-     * @param assID     Unique identifier for the assignment submission grade bra
+     * @param assignmentID     Unique identifier for the assignment submission grade bra
      * @param studentID Unique identifier for the student associated with the submission
      * @return A list containing the grade, date, and grader
      */
@@ -221,13 +221,13 @@ public class Submission {
 	    		submissions.add(submission);
 	    	}
 
-	    } catch (IncorrectResultSizeDataAccessException e){
-			//TODO
-		    return Optional.empty();
-		} catch (DataAccessException e1){
-			//TODO
-			return Optional.empty();
-		}
+        } catch (IncorrectResultSizeDataAccessException e) {
+            //TODO
+            return Optional.empty();
+        } catch (DataAccessException e1) {
+            //TODO
+            return Optional.empty();
+        }
 
         return Optional.of(submissions);
     }
@@ -239,7 +239,6 @@ public class Submission {
      * @param assID The assignment to get submissions for
 
      * @return A list of submissions for the assignment
-
      */
 
     private final static String getAllSubmissionsStatement = "SELECT * FROM "
