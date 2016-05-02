@@ -29,5 +29,14 @@ var UserGist = React.createClass({
     );
   }
 });
-
-ReactDOM.render(<UserGist source="https://api.github.com/users/octocat/gists" />, document.getElementById('courseContent'));
+window.CourseContent = React.createClass({
+    render: function() {
+        var id = this.props.id;
+        var type = this.props.type;
+        return (
+            <div>
+                ID: {id}<br />Type: {type}
+            </div>
+        );
+    }
+});
