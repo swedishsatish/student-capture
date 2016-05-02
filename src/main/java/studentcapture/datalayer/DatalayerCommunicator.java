@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Created by c12osn on 2016-04-22.
  * Edited by c13arm, ens13ahr
@@ -160,7 +159,7 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/getAssignmentVideo", method = RequestMethod.POST, produces = "video/webm")
     public ResponseEntity<InputStreamResource> getAssignmentVideo(@RequestParam("courseCode") String courseCode,
                                                                   @RequestParam("courseId") String courseId,
-                                                                  @RequestParam("assignmentId") String assignmentId) {
+                                                                  @RequestParam("assignmentId") int assignmentId) {
 
         ResponseEntity<InputStreamResource> responseEntity;
 
