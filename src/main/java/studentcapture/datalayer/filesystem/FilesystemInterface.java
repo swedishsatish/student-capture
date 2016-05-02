@@ -2,7 +2,6 @@ package studentcapture.datalayer.filesystem;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
-import java.nio.file.Files;
 
 /**
  * Interface to mangae the file system moosefs.
@@ -29,7 +28,7 @@ public class FilesystemInterface {
 	 * @param assignmentId	assignments unique database id
 	 * @return				path to directory
 	 */
-	public static String generatePath(String courseCode, String courseId, int assignmentId) {
+	public static String generatePath(String courseCode, String courseId, String assignmentId) {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseCode
 				+ "/" + courseId + "/" + assignmentId + "/";
 		
@@ -47,7 +46,7 @@ public class FilesystemInterface {
 	 * @return				path to directory
 	 */
 	public static String generatePath(String courseCode, String courseId,
-			int assignmentId, int studentId) {
+			String assignmentId, String studentId) {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseCode
 				+ "/" + courseId + "/" + assignmentId + "/" + studentId + "/";
 		
@@ -64,7 +63,7 @@ public class FilesystemInterface {
      */
 	public FileInputStream getAssignmentVideo(String courseCode,
                                               String courseId,
-                                              int assignmentId)
+                                              String assignmentId)
                                               throws FileNotFoundException {
         String path = generatePath(courseCode, courseId, assignmentId);
         return new FileInputStream(path);
@@ -80,7 +79,7 @@ public class FilesystemInterface {
      */
     public int getAssignmentVideoFileSize(String courseCode,
                                           String courseId,
-                                          int assignmentId) {
+                                          String assignmentId) {
         String path = generatePath(courseCode, courseId, assignmentId)
                         + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
         File f = new File(path);
@@ -97,7 +96,7 @@ public class FilesystemInterface {
      * @return video or null if it doesn't exist. 
      */
 	public FileInputStream getStudentVideo(String courseCode, String courseId,
-		   int assignmentId, int userId) {
+										   String assignmentId, String userId) {
 	   String path = FilesystemInterface.generatePath(courseCode, courseId, 
 			   assignmentId, userId) + FilesystemConstants
 			   .SUBMISSION_VIDEO_FILENAME;
@@ -117,7 +116,7 @@ public class FilesystemInterface {
      * @param assignmentId Unique code of the assignment
      * @return
      */
-    public FileInputStream getAssignmentDescription(String courseCode, String courseId, int assignmentId) {
+    public FileInputStream getAssignmentDescription(String courseCode, String courseId, String assignmentId) {
         String path = FilesystemInterface.generatePath(courseCode, courseId, assignmentId) + FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
         try {
             return new FileInputStream(path);
@@ -138,7 +137,7 @@ public class FilesystemInterface {
      * @return true if video was stored successfully
      */
 	public static boolean storeStudentVideo(String courseCode, String courseId,
-		   int assignmentId, int userId, File source) {
+		   String assignmentId, String userId, File source) {
 
         String path = FilesystemInterface.generatePath(courseCode, courseId,
 			   assignmentId, userId) + FilesystemConstants
@@ -152,6 +151,58 @@ public class FilesystemInterface {
         }
 
         return true;
+	}
+
+	/**
+	 * Store the teacher's feedback video to a student submission.
+	 *
+	 * @param courseCode the code for the course.
+	 * @param courseId course id from the database
+	 * @param assignmentId from database
+	 * @param userId from database
+	 * @return true if video was stored successfully
+	 */
+	public static boolean storeFeedbackVideo(String courseCode, String courseId,
+											String assignmentId, String userId, File source) {
+
+		String path = FilesystemInterface.generatePath(courseCode, courseId,
+				assignmentId, userId) + FilesystemConstants
+				.FEEDBACK_VIDEO_FILENAME;
+
+		try {
+			storeFile(source,path);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Store the teacher's feedback text to a student submission.
+	 *
+	 * @param courseCode the code for the course.
+	 * @param courseId course id from the database
+	 * @param assignmentId from database
+	 * @param userId from database
+	 * @return true if video was stored successfully
+	 */
+	public static boolean storeFeedbackText(String courseCode, String courseId,
+											String assignmentId, String userId, File source) {
+
+		String path = FilesystemInterface.generatePath(courseCode, courseId,
+				assignmentId, userId) + FilesystemConstants
+				.FEEDBACK_TEXT_FILENAME;
+
+		try {
+			storeFile(source,path);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
 	}
 
 
