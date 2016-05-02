@@ -91,8 +91,8 @@ public class VideoOutController {
     @RequestMapping(value = "/videoDownload/{courseCode}/{courseId}/{assignmentId}/{userId}",
             method = RequestMethod.GET, produces = "video/webm")
     public ResponseEntity<InputStreamResource> handleVideDl(@PathVariable("courseCode") String courseCode,
-            @PathVariable("courseId") int courseId, @PathVariable("assignmentId") int assignmentId,
-            @PathVariable("userId") int userId) {
+            @PathVariable("courseId") String courseId, @PathVariable("assignmentId") String assignmentId,
+            @PathVariable("userId") String userId) {
 
         ResponseEntity responseEntity = null;
 
