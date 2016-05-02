@@ -1,6 +1,6 @@
 package studentcapture.datalayer;
 
-import org.json.JSONObject;
+//import org.json.JSONObject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.Submission;
 import studentcapture.datalayer.database.User;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
-import studentcapture.video.VideoInfo;
+//import studentcapture.video.VideoInfo;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
