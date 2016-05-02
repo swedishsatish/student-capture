@@ -1,23 +1,16 @@
 package studentcapture.feedback;
 
-import com.fasterxml.jackson.annotation.JacksonInject;
-
 import java.net.URI;
-
-import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import studentcapture.assignment.AssignmentModel;
-import studentcapture.lti.*;
-
 import javax.validation.Valid;
 import java.util.HashMap;
+import studentcapture.assignment.AssignmentModel;
+import studentcapture.datalayer.DatalayerCommunicator;
+import studentcapture.lti.*;
 
 /**
  * Will deliver or update information about feedback on a Submission for an
@@ -36,6 +29,7 @@ public class FeedbackController {
 
     @Autowired
     private RestTemplate requestSender;
+    private DatalayerCommunicator dc;
 
     @CrossOrigin
     @RequestMapping(value = "get", method = RequestMethod.GET)
@@ -62,18 +56,22 @@ public class FeedbackController {
 
     /**
      * Will set the given grade for the Feedback.
-     * @param feedbackModel The given feedback that will be inserted/updated.
+     * @param fm The given feedback that will be inserted/updated.
      * @see LTICommunicator
      * @see FeedbackModel
      */
     @RequestMapping(value = "set", method = RequestMethod.POST)
-    public void setFeedback(@RequestBody FeedbackModel feedbackModel) {
+    public void setFeedback(@RequestBody FeedbackModel fm) {
         //TODO: Set grade in Student-capture (database)
+        dc.setGrade(String.valueOf(fm.getAssignmentID()),
+                    fm.getTeacherID(),
+                    String.valueOf(fm.getStudentID()),
+                    fm.getGrade());
 
 
         //TODO: Set grade in LTI.
         try {
-            LTICommunicator.setGrade(feedbackModel);
+            LTICommunicator.setGrade(fm);
         }
         catch (LTIInvalidGradeException e) {
             //TODO: Will need to notify the client.
@@ -88,6 +86,8 @@ public class FeedbackController {
 
 
     }
+
+
 
 
 
