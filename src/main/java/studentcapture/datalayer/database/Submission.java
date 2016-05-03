@@ -136,7 +136,7 @@ public class Submission {
      * @return A list of ungraded submissions for the assignment
      */
     private final static String getAllUngradedStatement = "SELECT "
-    		+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu,LastName,"
+    		+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
     		+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
     		+ "Submission AS sub LEFT JOIN Users AS stu ON "
     		+ "sub.studentId=stu.userId WHERE (AssignmentId=?) AND "
@@ -158,7 +158,7 @@ public class Submission {
 	    		String firstName = (String) row.get("FirstName");
 	    		String lastName = (String) row.get("LastName");
 	    		submission.studentName = firstName + " " + lastName;
-	    		
+
 	    		submissions.add(submission);
 	    	}
 
@@ -183,7 +183,7 @@ public class Submission {
      */
 
     private final static String getAllSubmissionsStatement = "SELECT "
-    		+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu,LastName,"
+    		+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
     		+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
     		+ "Submission AS sub LEFT JOIN Users AS stu ON "
     		+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
