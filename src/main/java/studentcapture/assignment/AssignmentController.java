@@ -2,6 +2,8 @@ package studentcapture.assignment;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,22 +24,20 @@ import java.net.URL;
 public class AssignmentController {
 
     @RequestMapping(value = "/assignment", method = RequestMethod.POST)
-    public AssignmentModel postAssignment(@RequestBody AssignmentModel assignment) throws IOException {
+    public void postAssignment(@RequestBody AssignmentModel assignment) throws IOException {
         RestTemplate rt = new RestTemplate();
-
+        String res = "";
         try {
             URL url = new URL("https://localhost:8443/DB/createAssignment");
-            int res = rt.postForObject(url.toString(), assignment, int.class);
+            res = rt.postForObject(url.toString(), assignment, String.class);
 
-            if(res < 0) {
-                throw new IOException("Couldn't access database layer");
+            if (res.equals("")) {
+                throw new IOException(res);
             }
 
         } catch (MalformedURLException e) {
             System.err.println("Malformed URL in AssignmentController.assignment");
             System.err.println(e.getMessage());
         }
-
-        return assignment;
     }
 }

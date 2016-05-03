@@ -25,8 +25,8 @@ public class AssignmentModel {
         this.info = info;
         this.minTimeSeconds = minTimeSeconds;
         this.maxTimeSeconds = maxTimeSeconds;
-        this.startDate = LocalDateTime.parse(startDate);
-        this.endDate = LocalDateTime.parse(endDate);
+        this.setStartDate(startDate);
+        this.setEndDate(endDate);
         this.published = published;
 
         validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
@@ -95,19 +95,23 @@ public class AssignmentModel {
     }
 
     public String getEndDate() {
-        return endDate.toString();
+        return endDate.toString().replace('T', ' ') + ":00";
     }
 
     public void setEndDate(String endDate) {
+        endDate = endDate.replace(' ', 'T');
+        endDate = endDate.substring(0, 16);
         this.endDate = LocalDateTime.parse(endDate);
         validateStartEndTime(this.startDate, this.endDate);
     }
 
     public String getStartDate() {
-        return startDate.toString();
+        return startDate.toString().replace('T', ' ') + ":00";
     }
 
     public void setStartDate(String startDate) {
+        startDate = startDate.replace(' ', 'T');
+        startDate = startDate.substring(0, 16);
         this.startDate = LocalDateTime.parse(startDate);
         //validateStartEndTime(this.startDate, this.endDate);
     }

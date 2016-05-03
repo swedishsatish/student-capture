@@ -85,7 +85,7 @@ public class AssignmentModelTest {
 
     @Test
     public void shouldNotThrowDateTimeParseException() {
-        new AssignmentModel("Test", "info", 120, 300, "2015-01-20T10:00", "2015-01-22T10:00", true);
+        new AssignmentModel("Test", "info", 120, 300, "2015-01-20 10:00:00", "2015-01-22 10:00:00", true);
     }
 
     @Test(expected = DateTimeParseException.class)
