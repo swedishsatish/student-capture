@@ -169,7 +169,7 @@ public class Assignment {
 
         return returnValues;
     }
-    
+
 	public String getAssignmentID(String courseID,String assignmentTitle){
     	String sql = "SELECT assignmentID from Assignment WHERE courseID = ? AND Title = ?";
     	return jdbcTemplate.queryForObject(sql, new Object[]{courseID,assignmentTitle},String.class);
@@ -187,4 +187,14 @@ public class Assignment {
         return true;
     }
 
+    public class AssignmentWrapper {
+    	public int assignmentId;
+    	public String courseId;
+    	public String title;
+    	public String StartDate;
+    	public String EndDate;
+    	public int minTime;
+    	public int maxTime;
+    	public boolean published;
+    }
 }
