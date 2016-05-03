@@ -272,7 +272,7 @@ public class DatalayerCommunicator {
     @ResponseBody
     public List<SubmissionWrapper> getAllUngradedSubmissions(
     		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submission.getAllSubmissions(assignmentID).get();
+    	return submission.getAllUngraded(assignmentID).get();
     }
 
     /**
@@ -291,7 +291,7 @@ public class DatalayerCommunicator {
     @ResponseBody
     public List<SubmissionWrapper> getAllSubmissionsWithStudents(
     		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submission.getAllSubmissions(assignmentID).get();
+    	return submission.getAllSubmissionsWithStudents(assignmentID).get();
     }
 
     /**
