@@ -31,13 +31,16 @@ window.CourseContent = React.createClass({
         var title;
         switch(type){
             case "course":
-                title = <h1>{type}</h1>
+                title = <h1>{type}</h1>;
                 break;
             case "assignment":
-                title = <h2>{type}</h2>
+                var courseId = this.props.course;
+                title = <h2>{type} (course={courseId})</h2>;
                 break;
             case "task":
-                title = <h3>{type}</h3>
+                var courseId = this.props.course;
+                var assignmentId = this.props.assignment;
+                title = <h3>{type} (course={courseId}) (assignment={assignmentId})</h3>;
                 break;
             default:
                 title = <h4>{type}</h4>
