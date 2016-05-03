@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class AssignmentModel {
 
-    private int courseID;
+    private String courseID;
     private String title;
     private String info;
     private int minTimeSeconds;
@@ -20,13 +20,13 @@ public class AssignmentModel {
     public AssignmentModel(String title, String info, int minTimeSeconds, int maxTimeSeconds, String startDate,
                            String endDate, boolean published) throws InputMismatchException
     {
-        this.courseID = 1; //should be changed.
+        this.courseID = "1000"; //should be changed.
         this.title = title;
         this.info = info;
         this.minTimeSeconds = minTimeSeconds;
         this.maxTimeSeconds = maxTimeSeconds;
-        this.startDate = LocalDateTime.parse(startDate);
-        this.endDate = LocalDateTime.parse(endDate);
+        this.setStartDate(startDate);
+        this.setEndDate(endDate);
         this.published = published;
 
         validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
@@ -34,7 +34,7 @@ public class AssignmentModel {
     }
 
     public AssignmentModel() {
-        this.courseID = 1; //should be changed.
+        this.courseID = "1000"; //should be changed.
         this.title = "Defualt Assignment";
         this.info = "Defualt Info";
         this.minTimeSeconds = 0;
@@ -44,11 +44,11 @@ public class AssignmentModel {
         this.published = false;
     }
 
-    public int getCourseID() {
+    public String getCourseID() {
         return courseID;
     }
 
-    public void setCourseID(int courseID) {
+    public void setCourseID(String courseID) {
         this.courseID = courseID;
     }
 
@@ -95,19 +95,23 @@ public class AssignmentModel {
     }
 
     public String getEndDate() {
-        return endDate.toString();
+        return endDate.toString().replace('T', ' ') + ":00";
     }
 
     public void setEndDate(String endDate) {
+        endDate = endDate.replace(' ', 'T');
+        endDate = endDate.substring(0, 16);
         this.endDate = LocalDateTime.parse(endDate);
         validateStartEndTime(this.startDate, this.endDate);
     }
 
     public String getStartDate() {
-        return startDate.toString();
+        return startDate.toString().replace('T', ' ') + ":00";
     }
 
     public void setStartDate(String startDate) {
+        startDate = startDate.replace(' ', 'T');
+        startDate = startDate.substring(0, 16);
         this.startDate = LocalDateTime.parse(startDate);
         //validateStartEndTime(this.startDate, this.endDate);
     }

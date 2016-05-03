@@ -111,6 +111,7 @@ public class Assignment {
 
         // Return generated AssignmentID
         return (int) keyHolder.getKeys().get("assignmentid");
+        //return 1;
     }
 
     /**
