@@ -20,6 +20,8 @@ public class FeedbackModel {
     @NotNull @Min(1)
     private int courseID;
 
+    private int courseCode;
+
     private String grade, feedbackText;
 
     public void setTeacherID(String teacherID) {
@@ -104,5 +106,13 @@ public class FeedbackModel {
      */
     public String getTeacherID() {
         return teacherID;
+    }
+
+    public int getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(int courseCode) {
+        this.courseCode = courseCode;
     }
 }

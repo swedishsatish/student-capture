@@ -21,8 +21,14 @@ import studentcapture.datalayer.database.User;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
 
+import javax.validation.Valid;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -46,20 +52,9 @@ public class DatalayerCommunicator {
     //@Autowired
     FilesystemInterface fsi;
     @CrossOrigin()
-    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.POST)
-    public MultiValueMap getGrade(@RequestParam(value = "studentID", required = false) String studentID,
-                                  @RequestParam(value = "courseCode", required = false) String courseCode,
-                                  @RequestParam(value = "courseID", required = false) String courseID,
-                                  @RequestParam(value = "assignmentID", required = false) String assignmentID) {
-
-        LinkedMultiValueMap<String, Object> returnData = new LinkedMultiValueMap<>();
-
-        returnData.add("grade", submission.getGrade(studentID, assignmentID).get("grade"));
-        returnData.add("time", submission.getGrade(studentID, assignmentID).get("time"));
-        returnData.add("teacher",  submission.getGrade(studentID, assignmentID).get("teacher"));
-
-
-        return returnData;
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
+    public Map<String, Object> getGrade(@Valid FeedbackModel model) {
+         return submission.getGrade(model.getStudentID(), model.getAssignmentID());
     }
 
 

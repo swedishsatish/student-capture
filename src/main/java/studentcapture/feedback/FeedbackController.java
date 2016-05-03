@@ -2,11 +2,14 @@ package studentcapture.feedback;
 
 import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.HashMap;
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.lti.*;
@@ -51,6 +54,30 @@ public class FeedbackController {
             //TODO Maybe not good to send exceptions to browser?
             response = new HashMap<String, String>();
             response.put("error", e.getMessage());
+        }
+        return response;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "video", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> video(@Valid FeedbackModel model) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.ALL));
+        HttpEntity<String> entity = new HttpEntity(headers);
+        ResponseEntity<byte[]> response = null;
+
+        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI + "/videoDownload/")
+                .path(Integer.toString(model.getCourseCode()) + "/" +
+                      Integer.toString(model.getCourseID()) + "/" +
+                      Integer.toString(model.getAssignmentID()) + "/" +
+                      Integer.toString(model.getStudentID()))
+                .build()
+                .toUri();
+        try {
+            response = requestSender.exchange(targetUrl, HttpMethod.GET, entity, byte[].class);
+        } catch (RestClientException e) {
+            //TODO Error handling
         }
         return response;
     }

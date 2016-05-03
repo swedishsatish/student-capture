@@ -219,7 +219,7 @@ public class FilesystemInterface {
 	 * @param source the video file to be stored
 	 * @param des destination for the video file
 	 */
-	private static void storeFile(MultipartFile source, String filename, String des) throws IOException {
+	private static void storeFile(MultipartFile source, String des, String filename) throws IOException {
 		File dir = new File(des);
 		dir.mkdirs();
 		File file = new File(des +"/"+ filename);
