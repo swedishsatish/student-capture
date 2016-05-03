@@ -78,8 +78,10 @@ var RegisterForm = React.createClass({
             return;
         }
 	
-		if(!this.refs.Fpass.checkValidity() || !this.refs.Spass.checkValidity())
+		if(!this.refs.Fpass.checkValidity() || !this.refs.Spass.checkValidity()){
     		alert('invalid password');
+    		return;
+    		}
     		
     		// if passwords are not the same
         if(this.refs.Fpass.value != this.refs.Spass.value){
