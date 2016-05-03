@@ -20,7 +20,7 @@ public class AssignmentModel {
     public AssignmentModel(String title, String info, int minTimeSeconds, int maxTimeSeconds, String startDate,
                            String endDate, boolean published) throws InputMismatchException
     {
-        this.courseID = "1"; //should be changed.
+        this.courseID = "1000"; //should be changed.
         this.title = title;
         this.info = info;
         this.minTimeSeconds = minTimeSeconds;
@@ -34,7 +34,7 @@ public class AssignmentModel {
     }
 
     public AssignmentModel() {
-        this.courseID = "1"; //should be changed.
+        this.courseID = "1000"; //should be changed.
         this.title = "Defualt Assignment";
         this.info = "Defualt Info";
         this.minTimeSeconds = 0;
