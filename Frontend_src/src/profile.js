@@ -36,10 +36,19 @@ var NewProfile = React.createClass({
 		$("#internet-speed").text("");
 	},
 	render : function() {
-		return <div className="three columns offset-by-nine" id="profile">
+		/*return <div className="three columns offset-by-nine" id="profile">
 			<h6 id="profileName" onClick={this.clickHandler} className="md-trigger md-setperspective" data-modal="modal-19">{profileData.name}</h6>
 			
-		</div>
+		</div>*/
+		return (
+			<div className="three columns offset-by-nine dropdown" id="profile">
+				<h6 id="profileName" className="dropdown-head">{profileData.name}</h6>
+				<div className="dropdown-content">
+					<h6 onClick={this.clickHandler} className="md-trigger md-setperspective dropdown-head" data-modal="modal-19">Test equipment</h6>
+				</div>
+
+			</div>
+		);
 	}
 });
 

@@ -1,70 +1,71 @@
+/**
+ * Props params:
+ *
+ * playCallback:    Function to be called with response from server. should take one parameter.
+ * calc:            Only used when testing hardware.
+ * postURL:         The url after the globally set url.
+ * formDataBuilder  Function to create formdata containing information to send. Function takes:.
+ *                                                                                     video(blob) as first param
+ *                                                                                     filename as second param.
+ * recButtonID:     [Optional] Button to start recording video. If left out it autorecords on render.
+ * stopButtonID:    Id of the button to stop recording video. Might post video as well(read about postButtonID).
+ * postButtonID:    [Optional] Id of the post video button. If left out the stop button posts the video to server.
+ * replay:          replay="true" if you want the recording to be playable in the same video tag.
+ * fileName:        The name the video recording should have.
+ *
+ *
+ * watch HardwareTest.js for example of use.
+ */
+
+
+
 var Recorder = React.createClass({
   componentDidMount: function() {
-      // PostBlob method uses XHR2 and FormData to submit
-      // recorded blob to the PHP server
+
+
       var props = this.props;
+
+      //used for hw testing
       var blobsize;
       var sendTime;
-      function PostBlob(blob, fileType, fileName) {
+
+
+      var autoRec = typeof props.recButtonID === "undefined";
+      var replay = props.replay == "true";
+      function PostBlob(blob) {
           // FormData
-          var formData = new FormData();
-          formData.append("videoName", fileName);
-          formData.append("video", blob);
+          var formData = props.formDataBuilder(blob,props.fileName);
 
-          blobsize = blob.size/1048576;
-          sendTime = Date.now();
-          // progress-bar
+          //used for hw testing
+          if(typeof props.calc !== "undefined") {
+              blobsize = blob.size / 1048576;
+              sendTime = Date.now();
+          }
 
-
-          // POST the Blob using XHR2
-          xhr(window.globalURL + props.postURL, formData, props.playCallback/*function (fName) {
-             
-
-
-              var container = document.getElementById("tst");
-              if(container.childNodes.length > 1){
-                  container.removeChild(container.childNodes.item(1));
-              }
-
-              var mediaElement = document.createElement("video");
-
-              var source = document.createElement('source');
-              source.src = "data:video/webm;base64,"+fName;
-
-              source.type = 'video/webm; codecs="vp8, vorbis"';
-
-              mediaElement.setAttribute("width","100%");
-              mediaElement.setAttribute("height","100%");
-              mediaElement.appendChild(source);
-              mediaElement.controls = true;
-              container.appendChild(mediaElement)
-              mediaElement.play();
-
-
-          }*/);
-      }
-      if(props.autoRec == "false"){
-          console.log("not auto")
-          var record = document.getElementById('record');
+          //call xhr with full url, data and callback function
+          xhr(window.globalURL + props.postURL, formData, props.playCallback);
       }
 
-      var stop = document.getElementById('stop');
 
+      if(!autoRec){
 
+          var record = document.getElementById(props.recButtonID);
+      }
 
+      var stop = document.getElementById(props.stopButtonID);
 
 
       var preview = document.getElementById('preview');
 
-
-
-      // if you want to record only audio on chrome
-      // then simply set "isFirefox=true"
-      var isFirefox = !!navigator.mozGetUserMedia;
+      //check webbrowse.
+      var isFirefox = !!navigator.mediaDevices.getUserMedia;
 
       var recordAudio, recordVideo;
       var startRecord = function () {
-          record.disabled = true;
+          if(!autoRec){
+              record.disabled = true;
+          }
+          //Start recording with forced low settings for smaller files.
           navigator.getUserMedia({
               audio: true,
               video: {
@@ -78,14 +79,13 @@ var Recorder = React.createClass({
                   }
               }
           }, function (stream) {
+              //start stream to record
               preview.src = window.URL.createObjectURL(stream);
               preview.play();
 
-              // var legalBufferValues = [256, 512, 1024, 2048, 4096, 8192, 16384];
-              // sample-rates in at least the range 22050 to 96000.
+
               recordAudio = RecordRTC(stream, {
-                  //bufferSize: 16384,
-                  //sampleRate: 45000,
+
                   onAudioProcessStarted: function () {
                       if (!isFirefox) {
                           recordVideo.startRecording();
@@ -106,34 +106,76 @@ var Recorder = React.createClass({
 
               stop.disabled = false;
           }, function (error) {
-              alert(JSON.stringify(error, null, '\t'));
+              alert("Problem occured, make sure camera is not\nused elsewhere and that you are connected\nby https.");
           });
       };
 
-      if(props.autoRec == "false"){
+      if(!autoRec){
           record.onclick = startRecord;
       }
       stop.onclick = function () {
-          if(props.autoRec == "false"){
+          if(!autoRec){
               record.disabled = false;
           }
           
           stop.disabled = true;
 
           preview.src = '';
+          
+          var postbutton = null;
+          if (typeof props.postButtonID !== "undefined"){
+              postbutton = document.getElementById(props.postButtonID);
+          }
 
 
           if (!isFirefox) {
-              recordVideo.stopRecording(function () {
-                  PostBlob(recordVideo.getBlob(), 'video', 'hej.webm');
+
+              recordVideo.stopRecording(function (url) {
+                  if(replay){
+                      preview.src = url;
+                      preview.setAttribute("controls","controls");
+                  }
+
+
+                  if(postbutton == null) {
+                      PostBlob(recordVideo.getBlob());
+                  }
+                  else {
+                      preview.src = url;
+                      preview.setAttribute("controls","controls");
+                      postbutton.disabled = false;
+                      postbutton.onclick = function () {
+                          
+                          PostBlob(recordVideo.getBlob());
+                          
+
+                      }
+                  }
               });
           }else {
+
               recordAudio.stopRecording(function (url) {
-                  preview.src = url;
-                  PostBlob(recordAudio.getBlob(), 'video', 'hej.webm');
+                  if(replay){
+                      preview.src = url;
+                      preview.setAttribute("controls","controls");
+                  }
+                  if(postbutton == null) {
+
+                      PostBlob(recordAudio.getBlob());
+                  }
+                  else {
+                      preview.src = url;
+                      preview.setAttribute("controls","controls");
+                      postbutton.disabled = false;
+                      postbutton.onclick = function () {
+                         
+                          PostBlob(recordAudio.getBlob());
+
+
+                      }
+                  }
               });
           }
-
 
       };
 
@@ -160,7 +202,7 @@ var Recorder = React.createClass({
 
 
 
-      if(props.autoRec == "true"){
+      if(autoRec){
           startRecord();
       }
   },
