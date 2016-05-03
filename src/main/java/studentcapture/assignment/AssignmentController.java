@@ -19,6 +19,8 @@ import java.net.URL;
 
 /**
  * Created by victor on 2016-04-28.
+ * Controller for assignments. At the moment only contains the method that newly created assignments should be posted
+ * to.
  */
 @RestController
 public class AssignmentController {

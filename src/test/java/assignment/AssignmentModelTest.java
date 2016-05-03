@@ -52,7 +52,7 @@ public class AssignmentModelTest {
 
     @Test
     public void CourseIDShouldBe1() {
-        assertEquals("1", assignmentModel.getCourseID());
+        assertEquals("1000", assignmentModel.getCourseID());
     }
 
     @Test
