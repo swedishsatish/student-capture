@@ -13,6 +13,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.Submission;
@@ -71,25 +72,19 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
-    public int createAssignment(//@RequestBody AssigmentModel assignment){ //will be used after merge
-                                @RequestParam(value = "courseID") String courseID,
-                                @RequestParam(value = "assignmentTitle") String assignmentTitle,
-                                @RequestParam(value = "startDate") String startDate,
-                                @RequestParam(value = "endDate") String endDate,
-                                @RequestParam(value = "minTime") int minTime,
-                                @RequestParam(value = "maxTime") int maxTime,
-                                @RequestParam(value = "published") boolean published){
-        int returnResult;
+    public String createAssignment(@RequestBody AssignmentModel assignmentModel){
+        Integer returnResult;
 
         try{
-            returnResult = assignment.createAssignment(courseID, assignmentTitle,
-                    startDate, endDate, minTime, maxTime, published);
+            returnResult = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
+                    assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
+                    assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
         } catch (IllegalArgumentException e) {
             //TODO return smarter error msg
-            return -1;
+            return e.getMessage();
         }
 
-        return returnResult;
+        return returnResult.toString();
     }
 
     /**
@@ -254,7 +249,7 @@ public class DatalayerCommunicator {
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.POST,
+    method = RequestMethod.GET,
     value = "/getAllSubmissions")
     @ResponseBody
     public List<SubmissionWrapper> getAllSubmissions(
@@ -272,12 +267,12 @@ public class DatalayerCommunicator {
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.POST,
+    method = RequestMethod.GET,
     value = "/getAllUngradedSubmissions")
     @ResponseBody
     public List<SubmissionWrapper> getAllUngradedSubmissions(
     		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submission.getAllSubmissions(assignmentID).get();
+    	return submission.getAllUngraded(assignmentID).get();
     }
 
     /**
@@ -291,12 +286,12 @@ public class DatalayerCommunicator {
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.POST,
+    method = RequestMethod.GET,
     value = "/getAllSubmissionsWithStudents")
     @ResponseBody
     public List<SubmissionWrapper> getAllSubmissionsWithStudents(
     		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submission.getAllSubmissions(assignmentID).get();
+    	return submission.getAllSubmissionsWithStudents(assignmentID).get();
     }
 
     /**
@@ -314,15 +309,23 @@ public class DatalayerCommunicator {
                                 @PathVariable(value = "courseID") String courseID,
                                 @PathVariable(value = "assignmentID") String assignmentID,
                                 @PathVariable(value = "userID") String userID,
-                                @RequestParam(value = "video") MultipartFile video) {
-
+                                @RequestParam(value = "video",required = false) MultipartFile video) {
+    	if(video == null){
+    		if(submission.addSubmission(assignmentID, userID)){
+    			return "Student submitted an empty answer";
+    		}
+    		else{
+    			return "DB failure for student submission";
+    		}
+    	}
         // ADD to database here
-
-        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
-            return "OK";
-        } else
-            return "Failed to add video to filesystem.";
-
+    	if(submission.addSubmission(assignmentID, userID)){
+	        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
+	            return "OK";
+	        } else
+	            return "Failed to add video to filesystem.";
+    	}
+    	return "failed to add submission to database";
     }
 
 }
