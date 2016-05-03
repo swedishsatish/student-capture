@@ -25,6 +25,8 @@
     <link rel="stylesheet" href="css/skeleton.css">
     <link rel="stylesheet" href="css/custom.css">
       <link rel="stylesheet" href="css/component.css">
+      <link rel="stylesheet" href="css/hwTest.css">
+
 
     <!-- Scripts -->
     <script src="build/react.js"></script>
@@ -35,6 +37,7 @@
     <script src="src/communicationsLibrary.js"></script>
     <script src="src/g2/RecordRTC.js"></script>
     <script src="src/viewAssignment.js" type="text/babel"></script>
+      <script src="src/g2/sorttable.js"></script>
 
 
     <!-- Favicon -->
@@ -43,7 +46,10 @@
 
   <!-- Primary Page Layout -->
   <body>
-      <div class="md-modal md-effect-18" id="modal-18">
+  <script>
+      window.globalURL = "";
+  </script>
+      <div class="md-modal md-effect-19" id="modal-19">
           <div class="md-content" id="modal-container">
               <button class="md-close">Close</button>
           </div>
@@ -55,7 +61,7 @@
         </div>
 
         <div class="three columns" id="desktopNavigation"></div>
-        <script type="text/babel" src="src/desktopNavigation.js"></script>
+        <script type="text/babel" src="src/hardcodeMenu.js"></script>
 
         <div class="nine columns" id="courseContent"></div>
         <script type="text/babel" src="src/courseContent.js"></script>
@@ -70,6 +76,8 @@
       <script type="text/babel" src="src/g2/videoRecord.js"></script>
       <script type="text/babel" src="src/g2/HardwareTest.js"></script>
       <script type="text/babel" src="src/g2/StudentList.js"></script>
+
+
   </body>
 <!-- End Document -->
 </html>

@@ -24,7 +24,7 @@ var CommentBox = React.createClass({
     // The render function for the component CommentBox
     render: function () {
         return (
-            <textarea name="commentBox"
+            <textarea id="commentBox"
                       value={this.state.value}
                       onChange={this.handleChange}
                       onClick={this.onClick}
@@ -212,8 +212,9 @@ var RenderHandle = React.createClass({
 
 window.RenderHandle = RenderHandle;
 
-ReactDOM.render(
+/*ReactDOM.render(
     <RenderHandle/>,
     document.getElementById('courseContent')
 
 );
+*/

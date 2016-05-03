@@ -36,7 +36,8 @@ var NewProfile = React.createClass({
 	},
 	render : function() {
 		return <div className="three columns offset-by-nine" id="profile">
-			<h6 id="profileName" onClick={this.clickHandler} className="md-trigger md-setperspective" data-modal="modal-18">{profileData.name}</h6>
+			<h6 id="profileName" onClick={this.clickHandler} className="md-trigger md-setperspective" data-modal="modal-19">{profileData.name}</h6>
+			
 		</div>
 	}
 });

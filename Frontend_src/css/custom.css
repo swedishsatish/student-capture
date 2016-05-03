@@ -122,6 +122,9 @@ h1, h2, h3, h4, h5, h6 {
     color: white;
 }
 
+#students-table tbody tr:hover{
+	background-color: #2D728F;
+}
 
 /* SHOW ASSIGNMENT VIDEO */
 
