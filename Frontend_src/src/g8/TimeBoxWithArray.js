@@ -1,3 +1,6 @@
+/**
+  Class that asks for the start- and end-time of a task/assignment and displays them, also time left
+*/
 window.TimeBoxWithArray = React.createClass({
 
     startTime: null,
@@ -8,7 +11,7 @@ window.TimeBoxWithArray = React.createClass({
 
     /* This function will automatically run when the class is rendered*/
     getInitialState: function() {
-        return {data: '', id: 1, content: 'Ben'};
+        return {data: ''};
     },
 
     /* This function will automatically run after the class has been rendered*/
@@ -50,12 +53,11 @@ window.TimeBoxWithArray = React.createClass({
     },
     render: function() {
 
+        // If connection failed
         if (this.endTime == -1) {
             return (
                 <div>
                     <p>
-                        Id: {this.state.id} <br />
-                        Content: {this.state.content} <br />
                         Starting time: N/A <br />
                         Ending time: N/A <br />
                         Ends in: N/A
@@ -67,28 +69,30 @@ window.TimeBoxWithArray = React.createClass({
         var currentTime = Math.floor(new Date().getTime());
         var timeLeft = Math.ceil((this.endTime.getTime() - currentTime)/1000);
 
+        // If there is time left to start the exam
         if (currentTime<this.endTime) {
             return (
                 <div>
                     <p>
-                        Id: {this.state.id} <br />
-                        Content: {this.state.content} <br />
                         Starting time: {this.startTime.toString()} <br />
                         Ending time: {this.endTime.toString()} <br />
                         Ends in: {timeLeft}
                     </p>
                 </div>
             );
+
+        // If the time for the exam has passed
         } else if (currentTime>=this.endTime) {
             clearInterval(this.intervalId);
             return (
                 <div>
-                    <p> Id: {this.state.id} <br />
+                    <p>
+                        Id: {this.state.id} <br />
                         Content: {this.state.content} <br />
                         Starting time: {this.startTime.toString()} <br />
                         Ending time: {this.endTime.toString()}
+                        The time for this exam is over
                     </p>
-                    <h4>Make your time!</h4>
                 </div>
             );
         }
