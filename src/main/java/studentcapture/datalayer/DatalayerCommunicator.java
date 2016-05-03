@@ -12,6 +12,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.Submission;
@@ -70,19 +71,13 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
-    public int createAssignment(//@RequestBody AssigmentModel assignment){ //will be used after merge
-                                @RequestParam(value = "courseID") String courseID,
-                                @RequestParam(value = "assignmentTitle") String assignmentTitle,
-                                @RequestParam(value = "startDate") String startDate,
-                                @RequestParam(value = "endDate") String endDate,
-                                @RequestParam(value = "minTime") int minTime,
-                                @RequestParam(value = "maxTime") int maxTime,
-                                @RequestParam(value = "published") boolean published){
+    public int createAssignment(@RequestBody AssignmentModel assignmentModel){ //will be used after merge
         int returnResult;
 
         try{
-            returnResult = assignment.createAssignment(courseID, assignmentTitle,
-                    startDate, endDate, minTime, maxTime, published);
+            returnResult = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
+                    assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
+                    assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
         } catch (IllegalArgumentException e) {
             //TODO return smarter error msg
             return -1;

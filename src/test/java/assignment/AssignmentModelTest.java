@@ -1,4 +1,4 @@
-package model;
+package assignment;
 
 import org.junit.Test;
 import studentcapture.assignment.AssignmentModel;
@@ -52,13 +52,13 @@ public class AssignmentModelTest {
 
     @Test
     public void CourseIDShouldBe1() {
-        assertEquals(1, assignmentModel.getCourseID());
+        assertEquals("1", assignmentModel.getCourseID());
     }
 
     @Test
     public void CourseIDShouldBe2() {
-        assignmentModel.setCourseID(2);
-        assertEquals(2, assignmentModel.getCourseID());
+        assignmentModel.setCourseID("2");
+        assertEquals("2", assignmentModel.getCourseID());
     }
 
     @Test
