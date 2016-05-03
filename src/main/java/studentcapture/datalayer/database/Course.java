@@ -57,8 +57,13 @@ public class Course {
         return result;
     }
 
+    
+    public String getCourseID(String year,String term,String courseCode){
+    	String sql = "SELECT courseID from course WHERE CourseCode = ? AND Year = ? AND Term = ?";
+    	return jdbcTemplate.queryForObject(sql, new Object[]{courseCode,year,term},String.class);
+    }
 
-
+    
     /**
 
      * Attempts to retrieve all data regarding a course from the database.

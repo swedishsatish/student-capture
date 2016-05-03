@@ -1,5 +1,6 @@
 package studentcapture.datalayer;
 
+import java.io.*;
 import java.util.Hashtable;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,35 +146,33 @@ public class DatalayerCommunicator {
      * @return              The video file vie http.
      */
     @CrossOrigin
-    @RequestMapping(value = "/getAssignmentVideo", method = RequestMethod.POST, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> getAssignmentVideo(@RequestParam("courseCode") String courseCode,
-                                                                  @RequestParam("courseId") String courseId,
-                                                                  @RequestParam("assignmentId") String assignmentId) {
+    @RequestMapping(value = "/getAssignmentVideo/{courseCode}/{courseId}/{assignmentId}",
+            method = RequestMethod.GET, produces = "video/webm")
+    public ResponseEntity<InputStreamResource> getAssignmentVideo(
+            @PathVariable("courseCode") String courseCode,
+            @PathVariable("courseId") String courseId,
+            @PathVariable("assignmentId") String assignmentId) {
 
         ResponseEntity<InputStreamResource> responseEntity;
 
         try {
+            fsi = new FilesystemInterface(); // should not be here? @autowired???
             FileInputStream videoInputStream = fsi.getAssignmentVideo(courseCode,courseId,assignmentId);
 
             byte []out = new byte[fsi.getAssignmentVideoFileSize (courseCode, courseId, assignmentId)];
             videoInputStream.read(out);
 
             HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.add("content-disposition", "inline; filename=AssignmentVideo" + assignmentId);
+            responseHeaders.add("content-disposition", "inline; filename=AssignmentVideo");
 
             responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
-
         } catch (FileNotFoundException e) {
-            //TODO change HttpStatus to something bad?
-            responseEntity = new ResponseEntity("File not found.", HttpStatus.OK);
+            responseEntity = new ResponseEntity("File not found.", HttpStatus.NOT_FOUND);
         } catch (IOException e) {
-            //TODO change HttpStatus to something bad?
-            responseEntity = new ResponseEntity("Error getting file.", HttpStatus.OK);
+            responseEntity = new ResponseEntity("Error getting file.", HttpStatus.NOT_FOUND);
         }
 
         return responseEntity;
-
-
     }
 
     /**
