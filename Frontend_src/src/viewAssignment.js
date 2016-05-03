@@ -1,18 +1,23 @@
 
 
 
-var AssignmentContent = React.createClass({
+window.AssignmentContent = React.createClass({
 
     render: function () {
 
-        var assignment = JSON.parse(this.props.data);
+        var assignment = this.props.assignment;
+        var course = this.props.course;
+        var json;
+
+        getJson("test/assignmentdata.json", function(data) {
+            json = JSON.parse(data);
+        });
+
+
 
 
         return (
             <div id="assignment-desc">
-                <h1>{assignment["AssignmentName"]}</h1>
-                <p>Starts at: {assignment["startsAt"]}
-                 <br />Ends at: {assignment["endsAt"]}</p>
                 <But />
             </div>
         )
@@ -65,16 +70,31 @@ var CountDown = React.createClass({
 
 })
 var Vid = React.createClass({
+    getInitialState: function() {
+        return {showCountdown: false};
+    },
     render: function() {
         return (
-            <video id="videoPlayer" width="70%"></video>
+            <div>
+                { this.state.showCountdown ? <CountDown /> : ''}
+                { this.state.showCountdown ? '' : <video id='videoPlayer' width='70%'></video>}
+            </div>
+
         );
     },
     componentDidMount: function() {
         var vid = document.getElementById("videoPlayer");
         vid.src = "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4"
+        //vid.addEventListener('ended',this.onEnded,false);
         vid.play();
+
+
+    },
+    onEnded: function() {
+        this.setState({showCountdown: true})
     }
+
+
 });
 
 function getJson(URL, callback) {
@@ -86,7 +106,3 @@ function getJson(URL, callback) {
     xmlHttp.open("GET", URL, true);
     xmlHttp.send();
 }
-
-getJson("test/assignmentdata.json", function(data) {
-    ReactDOM.render(<AssignmentContent data={data} />, document.getElementById('courseContent'));
-});
