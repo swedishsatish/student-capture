@@ -66,6 +66,12 @@ public class User {
      * @return          true if the remove succeed, else false.
      */
 
+    
+    public String getUserID(String username){
+    	String sql = "SELECT userID from users WHERE username = ?";
+    	return jdbcTemplate.queryForObject(sql, new Object[]{username},String.class);
+    }
+
     public boolean removeUser(String casID) {
         //TODO
         return false;

@@ -25,29 +25,16 @@ public class Submission {
      * @return True if everything went well, otherwise false
      */
     public boolean addSubmission(String assignmentID,String studentID) {
-        boolean result;
+        String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate) VALUES  (?,?,?)";
         java.util.Date date = new java.util.Date(System.currentTimeMillis());
         java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
         timestamp.setNanos(0);
-
-        try {
-            int rowsAffected = jdbcTemplate.update(
-                    "INSERT INTO Submission (assignmentId, studentId, SubmissionDate) VALUES  (?,?,?)",
-                    assignmentID,studentID,timestamp);
-            if(rowsAffected == 1) {
-                result = true;
-            } else {
-                result = false;
-            }
-        }catch (IncorrectResultSizeDataAccessException e){
-            result = false;
-        }catch (DataAccessException e1){
-            result = false;
+        int rowsAffected = jdbcTemplate.update(sql,new Object[]{assignmentID,studentID,timestamp});
+        if(rowsAffected == 1){
+        	return true;
         }
-
-        return result;
+        return false;
     }
-
     /**
      * Add a grade for a submission
      *
