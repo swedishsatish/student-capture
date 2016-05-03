@@ -72,8 +72,8 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
-    public int createAssignment(@RequestBody AssignmentModel assignmentModel){ //will be used after merge
-        int returnResult;
+    public String createAssignment(@RequestBody AssignmentModel assignmentModel){
+        Integer returnResult;
 
         try{
             returnResult = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
@@ -81,10 +81,10 @@ public class DatalayerCommunicator {
                     assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
         } catch (IllegalArgumentException e) {
             //TODO return smarter error msg
-            return -1;
+            return e.getMessage();
         }
 
-        return returnResult;
+        return returnResult.toString();
     }
 
     /**
