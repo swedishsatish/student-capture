@@ -29,28 +29,26 @@ window.CourseContent = React.createClass({
         var id = this.props.id;
         var type = this.props.type;
         var title;
+        var content = [];
         switch(type){
             case "course":
-                title = <h1>{type}</h1>;
+                content.push(<h1>{type}</h1>);
                 break;
             case "assignment":
                 var courseId = this.props.course;
-                title = <h2>{type} (course={courseId})</h2>;
+                content.push(<h2>{type} (course={courseId})</h2>);
                 break;
             case "task":
                 var courseId = this.props.course;
                 var assignmentId = this.props.assignment;
-                title = <h3>{type} (course={courseId}) (assignment={assignmentId})</h3>;
+                content.push(<h3>{type} (course={courseId}) (assignment={assignmentId})</h3>);
                 break;
             default:
-                title = <h4>{type}</h4>
+                content.push(<h4>{type}</h4>);
                 break;
         }
         return (
-            <div>
-                {title}
-                ID: {id}
-            </div>
+            <div>{content}</div>
         );
     }
 });
