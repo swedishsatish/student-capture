@@ -1,11 +1,20 @@
 /**
  * Created by c14gls on 2016-05-02.
  */
+
+
 /**
- * Created by c14gls on 2016-04-26.
+ * Things that need do be implemented:
+ * TODO: Create a function that receives student data such as studentID and course.
+ * TODO: Send this information forward to the database, potentially through the submit button.
+ * TODO: Also implement a popup window that lets the teacher confirm the grade for the given student.
  */
+
 var hasEdited = false;
-// Creates the commentBox
+/**
+ * Creates the comment box used by the GUI.
+ * The comment box is used by the teacher to submit feedback to the student.
+ */
 var CommentBox = React.createClass({
 
     getInitialState: function () {
@@ -34,9 +43,10 @@ var CommentBox = React.createClass({
 
 });
 /**
- * Submits teacher
+ * Creates the submit button used by the GUI.
+ * See TODO: on top of page.
+ * Upon clicking on the button it sends the feedback information to the student.(Not yet implemented)
  */
-// Creates the submitButton.
 var SubmitButton = React.createClass({
 
     // Upon clicking on the button a popup confirming window is shown,
@@ -49,6 +59,8 @@ var SubmitButton = React.createClass({
             passedStatus = 'No pass'
         }
 
+        //TODO: Create a popup window that lets the teacher confirm the given grading.
+
         var answer = confirm("You are about to give Kalle a " + passedStatus + " with the following grade: "+dropDownGrade);
         if(answer){
 
@@ -57,6 +69,11 @@ var SubmitButton = React.createClass({
             void(0);
         }
     },
+
+    /**
+     * TODO: Send information to the database.
+     * TODO: Information is defined as grade, feedback comments and so on.
+     */
     // Render function for SubmitButton
     render: function () {
         return (
@@ -69,14 +86,17 @@ var SubmitButton = React.createClass({
 });
 
 /**
- * Takes user back to previous state.
+ * Creates the back button used by the GUI.
+ * Makes it possible for the teacher to go back to the previous page.
  */
 //Creates the BackButton
 var BackButton = React.createClass({
     // Upon clicking on the button, it should go back to the previous GUI window.
     onClick: function() {
 
-        //Put code here to get back to previous GUI window.
+        /**
+         * TODO: Write code that takes the user back to the previous page.
+         */
     },
     // Render function for BackButton
     render: function() {
@@ -88,7 +108,7 @@ var BackButton = React.createClass({
     }
 });
 /**
- * Checkbox used to set students to passed or not passed.
+ * Checkbox that is used to determine if a student passed an assignment or not.
  * @type {number} current state of passed
  */
 var isPassed = 0;
@@ -133,7 +153,7 @@ var CheckBox = React.createClass({
 });
 
 /**
- * Drop down menu that is used grade students.
+ * Drop down menu that lets the teacher choose the grade for the student.
  * @type {string} Sting with students selected grade
  */
 // variable to keep track of grade, used in submission button
@@ -171,7 +191,8 @@ var DropDown = React.createClass({
 });
 
 /**
- * Render all objects to div classes  '
+ * Renders all the different built components for the GUI in prioritizing order.
+ * For example: First it renders Recorder, then CommentBox and so on.
  */
 var RenderHandle = React.createClass({
     render: function () {
@@ -179,7 +200,7 @@ var RenderHandle = React.createClass({
             <div class="row">
                 <div id="recorder">
                     <Recorder />
-                    </div>
+                </div>
                 <div id="feedBackContainer">
                     <div id="submissioncontainer">
                         <div id="commentbox">
@@ -213,8 +234,7 @@ var RenderHandle = React.createClass({
 window.RenderHandle = RenderHandle;
 
 /*ReactDOM.render(
-    <RenderHandle/>,
-    document.getElementById('courseContent')
+ <RenderHandle/>,
+ document.getElementById('courseContent')
 
-);
-*/
+ );
