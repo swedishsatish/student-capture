@@ -249,7 +249,7 @@ public class DatalayerCommunicator {
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.POST,
+    method = RequestMethod.GET,
     value = "/getAllSubmissions")
     @ResponseBody
     public List<SubmissionWrapper> getAllSubmissions(
@@ -267,12 +267,12 @@ public class DatalayerCommunicator {
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.POST,
+    method = RequestMethod.GET,
     value = "/getAllUngradedSubmissions")
     @ResponseBody
     public List<SubmissionWrapper> getAllUngradedSubmissions(
     		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submission.getAllSubmissions(assignmentID).get();
+    	return submission.getAllUngraded(assignmentID).get();
     }
 
     /**
@@ -286,12 +286,12 @@ public class DatalayerCommunicator {
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.POST,
+    method = RequestMethod.GET,
     value = "/getAllSubmissionsWithStudents")
     @ResponseBody
     public List<SubmissionWrapper> getAllSubmissionsWithStudents(
     		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submission.getAllSubmissions(assignmentID).get();
+    	return submission.getAllSubmissionsWithStudents(assignmentID).get();
     }
 
     /**
