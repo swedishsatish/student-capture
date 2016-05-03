@@ -16,7 +16,7 @@ var Recorder = React.createClass({
 
 
           // POST the Blob using XHR2
-          xhr('https://130.239.42.164:8443/video/textTest', formData, function (fName) {
+          xhr(window.globalURL + '/video/textTest', formData, function (fName) {
               //CALLBACK FUNCTION, Download video.
               //openInNewTab('uploads/' + fName.replace(/"/g, ''));
               //window.open('uploads/' + fName.replace(/"/g, ''),'_blank');

@@ -2,25 +2,40 @@
 
 
 window.AssignmentContent = React.createClass({
-
+    jsonReady: function(data) {
+        var json = JSON.parse(data);
+        document.getElementById("assignment-title").innerHTML = json["AssignmentName"];
+        document.getElementById("assignment-startAt").innerHTML = "Starts at " + json["startsAt"];
+        document.getElementById("assignment-endAt").innerHTML = "Ends at " + json["endsAt"];
+    },
     render: function () {
 
         var assignment = this.props.assignment;
         var course = this.props.course;
-        var json;
 
-        getJson("test/assignmentdata.json", function(data) {
-            json = JSON.parse(data);
-        });
+        getJson("test/assignmentdata.json", this.jsonReady);
 
 
 
 
         return (
-            <div id="assignment-desc">
-                <But />
+            <div id="assignment-div">
+                <div id="assignment-desc">
+                    <h1 id="assignment-title"></h1>
+                    <h5 id="assignment-startAt"></h5>
+                    <h5 id="assignment-endAt"></h5>
+                </div>
+                <div>
+                    <But />
+                    <Vid />
+                </div>
             </div>
+
         )
+
+    },
+    componentDidMount: function() {
+
     }
 });
 
@@ -28,17 +43,17 @@ window.AssignmentContent = React.createClass({
 
 var But = React.createClass({
     getInitialState: function() {
-        return { showCountdown: false, disabled: false};
+        return { disabled: false};
     },
     onClick: function() {
-        this.setState({ showCountdown: true, disabled: true});
+        this.setState({disabled: true});
+        document.getElementById("videoPlayer").play();
 
     },
     render: function() {
         return (
             <div>
-            <input disabled = {this.state.disabled} type="submit" id="start-video-button" value="Start Assignment" onClick={this.onClick} />
-            { this.state.showCountdown ? <CountDown /> : null }
+            <input disabled = {this.state.disabled} type="submit" id="start-video-button" value="Start Assignment" onClick={this.onClick}  />
             </div>
         );
     }
@@ -46,20 +61,20 @@ var But = React.createClass({
 
 var CountDown = React.createClass({
     getInitialState: function() {
-        return { timeLeft: 5 , showVideo : false};
+        return { timeLeft: 5 , startRecord : false};
     },
     tick: function() {
         this.setState({timeLeft : this.state.timeLeft - 1});
         if(this.state.timeLeft <= 0) {
             clearInterval(this.interval);
-            this.setState({showVideo : true})
+            this.setState({startRecord : true})
         }
 
     },
     render: function() {
         return (
             <div id="countdown-div">
-            { this.state.showVideo ? <Vid /> : this.state.timeLeft }
+            { this.state.startRecord ? alert("Start recording") : this.state.timeLeft }
             </div>
         );
     },
@@ -76,8 +91,7 @@ var Vid = React.createClass({
     render: function() {
         return (
             <div>
-                { this.state.showCountdown ? <CountDown /> : ''}
-                { this.state.showCountdown ? '' : <video id='videoPlayer' width='70%'></video>}
+                { this.state.showCountdown ? <CountDown /> : <video id='videoPlayer' width='70%'></video>}
             </div>
 
         );
@@ -85,8 +99,7 @@ var Vid = React.createClass({
     componentDidMount: function() {
         var vid = document.getElementById("videoPlayer");
         vid.src = "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4"
-        //vid.addEventListener('ended',this.onEnded,false);
-        vid.play();
+        vid.addEventListener('ended',this.onEnded,false);
 
 
     },

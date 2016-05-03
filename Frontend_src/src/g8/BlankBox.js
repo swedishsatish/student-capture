@@ -1,12 +1,16 @@
+/**
+  This class is a button that is used to leave a blank answer for a question.
+*/
 window.BlankBox = React.createClass({
 
-    withdrew: 0,
-    error: null,
-    stat: null,
-    result: false,
+    withdrew: 0, // used for what is rendered
+    error: null, // for error message after http-request
+    stat: null, // for error message after http-request
+    result: false, // result from submission post
 
     handleClick: function () {
-        if (confirm("You will leave a blank for this question")) {
+        if (confirm("You will leave a blank for this question")) { // if user really wants to leave blank
+        // send an http ajax post
             $.ajax({
                 url: "http://172.23.135.27:8080/emptyAnswer", // URL to send to
                 type: "POST", // Type of http
@@ -17,7 +21,7 @@ window.BlankBox = React.createClass({
                     courseID: 1,
                     assignmentID: 1,
                     studentID: 1,
-                    video: "spook"
+                    video: "video"
                 }),
                 success: function (data, status, xhr) { // Function to perform when success
                     this.result = data.result;
@@ -35,7 +39,7 @@ window.BlankBox = React.createClass({
     },
     render: function () {
 
-        if (this.withdrew == 1) {
+        if (this.withdrew == 1) { // if the withdrawal went ok
             return (
                 <div>
                     <h3>You withdrew</h3>
@@ -45,7 +49,7 @@ window.BlankBox = React.createClass({
                     </p>
                 </div>
             );
-        } else if (this.withdrew == 2) {
+        } else if (this.withdrew == 2) { // if some error happened
             return (
                 <div>
                     <h4>Oh no</h4>
@@ -55,7 +59,7 @@ window.BlankBox = React.createClass({
                     </p>
                 </div>
             );
-        } else {
+        } else { // the button to render
             return (
                 <div>
                     <button onClick={this.handleClick}>Withdraw</button>
