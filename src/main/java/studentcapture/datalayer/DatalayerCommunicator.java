@@ -118,9 +118,11 @@ public class DatalayerCommunicator {
     public boolean setFeedback(@RequestParam(value = "assID") String assID,
                                @RequestParam(value = "studentID") String studentID,
                                @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
-                               @RequestParam(value = "feedbackText") MultipartFile feedbackText,
-                               @RequestParam(value = "courseID") String courseID,
-                               @RequestParam(value = "courseCode") String courseCode) {
+                               @RequestParam(value = "feedbackText") MultipartFile feedbackText) {
+
+
+        String courseID = assignment.getCourseIDForAssignment(assID);
+        String courseCode = course.getCourseCodeFromId(courseID);
         int feedback = 0;
     	if(feedbackVideo != null) {
             fsi.storeFeedbackVideo(courseCode, courseID, assID, studentID, feedbackVideo);
