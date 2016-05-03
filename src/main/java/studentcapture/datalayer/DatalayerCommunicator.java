@@ -93,7 +93,7 @@ public class DatalayerCommunicator {
      * @param teacherID Teacher identification
      * @param studentID Student identification
      * @param grade Grade
-     * @return  True if tables were updated, else false
+     * @return  True if the grade was successfully saved to the database, else false
      */
     @CrossOrigin
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
@@ -108,16 +108,14 @@ public class DatalayerCommunicator {
     /**
      * Set feedback for a submission, video and text cannot both be null
      * @param assID Assignment identification
-     * @param teacherID Teacher identification
      * @param studentID Student identification
      * @param feedbackVideo Video feedback
      * @param feedbackText Text feedback
-     * @return True if feedback was saved, else false
+     * @return True if feedback was successfully saved to the database, else false
      */
     @CrossOrigin
     @RequestMapping(value = "/setFeedback", method = RequestMethod.POST)
     public boolean setFeedback(@RequestParam(value = "assID") String assID,
-                               @RequestParam(value = "teacherID") String teacherID,
                                @RequestParam(value = "studentID") String studentID,
                                @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
                                @RequestParam(value = "feedbackText") MultipartFile feedbackText,
