@@ -122,3 +122,17 @@ h1, h2, h3, h4, h5, h6 {
     color: white;
 }
 
+
+/* SHOW ASSIGNMENT VIDEO */
+
+#countdown-div
+{
+	font-size: 60px;
+}
+
+#assignment-div
+{
+	width: 70%;
+	margin:auto;
+	text-align: center;
+}
