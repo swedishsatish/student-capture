@@ -91,8 +91,7 @@ var Vid = React.createClass({
     render: function() {
         return (
             <div>
-                { this.state.showCountdown ? <CountDown /> : ''}
-                { this.state.showCountdown ? '' : <video id='videoPlayer' width='70%'></video>}
+                { this.state.showCountdown ? <CountDown /> : <video id='videoPlayer' width='70%'></video>}
             </div>
 
         );
