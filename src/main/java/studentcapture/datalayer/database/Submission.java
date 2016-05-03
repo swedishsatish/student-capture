@@ -20,7 +20,7 @@ public class Submission {
     /**
      * Add a new submission for an assignment
      *
-     * @param assID     Unique identifier for the assignment we're submitting to
+     * @param assignmentID     Unique identifier for the assignment we're submitting to
      * @param studentID Unique identifier for the student submitting
      * @return True if everything went well, otherwise false
      */
