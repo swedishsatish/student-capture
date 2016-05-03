@@ -1,15 +1,25 @@
-var LoginForm = React.createClass({
+//Created by:
+//Simon Lundmark
 
+//Last update:
+//3/8-16
+
+
+// Class for the login form.
+var LoginForm = React.createClass({
+    
+    // Function that swaps the ligin form with the register form. 
     handleClickReg: function(){
         ReactDOM.render(<RegisterForm />, document.getElementById('loginPage'))
     },
     
+    // Temporary login
     handleClickLogin: function(){       
-        
-        if(loginForm.Uname.value == "user" &&
-           loginForm.Fpass.value == "password"){
+
+        if(this.refs.Uname.value == "user" &&
+           this.refs.Fpass.value == "password"){
             
-            alert("Login SUCCESSFUL! but stay here for a while")
+           window.location = "demo.html";
         }
         else
         {
@@ -17,22 +27,22 @@ var LoginForm = React.createClass({
         }
     },
 
+    // Render function, defines what is to be shown for this class
     render: function(){
         return (
-
-            <div id="loginForm" onSubmit={this.handleClickLogin}>
-             
+            // div containing all the inputs.
+            <div id="loginForm">
                 <h1>Student Capture</h1>
+                <input type="text" 
+                    placeholder="Username" ref="Uname" name="username"/>
+            
+                <input type="password" 
+                    placeholder="Password" ref="Fpass" name="password"/>
 
-                        <input type="text" 
-                               placeholder="Username" id="Uname" name="username"/>
-                    
-                        <input type="password" 
-                               placeholder="Password" id="Fpass" name="password"/>
-
-                <button type="submit">
+                <button type="button" onClick={this.handleClickLogin}>
                     Login
                 </button>
+                
                 <button type="button" onClick={this.handleClickReg}>
                     Register
                 </button>
@@ -42,24 +52,13 @@ var LoginForm = React.createClass({
     }
 });
 
+// Class for the Register form.
 var RegisterForm = React.createClass({
-
-    validateEmail: function() {
-        var input = this.refs.EmailInput.value;
-        var atpos = input.indexOf("@");
-        var dotpos = input.lastIndexOf(".");
-        if (atpos<1 || dotpos<atpos+2 || dotpos+2>=input.length) {
-            return false;
-        }
-        return true;
-    },
     
-    setInvalid: function(){
-        
-    },
-
+    // Function to check that all the fields are valid
     validateAllFields: function(){
-    
+        
+        //if any is empty
         if(this.refs.Fname.value == ""
             || this.refs.Fname.value == ""
             || this.refs.Lname.value == ""
@@ -71,31 +70,44 @@ var RegisterForm = React.createClass({
             alert("Fill all fields");
             return;
         }
-
-        if (!this.validateEmail())
+        
+        // if email is wrong
+        if (!this.refs.EmailInput.checkValidity())
         {
             alert('Please enter a valid email address on the format:\nexample@mail.domain');
             return;
         }
-        
+	
+		if(!this.refs.Fpass.checkValidity() || !this.refs.Spass.checkValidity()){
+    		alert('invalid password');
+    		return;
+    		}
+    		
+    		// if passwords are not the same
         if(this.refs.Fpass.value != this.refs.Spass.value){
             alert('Passwords did not match');
             return;
         }
-	
-		if(!this.refs.Fpass.checkValidity() || !this.refs.Spass.checkValidity())
-    		alert('invalid password');
-////ajax send
-//        ReactDOM.render(<LoginForm />, document.getElementById('loginPage'));
+
+        // send form (todo!)        
+                
+        //Tell the user it was successful 
 		alert('accepted');
+		ReactDOM.render(<LoginForm />, document.getElementById('loginPage'));
 
     },
     
+    // Return to loginForm
     handleClickCancel: function(){
 
        ReactDOM.render(<LoginForm />, document.getElementById('loginPage'))
     },
     
+    // Render function, defines what is to be shown for this class
+    
+    // Define password field, with pattern. that it should 
+    // contain one big character, one small and one number 
+    // atleast and 6 character minimum.
     render: function() {
         return (
             <div id="registrationForm">
@@ -113,7 +125,7 @@ var RegisterForm = React.createClass({
          
                         <input className="u-full-width" type="text" 
                                placeholder="Username" ref="Uname" required/>
-    					
+    					  
                         <input type="password" 
                                placeholder="Password" ref="Fpass" 
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
@@ -125,7 +137,7 @@ var RegisterForm = React.createClass({
                                required />
                                
                                <p>Password must contain atleast one upper case character,
-    					 one lower case character and one numeric character.</p>
+    					 one lower case character and one numeric character. 6 characters minimum.</p>
     					 
                          
                 <button type="button" onClick={this.validateAllFields}>
@@ -140,6 +152,7 @@ var RegisterForm = React.createClass({
     }
 });
 
+//render login.
 ReactDOM.render(
     <LoginForm />,
     document.getElementById('loginPage')

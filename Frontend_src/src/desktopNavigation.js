@@ -3,7 +3,7 @@
 var Tasks = React.createClass({
     handleClick: function(task, event) {
         if(task["isActive"])
-            ReactDOM.render(<CourseContent id={task["_id"]} type="task" />,
+            ReactDOM.render(<CourseContent course={this.props.course} assignment={this.props.assignment["_id"]} id={task["_id"]} type="task" />,
                                 document.getElementById('courseContent'));
     },
     render: function() {
@@ -26,11 +26,11 @@ var Assignment = React.createClass({
     },
     handleClick: function(assignment,event) {
         if(assignment["isActive"])
-            ReactDOM.render(<CourseContent id={assignment["_id"]} type="assignment" />,
+            ReactDOM.render(<CourseContent course={this.props.course} id={assignment["_id"]} type="assignment" />,
                             document.getElementById('courseContent'));
         if(this.state.showChildren && assignment["isActive"]) {
             event.target.nextElementSibling.className="done";
-            ReactDOM.render(<Tasks assignment={assignment} />,event.target.nextElementSibling);
+            ReactDOM.render(<Tasks course={this.props.course} assignment={this.props.assignment} />,event.target.nextElementSibling);
         } else {
             event.target.nextElementSibling.className="invisible";
         }
@@ -51,7 +51,7 @@ var Assignments = React.createClass({
         var assignments = course["assignments"];
         var assignElems = [];
         for(var i = 0; i < assignments.length; i++) {
-            assignElems.push(<Assignment assignment={assignments[i]} />);
+            assignElems.push(<Assignment course={course["_id"]} assignment={assignments[i]} />);
             assignElems.push(<ul className="invisible"></ul>);            
         }
         return <ul>{assignElems}</ul>;

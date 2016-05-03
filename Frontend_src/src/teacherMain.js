@@ -9,7 +9,7 @@ recordButton.onclick = function() {
 
 
 postButton.onclick = function () {
-    postToServer(blob,"user","5DV121","1337")
+    postToServer(blob,"user","5DV121","1337");
     document.getElementById("post").disabled = true;
 
 

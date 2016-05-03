@@ -130,3 +130,20 @@ h1, h2, h3, h4, h5, h6 {
     color: white;
 }
 
+#students-table tbody tr:hover{
+	background-color: #2D728F;
+}
+
+/* SHOW ASSIGNMENT VIDEO */
+
+#countdown-div
+{
+	font-size: 60px;
+}
+
+#assignment-div
+{
+	width: 70%;
+	margin:auto;
+	text-align: center;
+}

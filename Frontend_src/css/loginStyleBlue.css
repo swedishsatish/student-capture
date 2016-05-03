@@ -58,11 +58,6 @@ body{
 	
 
 }
-/*@media screen and (min-width: 1000px) {*/
-/*    body {*/
-/*        background-color: lightgreen;*/
-/*    }*/
-/*}*/
 
 /*text attributes, centers text, shadow of text*/
 h1
@@ -100,6 +95,7 @@ input
 
 input:invalid{
   border-color:red;
+  border-width:2px;
 }
 
 

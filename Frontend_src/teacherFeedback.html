@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 
-  <head>
+<head>
     <!-- Meta data -->
     <meta charset="utf-8">
-    <title>Student Capture</title>
+    <title>Teacher Feedback</title>
     <meta name="Description" content="First Draft">
     <meta name="Author" content="Filip Golles">
 
@@ -24,9 +24,7 @@
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/skeleton.css">
     <link rel="stylesheet" href="css/custom.css">
-      <link rel="stylesheet" href="css/component.css">
-      <link rel="stylesheet" href="css/hwTest.css">
-
+    <link rel="stylesheet" href="css/SubmissionGUI.css">
 
     <!-- Scripts -->
     <script src="build/react.js"></script>
@@ -34,50 +32,45 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
-    <script src="src/communicationsLibrary.js"></script>
     <script src="src/g2/RecordRTC.js"></script>
-    <script src="src/viewAssignment.js" type="text/babel"></script>
-      <script src="src/g2/sorttable.js"></script>
+    <script src="src/communicationsLibrary.js"></script>
 
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/favicon.png">
-  </head>
+</head>
 
-  <!-- Primary Page Layout -->
-  <body>
-  <script>
-      window.globalURL = "";
-  </script>
-      <div class="md-modal md-effect-19" id="modal-19">
-          <div class="md-content" id="modal-container">
-              <button class="md-close">Close</button>
-          </div>
-      </div>
-    <div class="container">
-        <div class="row">
-            <div class="twelve columns header" id="desktopHeader"></div>
-            <script type="text/babel" src="src/profile.js"></script>
-        </div>
-
-        <div class="three columns" id="desktopNavigation"></div>
-        <script type="text/babel" src="src/hardcodeMenu.js"></script>
-
-        <div class="nine columns" id="courseContent"></div>
-        <script type="text/babel" src="src/courseContent.js"></script>
+<!-- Primary Page Layout -->
+<body>
+<div class="container">
+    <div class="row">
+        <div class="twelve columns header" id="desktopHeader"></div>
     </div>
-      <div class="md-overlay"></div>
-    <!--div class="footer" id="footer">
-        <script type="text/babel" src="src/footer.js"></script>
-    </div-->
+    <div class="row">
+    <div class="three columns" id="desktopNavigation"></div>
+    <script type="text/babel" src="src/desktopNavigation.js"></script>
 
 
+    <div class="nine columns" id="courseContent"></div>
+    <script type="text/babel" src="src/g2/videoRecord.js"></script>
+    <script type="text/babel" src="src/g6/submissionGUI.js"></script>
+    <script type="text/babel" src="src/courseContent.js"></script>
 
-      <script type="text/babel" src="src/g2/videoRecord.js"></script>
-      <script type="text/babel" src="src/g2/HardwareTest.js"></script>
-      <script type="text/babel" src="src/g2/StudentList.js"></script>
+
+</div>
+</div>
+
+<script src="src/capture.js"></script>
+<script src="src/record.js"></script>
+<script src="src/teacherMain.js"></script>
+<script src="src/upload.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
 
-  </body>
+<!--div class="footer" id="footer">
+    <script type="text/babel" src="src/footer.js"></script>
+</div-->
+</body>
 <!-- End Document -->
 </html>
