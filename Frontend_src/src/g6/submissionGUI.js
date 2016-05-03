@@ -33,11 +33,8 @@ var CommentBox = React.createClass({
     // The render function for the component CommentBox
     render: function () {
         return (
-            <textarea id="commentBox"
-                      value={this.state.value}
-                      onChange={this.handleChange}
-                      onClick={this.onClick}
-            />
+            <textarea value={this.state.value} onChange={this.handleChange} onClick={this.onClick} />
+
         );
     }
 
@@ -204,23 +201,23 @@ var RenderHandle = React.createClass({
                 <div id="feedBackContainer">
                     <div id="submissioncontainer">
                         <div id="commentbox">
-                            <CommentBox/>
+                            <CommentBox />
                         </div>
                         <div id="gradeAndPassContainer">
                             <div id="passbox">
-                                <CheckBox/>
+                                <CheckBox />
                             </div>
                             <div id="dropDown">
-                                <DropDown/>
+                                <DropDown />
                             </div>
                         </div>
                     </div>
                     <div id="buttonContainer">
                         <div id="backButton">
-                            <BackButton/>
+                            <BackButton />
                         </div>
                         <div id="submitButton">
-                            <SubmitButton/>
+                            <SubmitButton />
                         </div>
 
                     </div>

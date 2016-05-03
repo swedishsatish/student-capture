@@ -61,9 +61,9 @@ var NewFeedback = React.createClass ({
 
 //<video width="720" height="460" src={this.props.sourceInfo} preload="auto" controls></video>
 
-ReactDOM.render(
+/*ReactDOM.render(
     <Feedback />,
     document.getElementById('courseContent')
 );
-
+*/
 

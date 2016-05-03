@@ -22,7 +22,7 @@ var StudentList = React.createClass ({
             grade: event.currentTarget.childNodes[2].innerText,
         }*/
         console.log(user.studentName + "_" + user.submitionDate + "_" + user.grade + "_" + user.assignmentID);
-        //sReactDOM.render(<RenderHandle />,document.getElementById("answerContainer"));
+        ReactDOM.render(<RenderHandle />,document.getElementById("answerContainer"));
         //TODO: render other user story.
     },
 
@@ -58,7 +58,7 @@ var StudentList = React.createClass ({
                 <div className="six columns" id="answerContainer">
 
                 </div>
-                <script src="src/g6/submissionGUI.js"></script>
+              
             </div>
         );
     }
