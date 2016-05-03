@@ -1,12 +1,27 @@
 package studentcapture.video.videoIn;
 
+import org.omg.CORBA.Request;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.SystemPropertyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Map;
 
 
@@ -72,4 +87,8 @@ public class RequestManager {
         return ((userID == "user") && (courseID == "5DV151") && (assignmentID == "1337"));
     }
 
+
+
+
 }
+

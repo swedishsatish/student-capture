@@ -1,131 +1,106 @@
-/* Grupp 5 */
-
 package studentcapture.video.videoOut;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import studentcapture.config.StudentCaptureApplication;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 @RestController
+@RequestMapping(value = "/video/download")
 public class VideoOutController {
 
     /**
-     * Example method.
-     *
-     * Precondition: Need video on disk at location StudentCaptureApplication.ROOT/video.webm
-     *
-     * @return Inlined video to the client if video exists on disk.
+     * Return the assignment video corresponding to the input parameters.
+     * @param courseCode    Courses 6 character identifier.
+     * @param courseId      Courses unique database id.
+     * @param assignmentId  Assignments unique database id.
+     * @return              The video in a ResponseEntity.
      */
-    @RequestMapping(value = "/videoDownload", method = RequestMethod.GET, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> handleVideoUpload(@PathVariable("video") String videoName) {
-        String filename = "video.webm";
-        String filepath = StudentCaptureApplication.ROOT;
-        ResponseEntity responseEntity = null;
-        byte []file = null;
-        
-        File video = new File(filepath+filename);
+    @RequestMapping(value = "/assignment/{courseCode}/{courseId}/{assignmentId}",
+            method = RequestMethod.GET, produces = "video/webm")
+    public ResponseEntity<InputStreamResource> getAssignmentVideo(
+            @PathVariable("courseCode") String courseCode,
+            @PathVariable("courseId") String courseId,
+            @PathVariable("assignmentId") int assignmentId){
 
-        if(video.exists()) {
-            try {
-                byte []out = FileCopyUtils.copyToByteArray(video);
-                HttpHeaders responseHeaders = new HttpHeaders();
-                responseHeaders.add("content-disposition", "inline; filename="+filename);
+        try {
+            URL url = new URL("https://localhost:8443/DB/getAssignmentVideo/" +
+                    courseCode + "/" + courseId + "/"+assignmentId);
 
-                responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
-            } catch (IOException e) {
-                responseEntity = new ResponseEntity("Error getting file", HttpStatus.OK);
-            }
-        } else {
-            responseEntity = new ResponseEntity("File not found", HttpStatus.OK);
+            return getVideoFromDB(url.toURI());
+        } catch (MalformedURLException e) {
+            return new ResponseEntity("Error getting file.", HttpStatus.NOT_FOUND);
+        } catch (URISyntaxException e) {
+            return new ResponseEntity("Error getting file.", HttpStatus.NOT_FOUND);
         }
-
-        return responseEntity;
-    }
-    @RequestMapping(value = "/videoDownload/{video}", method = RequestMethod.GET, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> handleVideDl(@PathVariable("video") String videoName) {
-        String filename = "/"+videoName+".webm";
-
-        String filepath = StudentCaptureApplication.ROOT;
-        ResponseEntity responseEntity = null;
-        byte []file = null;
-
-        File video = new File(filepath+filename);
-
-        if(video.exists()) {
-            try {
-                byte []out = FileCopyUtils.copyToByteArray(video);
-                HttpHeaders responseHeaders = new HttpHeaders();
-                responseHeaders.add("content-disposition", "inline; filename="+filename);
-
-                responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
-            } catch (IOException e) {
-                responseEntity = new ResponseEntity("Error getting file", HttpStatus.OK);
-            }
-        } else {
-            responseEntity = new ResponseEntity("File not found", HttpStatus.OK);
-        }
-
-        return responseEntity;
     }
 
     /**
-     * Gets a specific video from the FilesystemInterface and returns 
-     * it as a byte array.
-     * 
-     * @param courseCode    courses 6 character identifier
-     * @param courseId      courses unique database id
-     * @param assignmentId  assignments unique database id
-     * @param userId        users unique database id
-     * @return              a video byte array
-     * @author              Stefan Embretsen
+     * Used to get the video from the database. Uses Http to get the video from DB.
+     * Right now the parameters needs to be in the URI and taken care of with
+     * @ PathVariable in the DB.
+     * @param dbURI The URI to the DB with the parameters.
+     * @return The video in a ResponseEntity.
      */
-    @RequestMapping(value = "/videoDownload/{courseCode}/{courseId}/{assignmentId}/{userId}",
-            method = RequestMethod.GET, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> handleVideDl(@PathVariable("courseCode") String courseCode,
-            @PathVariable("courseId") String courseId, @PathVariable("assignmentId") String assignmentId,
-            @PathVariable("userId") String userId) {
+    private ResponseEntity<InputStreamResource> getVideoFromDB(URI dbURI) {
+        ResponseEntity<InputStreamResource> responseEntity;
+        RestTemplate restTemplate = new RestTemplate();
 
-        ResponseEntity responseEntity = null;
+        //TODO check userID with back end. Authorization?
 
-        FilesystemInterface fis = new FilesystemInterface();
-        
-        FileInputStream videoIS = fis.getStudentVideo
-                (courseCode, courseId, assignmentId, userId);
-        
-        if(videoIS != null){
-            try {
-                //Sets byte array to the same size as the video file.
-                byte []out = new byte[fis.getVideoFileSize
-                                 (courseCode, courseId, assignmentId, userId)];
-                //Reads the video file to byte array.
-                videoIS.read(out);
-                HttpHeaders responseHeaders = new HttpHeaders();
-                
-                responseHeaders.add
-                ("content-disposition", "inline; filename=StudentCaptureVideo");
-                
-                responseEntity = new ResponseEntity
-                        (out, responseHeaders, HttpStatus.OK);
-                
-            } catch (IOException e) {
-                responseEntity = new ResponseEntity
-                        ("Error getting file", HttpStatus.OK);
-            }
-        }else {
-            responseEntity = new ResponseEntity("File not found", HttpStatus.OK);
+        try {
+            // Extract movie from inputstream.
+            ResponseExtractor<byte[]> responseExtractor = new ResponseExtractor<byte[]>() {
+                @Override
+                public byte[] extractData(ClientHttpResponse clientHttpResponse)
+                        throws IOException {
+                    return FileCopyUtils.copyToByteArray(clientHttpResponse.getBody());
+                }
+            };
+
+            RequestCallback requestCallback = new RequestCallback() {
+                @Override
+                public void doWithRequest(ClientHttpRequest clientHttpRequest)
+                        throws IOException {
+                    // does nothing just needs to be sent.
+                }
+            };
+
+            byte []out = restTemplate.execute(dbURI.toString(),
+                    HttpMethod.GET,requestCallback, responseExtractor);
+            // Free to do something with the file here. decompress, deencrypt?
+
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.add("content-disposition", "inline; filename=Video");
+            responseEntity = new ResponseEntity(out,responseHeaders,HttpStatus.OK);
+
+        } catch (RestClientException e) {
+            responseEntity = new ResponseEntity("Error getting file.", HttpStatus.NOT_FOUND);
+            e.printStackTrace();
         }
-        return responseEntity;
-        
 
+        return responseEntity;
     }
+
+
 
 }
