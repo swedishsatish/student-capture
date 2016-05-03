@@ -19,7 +19,7 @@ var LoginForm = React.createClass({
         if(this.refs.Uname.value == "user" &&
            this.refs.Fpass.value == "password"){
             
-           window.location = "index.html";
+           window.location = "demo.html";
         }
         else
         {
