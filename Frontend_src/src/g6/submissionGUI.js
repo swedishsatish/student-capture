@@ -230,8 +230,4 @@ var RenderHandle = React.createClass({
 
 window.RenderHandle = RenderHandle;
 
-/*ReactDOM.render(
- <RenderHandle/>,
- document.getElementById('courseContent')
 
- );
