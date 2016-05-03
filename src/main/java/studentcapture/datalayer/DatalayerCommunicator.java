@@ -315,15 +315,23 @@ public class DatalayerCommunicator {
                                 @PathVariable(value = "courseID") String courseID,
                                 @PathVariable(value = "assignmentID") String assignmentID,
                                 @PathVariable(value = "userID") String userID,
-                                @RequestParam(value = "video") MultipartFile video) {
-
+                                @RequestParam(value = "video",required = false) MultipartFile video) {
+    	if(video == null){
+    		if(submission.addSubmission(assignmentID, userID)){
+    			return "Student submitted an empty answer";
+    		}
+    		else{
+    			return "DB failure for student submission";
+    		}
+    	}
         // ADD to database here
-
-        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
-            return "OK";
-        } else
-            return "Failed to add video to filesystem.";
-
+    	if(submission.addSubmission(assignmentID, userID)){
+	        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
+	            return "OK";
+	        } else
+	            return "Failed to add video to filesystem.";
+    	}
+    	return "failed to add submission to database";
     }
 
 }

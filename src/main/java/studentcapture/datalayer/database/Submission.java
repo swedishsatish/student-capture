@@ -29,7 +29,7 @@ public class Submission {
         java.util.Date date = new java.util.Date(System.currentTimeMillis());
         java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
         timestamp.setNanos(0);
-        int rowsAffected = jdbcTemplate.update(sql,new Object[]{assignmentID,studentID,timestamp});
+        int rowsAffected = jdbcTemplate.update(sql,new Object[]{Integer.parseInt(assignmentID),Integer.parseInt(studentID),timestamp});
         if(rowsAffected == 1){
         	return true;
         }
