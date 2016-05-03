@@ -1,29 +1,52 @@
-var NewContent = React.createClass({
+var NewAssignment = React.createClass({
     render : function() {
-      return <p className="innerContent">Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they're actually proud of that shit. 
-
-The path of the righteous man is beset on all sides by the iniquities of the selfish and the tyranny of evil men. Blessed is he who, in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother's keeper and the finder of lost children. And I will strike down upon thee with great vengeance and furious anger those who would attempt to poison and destroy My brothers. And you will know My name is the Lord when I lay My vengeance upon thee.
-
-Well, the way they make shows is, they make one show. That show's called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they're going to make more shows. Some pilots get picked and become television programs. Some don't, become nothing. She starred in one of the ones that became nothing.
-
-Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they're actually proud of that shit. 
-
-Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they're actually proud of that shit. 
-
-Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they're actually proud of that shit. 
-
-Well, the way they make shows is, they make one show. That show's called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they're going to make more shows. Some pilots get picked and become television programs. Some don't, become nothing. She starred in one of the ones that became nothing.
-
-Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they're actually proud of that shit. 
-
-The path of the righteous man is beset on all sides by the iniquities of the selfish and the tyranny of evil men. Blessed is he who, in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother's keeper and the finder of lost children. And I will strike down upon thee with great vengeance and furious anger those who would attempt to poison and destroy My brothers. And you will know My name is the Lord when I lay My vengeance upon thee.
-
-Look, just because I don't be givin' no man a foot massage don't make it right for Marsellus to throw Antwone into a glass motherfuckin' house, fuckin' up the way the nigger talks. Motherfucker do that shit to me, he better paralyze my ass, 'cause I'll kill the motherfucker, know what I'm sayin'?The path of the righteous man is beset on all sides by the iniquities of the selfish and the tyranny of evil men. Blessed is he who, in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother's keeper and the finder of lost children. And I will strike down upon thee with great vengeance and furious anger those who would attempt to poison and destroy My brothers. And you will know My name is the Lord when I lay My vengeance upon thee.
-
-Well, the way they make shows is, they make one show. That show's called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they're going to make more shows. Some pilots get picked and become television programs. Some don't, become nothing. She starred in one of the ones that became nothing.
-</p>
+      return <div>
+                <form id="form" action="assignment" method="post">
+                <input className="inputField" id="title" type="text" defaultValue="title" /><br/>
+                <input className="inputField" id="info" type="text" defaultValue="description" /><br/>
+                <p>VIDEO RECORDING COMPONENT GOES HERE</p>
+                <input id="startDate" type="datetime-local" /><br/>
+                <input id="endDate" type="datetime-local" /><br/>
+                <input id="minTimeSeconds" type="text" defaultValue="minTimeSeconds" /><br/>
+                <input id="maxTimeSeconds" type="text" defaultValue="maxTimeSeconds" /><br/>
+                <input id="isPublished" type="checkbox" value="Car"/>Publish Assignment<br/>
+                <div className="button primary-button" onClick = {handleCancel}> CANCEL </div>
+                <div className="button primary-button" onClick = {submitAssignment}> SUBMIT </div>
+            </form>
+        </div>
     }
 });
+
+function handleCancel() {
+
+}
+
+function submitAssignment() {
+    var reqBody = {}
+    reqBody["title"] = $("#title").val();
+    reqBody["info"] = $("#info").val();
+    reqBody["minTimeSeconds"] = $("#minTimeSeconds").val();
+    reqBody["maxTimeSeconds"] = $("#maxTimeSeconds").val();
+    reqBody["startDate"] = $("#startDate").val();
+    reqBody["endDate"] = $("#endDate").val();
+    reqBody["isPublished"] = $("#isPublished").is(':checked');
+    $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : "assignment",
+        data : JSON.stringify(reqBody),
+        timeout : 100000,
+        success : function(response) {
+            console.log("SUCCESS: ", response);
+            ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
+        }, error : function(e) {
+            console.log("ERROR: ", e);
+        }, done : function(e) {
+            console.log("DONE");
+        }
+    });    
+}
+
 window.CourseContent = React.createClass({
     render: function() {
         var id = this.props.id;
@@ -51,4 +74,5 @@ window.CourseContent = React.createClass({
         );
     }
 });
-ReactDOM.render(<NewContent />, document.getElementById('courseContent'));
+
+ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
