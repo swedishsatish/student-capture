@@ -18,7 +18,7 @@ public class User {
 
     private final String SQL_ADD_USR = "INSERT INTO users"
                                        + " (username, firstname, lastname, persnr, pswd)"
-                                        + " VALUES (?, ?, ?, ?, ?);";
+                                        + " VALUES (?, ?, ?, ?, ?)";
 
     private final String SQL_GET_USR_BY_ID = "SELECT  * FROM users WHERE userID = ?";
     private final String SQL_USR_EXIST     = "SELECT EXISTS (SELECT 1 FROM users "
@@ -99,12 +99,14 @@ public class User {
      * @param casID     unique identifier for a person
      * @return          The list with info of a person.
      */
-
     public HashMap<String,String> getUserByID(String userID) {
         HashMap<String,String> info = (HashMap<String,String>) jdbcTemplate.
                                         queryForObject(SQL_GET_USR_BY_ID,
                                          new Object[] {Integer.parseInt(userID)},
                                                new UserWrapper());
+
+        System.out.println("Size of info:" + info.size());
+
         return info;
     }
 
@@ -122,6 +124,9 @@ public class User {
     }
 
 
+    /**
+     *  Used to collect user information, and return a hashmap.
+     */
     protected class UserWrapper implements org.springframework.jdbc.core.RowMapper {
 
         @Override
