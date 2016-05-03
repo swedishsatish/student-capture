@@ -1,12 +1,29 @@
 package studentcapture.video.videoIn;
 
+import org.omg.CORBA.Request;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.SystemPropertyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Base64;
 import java.util.Map;
 
 
@@ -64,6 +81,50 @@ public class RequestManager {
     }
 
     /**
+     * Receives a video as a MultipartFile and returns the video
+     * in a responseEntity containing a encoded string in base64.
+     * Used for hardware testing when a user whats to check if the
+     * client can send a video to the system and receive the same
+     * video.
+     *
+     * @param userID String containing the ID of the User(optional)
+     * @param video MultipartFile of the video to be send back.
+     * @return ResponseEntity containing encoded string in base64.
+     */
+    @CrossOrigin()
+    @RequestMapping(value="/video/textTest", method = RequestMethod.POST,
+            headers = "content-type=multipart/form-data", produces = "video/webm")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<InputStreamResource> requestTestingVideo(
+            @RequestParam(value="userID",required = false) String userID,
+            @RequestParam(value = "video", required = false) MultipartFile video
+    ) {
+
+        ResponseEntity<InputStreamResource> responseEntity = null;
+
+        if (!video.isEmpty()) {
+            try {
+                byte[] videoArray = video.getBytes();
+
+                HttpHeaders responseHeaders = new HttpHeaders();
+                responseHeaders.add("content-disposition", "inline; filename="+userID);
+
+                responseEntity = new ResponseEntity(Base64.getEncoder().
+                        encodeToString(videoArray), responseHeaders, HttpStatus.OK);
+            } catch (Exception e) {
+                System.err.println("Failed to upload file.");
+                return null;
+            }
+        } else {
+            System.err.println("Bad file.");
+            return null;
+        }
+
+
+        return responseEntity;
+    }
+
+    /**
      * Checks that a user is valid to upload a video.
      * @return
      */
@@ -72,4 +133,8 @@ public class RequestManager {
         return ((userID == "user") && (courseID == "5DV151") && (assignmentID == "1337"));
     }
 
+
+
+
 }
+

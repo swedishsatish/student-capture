@@ -111,6 +111,7 @@ public class Assignment {
 
         // Return generated AssignmentID
         return (int) keyHolder.getKeys().get("assignmentid");
+        //return 1;
     }
 
     /**
@@ -168,6 +169,11 @@ public class Assignment {
 
         return returnValues;
     }
+    
+	public String getAssignmentID(String courseID,String assignmentTitle){
+    	String sql = "SELECT assignmentID from Assignment WHERE courseID = ? AND Title = ?";
+    	return jdbcTemplate.queryForObject(sql, new Object[]{courseID,assignmentTitle},String.class);
+	}
 
     public boolean updateAssignment(String assignmentID, String assignmentTitle,
                                     String startDate, String endDate, int minTime, int maxTime,

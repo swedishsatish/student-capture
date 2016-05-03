@@ -20,34 +20,21 @@ public class Submission {
     /**
      * Add a new submission for an assignment
      *
-     * @param assID     Unique identifier for the assignment we're submitting to
+     * @param assignmentID     Unique identifier for the assignment we're submitting to
      * @param studentID Unique identifier for the student submitting
      * @return True if everything went well, otherwise false
      */
     public boolean addSubmission(String assignmentID,String studentID) {
-        boolean result;
+        String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate) VALUES  (?,?,?)";
         java.util.Date date = new java.util.Date(System.currentTimeMillis());
         java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
         timestamp.setNanos(0);
-
-        try {
-            int rowsAffected = jdbcTemplate.update(
-                    "INSERT INTO Submission (assignmentId, studentId, SubmissionDate) VALUES  (?,?,?)",
-                    assignmentID,studentID,timestamp);
-            if(rowsAffected == 1) {
-                result = true;
-            } else {
-                result = false;
-            }
-        }catch (IncorrectResultSizeDataAccessException e){
-            result = false;
-        }catch (DataAccessException e1){
-            result = false;
+        int rowsAffected = jdbcTemplate.update(sql,new Object[]{Integer.parseInt(assignmentID),Integer.parseInt(studentID),timestamp});
+        if(rowsAffected == 1){
+        	return true;
         }
-
-        return result;
+        return false;
     }
-
     /**
      * Add a grade for a submission
      *
@@ -148,8 +135,12 @@ public class Submission {
      * @param assID The assignment to get submissions for
      * @return A list of ungraded submissions for the assignment
      */
-    private final static String getAllUngradedStatement = "SELECT * FROM "
-    		+ "Submission WHERE (AssignmentId=?) AND (Grade IS NULL)";
+    private final static String getAllUngradedStatement = "SELECT "
+    		+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
+    		+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
+    		+ "Submission AS sub LEFT JOIN Users AS stu ON "
+    		+ "sub.studentId=stu.userId WHERE (AssignmentId=?) AND "
+    		+ "(Grade IS NULL)";
     public Optional<List<SubmissionWrapper>> getAllUngraded(String assId) {
     	List<SubmissionWrapper> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
@@ -160,10 +151,18 @@ public class Submission {
 	    		SubmissionWrapper submission = new SubmissionWrapper();
 	    		submission.assignmentId = (int) row.get("AssignmentId");
 	    		submission.studentId = (int) row.get("StudentId");
-	    		submission.teacherId = Optional.of((int) row.get("TeacherId"));
-	    		submission.grade = Optional.of((String) row.get("Grade"));
-	    		submission.submissionDate = Optional.of(((Timestamp)
-	    				row.get("SubmissionDate")).toString());
+	    		//submission.teacherId = (int) row.get("TeacherId");
+	    		//submission.grade = (String) row.get("Grade");
+	    		submission.submissionDate = ((Timestamp)
+	    				row.get("SubmissionDate")).toString();
+	    		try {
+	    			String firstName = (String) row.get("FirstName");
+		    		String lastName = (String) row.get("LastName");
+		    		submission.studentName = firstName + " " + lastName;
+	    		} catch (NullPointerException e) {
+	    			submission.studentName = null;
+	    		}
+	    		
 	    		submissions.add(submission);
 	    	}
 
@@ -187,8 +186,11 @@ public class Submission {
      * @return A list of submissions for the assignment
      */
 
-    private final static String getAllSubmissionsStatement = "SELECT * FROM "
-    		+ "Submission WHERE (AssignmentId=?)";
+    private final static String getAllSubmissionsStatement = "SELECT "
+    		+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
+    		+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
+    		+ "Submission AS sub LEFT JOIN Users AS stu ON "
+    		+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
     public Optional<List<SubmissionWrapper>> getAllSubmissions(String assId) {
     	List<SubmissionWrapper> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
@@ -200,17 +202,24 @@ public class Submission {
 	    		submission.assignmentId = (int) row.get("AssignmentId");
 	    		submission.studentId = (int) row.get("StudentId");
 	    		try {
-	    			submission.teacherId = Optional.of((int) row.get("TeacherId"));
+	    			submission.teacherId = (int) row.get("TeacherId");
 	    		} catch (NullPointerException e) {
-	    			submission.teacherId = Optional.empty();
+	    			submission.teacherId = null;
 	    		}
 	    		try {
-	    			submission.grade = Optional.of((String) row.get("Grade"));
+	    			submission.grade = (String) row.get("Grade");
 	    		} catch (NullPointerException e) {
-	    			submission.grade = Optional.empty();
+	    			submission.grade = null;
 	    		}
-	    		submission.submissionDate = Optional.of(((Timestamp)
-	    				row.get("SubmissionDate")).toString());
+	    		submission.submissionDate = ((Timestamp)
+	    				row.get("SubmissionDate")).toString();
+	    		try {
+	    			String firstName = (String) row.get("FirstName");
+		    		String lastName = (String) row.get("LastName");
+		    		submission.studentName = firstName + " " + lastName;
+	    		} catch (NullPointerException e) {
+	    			submission.studentName = null;
+	    		}
 
 	    		submissions.add(submission);
 	    	}
@@ -254,20 +263,20 @@ public class Submission {
 	    		submission.assignmentId = (int) row.get("AssignmentId");
 	    		submission.studentId = (int) row.get("StudentId");
 	    		try {
-	    			submission.teacherId = Optional.of((int) row.get("TeacherId"));
+	    			submission.teacherId = (int) row.get("TeacherId");
 	    		} catch (NullPointerException e) {
-	    			submission.teacherId = Optional.empty();
+	    			submission.teacherId = null;
 	    		}
 	    		try {
-	    			submission.grade = Optional.of((String) row.get("Grade"));
+	    			submission.grade = (String) row.get("Grade");
 	    		} catch (NullPointerException e) {
-	    			submission.grade = Optional.empty();
+	    			submission.grade = null;
 	    		}
 	    		try {
-	    			submission.submissionDate = Optional.of(((Timestamp)
-		    				row.get("SubmissionDate")).toString());
+	    			submission.submissionDate = ((Timestamp)
+		    				row.get("SubmissionDate")).toString();
 	    		} catch (NullPointerException e) {
-	    			submission.submissionDate = Optional.empty();
+	    			submission.submissionDate = null;
 	    		}
 
 
@@ -288,9 +297,10 @@ public class Submission {
     public class SubmissionWrapper {
     	public int assignmentId;
     	public int studentId;
-    	public Optional<String> submissionDate;
-    	public Optional<String> grade;
-    	public Optional<Integer> teacherId;
+    	public String studentName;
+    	public String submissionDate;
+    	public String grade;
+    	public Integer teacherId;
     }
 }
 

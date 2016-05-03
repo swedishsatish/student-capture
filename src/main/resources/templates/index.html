@@ -1,63 +1,60 @@
 <!DOCTYPE html>
-<!-- This thymeleaf dependency has to be here for serving the html file via Spring MVC -->
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Student-capture</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+  <head>
+    <!-- Meta data -->
+    <meta charset="utf-8"/>
+    <title>Student Capture</title>
+    <meta name="Description" content="First Draft"/>
+    <meta name="Author" content="Filip Golles"/>
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- FONT  Montserrat-->
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'/>
+
+    <!-- FONT  Open Sans -->
+    <!--<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,600&subset=latin,latin-ext' rel='stylesheet' type='text/css'/>-->
+
+    <!-- FONT  Libre Baskerville-->
+    <!--<link href='https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'/>-->
+   
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/normalize.css"/>
+    <link rel="stylesheet" href="css/skeleton.css"/>
+    <link rel="stylesheet" href="css/custom.css"/>
+
+    <!-- Scripts -->
+    <script src="build/react.js"></script>
+    <script src="build/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
-    <script>
+    <script src="src/communicationsLibrary.js"></script>
 
-        function searchAjax() {
-            var search = {}
-            search["title"] = $("#title").val();
-            search["info"] = $("#info").val();
-            search["minTimeSeconds"] = $("#minTimeSeconds").val();
-            search["maxTimeSeconds"] = $("#maxTimeSeconds").val();
-            search["startDate"] = $("#startDate").val();
-            search["endDate"] = $("#endDate").val();
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/favicon.png"/>
+  </head>
 
-            $.ajax({
-                type : "POST",
-                contentType : "application/json",
-                url : "assignment",
-                data : JSON.stringify(search),
-                dataType : 'json',
-                timeout : 100000,
-                success : function(data) {
-                    console.log("SUCCESS: ", data);
-                    alert(JSON.stringify(data));
-                },
-                error : function(e) {
-                    console.log("ERROR: ", e);
-                    alert(JSON.stringify(data));
-                },
-                done : function(e) {
-                    console.log("DONE");
-                }
-            });
-        }
-    </script>
-</head>
-<body>
-<h1>Welcome to Student-capture!</h1>
-<form id="form" action="assignment" method="post">
-    Title:
-    <input id="title" type="text" /><br/>
-    Info:
-    <input id="info" type="text" /><br/>
-    Start time:
-    <input id="startDate" type="datetime-local" /><br/>
-    End time:
-    <input id="endDate" type="datetime-local" /><br/>
-    minTimeSeconds:
-    <input id="minTimeSeconds" type="text" /><br/>
-    maxTimeSeconds:
-    <input id="maxTimeSeconds" type="text" /><br/>
+  <!-- Primary Page Layout -->
+  <body>
+    <div class="container">
+        <div class="row">
+            <div class="twelve columns header" id="desktopHeader"></div>
+            <script type="text/babel" src="src/profile.js"></script>
+        </div>
 
-    <input name="submit" type="button" value="submit" onclick="searchAjax()"/>
-</form>
-</body>
+        <div class="three columns" id="desktopNavigation"></div>
+        <script type="text/babel" src="src/desktopNavigation.js"></script>
+
+        <div class="nine columns" id="courseContent"></div>
+        <script type="text/babel" src="src/courseContent.js"></script>
+    </div>
+
+    <!--div class="footer" id="footer">
+        <script type="text/babel" src="src/footer.js"></script>
+    </div-->  
+  </body>
+<!-- End Document -->
 </html>

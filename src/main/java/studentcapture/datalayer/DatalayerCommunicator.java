@@ -1,5 +1,6 @@
 package studentcapture.datalayer;
 
+import java.io.*;
 import java.util.Hashtable;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.Submission;
@@ -70,25 +72,19 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
-    public int createAssignment(//@RequestBody AssigmentModel assignment){ //will be used after merge
-                                @RequestParam(value = "courseID") String courseID,
-                                @RequestParam(value = "assignmentTitle") String assignmentTitle,
-                                @RequestParam(value = "startDate") String startDate,
-                                @RequestParam(value = "endDate") String endDate,
-                                @RequestParam(value = "minTime") int minTime,
-                                @RequestParam(value = "maxTime") int maxTime,
-                                @RequestParam(value = "published") boolean published){
-        int returnResult;
+    public String createAssignment(@RequestBody AssignmentModel assignmentModel){
+        Integer returnResult;
 
         try{
-            returnResult = assignment.createAssignment(courseID, assignmentTitle,
-                    startDate, endDate, minTime, maxTime, published);
+            returnResult = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
+                    assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
+                    assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
         } catch (IllegalArgumentException e) {
             //TODO return smarter error msg
-            return -1;
+            return e.getMessage();
         }
 
-        return returnResult;
+        return returnResult.toString();
     }
 
     /**
@@ -97,7 +93,7 @@ public class DatalayerCommunicator {
      * @param teacherID Teacher identification
      * @param studentID Student identification
      * @param grade Grade
-     * @return  True if tables were updated, else false
+     * @return  True if the grade was successfully saved to the database, else false
      */
     @CrossOrigin
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
@@ -112,16 +108,14 @@ public class DatalayerCommunicator {
     /**
      * Set feedback for a submission, video and text cannot both be null
      * @param assID Assignment identification
-     * @param teacherID Teacher identification
      * @param studentID Student identification
      * @param feedbackVideo Video feedback
      * @param feedbackText Text feedback
-     * @return True if feedback was saved, else false
+     * @return True if feedback was successfully saved to the database, else false
      */
     @CrossOrigin
     @RequestMapping(value = "/setFeedback", method = RequestMethod.POST)
     public boolean setFeedback(@RequestParam(value = "assID") String assID,
-                               @RequestParam(value = "teacherID") String teacherID,
                                @RequestParam(value = "studentID") String studentID,
                                @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
                                @RequestParam(value = "feedbackText") MultipartFile feedbackText,
@@ -150,35 +144,33 @@ public class DatalayerCommunicator {
      * @return              The video file vie http.
      */
     @CrossOrigin
-    @RequestMapping(value = "/getAssignmentVideo", method = RequestMethod.POST, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> getAssignmentVideo(@RequestParam("courseCode") String courseCode,
-                                                                  @RequestParam("courseId") String courseId,
-                                                                  @RequestParam("assignmentId") String assignmentId) {
+    @RequestMapping(value = "/getAssignmentVideo/{courseCode}/{courseId}/{assignmentId}",
+            method = RequestMethod.GET, produces = "video/webm")
+    public ResponseEntity<InputStreamResource> getAssignmentVideo(
+            @PathVariable("courseCode") String courseCode,
+            @PathVariable("courseId") String courseId,
+            @PathVariable("assignmentId") String assignmentId) {
 
         ResponseEntity<InputStreamResource> responseEntity;
 
         try {
+            fsi = new FilesystemInterface(); // should not be here? @autowired???
             FileInputStream videoInputStream = fsi.getAssignmentVideo(courseCode,courseId,assignmentId);
 
             byte []out = new byte[fsi.getAssignmentVideoFileSize (courseCode, courseId, assignmentId)];
             videoInputStream.read(out);
 
             HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.add("content-disposition", "inline; filename=AssignmentVideo" + assignmentId);
+            responseHeaders.add("content-disposition", "inline; filename=AssignmentVideo");
 
             responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
-
         } catch (FileNotFoundException e) {
-            //TODO change HttpStatus to something bad?
-            responseEntity = new ResponseEntity("File not found.", HttpStatus.OK);
+            responseEntity = new ResponseEntity("File not found.", HttpStatus.NOT_FOUND);
         } catch (IOException e) {
-            //TODO change HttpStatus to something bad?
-            responseEntity = new ResponseEntity("Error getting file.", HttpStatus.OK);
+            responseEntity = new ResponseEntity("Error getting file.", HttpStatus.NOT_FOUND);
         }
 
         return responseEntity;
-
-
     }
 
     /**
@@ -255,7 +247,7 @@ public class DatalayerCommunicator {
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.POST,
+    method = RequestMethod.GET,
     value = "/getAllSubmissions")
     @ResponseBody
     public List<SubmissionWrapper> getAllSubmissions(
@@ -273,12 +265,12 @@ public class DatalayerCommunicator {
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.POST,
+    method = RequestMethod.GET,
     value = "/getAllUngradedSubmissions")
     @ResponseBody
     public List<SubmissionWrapper> getAllUngradedSubmissions(
     		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submission.getAllSubmissions(assignmentID).get();
+    	return submission.getAllUngraded(assignmentID).get();
     }
 
     /**
@@ -292,12 +284,12 @@ public class DatalayerCommunicator {
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.POST,
+    method = RequestMethod.GET,
     value = "/getAllSubmissionsWithStudents")
     @ResponseBody
     public List<SubmissionWrapper> getAllSubmissionsWithStudents(
     		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submission.getAllSubmissions(assignmentID).get();
+    	return submission.getAllSubmissionsWithStudents(assignmentID).get();
     }
 
     /**
@@ -315,15 +307,23 @@ public class DatalayerCommunicator {
                                 @PathVariable(value = "courseID") String courseID,
                                 @PathVariable(value = "assignmentID") String assignmentID,
                                 @PathVariable(value = "userID") String userID,
-                                @RequestParam(value = "video") MultipartFile video) {
-
+                                @RequestParam(value = "video",required = false) MultipartFile video) {
+    	if(video == null){
+    		if(submission.addSubmission(assignmentID, userID)){
+    			return "Student submitted an empty answer";
+    		}
+    		else{
+    			return "DB failure for student submission";
+    		}
+    	}
         // ADD to database here
-
-        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
-            return "OK";
-        } else
-            return "Failed to add video to filesystem.";
-
+    	if(submission.addSubmission(assignmentID, userID)){
+	        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
+	            return "OK";
+	        } else
+	            return "Failed to add video to filesystem.";
+    	}
+    	return "failed to add submission to database";
     }
 
 }

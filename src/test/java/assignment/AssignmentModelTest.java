@@ -1,4 +1,4 @@
-package model;
+package assignment;
 
 import org.junit.Test;
 import studentcapture.assignment.AssignmentModel;
@@ -52,13 +52,13 @@ public class AssignmentModelTest {
 
     @Test
     public void CourseIDShouldBe1() {
-        assertEquals(1, assignmentModel.getCourseID());
+        assertEquals("1000", assignmentModel.getCourseID());
     }
 
     @Test
     public void CourseIDShouldBe2() {
-        assignmentModel.setCourseID(2);
-        assertEquals(2, assignmentModel.getCourseID());
+        assignmentModel.setCourseID("2");
+        assertEquals("2", assignmentModel.getCourseID());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class AssignmentModelTest {
 
     @Test
     public void shouldNotThrowDateTimeParseException() {
-        new AssignmentModel("Test", "info", 120, 300, "2015-01-20T10:00", "2015-01-22T10:00", true);
+        new AssignmentModel("Test", "info", 120, 300, "2015-01-20 10:00:00", "2015-01-22 10:00:00", true);
     }
 
     @Test(expected = DateTimeParseException.class)
