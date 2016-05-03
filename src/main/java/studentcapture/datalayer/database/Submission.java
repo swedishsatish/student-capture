@@ -151,14 +151,18 @@ public class Submission {
 	    		SubmissionWrapper submission = new SubmissionWrapper();
 	    		submission.assignmentId = (int) row.get("AssignmentId");
 	    		submission.studentId = (int) row.get("StudentId");
-	    		submission.teacherId = (int) row.get("TeacherId");
-	    		submission.grade = (String) row.get("Grade");
+	    		//submission.teacherId = (int) row.get("TeacherId");
+	    		//submission.grade = (String) row.get("Grade");
 	    		submission.submissionDate = ((Timestamp)
 	    				row.get("SubmissionDate")).toString();
-	    		String firstName = (String) row.get("FirstName");
-	    		String lastName = (String) row.get("LastName");
-	    		submission.studentName = firstName + " " + lastName;
-
+	    		try {
+	    			String firstName = (String) row.get("FirstName");
+		    		String lastName = (String) row.get("LastName");
+		    		submission.studentName = firstName + " " + lastName;
+	    		} catch (NullPointerException e) {
+	    			submission.studentName = null;
+	    		}
+	    		
 	    		submissions.add(submission);
 	    	}
 
@@ -209,9 +213,13 @@ public class Submission {
 	    		}
 	    		submission.submissionDate = ((Timestamp)
 	    				row.get("SubmissionDate")).toString();
-	    		String firstName = (String) row.get("FirstName");
-	    		String lastName = (String) row.get("LastName");
-	    		submission.studentName = firstName + " " + lastName;
+	    		try {
+	    			String firstName = (String) row.get("FirstName");
+		    		String lastName = (String) row.get("LastName");
+		    		submission.studentName = firstName + " " + lastName;
+	    		} catch (NullPointerException e) {
+	    			submission.studentName = null;
+	    		}
 
 	    		submissions.add(submission);
 	    	}
