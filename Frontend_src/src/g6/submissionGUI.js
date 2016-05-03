@@ -197,6 +197,7 @@ var RenderHandle = React.createClass({
             <div class="row">
                 <div id="recorder">
                     <Recorder />
+                    
                 </div>
                 <div id="feedBackContainer">
                     <div id="submissioncontainer">

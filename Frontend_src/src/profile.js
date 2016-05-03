@@ -33,6 +33,7 @@ var NewProfile = React.createClass({
 		if(container.childNodes.length > 1){
 			container.removeChild(container.childNodes.item(1));
 		}
+		$("#internet-speed").text("");
 	},
 	render : function() {
 		return <div className="three columns offset-by-nine" id="profile">

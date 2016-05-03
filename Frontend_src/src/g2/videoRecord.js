@@ -2,6 +2,7 @@ var Recorder = React.createClass({
   componentDidMount: function() {
       // PostBlob method uses XHR2 and FormData to submit
       // recorded blob to the PHP server
+      var props = this.props;
       var blobsize;
       var sendTime;
       function PostBlob(blob, fileType, fileName) {
@@ -16,15 +17,8 @@ var Recorder = React.createClass({
 
 
           // POST the Blob using XHR2
-          xhr(window.globalURL + '/video/textTest', formData, function (fName) {
-              //CALLBACK FUNCTION, Download video.
-              //openInNewTab('uploads/' + fName.replace(/"/g, ''));
-              //window.open('uploads/' + fName.replace(/"/g, ''),'_blank');
-              //TODO: play returned video-
-              //console.log(fName);
-             /* var vid = document.getElementById("returnTestVid");
-              vid.src = "data:video/webm;base64,"+fName;
-              vid.play();*/
+          xhr(window.globalURL + props.postURL, formData, props.playCallback/*function (fName) {
+             
 
 
               var container = document.getElementById("tst");
@@ -47,26 +41,29 @@ var Recorder = React.createClass({
               mediaElement.play();
 
 
-          });
+          }*/);
+      }
+      if(props.autoRec == "false"){
+          console.log("not auto")
+          var record = document.getElementById('record');
       }
 
-      var record = document.getElementById('record');
       var stop = document.getElementById('stop');
 
 
-      var audio = document.querySelector('audio');
 
-      var recordVideo = document.getElementById('record-video');
+
+
       var preview = document.getElementById('preview');
 
-      var container = document.getElementById('container');
+
 
       // if you want to record only audio on chrome
       // then simply set "isFirefox=true"
       var isFirefox = !!navigator.mozGetUserMedia;
 
       var recordAudio, recordVideo;
-      record.onclick = function () {
+      var startRecord = function () {
           record.disabled = true;
           navigator.getUserMedia({
               audio: true,
@@ -113,9 +110,14 @@ var Recorder = React.createClass({
           });
       };
 
-
+      if(props.autoRec == "false"){
+          record.onclick = startRecord;
+      }
       stop.onclick = function () {
-          record.disabled = false;
+          if(props.autoRec == "false"){
+              record.disabled = false;
+          }
+          
           stop.disabled = true;
 
           preview.src = '';
@@ -145,16 +147,11 @@ var Recorder = React.createClass({
               }
           };
 
-          request.upload.onload = function () {
-
-              $("#internet-speed").text(function () {
-                  var now = Date.now();
-                  var mbsec = (blobsize/((now - sendTime)/1000));
-                  //console.log("mbsec " + mbsec + "now = " + now/1000 + "stime" + sendTime/1000);
-                  return "Upload speed = "+ mbsec.toFixed(2) + "MB/s"
-              });
+          request.upload.onload = function(){
+              if(typeof props.calc !== "undefined"){
+                  props.calc(blobsize,sendTime);
+              }
           }
-
           request.open('POST', url,true);
 
           request.send(data);
@@ -162,6 +159,10 @@ var Recorder = React.createClass({
       }
 
 
+
+      if(props.autoRec == "true"){
+          startRecord();
+      }
   },
   render: function() {
 
