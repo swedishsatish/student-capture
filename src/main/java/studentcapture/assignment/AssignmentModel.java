@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * Created by root on 4/25/16.
+ * Created by David Björkstrand on 4/25/16.
+ * This class is the model for a assignment. I.e. it contains all data needed for a assignment.
+ * Add more fields if needed.
  */
 public class AssignmentModel {
 

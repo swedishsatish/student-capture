@@ -9,6 +9,7 @@ var NewAssignment = React.createClass({
                 <input id="endDate" type="datetime-local" /><br/>
                 <input id="minTimeSeconds" type="text" defaultValue="minTimeSeconds" /><br/>
                 <input id="maxTimeSeconds" type="text" defaultValue="maxTimeSeconds" /><br/>
+                <input id="isPublished" type="checkbox" value="Car"/>Publish Assignment<br/>
                 <div className="button primary-button" onClick = {handleCancel}> CANCEL </div>
                 <div className="button primary-button" onClick = {submitAssignment}> SUBMIT </div>
             </form>
@@ -28,6 +29,7 @@ function submitAssignment() {
     reqBody["maxTimeSeconds"] = $("#maxTimeSeconds").val();
     reqBody["startDate"] = $("#startDate").val();
     reqBody["endDate"] = $("#endDate").val();
+    reqBody["published"] = $("#isPublished").is(':checked');
     $.ajax({
         type : "POST",
         contentType : "application/json",
@@ -42,7 +44,7 @@ function submitAssignment() {
         }, done : function(e) {
             console.log("DONE");
         }
-    });    
+    });
 }
 
 window.CourseContent = React.createClass({
