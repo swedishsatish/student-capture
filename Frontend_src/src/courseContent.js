@@ -54,4 +54,4 @@ window.CourseContent = React.createClass({
         );
     }
 });
-ReactDOM.render(<NewContent />, document.getElementById('courseContent'));
+ReactDOM.render(<RenderHandle />, document.getElementById('courseContent'));
