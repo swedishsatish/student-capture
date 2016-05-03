@@ -2,7 +2,7 @@
  * Created by c14hht on 2016-04-28.
  */
 
-var Feedback = React.createClass ({
+window.Feedback = React.createClass ({
 
 
     handleClick: function () {
