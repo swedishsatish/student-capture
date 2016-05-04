@@ -1,4 +1,6 @@
-
+/*
+ * viewAssignment.js
+ */
 
 
 window.AssignmentContent = React.createClass({
@@ -7,6 +9,7 @@ window.AssignmentContent = React.createClass({
         document.getElementById("assignment-title").innerHTML = json["AssignmentName"];
         document.getElementById("assignment-startAt").innerHTML = "Starts at " + json["startsAt"];
         document.getElementById("assignment-endAt").innerHTML = "Ends at " + json["endsAt"];
+        document.getElementById("videoPlayer").src = json["assignmentUrl"];
     },
     render: function () {
 
@@ -14,9 +17,6 @@ window.AssignmentContent = React.createClass({
         var course = this.props.course;
 
         getJson("test/assignmentdata.json", this.jsonReady);
-
-
-
 
         return (
             <div id="assignment-div">
@@ -30,12 +30,9 @@ window.AssignmentContent = React.createClass({
                     <Vid />
                 </div>
             </div>
-
         )
-
     },
     componentDidMount: function() {
-
     }
 });
 
@@ -48,7 +45,6 @@ var But = React.createClass({
     onClick: function() {
         this.setState({disabled: true});
         document.getElementById("videoPlayer").play();
-
     },
     render: function() {
         return (
@@ -69,7 +65,6 @@ var CountDown = React.createClass({
             clearInterval(this.interval);
             this.setState({startRecord : true})
         }
-
     },
     render: function() {
         return (
@@ -93,23 +88,20 @@ var Vid = React.createClass({
             <div>
                 { this.state.showCountdown ? <CountDown /> : <video id='videoPlayer' width='70%'></video>}
             </div>
-
         );
     },
     componentDidMount: function() {
         var vid = document.getElementById("videoPlayer");
-        vid.src = "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4"
         vid.addEventListener('ended',this.onEnded,false);
-
-
     },
     onEnded: function() {
         this.setState({showCountdown: true})
     }
-
-
 });
 
+/*
+ * 
+ */
 function getJson(URL, callback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
@@ -119,3 +111,4 @@ function getJson(URL, callback) {
     xmlHttp.open("GET", URL, true);
     xmlHttp.send();
 }
+
