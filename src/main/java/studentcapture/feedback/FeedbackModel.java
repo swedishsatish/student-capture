@@ -1,6 +1,7 @@
 package studentcapture.feedback;
 
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -17,10 +18,11 @@ public class FeedbackModel {
     private int studentID;
     @NotNull @Min(1)
     private int assignmentID;
-    @NotNull @Min(1)
-    private int courseID;
+    @Min(1) @Max(10)
+    private String courseID;
 
-    private int courseCode;
+    @Min(1) @Max(6)
+    private String courseCode;
 
     private String grade, feedbackText;
 
@@ -90,14 +92,14 @@ public class FeedbackModel {
     /**
      * @return courseID of the feedback.
      */
-    public int getCourseID() {
+    public String getCourseID() {
         return courseID;
     }
 
     /**
      * @param courseID the courseID of the feedback.
      */
-    public void setCourseID(int courseID) {
+    public void setCourseID(String courseID) {
         this.courseID = courseID;
     }
 
@@ -108,11 +110,11 @@ public class FeedbackModel {
         return teacherID;
     }
 
-    public int getCourseCode() {
+    public String getCourseCode() {
         return courseCode;
     }
 
-    public void setCourseCode(int courseCode) {
+    public void setCourseCode(String courseCode) {
         this.courseCode = courseCode;
     }
 }

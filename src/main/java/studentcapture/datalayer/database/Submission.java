@@ -114,7 +114,7 @@ public class Submission {
                 " FROM submission JOIN users ON (teacherid = userid) WHERE (studentid = ? AND assignmentid = ?)";
         Map<String, Object> response;
         try {
-            response = jdbcTemplate.queryForMap(query, studentID, assignmentID);
+            response = jdbcTemplate.queryForMap(query, new Object[] {studentID, assignmentID});
             //return the time as string instead of timestamp
             response.put("time", response.get("time").toString());
         } catch (IncorrectResultSizeDataAccessException e) {
