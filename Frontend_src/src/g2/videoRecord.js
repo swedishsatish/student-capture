@@ -58,7 +58,13 @@ var Recorder = React.createClass({
       var preview = document.getElementById('preview');
 
       //check webbrowse.
-      var isFirefox = !!navigator.mediaDevices.getUserMedia;
+      //var isFirefox = !!navigator.mediaDevices.getUserMedia;
+
+      navigator.getUserMedia = ( navigator.getUserMedia ||
+                                  navigator.webkitGetUserMedia ||
+      navigator.mediaDevices.getUserMedia ||
+                                  navigator.msGetUserMedia);
+
 
       var recordAudio, recordVideo;
       var startRecord = function () {
@@ -87,22 +93,22 @@ var Recorder = React.createClass({
               recordAudio = RecordRTC(stream, {
 
                   onAudioProcessStarted: function () {
-                      if (!isFirefox) {
+                      //if (!isFirefox) {
                           recordVideo.startRecording();
-                      }
+                      //}
                   }
               });
 
-              if (isFirefox) {
-                  recordAudio.startRecording();
-              }
+             // if (isFirefox) {
+               //   recordAudio.startRecording();
+              //}
 
-              if (!isFirefox) {
+              //if (!isFirefox) {
                   recordVideo = RecordRTC(stream, {
                       type: 'video'
                   });
                   recordAudio.startRecording();
-              }
+              //}
 
               stop.disabled = false;
           }, function (error) {
@@ -128,7 +134,7 @@ var Recorder = React.createClass({
           }
 
 
-          if (!isFirefox) {
+        //  if (!isFirefox) {
 
               recordVideo.stopRecording(function (url) {
                   if(replay){
@@ -152,7 +158,7 @@ var Recorder = React.createClass({
                       }
                   }
               });
-          }else {
+          /*}else {
 
               recordAudio.stopRecording(function (url) {
                   if(replay){
@@ -175,7 +181,7 @@ var Recorder = React.createClass({
                       }
                   }
               });
-          }
+          }*/
 
       };
 
@@ -188,12 +194,24 @@ var Recorder = React.createClass({
                   callback(request.responseText);
               }
           };
-
-          request.upload.onload = function(){
+          if(typeof props.calc !== "undefined") {
+            request.upload.onloadstart = function () {
+                $("#internet-speed").text("Uploading...");
+            }
+          }
+          request.onload = function(){
               if(typeof props.calc !== "undefined"){
-                  props.calc(blobsize,sendTime);
+                  if(request.status == 404)
+                      $("#internet-speed").text("Upload failed, no server connection.");
+                  else
+                    props.calc(blobsize,sendTime);
+              }
+              else if(request.status == 404) {
+
+                      alert("Upload failed, no server connection.");
               }
           }
+
           request.open('POST', url,true);
 
           request.send(data);
