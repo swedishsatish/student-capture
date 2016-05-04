@@ -1,15 +1,13 @@
+
 var StartPage = React.createClass({
-    render : function() {
-      return <div>
-                <h3>Welcome to Student Capture!</h3>
-                <p>A video examination platform</p>
+    render: function () {
+        return <div>
+            <h3>Welcome to Student Capture!</h3>
+            <p>A video examination platform</p>
         </div>
     }
+
 });
-
-function handleCancel() {
-
-}
 
 function submitAssignment() {
     var reqBody = {}
