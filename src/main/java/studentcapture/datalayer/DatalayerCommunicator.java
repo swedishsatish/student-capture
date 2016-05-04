@@ -213,7 +213,7 @@ public class DatalayerCommunicator {
      * @return true  if correct user password and username is given otherwise false
      */
     @CrossOrigin
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
     public boolean login(@RequestParam(value = "username") String username,
                          @RequestParam(value = "pswd") String pswd) {
         return   user.userExist(username,pswd);
@@ -230,7 +230,7 @@ public class DatalayerCommunicator {
      * @return true if registration was successfull else false
      */
     @CrossOrigin
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
     public boolean registerUser(@RequestParam(value = "userName") String userName,
                                 @RequestParam(value = "fName") String fName,
                                 @RequestParam(value = "lName") String lName,
