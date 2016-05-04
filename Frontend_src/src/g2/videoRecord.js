@@ -188,12 +188,24 @@ var Recorder = React.createClass({
                   callback(request.responseText);
               }
           };
-
-          request.upload.onload = function(){
+          if(typeof props.calc !== "undefined") {
+            request.upload.onloadstart = function () {
+                $("#internet-speed").text("Uploading...");
+            }
+          }
+          request.onload = function(){
               if(typeof props.calc !== "undefined"){
-                  props.calc(blobsize,sendTime);
+                  if(request.status == 404)
+                      $("#internet-speed").text("Upload failed, no server connection.");
+                  else
+                    props.calc(blobsize,sendTime);
+              }
+              else if(request.status == 404) {
+
+                      alert("Upload failed, no server connection.");
               }
           }
+
           request.open('POST', url,true);
 
           request.send(data);
