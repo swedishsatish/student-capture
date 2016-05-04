@@ -196,15 +196,21 @@ var Recorder = React.createClass({
                   callback(request.responseText);
               }
           };
+
           if(typeof props.calc !== "undefined") {
             request.upload.onloadstart = function () {
                 $("#internet-speed").text("Uploading...");
             }
+              request.onloadstart = function () {
+                  $("#internet-speed").text("Uploading...");
+              }
           }
           request.onload = function(){
               if(typeof props.calc !== "undefined"){
                   if(request.status == 404)
                       $("#internet-speed").text("Upload failed, no server connection.");
+                  else if(request.status == 408)
+                      $("#internet-speed").text("Connection timed out.");
                   else
                     props.calc(blobsize,sendTime);
               }
@@ -212,6 +218,12 @@ var Recorder = React.createClass({
 
                       alert("Upload failed, no server connection.");
               }
+              else if(request.status == 408) {
+
+                  alert("Connection timed out.");
+              }
+
+
           }
 
           request.open('POST', url,true);
