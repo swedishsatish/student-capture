@@ -20,7 +20,7 @@ public class User {
                                        + " (username, firstname, lastname, persnr, pswd)"
                                         + " VALUES (?, ?, ?, ?, ?)";
 
-    private final String SQL_GET_USR_BY_ID = "SELECT  * FROM users WHERE userID = ?";
+    private final String SQL_GET_USR_BY_ID = "SELECT  * FROM users WHERE userid = ?";
     private final String SQL_USR_EXIST     = "SELECT EXISTS (SELECT 1 FROM users "
                                            + "WHERE  username = ? AND pswd = ?)";
 
@@ -43,13 +43,12 @@ public class User {
      */
     public boolean addUser(String userName, String fName, String lName, String pNr, String pwd) {
 
-        Object[] values = new Object[] {userName, fName,lName,pNr,pwd};
-        Object[] types = new Object[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
+        Object[] args = new Object[] {userName, fName,lName,pNr,pwd};
+        int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
                                       Types.CHAR,Types.VARCHAR};
 
         try {
-
-            jdbcTemplate.update(SQL_ADD_USR, values);
+            jdbcTemplate.update(SQL_ADD_USR, args,types);
 
         } catch (DataIntegrityViolationException e) {
             System.out.println(e);
@@ -106,12 +105,13 @@ public class User {
      * @return          The list with info of a person.
      */
     public HashMap<String,String> getUserByID(String userID) {
-        HashMap<String,String> info = (HashMap<String,String>) jdbcTemplate.
-                                        queryForObject(SQL_GET_USR_BY_ID,
-                                         new Object[] {Integer.parseInt(userID)},
-                                               new UserWrapper());
 
-        System.out.println("Size of info:" + info.size());
+        String sql = "SELECT * FROM users WHERE userid = ?";
+
+        Object[] arg = new Object[]{Integer.parseInt(userID)};
+        HashMap<String,String> info = (HashMap<String,String>)
+                jdbcTemplate.queryForObject(SQL_GET_USR_BY_ID,
+                        arg, new UserWrapper());
 
         return info;
     }
@@ -137,19 +137,12 @@ public class User {
 
         @Override
         public Object mapRow(ResultSet rs, int i) throws SQLException {
-            List<String> list = Arrays.asList(rs.getString("userid"),
-                                              rs.getString("username"),
-                                              rs.getString("lastname"),
-                                              rs.getString("persnr"),
-                                              rs.getString("pswd"));
-
             HashMap<String,String> info = new HashMap();
             info.put("userid",rs.getString("userid"));
             info.put("username",rs.getString("username"));
             info.put("lastname",rs.getString("lastname"));
             info.put("persnr",rs.getString("persnr"));
             info.put("pswd",rs.getString("pswd"));
-
             return info;
         }
     }
