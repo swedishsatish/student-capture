@@ -26,7 +26,7 @@ window.AssignmentContent = React.createClass({
                     <h5 id="assignment-endAt"></h5>
                 </div>
                 <div id="assignment-interaction">
-                    <BlankBox /> // Group 8
+                    <BlankBox />
                     <But />
                     <Vid />
                 </div>
