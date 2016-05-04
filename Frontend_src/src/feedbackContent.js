@@ -1,9 +1,10 @@
 /**
  * Created by c14hht on 2016-04-28.
+ *
+ * Class that when entering the studentid, assignmentid, courseid and submitting gets the feedback and view it.
  */
 
 window.Feedback = React.createClass ({
-
 
     handleClick: function () {
         var xmlHttp = new XMLHttpRequest();
@@ -28,13 +29,12 @@ window.Feedback = React.createClass ({
         return (
             <div>
                 <form>
-                    UserID: <br />
-                    <input id="student"type="text" name="userid"></input> <br />
+                    StudentID: <br />
+                    <input id="student"type="text" name="studentid"></input> <br />
                     AssID: <br />
                     <input id="ass" type="text" name="assid"></input> <br />
                     CourseID: <br />
                     <input id="course" type="text" name="courseid"></input>
-
                 </form>
                 <button style={{backgroundColor: 'black',color:'white'}} onClick={this.handleClick}>Submit</button>
             </div>
