@@ -1,4 +1,4 @@
-Student Capture
+Student Capture [![Build Status](https://travis-ci.org/student-capture/student-capture.svg?branch=deployment-test)](https://travis-ci.org/student-capture/student-capture)
 ===============
 
 # Getting started
