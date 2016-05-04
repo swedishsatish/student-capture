@@ -46,10 +46,10 @@ function submitAssignment() {
         success : function(responseIn) {
             console.log("SUCCESS: ", responseIn);
             ReactDOM.render(<ReturnMessage message="Success: assignment ID is" response={responseIn}/>, document.getElementById('courseContent'));
-        }, error : function(e) {
-            console.log("ERROR: ", e);
-            ReactDOM.render(<ReturnMessage message="ERROR:" reponse={reponseIn}/>, document.getElementById('courseContent'));
-        }, done : function(e) {
+        }, error : function(jqxhr) {
+            console.log("ERROR: ", jqxhr);
+            ReactDOM.render(<ReturnMessage message="ERROR" reponse=""/>, document.getElementById('courseContent'));
+       }, done : function(e) {
             console.log("DONE");
         }
     });
