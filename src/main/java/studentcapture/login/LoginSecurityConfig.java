@@ -55,7 +55,7 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
                 .logoutUrl("/logout")
                 .permitAll()
                 .and()
-            .csrf(); //Force CSRF token use (should only affect login)
+            .csrf().disable(); //CSRF Disabled for now
     }
 
 }

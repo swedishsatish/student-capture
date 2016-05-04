@@ -1,6 +1,3 @@
-var token = $("meta[name='_csrf_token']").attr("content");
-var header = $("meta[name='_csrf_header']").attr("content");
-var parameter = $("meta[name='_csrf_parameter']").attr("content");
 
 var LoginForm = React.createClass({
     
@@ -29,9 +26,6 @@ var LoginForm = React.createClass({
             // div containing all the inputs.
             <div id="loginForm">
                 <h1>Student Capture</h1>
-                <input type="hidden"
-        			name={parameter}
-        			value={token} />
                 <input type="text" 
                     placeholder="Username" ref="Uname" name="username"/>
             
