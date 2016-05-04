@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.Submission;
 import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 import studentcapture.datalayer.database.User;
+import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
 
@@ -172,6 +174,41 @@ public class DatalayerCommunicator {
             responseEntity = new ResponseEntity("Error getting file.", HttpStatus.NOT_FOUND);
         }
 
+        return responseEntity;
+    }
+
+    /**
+     * Sends the feedback video file.
+     * @param model    Model containing the information needed to get the correct video.
+     * @return         The video file vie http.
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/getFeedbackVideo",
+            method = RequestMethod.GET, produces = "video/webm")
+    public ResponseEntity<InputStreamResource> getAssignmentVideo(@Valid FeedbackModel model) {
+
+        ResponseEntity<InputStreamResource> responseEntity;
+        byte []file = null;
+        String path = fsi.generatePath(Integer.toString(model.getCourseCode()),
+                Integer.toString(model.getCourseID()),
+                Integer.toString(model.getAssignmentID()),
+                Integer.toString(model.getStudentID()));
+        String filename = FilesystemConstants.FEEDBACK_VIDEO_FILENAME;
+
+        File video = new File(path + filename);
+        if(video.exists()) {
+            try {
+                byte []out = FileCopyUtils.copyToByteArray(video);
+                HttpHeaders responseHeaders = new HttpHeaders();
+                responseHeaders.add("content-disposition", "inline; filename="+filename);
+
+                responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
+            } catch (IOException e) {
+                responseEntity = new ResponseEntity("Error getting file", HttpStatus.OK);
+            }
+        } else {
+            responseEntity = new ResponseEntity("File not found", HttpStatus.OK);
+        }
         return responseEntity;
     }
 
