@@ -25,6 +25,10 @@ public class FilesystemInterfaceTest {
         userID = "user";
     }
 
+    /**
+     * tearDown deletes the path created after each test.
+     * @throws Exception
+     */
     @After
     public void tearDown() throws Exception {
         deleteFile(new File(StudentCaptureApplication.ROOT+"/moose/"+courseCode));
