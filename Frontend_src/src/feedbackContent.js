@@ -13,14 +13,14 @@ window.Feedback = React.createClass ({
                 return (
                     ReactDOM.render(
                         <NewFeedback feedbackResponse={infoFromDb}/*
-                        sourceInfo={"https://130.239.42.203:8443/feedback/video?studentID=" + document.getElementById('student').value
+                        sourceInfo={"https://" + window.globalURL + "/feedback/video?studentID=" + document.getElementById('student').value
             + "&assignmentID=" + document.getElementById('ass').value + "&courseID=" + document.getElementById('course').value}*//>,
                         document.getElementById('courseContent')
                     )
                 )
             }
         };
-        xmlHttp.open("GET", "https://130.239.42.193:8443/feedback/get?studentID=" + document.getElementById('student').value
+        xmlHttp.open("GET", "https://" + window.globalURL + "/feedback/get?studentID=" + document.getElementById('student').value
             + "&assignmentID=" + document.getElementById('ass').value + "&courseID=" + document.getElementById('course').value, true);
         xmlHttp.send();
     },
