@@ -140,6 +140,7 @@ var Recorder = React.createClass({
                   if(replay){
                       preview.src = url;
                       preview.setAttribute("controls","controls");
+                      preview.removeAttribute("muted");
                   }
 
 
@@ -149,6 +150,7 @@ var Recorder = React.createClass({
                   else {
                       preview.src = url;
                       preview.setAttribute("controls","controls");
+                      preview.removeAttribute("muted");
                       postbutton.disabled = false;
                       postbutton.onclick = function () {
                           

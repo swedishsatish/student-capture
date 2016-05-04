@@ -3,6 +3,10 @@
  */
 
 var HardwareTest = React.createClass({
+
+    componentDidMount: function () {
+        //ReactDOM.render();
+    },
     formDataBuilder: function (blob, fileName) {
         var fd = new FormData();
         fd.append("videoName", fileName);
@@ -47,10 +51,10 @@ var HardwareTest = React.createClass({
             <div>
                 <h3>Equipment testing</h3>
                 <div className="row" id="">
-                    <div className="six columns"><h5>Recording you</h5>
+                    <div className="six columns" id="rec-test-container"><h5>Recording you</h5>
                         <Recorder playCallback={this.playVideo} calc={this.calcSpeed}
                                   postURL="/video/textTest" formDataBuilder={this.formDataBuilder}
-                                  recButtonID="record-test" stopButtonID="stop-test" fileName="testVid.webm" replay="true"
+                                  recButtonID="record-test" stopButtonID="stop-test" fileName="testVid.webm"
                         />
 
                     </div>
