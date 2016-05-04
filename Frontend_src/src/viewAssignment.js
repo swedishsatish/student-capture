@@ -5,7 +5,8 @@
 
 window.AssignmentContent = React.createClass({
     getInitialState: function() {
-        return {assignmentName : '',
+        return {loaded : false,
+                assignmentName : '',
                 startsAt : '',
                 endsAt : '',
                 assignmentUrl : '',
@@ -13,14 +14,15 @@ window.AssignmentContent = React.createClass({
     },
     jsonReady: function(data) {
         var json = JSON.parse(data);
-        this.setState({assignmentName: json["AssignmentName"], startsAt: json["startsAt"], endsAt: json["endsAt"], assignmentUrl: json["assignmentUrl"]});
+        this.setState({loaded: true, assignmentName: json["AssignmentName"], startsAt: json["startsAt"], endsAt: json["endsAt"], assignmentUrl: json["assignmentUrl"]});
     },
     render: function () {
 
         var assignment = this.props.assignment;
         var course = this.props.course;
+        if(!this.state.loaded)
+            getJson("test/assignmentdata.json", this.jsonReady);
 
-        getJson("test/assignmentdata.json", this.jsonReady);
 
         return (
             <div id="assignment-div">
@@ -38,6 +40,7 @@ window.AssignmentContent = React.createClass({
         )
     },
     componentDidMount: function() {
+
     }
 });
 
@@ -72,9 +75,10 @@ var CountDown = React.createClass({
         }
     },
     render: function() {
+        var content = this.state.startRecord ? console.log("Start Recording") : this.state.timeLeft;
         return (
             <div id="countdown-div">
-            { this.state.startRecord ? alert("Start recording") : this.state.timeLeft }
+            { content }
             </div>
         );
     },
