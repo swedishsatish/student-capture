@@ -14,5 +14,6 @@ before_install:
 - sudo apt-get autoremove
 - sudo apt-get -y autoclean
 - sudo apt-get -y clean
+- sudo chmod +x tests.sh
 
-script: "./test.sh"
+script: "./tests.sh"
