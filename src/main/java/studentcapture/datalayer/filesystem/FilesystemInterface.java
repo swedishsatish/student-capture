@@ -8,6 +8,7 @@ import java.nio.channels.ReadableByteChannel;
 
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.config.StudentCaptureApplication;
+import studentcapture.feedback.FeedbackModel;
 
 import java.io.*;
 
@@ -58,6 +59,17 @@ public class FilesystemInterface {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseCode
 				+ "/" + courseID + "/" + studentID  + "/" + assignmentID + "/";
 		
+		return path;
+	}
+
+	/**
+	 *
+	 * @param model
+	 * @return
+     */
+	public static String generatePath(FeedbackModel model) {
+		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + model.getCourseCode()
+				+ "/" + model.getCourseID() + "/" + model.getStudentID()  + "/" + model.getAssignmentID() + "/";
 		return path;
 	}
 

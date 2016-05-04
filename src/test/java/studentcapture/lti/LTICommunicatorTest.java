@@ -20,7 +20,7 @@ public class LTICommunicatorTest {
         fm.setGrade("0.1");
         fm.setFeedbackText("Dåligt");
         fm.setAssignmentID(100);
-        fm.setCourseID(2000);
+        fm.setCourseID("2000");
         fm.setStudentID(12);
     }
 
