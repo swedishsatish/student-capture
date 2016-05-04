@@ -4,12 +4,16 @@
 
 
 window.AssignmentContent = React.createClass({
+    getInitialState: function() {
+        return {assignmentName : '',
+                startsAt : '',
+                endsAt : '',
+                assignmentUrl : '',
+                }
+    },
     jsonReady: function(data) {
         var json = JSON.parse(data);
-        document.getElementById("assignment-title").innerHTML = json["AssignmentName"];
-        document.getElementById("assignment-startAt").innerHTML = "Starts at " + json["startsAt"];
-        document.getElementById("assignment-endAt").innerHTML = "Ends at " + json["endsAt"];
-        document.getElementById("videoPlayer").src = json["assignmentUrl"];
+        this.setState({assignmentName: json["AssignmentName"], startsAt: json["startsAt"], endsAt: json["endsAt"], assignmentUrl: json["assignmentUrl"]});
     },
     render: function () {
 
@@ -21,14 +25,14 @@ window.AssignmentContent = React.createClass({
         return (
             <div id="assignment-div">
                 <div id="assignment-desc">
-                    <h1 id="assignment-title"></h1>
-                    <h5 id="assignment-startAt"></h5>
-                    <h5 id="assignment-endAt"></h5>
+                    <h1 id="assignment-title">{this.state.assignmentName}</h1>
+                    <h5 id="assignment-startAt">{this.state.startsAt}</h5>
+                    <h5 id="assignment-endAt">{this.state.endsAt}</h5>
                 </div>
                 <div id="assignment-interaction">
                     <BlankBox />
                     <But />
-                    <Vid />
+                    <Vid url={this.state.assignmentUrl}/>
                 </div>
             </div>
         )
@@ -87,7 +91,7 @@ var Vid = React.createClass({
     render: function() {
         return (
             <div>
-                { this.state.showCountdown ? <CountDown /> : <video id='videoPlayer' width='70%'></video>}
+                { this.state.showCountdown ? <CountDown /> : <video id='videoPlayer' src={this.props.url} width='70%'></video>}
             </div>
         );
     },
@@ -101,7 +105,7 @@ var Vid = React.createClass({
 });
 
 /*
- * 
+ *
  */
 function getJson(URL, callback) {
     var xmlHttp = new XMLHttpRequest();
@@ -112,4 +116,3 @@ function getJson(URL, callback) {
     xmlHttp.open("GET", URL, true);
     xmlHttp.send();
 }
-
