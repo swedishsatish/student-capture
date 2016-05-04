@@ -189,8 +189,8 @@ public class DatalayerCommunicator {
 
         ResponseEntity<InputStreamResource> responseEntity;
         byte []file = null;
-        String path = fsi.generatePath(Integer.toString(model.getCourseCode()),
-                Integer.toString(model.getCourseID()),
+        String path = fsi.generatePath((model.getCourseCode()),
+                (model.getCourseID()),
                 Integer.toString(model.getAssignmentID()),
                 Integer.toString(model.getStudentID()));
         String filename = FilesystemConstants.FEEDBACK_VIDEO_FILENAME;
