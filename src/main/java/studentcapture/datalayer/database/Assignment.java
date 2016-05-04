@@ -4,25 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Created by E&S on 4/26/16.
@@ -169,11 +160,16 @@ public class Assignment {
 
         return returnValues;
     }
-    
+
 	public String getAssignmentID(String courseID,String assignmentTitle){
     	String sql = "SELECT assignmentID from Assignment WHERE courseID = ? AND Title = ?";
     	return jdbcTemplate.queryForObject(sql, new Object[]{courseID,assignmentTitle},String.class);
 	}
+
+    public String getCourseIDForAssignment(String assignmentID) {
+        String sql = "SELECT courseID from Assignment WHERE assignmentID = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{assignmentID},String.class);
+    }
 
     public boolean updateAssignment(String assignmentID, String assignmentTitle,
                                     String startDate, String endDate, int minTime, int maxTime,
@@ -187,4 +183,14 @@ public class Assignment {
         return true;
     }
 
+    public class AssignmentWrapper {
+    	public int assignmentId;
+    	public String courseId;
+    	public String title;
+    	public String StartDate;
+    	public String EndDate;
+    	public int minTime;
+    	public int maxTime;
+    	public boolean published;
+    }
 }

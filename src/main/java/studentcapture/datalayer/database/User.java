@@ -5,6 +5,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.datalayer.database.Assignment.AssignmentWrapper;
+import studentcapture.datalayer.database.Course.CourseWrapper;
+import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +15,7 @@ import java.sql.Types;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 @Repository
 public class User {
 
@@ -65,7 +69,7 @@ public class User {
      * @return          true if the remove succeed, else false.
      */
 
-    
+
     public String getUserID(String username){
     	String sql = "SELECT userID from users WHERE username = ?";
     	return jdbcTemplate.queryForObject(sql, new Object[]{username},String.class);
@@ -129,6 +133,9 @@ public class User {
         return exist;
     }
 
+    public Optional<CourseAssignmentHierarchy> getCourseAssignmentHierarchy() {
+    	return null;
+    }
 
     /**
      *  Used to collect user information, and return a hashmap.
@@ -145,6 +152,21 @@ public class User {
             info.put("pswd",rs.getString("pswd"));
             return info;
         }
+    }
+
+    public class CourseAssignmentHierarchy {
+    	public UserWrapper user;
+    	public List<CoursePackage> courses;
+    }
+
+    public class CoursePackage {
+    	public CourseWrapper course;
+    	public List<AssignmentPackage> assignments;
+    }
+
+    public class AssignmentPackage {
+    	public AssignmentWrapper assignment = null;
+    	public SubmissionWrapper submission = null;
     }
 }
 
