@@ -16,8 +16,6 @@ public class HashCodeGenerator {
         hashCode = 31 * hashCode + (int)userID.charAt(2);
         hashCode = 31 * hashCode + (int)userID.charAt(1);
 
-        String temp = Integer.toString(hashCode);
-
-        return temp;
+        return Integer.toString(hashCode);
     }
 }

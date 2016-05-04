@@ -57,6 +57,8 @@ public class RequestManagerTest extends StudentCaptureApplicationTests {
 
     }
 
+
+
     @Test
     public void shouldGiveBackOkOnReqTestVidtest() throws Exception {
         byte []fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
