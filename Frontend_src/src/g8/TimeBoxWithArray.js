@@ -24,7 +24,7 @@ window.TimeBoxWithArray = React.createClass({
     },
     getInitTime: function() {
         $.ajax({
-            url: "http://172.23.135.27:8080/assignment/returnArray", // URL to send to
+            url: window.globalURL + "/assignment/returnArray", // URL to send to
             type: "GET", // Type of http
             dataType: "json", // Type of data
             async: false,

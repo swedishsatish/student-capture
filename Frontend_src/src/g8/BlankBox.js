@@ -12,7 +12,7 @@ window.BlankBox = React.createClass({
         if (confirm("You will leave a blank for this question")) { // if user really wants to leave blank
         // send an http ajax post
             $.ajax({
-                url: "http://172.23.135.27:8080/emptyAnswer", // URL to send to
+                url: window.globalURL + "/emptyAnswer", // URL to send to
                 type: "POST", // Type of http
                 dataType: "json", // Type of data
                 async: false,
