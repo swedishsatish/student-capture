@@ -17,7 +17,22 @@ public class ViewController {
      * @return Name of starting page html file.
      */
     @RequestMapping(value = "/")
-    public String index() {
+    public String defaultIndexView() {
         return "index";
+    }
+    
+    @RequestMapping(value = "/index")
+    public String indexView() {
+        return "index";
+    }
+    
+    @RequestMapping(value = "/login")
+    public String loginView() {
+        return "login";
+    }
+    
+    @RequestMapping(value = "/loggedin")
+    public String loggedinView() {
+        return "loggedin";
     }
 }
