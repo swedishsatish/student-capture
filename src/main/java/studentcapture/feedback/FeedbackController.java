@@ -67,11 +67,11 @@ public class FeedbackController {
         HttpEntity<String> entity = new HttpEntity(headers);
         ResponseEntity<byte[]> response = null;
 
-        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI + "/videoDownload/")
-                .path(Integer.toString(model.getCourseCode()) + "/" +
-                      Integer.toString(model.getCourseID()) + "/" +
-                      Integer.toString(model.getAssignmentID()) + "/" +
-                      Integer.toString(model.getStudentID()))
+        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI + "/DB/getFeedbackVideo")
+                .queryParam("studentID", model.getStudentID())
+                .queryParam("assignmentID", model.getAssignmentID())
+                .queryParam("courseID", model.getCourseID())
+                .queryParam("courseCode", model.getCourseCode())
                 .build()
                 .toUri();
         try {
