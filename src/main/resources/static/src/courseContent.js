@@ -22,6 +22,13 @@ function handleCancel() {
 }
 
 function submitAssignment() {
+    var ReturnMessage = React.createClass({
+        render : function() {
+            return (
+                <div>{this.props.message} {this.props.response}</div>
+            )
+        }
+    });
     var reqBody = {}
     reqBody["title"] = $("#title").val();
     reqBody["info"] = $("#info").val();
@@ -36,11 +43,12 @@ function submitAssignment() {
         url : "assignment",
         data : JSON.stringify(reqBody),
         timeout : 100000,
-        success : function(response) {
-            console.log("SUCCESS: ", response);
-            ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
+        success : function(responseIn) {
+            console.log("SUCCESS: ", responseIn);
+            ReactDOM.render(<ReturnMessage message="Success: assignment ID is" response={responseIn}/>, document.getElementById('courseContent'));
         }, error : function(e) {
             console.log("ERROR: ", e);
+            ReactDOM.render(<ReturnMessage message="ERROR:" reponse={reponseIn}/>, document.getElementById('courseContent'));
         }, done : function(e) {
             console.log("DONE");
         }

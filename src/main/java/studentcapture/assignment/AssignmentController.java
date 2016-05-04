@@ -26,20 +26,25 @@ import java.net.URL;
 public class AssignmentController {
 
     @RequestMapping(value = "/assignment", method = RequestMethod.POST)
-    public void postAssignment(@RequestBody AssignmentModel assignment) throws IOException {
+    public String postAssignment(@RequestBody AssignmentModel assignment) throws IOException {
         RestTemplate rt = new RestTemplate();
         String res = "";
         try {
             URL url = new URL("https://localhost:8443/DB/createAssignment");
             res = rt.postForObject(url.toString(), assignment, String.class);
 
-            if (res.equals("")) {
+            try {
+                Integer.parseInt(res);
+            } catch (NumberFormatException e) {
                 throw new IOException(res);
             }
+
+            return res;
 
         } catch (MalformedURLException e) {
             System.err.println("Malformed URL in AssignmentController.assignment");
             System.err.println(e.getMessage());
+            return e.getMessage();
         }
     }
 }
