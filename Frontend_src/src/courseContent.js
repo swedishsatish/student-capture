@@ -1,47 +1,13 @@
-<<<<<<< HEAD
-var UserGist = React.createClass({
-  getInitialState: function() {
-    return {
-      username: '',
-      lastGistUrl: ''
-    };
-  },
 
-  componentDidMount: function() {
-    this.serverRequest = $.get(this.props.source, function (result) {
-      var lastGist = result[0];
-      this.setState({
-        username: lastGist.owner.login,
-        lastGistUrl: lastGist.html_url
-      });
-    }.bind(this));
-
-  },
-
-  componentWillUnmount: function() {
-    this.serverRequest.abort();
-  },
-  render: function() {
-    return (
-      <div id="videoDivFrame">
-            <iframe name="videoplay" src="teacherVideo.html"></iframe>
-        </div>
-    );
-  }
-=======
 var StartPage = React.createClass({
-    render : function() {
-      return <div>
-                <h3>Welcome to Student Capture!</h3>
-                <p>A video examination platform</p>
+    render: function () {
+        return <div>
+            <h3>Welcome to Student Capture!</h3>
+            <p>A video examination platform</p>
         </div>
     }
->>>>>>> refs/remotes/origin/Front-end
+
 });
-
-function handleCancel() {
-
-}
 
 function submitAssignment() {
     var reqBody = {}
