@@ -133,10 +133,14 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void shouldReturnVideo() throws Exception {
-        URI targetUrl = UriComponentsBuilder.fromUriString("https://localhost:8443/videoDownload/")
-                .path("1/1/1/1/")
+        URI targetUrl = UriComponentsBuilder.fromUriString("https://localhost:8443/DB/getFeedbackVideo/")
+                .queryParam("studentID", "1")
+                .queryParam("assignmentID", "1")
+                .queryParam("courseID", "1")
+                .queryParam("courseID", "1")
                 .build()
                 .toUri();
+
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.ALL));
         HttpEntity<String> entity = new HttpEntity(headers);
@@ -151,8 +155,11 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
     }
     @Test
     public void shouldReturnEmptyOnVideoRequestError() throws Exception {
-        URI targetUrl = UriComponentsBuilder.fromUriString("https://localhost:8443/videoDownload/")
-                .path("1/1/1/1/")
+        URI targetUrl = UriComponentsBuilder.fromUriString("https://localhost:8443/DB/getFeedbackVideo/")
+                .queryParam("studentID", "1")
+                .queryParam("assignmentID", "1")
+                .queryParam("courseID", "1")
+                .queryParam("courseID", "1")
                 .build()
                 .toUri();
         HttpHeaders headers = new HttpHeaders();
