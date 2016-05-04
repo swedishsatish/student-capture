@@ -1,0 +1,89 @@
+/* by Filip Golles 2016-05-04 */
+
+html, body {
+	margin:0;
+	width:100%;
+	max-height:100vh;
+}
+
+body {
+	background: rgb(79, 159, 174);
+	background: -moz-linear-gradient(81deg, rgb(79, 159, 174) 49.9%, rgb(7, 97, 114) 50%);
+	background: -webkit-linear-gradient(81deg, rgb(79, 159, 174) 49.9%, rgb(7, 97, 114) 50%);
+	background: -o-linear-gradient(81deg, rgb(79, 159, 174) 49.9%, rgb(7, 97, 114) 50%);
+	background: -ms-linear-gradient(81deg, rgb(79, 159, 174) 49.9%, rgb(7, 97, 114) 50%);
+	background: linear-gradient(171deg, rgb(79, 159, 174) 49.9%, rgb(7, 97, 114) 50%);
+	background-repeat: no-repeat;
+}
+
+#loginLogo {
+	margin-left:3%;
+	margin-right:3%;
+	width:94%;
+}
+
+#loginPage {
+	height:100%;
+}
+
+#registerButton {
+	position:fixed;
+	top:10px;
+	right:10px;
+}
+
+#loginButton {
+	margin-left:4%;
+	margin-right:4%;
+	width:92%;
+}
+
+.loginField {
+	margin-left:4%;
+	margin-right:4%;
+	width:92%;
+}
+
+.nameField {
+	width:44%;
+}
+
+#firstName {
+	margin-right:2%;
+}
+
+#lastName {
+	margin-left:2%; 
+}
+
+#firstPass {
+	margin-right:2%;
+}
+
+#secondPass {
+	margin-left:2%; 
+}
+
+.forms {
+	border-radius: 20px;
+	position:relative;
+	top: calc(50% - 130px);
+	background-color: #107D91;
+}
+
+#regPage {
+	top: calc(50% - 167px)
+}
+
+#cnclBtn {
+	margin-right:2%;
+}
+
+#regBtn {
+	margin-left:2%; 
+}
+
+#regText {
+	text-transform: uppercase;
+	text-align: center;
+}

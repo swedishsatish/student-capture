@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 
   <head>
     <!-- Meta data -->
@@ -26,9 +26,8 @@
     <link rel="stylesheet" href="css/custom.css">
       <link rel="stylesheet" href="css/component.css">
       <link rel="stylesheet" href="css/hwTest.css">
+      <link rel="stylesheet" href="css/dropdown.css">
       <link rel="stylesheet" href="css/viewAssignment.css">
-
-
     <!-- Scripts -->
     <script src="build/react.js"></script>
     <script src="build/react-dom.js"></script>
@@ -37,10 +36,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
     <script src="src/communicationsLibrary.js"></script>
     <script src="src/g2/RecordRTC.js"></script>
-    <script src="src/viewAssignment.js" type="text/babel"></script>
       <script src="src/g2/sorttable.js"></script>
-
-
 
 
     <!-- Favicon -->
@@ -64,7 +60,8 @@
         </div>
 
         <div class="three columns" id="desktopNavigation"></div>
-        <script type="text/babel" src="src/desktopNavigation.js"></script>
+        <!-- <script type="text/babel" src="src/desktopNavigation.js"></script> -->
+        <script type="text/babel" src="src/hardcodeMenu.js"></script>
 
         <div class="nine columns" id="courseContent"></div>
         <script type="text/babel" src="src/courseContent.js"></script>
@@ -73,12 +70,23 @@
     <!--div class="footer" id="footer">
         <script type="text/babel" src="src/footer.js"></script>
     </div-->
+      <script type="text/babel" src="src/g6/submissionGUI.js"></script>
 
-
-
+      <script type="text/babel" src="src/feedbackContent.js"></script>
       <script type="text/babel" src="src/g2/videoRecord.js"></script>
       <script type="text/babel" src="src/g2/HardwareTest.js"></script>
       <script type="text/babel" src="src/g2/StudentList.js"></script>
+      <script type="text/babel" src="src/g1/newAssignment.js"></script>
+  <script type="text/babel" src="src/g8/BlankBox.js"></script>
+  <script src="src/viewAssignment.js" type="text/babel"></script>
+  <script src="src/feedbackContent.js" type="text/babel"></script>
+
+  <script type="text/babel" src="src/g5/TeacherRecordVideo.js"></script>
+  <script type="text/babel" src="src/g5/videoRecordTeacher.js"></script>
+
+  <script type="text/babel" src="src/g5/StudentRecordVideo.js"></script>
+  <script type="text/babel" src="src/g5/videoRecordStudent.js"></script>
+
 
 
   </body>
