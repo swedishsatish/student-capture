@@ -13,9 +13,9 @@ window.Feedback = React.createClass ({
                 var infoFromDb = JSON.parse(xmlHttp.responseText);
                 return (
                     ReactDOM.render(
-                        <NewFeedback feedbackResponse={infoFromDb}/*
+                        <NewFeedback feedbackResponse={infoFromDb}
                         sourceInfo={"https://" + window.globalURL + "/feedback/video?studentID=" + document.getElementById('student').value
-            + "&assignmentID=" + document.getElementById('ass').value + "&courseID=" + document.getElementById('course').value}*//>,
+            + "&assignmentID=" + document.getElementById('ass').value + "&courseID=" + document.getElementById('course').value}/>,
                         document.getElementById('courseContent')
                     )
                 )
@@ -54,12 +54,11 @@ var NewFeedback = React.createClass ({
                 Teacher: {feedbackResponse.teacher} <br />
                 Grade: {feedbackResponse.grade} <br />
                 Time: {feedbackResponse.time} <br />
+                <video width="720" height="460" src={this.props.sourceInfo} preload="auto" controls></video>
             </div>
         )
     }
 });
-
-//<video width="720" height="460" src={this.props.sourceInfo} preload="auto" controls></video>
 
 /*ReactDOM.render(
     <Feedback />,
