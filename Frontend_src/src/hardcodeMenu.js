@@ -40,9 +40,8 @@ var CourseList = React.createClass({
 		var listComponents = [];
         listComponents.push(<div className="menuItem" key={1} onClick={this.printVideo} ><h6 className="navigationText">Video Playback</h6></div>);
         listComponents.push(<div className="menuItem" key={2} onClick={this.printFeedback}><h6 className="navigationText">Feedback</h6></div>);
-        listComponents.push(<div className="menuItem" key={3}><h6 className="navigationText">Item 3</h6></div>);
-        listComponents.push(<div className="menuItem" key={4} onClick={this.studentSubmitions}><h6 className="navigationText">Teacher view assignment</h6></div>);
-        listComponents.push(<div className="menuItem" key={5} onClick={this.newAssignment}><h6 className="navigationText">Teacher new assignment</h6></div>);
+        listComponents.push(<div className="menuItem" key={3} onClick={this.studentSubmitions}><h6 className="navigationText">Teacher view assignment</h6></div>);
+        listComponents.push(<div className="menuItem" key={4} onClick={this.newAssignment}><h6 className="navigationText">Teacher new assignment</h6></div>);
 		return <div>{listComponents}</div>;
 	}
 });
