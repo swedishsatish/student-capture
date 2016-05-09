@@ -6,8 +6,6 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import studentcapture.datalayer.database.Submission.SubmissionWrapper;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;

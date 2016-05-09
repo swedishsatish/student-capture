@@ -1,16 +1,12 @@
 package studentcapture.datalayer.filesystem;
 
-import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-
 import org.springframework.web.multipart.MultipartFile;
-import studentcapture.config.StudentCaptureApplication;
 import studentcapture.feedback.FeedbackModel;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 /**

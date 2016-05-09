@@ -6,10 +6,6 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import studentcapture.datalayer.database.Course.CourseWrapper;
-
-import java.sql.Timestamp;
-import java.util.List;
 import java.util.Map;
 
 /**

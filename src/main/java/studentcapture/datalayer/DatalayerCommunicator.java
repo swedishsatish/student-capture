@@ -1,8 +1,5 @@
 package studentcapture.datalayer;
 
-import java.io.*;
-import java.util.Hashtable;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -10,11 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Course;
@@ -27,7 +21,6 @@ import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
 
 import javax.validation.Valid;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -379,6 +372,7 @@ public class DatalayerCommunicator {
     			return "DB failure for student submission";
     		}
     	}
+
         // ADD to database here
     	if(submission.addSubmission(assignmentID, userID)){
 	        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
@@ -386,6 +380,7 @@ public class DatalayerCommunicator {
 	        } else
 	            return "Failed to add video to filesystem.";
     	}
+
     	return "failed to add submission to database";
     }
 

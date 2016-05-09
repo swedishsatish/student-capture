@@ -1,18 +1,21 @@
 package studentcapture.feedback;
 
-import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import studentcapture.assignment.AssignmentModel;
+import studentcapture.lti.LTICommunicator;
+import studentcapture.lti.LTIInvalidGradeException;
+import studentcapture.lti.LTINullPointerException;
+import studentcapture.lti.LTISignatureException;
+
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
-import studentcapture.assignment.AssignmentModel;
-import studentcapture.lti.*;
 
 /**
  * Will deliver or update information about feedback on a Submission for an

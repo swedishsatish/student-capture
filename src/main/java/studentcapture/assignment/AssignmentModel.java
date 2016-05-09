@@ -1,7 +1,7 @@
 package studentcapture.assignment;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.InputMismatchException;
 
 /**
  * Created by David Björkstrand on 4/25/16.
