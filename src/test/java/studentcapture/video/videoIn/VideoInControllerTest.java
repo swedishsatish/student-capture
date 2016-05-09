@@ -48,19 +48,13 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     private MockMvc mockMvc;
     private String id = "-1129137218";
 
-    byte[] fileContent;
-
-    @Before
-    public void setUp() throws Exception {
-        fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
-    }
-
+    private byte[] fileContent;
 
     @Test
     public void testUploadCorrectHeaderAndEmptyBody() throws Exception {
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
-        mockMvc.perform(post("/uploadVideo/"+id)
+        mockMvc.perform(post("/uploadVideo/" + id)
                 .contentType("multipart/form-data"))
                 .andExpect(status().isBadRequest());
     }
@@ -69,7 +63,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testUploadBadID() throws Exception {
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
-        mockMvc.perform(fileUpload("/uploadVideo/"+id+"asdsad")
+        mockMvc.perform(fileUpload("/uploadVideo/" + id + "asdsad")
                 .file(new MockMultipartFile("video", fileContent))
                 .param("userID", "user")
                 .param("assignmentID", "1337")
@@ -228,7 +222,10 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     }
 
     @Before
-    public void setup() {
+    public void setUp() throws Exception {
+        fileContent = FileCopyUtils.copyToByteArray(
+                new File(StudentCaptureApplication.ROOT + "/bugsbunny.webm"));
+
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .build();
         Mockito.reset(templateMock);
