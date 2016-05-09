@@ -45,7 +45,9 @@ public class User {
     private Assignment assignment;
     @Autowired
     private Submission submission;
-    
+
+
+
     /**
      * Add a new user to the User-table in the database.
      *
@@ -57,6 +59,12 @@ public class User {
      * @return          true if success, else false.
      */
     public boolean addUser(String userName, String fName, String lName, String pNr, String pwd) {
+        // TODO:
+        //Check that user doesn't exist
+
+        // Generate salt
+        // Create idSalt by combining salt with user name
+        // register user info with idSalt.
 
         Object[] args = new Object[] {userName, fName,lName,pNr,pwd};
         int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
@@ -143,6 +151,9 @@ public class User {
                                                      Boolean.class);
         return exist;
     }
+
+
+
     
     public Optional<CourseAssignmentHierarchy> getCourseAssignmentHierarchy(
     		String userID) {
