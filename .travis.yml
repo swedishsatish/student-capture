@@ -6,6 +6,7 @@ env:
 branches:
   only:
     - Production
+    - Development
 
 sudo: required
 

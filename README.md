@@ -1,5 +1,9 @@
-Student Capture [![Build Status](https://travis-ci.org/student-capture/student-capture.svg?branch=Production)](https://travis-ci.org/student-capture/student-capture)
+Student Capture [![Production Build Status](https://travis-ci.org/student-capture/student-capture.svg?branch=Production)](https://travis-ci.org/student-capture/student-capture)
 ===============
+
+Production Status: [![Production Build Status](https://travis-ci.org/student-capture/student-capture.svg?branch=Production)](https://travis-ci.org/student-capture/student-capture)
+
+Development Branch Status: [![Build Status Development Branch](https://travis-ci.org/student-capture/student-capture.svg?branch=Development)](https://travis-ci.org/student-capture/student-capture)
 
 ![Splash page](docs/img/splash-screen.png)
 
