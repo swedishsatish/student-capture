@@ -19,9 +19,13 @@ public class AssignmentModel {
     private LocalDateTime endDate;
     private boolean published;
 
-    public AssignmentModel(String title, String info, int minTimeSeconds, int maxTimeSeconds, String startDate,
-                           String endDate, boolean published) throws InputMismatchException
-    {
+    public AssignmentModel(String title,
+                           String info,
+                           int minTimeSeconds,
+                           int maxTimeSeconds,
+                           String startDate,
+                           String endDate,
+                           boolean published) throws InputMismatchException {
         this.courseID = "1000"; //should be changed.
         this.title = title;
         this.info = info;
