@@ -117,7 +117,7 @@ public class User {
     /**
      * Returns a list with info of a user.
      *
-     * @param casID     unique identifier for a person
+     * @param userID     unique identifier for a person
      * @return          The list with info of a person.
      */
     public HashMap<String,String> getUserByID(String userID) {
@@ -145,9 +145,6 @@ public class User {
         return exist;
     }
 
-
-
-    
     public Optional<CourseAssignmentHierarchy> getCourseAssignmentHierarchy(
     		String userID) {
     	CourseAssignmentHierarchy hierarchy = new CourseAssignmentHierarchy();
@@ -171,7 +168,7 @@ public class User {
     		+ "UserId=?";
     private void addUserToHierarchy(CourseAssignmentHierarchy hierarchy, int userId) {
     	Map<String, Object> map = jdbcTemplate.queryForMap(
-    			getUserStatement, new Object[] {userId});
+    			getUserStatement, userId);
     	hierarchy.userId = (int) map.get("UserId");
     	hierarchy.firstName = (String) map.get("FirstName");
     	hierarchy.lastName = (String) map.get("LastName");
