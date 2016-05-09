@@ -96,23 +96,19 @@ public class Course {
 		} catch (DataAccessException e1) {
 			return new CourseWrapper();
 		}
+
 		return result;
 	}
 
-    /**
-
-     * Attempts to remove a course from the database.
-
-     *
-
-     * @param courseID	courses database identification
-
-     * @return			true if successful, else false
-
-     */
-
     private static final String removeCourseStatement = "DELETE FROM "
     		+ "Course WHERE CourseID=?";
+    
+    /**
+     * Attempts to remove a course from the database.
+     *
+     * @param courseID	courses database identification
+     * @return			true if successful, else false
+     */
     public boolean removeCourse(String courseID) {
     	boolean result;
         try {
