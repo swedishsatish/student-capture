@@ -201,16 +201,19 @@ public class User {
 
     			try {
         			currentAssignment = currentCourse.assignments.get(assignmentId);
-        			if(currentAssignment==null)
-        				throw new NullPointerException();
+
+					if (currentAssignment == null) {
+						throw new NullPointerException();
+					}
         		} catch (NullPointerException e) {
         			currentAssignment = new AssignmentPackage();
         			currentAssignment.assignment = assignment
         					.getAssignmentWithWrapper(assignmentId).get();
         			currentCourse.assignments.put(assignmentId, currentAssignment);
         		}
-    			
-    			SubmissionWrapper currentSubmission = null;
+
+				// TODO: unused variable
+    			SubmissionWrapper currentSubmission;
     			Integer submissionId = (Integer) row.get("SubmissionId");
 
 				if (submissionId != null) {
@@ -236,9 +239,9 @@ public class User {
     		+ "par.userId=? AND par.function='Student'";
 	private void addStudentHierarchy(CourseAssignmentHierarchy hierarchy, int userId) {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-    			getStudentHierarchyStatement, new Object[] {userId});
+    			getStudentHierarchyStatement, userId);
     	for (Map<String, Object> row : rows) {
-    		CoursePackage currentCourse = null;
+    		CoursePackage currentCourse;
     		String courseId = (String) row.get("CourseId");
     		try {
     			currentCourse = hierarchy.studentCourses.get(courseId);
@@ -251,8 +254,9 @@ public class User {
     		}
     		
     		try {
-    			AssignmentPackage currentAssignment = null;
+    			AssignmentPackage currentAssignment;
         		int assignmentId = (int) row.get("AssignmentId");
+
     			try {
         			currentAssignment = currentCourse.assignments.get(assignmentId);
         			if(currentAssignment==null)
@@ -266,13 +270,11 @@ public class User {
     			
     			SubmissionWrapper currentSubmission = null;
     			Integer submissionId = (Integer) row.get("SubmissionId");
-    			if(submissionId!=null) {
+    			if (submissionId != null) {
     				try {
     					currentSubmission = currentAssignment
     							.submissions.get(submissionId);
-    					if(submissionId==null)
-    						throw new NullPointerException();
-    				} catch (Exception e) {
+					} catch (Exception e) {
     					currentSubmission = submission.getSubmissionWithWrapper(
     							assignmentId,userId).get();
     					currentAssignment.submissions.put(submissionId, currentSubmission);
@@ -280,6 +282,7 @@ public class User {
     			}
     		} catch (Exception e) {
     			//TODO
+				throw new RuntimeException("Unimplemented catch-block triggered");
     		}
     		
     	}
