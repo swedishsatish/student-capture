@@ -204,13 +204,11 @@ public class Assignment {
     public boolean updateAssignment(String assignmentID, String assignmentTitle,
                                     String startDate, String endDate, int minTime, int maxTime,
                                     boolean published){
-        //TODO
-        return true;
+        throw new UnsupportedOperationException();
     }
 
     public boolean removeAssignment(String assignmentID){
-        //TODO
-        return true;
+        throw new UnsupportedOperationException();
     }
 
     public static class AssignmentWrapper {
