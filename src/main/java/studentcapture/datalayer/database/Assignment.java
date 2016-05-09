@@ -185,8 +185,8 @@ public class Assignment {
 	    	result.courseId = (String) map.get("CourseId");
 	    	
 	    	result.title = (String) map.get("Title");
-	    	result.StartDate = ((Timestamp) map.get("StartDate")).toString();
-	    	result.EndDate = ((Timestamp) map.get("EndDate")).toString();
+	    	result.StartDate = map.get("StartDate").toString();
+	    	result.EndDate = map.get("EndDate").toString();
 	    	result.minTime = (int) map.get("MinTime");
 	    	result.maxTime = (int) map.get("MaxTime");
 	    	result.published = (boolean) map.get("Published");
