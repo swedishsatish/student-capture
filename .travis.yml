@@ -1,0 +1,15 @@
+env:
+  global:
+    - JAVA_HOME=/usr/lib/jvm/java-8-oracle
+
+# whitelist
+branches:
+  only:
+    - Production
+
+sudo: required
+
+before_install:
+- sudo chmod +x tests.sh
+
+script: "./tests.sh"
