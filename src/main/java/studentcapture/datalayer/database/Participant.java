@@ -75,19 +75,15 @@ public class Participant {
 
 
 
-    /**
-
-     * Returns a list of all participants of a course including their function
-
-     *
-
-     * @param CourseID      unique identifier, registration code
-
-     * @return              List of tuples: CAS_ID - function
-
-     */
     private static final String getAllParticipantFromCourseStatement = "SELECT"
     		+ " * FROM Participant WHERE (CourseId=?)";
+
+    /**
+     * Returns a list of all participants of a course including their function
+     *
+     * @param courseId      unique identifier, registration code
+     * @return              List of tuples: CAS_ID - function
+     */
     public Optional<List<ParticipantWrapper>> getAllParticipantsFromCourse(String courseId){
     	List<ParticipantWrapper> participants = new ArrayList<>();
 		try {
