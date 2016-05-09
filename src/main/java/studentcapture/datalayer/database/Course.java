@@ -59,38 +59,24 @@ public class Course {
 
     public String getCourseID(String term,String courseCode){
     	String sql = "SELECT courseID from course WHERE CourseCode = ? AND Term = ?";
-    	return jdbcTemplate.queryForObject(sql, new Object[]{courseCode,term},String.class);
+    	return jdbcTemplate.queryForObject(sql, new Object[]{courseCode,term}, String.class);
     }
 
 
     /**
-
      * Attempts to retrieve all data regarding a course from the database.
-
      *
-
      * @param courseID	target courses database identification
-
      * @return			list of course data in order:<ul>
-
      * 					<li>the courses database identification</li>
-
      * 					<li>the courses 6 character identification</li>
-
      * 					<li>the year the course takes place</li>
-
      * 					<li>the term the course takes place</li>
-
      * 					<li>the courses name</li></ul>
-
      * 					If unsuccessful, an empty list is returned.
-
      */
-
     public CourseWrapper getCourse(String courseID) {
-
-        return null; //TODO
-
+        throw new UnsupportedOperationException();
     }
 
     private static final String getCourseStatement = "SELECT * FROM Course"
