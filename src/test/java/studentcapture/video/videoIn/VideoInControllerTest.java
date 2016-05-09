@@ -48,6 +48,14 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     private MockMvc mockMvc;
     private String id = "-1129137218";
 
+    byte[] fileContent;
+
+    @Before
+    public void setUp() throws Exception {
+        fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
+    }
+
+
     @Test
     public void testUploadCorrectHeaderAndEmptyBody() throws Exception {
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
@@ -59,8 +67,6 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testUploadBadID() throws Exception {
-        byte[] fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
-
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id+"asdsad")
@@ -76,8 +82,6 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testWithWrongHeader() throws Exception {
-        byte[] fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
-
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
@@ -102,8 +106,6 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testCorrectVideoUpload() throws Exception {
-        byte[] fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
-
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
@@ -119,8 +121,6 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testCorrectVideoUploadButFileTransferFails() throws Exception {
-        byte[] fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
-
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("Failed");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
@@ -136,8 +136,6 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testCorrectVideoUploadButFileTransferFails2() throws Exception {
-        byte[] fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
-
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("Server error");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
@@ -153,8 +151,6 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testCorrectVideoUploadButFileTransferResponseReturnsNull() throws Exception {
-        byte[] fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
-
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(null);
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
@@ -170,8 +166,6 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testUploadWithWrongAmountOfParams() throws Exception {
-        byte[] fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT + "/bugsbunny.webm"));
-
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
@@ -187,8 +181,6 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testUploadWithWrongParamNames() throws Exception {
-        byte[] fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
-
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
@@ -205,8 +197,6 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testUploadWithWrongParamValues() throws Exception {
-        byte[] fileContent = FileCopyUtils.copyToByteArray(new File(StudentCaptureApplication.ROOT+"/bugsbunny.webm"));
-
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
         mockMvc.perform(fileUpload("/uploadVideo/"+id)
