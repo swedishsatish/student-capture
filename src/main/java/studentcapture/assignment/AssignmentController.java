@@ -28,12 +28,13 @@ public class AssignmentController {
     @RequestMapping(value = "/assignment", method = RequestMethod.POST)
     public String postAssignment(@RequestBody AssignmentModel assignment) throws IOException {
         RestTemplate rt = new RestTemplate();
-        String res = "";
+        String res;
         try {
             URL url = new URL("https://localhost:8443/DB/createAssignment");
             res = rt.postForObject(url.toString(), assignment, String.class);
 
             try {
+                // TODO: Result of Integer.parseInt() is ignored. What should actually be done here?
                 Integer.parseInt(res);
             } catch (NumberFormatException e) {
                 throw new IOException(res);
