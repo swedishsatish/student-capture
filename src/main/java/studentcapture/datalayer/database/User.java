@@ -108,12 +108,9 @@ public class User {
      * @param casID     unique identifier for a person
      * @return          true if the update succeed, else false.
      */
-
     public boolean updateUser(String fName, String lName, String pNr,
                               String pWord, String casID) {
-        //TODO
-        return false;
-
+		throw new UnsupportedOperationException();
     }
 
 
