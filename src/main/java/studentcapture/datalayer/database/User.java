@@ -181,9 +181,9 @@ public class User {
     		+ "sub.assignmentId WHERE par.userId=? AND par.function='Teacher'";
 	private void addTeacherHierarchy(CourseAssignmentHierarchy hierarchy, int userId) {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-    			getTeacherHierarchyStatement, new Object[] {userId});
+    			getTeacherHierarchyStatement, userId);
     	for (Map<String, Object> row : rows) {
-    		CoursePackage currentCourse = null;
+    		CoursePackage currentCourse;
     		String courseId = (String) row.get("CourseId");
     		try {
     			currentCourse = hierarchy.teacherCourses.get(courseId);
@@ -196,8 +196,9 @@ public class User {
     		}
     		
     		try {
-    			AssignmentPackage currentAssignment = null;
+    			AssignmentPackage currentAssignment;
         		int assignmentId = (int) row.get("AssignmentId");
+
     			try {
         			currentAssignment = currentCourse.assignments.get(assignmentId);
         			if(currentAssignment==null)
@@ -211,11 +212,12 @@ public class User {
     			
     			SubmissionWrapper currentSubmission = null;
     			Integer submissionId = (Integer) row.get("SubmissionId");
-    			if(submissionId!=null) {
+
+				if (submissionId != null) {
     				try {
     					currentSubmission = currentAssignment
     							.submissions.get(submissionId);
-    					if(submissionId==null)
+    					if (submissionId == null)
     						throw new NullPointerException();
     				} catch (Exception e) {
     					currentSubmission = submission.getSubmissionWithWrapper(
