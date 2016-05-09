@@ -138,11 +138,9 @@ public class User {
      * @return true if user exist, otherwise false.
      */
     public boolean userExist(String userName,String pswd) {
-
-        boolean exist = jdbcTemplate.queryForObject(SQL_USR_EXIST,
-                                                    new Object[] {userName,pswd},
-                                                     Boolean.class);
-        return exist;
+		return jdbcTemplate.queryForObject(SQL_USR_EXIST,
+				new Object[] {userName,pswd},
+				Boolean.class);
     }
 
     public Optional<CourseAssignmentHierarchy> getCourseAssignmentHierarchy(
