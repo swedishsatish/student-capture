@@ -102,7 +102,7 @@ public class Course {
 
     private static final String removeCourseStatement = "DELETE FROM "
     		+ "Course WHERE CourseID=?";
-    
+
     /**
      * Attempts to remove a course from the database.
      *
@@ -111,19 +111,17 @@ public class Course {
      */
     public boolean removeCourse(String courseID) {
     	boolean result;
+
         try {
             int rowsAffected = jdbcTemplate.update(removeCourseStatement,
-            		new Object[] {courseID});
-            if(rowsAffected == 1) {
-            	result = true;
-            } else {
-            	result = false;
-            }
-        }catch (IncorrectResultSizeDataAccessException e){
+                    courseID);
+            result = rowsAffected == 1;
+        } catch (IncorrectResultSizeDataAccessException e){
             result = false;
-        }catch (DataAccessException e1){
+        } catch (DataAccessException e1){
             result = false;
         }
+        
         return result;
     }
 
