@@ -85,7 +85,7 @@ public class Course {
 		CourseWrapper result = new CourseWrapper();
 		try {
 			Map<String, Object> map = jdbcTemplate.queryForMap(
-    			getCourseStatement, new Object[] {courseID});
+    			getCourseStatement, courseID);
 			result.courseId = (String) map.get("CourseId");
 			result.courseName = (String) map.get("CourseName");
 			result.year = (int) map.get("Year");
