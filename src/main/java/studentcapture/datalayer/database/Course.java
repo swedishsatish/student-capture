@@ -22,23 +22,18 @@ public class Course {
     // This template should be used to send queries to the database
     @Autowired
     protected JdbcTemplate jdbcTemplate;
-    /**
 
-     * Attempts to add a course to the database.
-
-     *
-
-     * @param courseCode	the courses 6 character identification (ex. 5DV151)
-
-     * @param year		the year the course takes place
-
-     * @param term		the term the course takes palce (ex. VT)
-
-     * @return			true if successful, else false
-
-     */
     private static final String addCourseStatement = "INSERT INTO "
     		+ "Course VALUES (?,?,?,?,?)";
+
+    /**
+     * Attempts to add a course to the database.
+     *
+     * @param courseCode	the courses 6 character identification (ex. 5DV151)
+     * @param year		the year the course takes place
+     * @param term		the term the course takes palce (ex. VT)
+     * @return			true if successful, else false
+     */
     public boolean addCourse(String courseID, String courseCode, String year,
     		String term, String courseName) {
     	boolean result;
