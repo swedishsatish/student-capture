@@ -110,20 +110,15 @@ public class Participant {
 
 
 
-    /**
-
-     * Returns a list of all courses a person is registered for, including their function
-
-     *
-
-     * @param CAS_ID        unique identifier for a person
-
-     * @return              List of tuples: CourseID - function
-
-     */
-
     private static final String getAllCoursesForParticipantStatement = "SELECT"
     		+ " CourseId,Function FROM Participant WHERE (UserId=?)";
+
+    /**
+     * Returns a list of all courses a person is registered for, including their function
+     *
+     * @param userID        unique identifier for a person
+     * @return              List of tuples: CourseID - function
+     */
     public Optional<List<ParticipantWrapper>> getAllCoursesForParticipant(String userID) {
     	List<ParticipantWrapper> participants = new ArrayList<>();
     	int userId = Integer.parseInt(userID);
