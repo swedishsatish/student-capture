@@ -40,9 +40,10 @@ public class Participant {
     public boolean addParticipant(String userID, String courseId, String function) {
         boolean result;
         int userId = Integer.parseInt(userID);
+
         try {
             int rowsAffected = jdbcTemplate.update(addParticipantStatement,
-            		new Object[] {userId, courseId, function});
+                    userId, courseId, function);
             if(rowsAffected == 1) {
             	result = true;
             } else {

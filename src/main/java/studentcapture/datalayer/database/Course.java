@@ -38,9 +38,10 @@ public class Course {
     		String term, String courseName) {
     	boolean result;
     	int years = Integer.parseInt(year);
+
         try {
             int rowsAffected = jdbcTemplate.update(addCourseStatement,
-            		new Object[] {courseID, years, term, courseCode, courseName});
+                    courseID, years, term, courseCode, courseName);
             if(rowsAffected == 1) {
             	result = true;
             } else {
