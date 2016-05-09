@@ -17,14 +17,9 @@ import java.util.Map;
  */
 @Repository
 public class Course {
-
-
     // This template should be used to send queries to the database
     @Autowired
     protected JdbcTemplate jdbcTemplate;
-
-    private static final String addCourseStatement = "INSERT INTO "
-    		+ "Course VALUES (?,?,?,?,?)";
 
     /**
      * Attempts to add a course to the database.
@@ -38,6 +33,9 @@ public class Course {
     		String term, String courseName) {
     	boolean result;
     	int years = Integer.parseInt(year);
+
+        String addCourseStatement =
+                "INSERT INTO Course VALUES (?,?,?,?,?)";
 
         try {
             int rowsAffected = jdbcTemplate.update(addCourseStatement,
@@ -79,11 +77,12 @@ public class Course {
         throw new UnsupportedOperationException();
     }
 
-    private static final String getCourseStatement = "SELECT * FROM Course"
-    		+ " WHERE CourseId=?";
 	public CourseWrapper getCourseWithWrapper(String courseID) {
 		CourseWrapper result = new CourseWrapper();
 		try {
+            String getCourseStatement =
+                    "SELECT * FROM Course WHERE CourseId=?";
+
 			Map<String, Object> map = jdbcTemplate.queryForMap(
     			getCourseStatement, courseID);
 			result.courseId = (String) map.get("CourseId");
@@ -100,9 +99,6 @@ public class Course {
 		return result;
 	}
 
-    private static final String removeCourseStatement = "DELETE FROM "
-    		+ "Course WHERE CourseID=?";
-
     /**
      * Attempts to remove a course from the database.
      *
@@ -111,6 +107,8 @@ public class Course {
      */
     public boolean removeCourse(String courseID) {
     	boolean result;
+
+        String removeCourseStatement = "DELETE FROM Course WHERE CourseID=?";
 
         try {
             int rowsAffected = jdbcTemplate.update(removeCourseStatement,

@@ -46,8 +46,6 @@ public class Participant {
         return result;
     }
 
-    private static final String getFunctionForParticipantStatement = "SELECT "
-    		+ "Function FROM Participant WHERE (UserId=? AND CourseId=?)";
 
     /**
      * Get the role for a participant in a selected course
@@ -59,7 +57,11 @@ public class Participant {
     public Optional<String> getFunctionForParticipant(String userID, String courseId) {
     	String result = null;
         int userId = Integer.parseInt(userID);
-    	try {
+
+        String getFunctionForParticipantStatement =
+                "SELECT Function FROM Participant WHERE (UserId=? AND CourseId=?)";
+
+        try {
     		result = jdbcTemplate.queryForObject(
     				getFunctionForParticipantStatement, new Object[]
     						{userId, courseId},
@@ -74,10 +76,6 @@ public class Participant {
     }
 
 
-
-    private static final String getAllParticipantFromCourseStatement = "SELECT"
-    		+ " * FROM Participant WHERE (CourseId=?)";
-
     /**
      * Returns a list of all participants of a course including their function
      *
@@ -86,6 +84,10 @@ public class Participant {
      */
     public Optional<List<ParticipantWrapper>> getAllParticipantsFromCourse(String courseId){
     	List<ParticipantWrapper> participants = new ArrayList<>();
+
+        String getAllParticipantFromCourseStatement =
+                "SELECT * FROM Participant WHERE (CourseId=?)";
+
 		try {
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(
 					getAllParticipantFromCourseStatement, courseId);
@@ -108,11 +110,6 @@ public class Participant {
         return Optional.of(participants);
     }
 
-
-
-    private static final String getAllCoursesForParticipantStatement = "SELECT"
-    		+ " CourseId,Function FROM Participant WHERE (UserId=?)";
-
     /**
      * Returns a list of all courses a person is registered for, including their function
      *
@@ -122,6 +119,10 @@ public class Participant {
     public Optional<List<ParticipantWrapper>> getAllCoursesForParticipant(String userID) {
     	List<ParticipantWrapper> participants = new ArrayList<>();
     	int userId = Integer.parseInt(userID);
+
+        String getAllCoursesForParticipantStatement =
+                "SELECT CourseId,Function FROM Participant WHERE (UserId=?)";
+
     	try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
 	    			getAllCoursesForParticipantStatement, userId);
@@ -144,11 +145,6 @@ public class Participant {
     }
 
 
-
-
-    private static final String removeParticipantStatement = "DELETE FROM "
-    		+ "Participant WHERE (UserId=? AND CourseId=?)";
-
     /**
      * Removes the connection between a person and a course from the database
      *
@@ -159,6 +155,10 @@ public class Participant {
     public boolean removeParticipant(String userID, String courseId){
     	boolean result;
     	int userId = Integer.parseInt(userID);
+
+        String removeParticipantStatement =
+                "DELETE FROM Participant WHERE (UserId=? AND CourseId=?)";
+
         try {
             int rowsAffected = jdbcTemplate.update(removeParticipantStatement,
                     userId, courseId);

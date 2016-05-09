@@ -199,7 +199,7 @@ public class DatalayerCommunicator {
         File video = new File(path + filename);
         if(video.exists()) {
             try {
-                byte []out = FileCopyUtils.copyToByteArray(video);
+                byte[] out = FileCopyUtils.copyToByteArray(video);
                 HttpHeaders responseHeaders = new HttpHeaders();
                 responseHeaders.add("content-disposition", "inline; filename="+filename);
 
@@ -371,7 +371,7 @@ public class DatalayerCommunicator {
                                 @PathVariable(value = "assignmentID") String assignmentID,
                                 @PathVariable(value = "userID") String userID,
                                 @RequestParam(value = "video",required = false) MultipartFile video) {
-    	if(video == null){
+    	if (video == null){
     		if(submission.addSubmission(assignmentID, userID)){
     			return "Student submitted an empty answer";
     		}

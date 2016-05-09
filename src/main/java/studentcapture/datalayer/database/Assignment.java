@@ -173,11 +173,12 @@ public class Assignment {
         return jdbcTemplate.queryForObject(sql, new Object[]{assignmentID},String.class);
     }
 
-    private static final String getAssignmentStatement = "SELECT * FROM "
-    		+ "Assignment WHERE AssignmentId=?";
 	public Optional<AssignmentWrapper> getAssignmentWithWrapper(
 			int assignmentId) {
 		try {
+            String getAssignmentStatement = "SELECT * FROM "
+                    + "Assignment WHERE AssignmentId=?";
+
 			Map<String, Object> map = jdbcTemplate.queryForMap(
 	    			getAssignmentStatement, assignmentId);
 			AssignmentWrapper result = new AssignmentWrapper();

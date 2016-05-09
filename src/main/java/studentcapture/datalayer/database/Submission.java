@@ -132,13 +132,15 @@ public class Submission {
      * @param assID The assignment to get submissions for
      * @return A list of ungraded submissions for the assignment
      */
-    private final static String getAllUngradedStatement = "SELECT "
-    		+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
-    		+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
-    		+ "Submission AS sub LEFT JOIN Users AS stu ON "
-    		+ "sub.studentId=stu.userId WHERE (AssignmentId=?) AND "
-    		+ "(Grade IS NULL)";
     public Optional<List<SubmissionWrapper>> getAllUngraded(String assId) {
+
+		String getAllUngradedStatement = "SELECT "
+				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
+				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
+				+ "Submission AS sub LEFT JOIN Users AS stu ON "
+				+ "sub.studentId=stu.userId WHERE (AssignmentId=?) AND "
+				+ "(Grade IS NULL)";
+
     	List<SubmissionWrapper> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
     	try {
@@ -173,14 +175,6 @@ public class Submission {
         return Optional.of(submissions);
     }
 
-
-
-    private final static String getAllSubmissionsStatement = "SELECT "
-    		+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
-    		+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
-    		+ "Submission AS sub LEFT JOIN Users AS stu ON "
-    		+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
-
 	/**
 	 * Get all submissions for an assignment
 	 * @param assId The assignment to get submissions for
@@ -189,6 +183,12 @@ public class Submission {
     public Optional<List<SubmissionWrapper>> getAllSubmissions(String assId) {
     	List<SubmissionWrapper> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
+
+		String getAllSubmissionsStatement = "SELECT "
+				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
+				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
+				+ "Submission AS sub LEFT JOIN Users AS stu ON "
+				+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
 
     	try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
@@ -231,15 +231,6 @@ public class Submission {
         return Optional.of(submissions);
     }
 
-
-
-    private final static String getAllSubmissionsWithStudentsStatement =
-    		"SELECT ass.AssignmentId,par.UserId AS StudentId,sub.SubmissionDate"
-    		+ ",sub.Grade,sub.TeacherId FROM Assignment AS ass RIGHT JOIN "
-    		+ "Participant AS par ON ass.CourseId=par.CourseId LEFT JOIN "
-    		+ "Submission AS sub ON par.userId=sub.studentId WHERE "
-    		+ "(par.function='Student') AND (ass.AssignmentId=?)";
-
 	/**
 	 *
 	 * Get all submissions for an assignment, including students that have not
@@ -252,6 +243,13 @@ public class Submission {
     		(String assId) {
     	List<SubmissionWrapper> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
+
+		String getAllSubmissionsWithStudentsStatement =
+				"SELECT ass.AssignmentId,par.UserId AS StudentId,sub.SubmissionDate"
+						+ ",sub.Grade,sub.TeacherId FROM Assignment AS ass RIGHT JOIN "
+						+ "Participant AS par ON ass.CourseId=par.CourseId LEFT JOIN "
+						+ "Submission AS sub ON par.userId=sub.studentId WHERE "
+						+ "(par.function='Student') AND (ass.AssignmentId=?)";
 
     	try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
@@ -294,12 +292,13 @@ public class Submission {
         return Optional.of(submissions);
     }
     
-    private final static String getStudentSubmissionStatement = "SELECT * FROM"
-    		+ " Submission WHERE AssignmentId=? AND StudentId=?";
-
 	public Optional<SubmissionWrapper> getSubmissionWithWrapper(int assignmentId,
 			int studentId) {
 		SubmissionWrapper result = new SubmissionWrapper();
+
+		String getStudentSubmissionStatement =
+				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
+
 		try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
 	    			getStudentSubmissionStatement, assignmentId, studentId);

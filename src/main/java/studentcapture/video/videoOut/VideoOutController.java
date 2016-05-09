@@ -85,7 +85,7 @@ public class VideoOutController {
                 }
             };
 
-            byte []out = restTemplate.execute(dbURI.toString(),
+            byte[] out = restTemplate.execute(dbURI.toString(),
                     HttpMethod.GET,requestCallback, responseExtractor);
             // Free to do something with the file here. decompress, deencrypt?
 
