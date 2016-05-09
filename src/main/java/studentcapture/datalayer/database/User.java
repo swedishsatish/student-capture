@@ -217,9 +217,7 @@ public class User {
     				try {
     					currentSubmission = currentAssignment
     							.submissions.get(submissionId);
-    					if (submissionId == null)
-    						throw new NullPointerException();
-    				} catch (Exception e) {
+					} catch (Exception e) {
     					currentSubmission = submission.getSubmissionWithWrapper(
     							assignmentId,userId).get();
     				}
