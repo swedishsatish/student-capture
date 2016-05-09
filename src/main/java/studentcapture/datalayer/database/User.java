@@ -84,20 +84,16 @@ public class User {
     /**
      * Remove a user from the User-table in the database.
      *
-     * @param casID     unique identifier for a person
+     * @param username     unique identifier for a person
      * @return          true if the remove succeed, else false.
      */
-
-
     public String getUserID(String username){
     	String sql = "SELECT userID from users WHERE username = ?";
     	return jdbcTemplate.queryForObject(sql, new Object[]{username},String.class);
     }
 
     public boolean removeUser(String casID) {
-        //TODO
-        return false;
-
+		throw new UnsupportedOperationException();
     }
 
 
