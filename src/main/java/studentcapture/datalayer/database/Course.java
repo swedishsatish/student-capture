@@ -121,7 +121,7 @@ public class Course {
         } catch (DataAccessException e1){
             result = false;
         }
-        
+
         return result;
     }
 

@@ -19,24 +19,16 @@ public class Participant {
     @Autowired
     protected JdbcTemplate jdbcTemplate;
 
+    private static final String addParticipantStatement = "INSERT INTO Participant VALUES (?,?,?)";
 
     /**
-
      * Add a new participant to a course by connecting the tables "User" and "Course" in the database.
-
      *
-
-     * @param studentId        unique identifier for a person
-
+     * @param userID        unique identifier for a person
      * @param courseId      unique identifier, registration code
-
      * @param function      student, teacher, ....
-
      * @return              true if insertion worked, else false
-
      */
-
-    private static final String addParticipantStatement = "INSERT INTO Participant VALUES (?,?,?)";
     public boolean addParticipant(String userID, String courseId, String function) {
         boolean result;
         int userId = Integer.parseInt(userID);
@@ -44,14 +36,10 @@ public class Participant {
         try {
             int rowsAffected = jdbcTemplate.update(addParticipantStatement,
                     userId, courseId, function);
-            if(rowsAffected == 1) {
-            	result = true;
-            } else {
-            	result = false;
-            }
-        }catch (IncorrectResultSizeDataAccessException e){
+            result = rowsAffected == 1;
+        } catch (IncorrectResultSizeDataAccessException e){
             result = false;
-        }catch (DataAccessException e1){
+        } catch (DataAccessException e1){
             result = false;
         }
 
