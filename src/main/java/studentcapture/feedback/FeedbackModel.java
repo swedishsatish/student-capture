@@ -1,6 +1,5 @@
 package studentcapture.feedback;
 
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -11,7 +10,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author Group6
  * @version 0.1
- * @see Submission
+ * @see studentcapture.datalayer.database.Submission
  */
 public class FeedbackModel {
     @NotNull @Min(1)
