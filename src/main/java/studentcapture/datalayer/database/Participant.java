@@ -124,7 +124,7 @@ public class Participant {
     	int userId = Integer.parseInt(userID);
     	try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-	    			getAllCoursesForParticipantStatement, new Object[] {userId});
+	    			getAllCoursesForParticipantStatement, userId);
 	    	for (Map<String, Object> row : rows) {
 	    		ParticipantWrapper participant = new ParticipantWrapper();
 	    		participant.courseId = (String) row.get("CourseId");
