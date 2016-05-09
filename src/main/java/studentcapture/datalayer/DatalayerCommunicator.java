@@ -138,10 +138,8 @@ public class DatalayerCommunicator {
             fsi.storeFeedbackText(courseCode, courseID, assID, studentID, feedbackText);
             feedback++;
         }
-        if(feedback == 0)
-            return false;
-        else
-            return true;
+
+        return feedback != 0;
     }
 
     /**
@@ -165,7 +163,9 @@ public class DatalayerCommunicator {
             fsi = new FilesystemInterface(); // should not be here? @autowired???
             FileInputStream videoInputStream = fsi.getAssignmentVideo(courseCode,courseId,assignmentId);
 
-            byte []out = new byte[fsi.getAssignmentVideoFileSize (courseCode, courseId, assignmentId)];
+            byte[] out = new byte[fsi.getAssignmentVideoFileSize (courseCode, courseId, assignmentId)];
+
+            // TODO: Result is ignored?
             videoInputStream.read(out);
 
             HttpHeaders responseHeaders = new HttpHeaders();
@@ -192,8 +192,8 @@ public class DatalayerCommunicator {
     public ResponseEntity<InputStreamResource> getAssignmentVideo(@Valid FeedbackModel model) {
 
         ResponseEntity<InputStreamResource> responseEntity;
-        byte []file = null;
-        String path = fsi.generatePath(model);
+        byte[] file = null;
+        String path = FilesystemInterface.generatePath(model);
         String filename = FilesystemConstants.FEEDBACK_VIDEO_FILENAME;
 
         File video = new File(path + filename);
