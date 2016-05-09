@@ -121,11 +121,8 @@ public class Assignment {
             throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         Date date = sdf.parse(value);
-        if (value.equals(sdf.format(date))) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return value.equals(sdf.format(date));
     }
 
     /**
