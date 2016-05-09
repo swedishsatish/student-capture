@@ -179,7 +179,7 @@ public class Assignment {
 			int assignmentId) {
 		try {
 			Map<String, Object> map = jdbcTemplate.queryForMap(
-	    			getAssignmentStatement, new Object[] {assignmentId});
+	    			getAssignmentStatement, assignmentId);
 			AssignmentWrapper result = new AssignmentWrapper();
 	    	result.assignmentId = (int) map.get("AssignmentId");
 	    	result.courseId = (String) map.get("CourseId");
