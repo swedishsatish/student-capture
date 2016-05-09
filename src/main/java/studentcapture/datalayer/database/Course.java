@@ -6,8 +6,11 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.datalayer.database.Course.CourseWrapper;
+
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by c13gan on 2016-04-26.
@@ -88,13 +91,31 @@ public class Course {
 
      */
 
-    public List<Object> getCourse(String courseID) {
+    public CourseWrapper getCourse(String courseID) {
 
         return null; //TODO
 
     }
 
-
+    private static final String getCourseStatement = "SELECT * FROM Course"
+    		+ " WHERE CourseId=?";
+	public CourseWrapper getCourseWithWrapper(String courseID) {
+		CourseWrapper result = new CourseWrapper();
+		try {
+			Map<String, Object> map = jdbcTemplate.queryForMap(
+    			getCourseStatement, new Object[] {courseID});
+			result.courseId = (String) map.get("CourseId");
+			result.courseName = (String) map.get("CourseName");
+			result.year = (int) map.get("Year");
+			result.term = (String) map.get("Term");
+			result.courseCode = (String) map.get("CourseCode");			
+		} catch (IncorrectResultSizeDataAccessException e) {
+			return new CourseWrapper();
+		} catch (DataAccessException e1) {
+			return new CourseWrapper();
+		}
+		return result;
+	}
 
     /**
 
@@ -155,8 +176,8 @@ public class Course {
         return courseCode;
     }
 
-    public class CourseWrapper {
-    	public int courseId;
+    public static class CourseWrapper {
+    	public String courseId;
     	public int year;
     	public String term;
     	public String courseCode;

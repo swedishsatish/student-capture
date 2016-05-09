@@ -14,17 +14,20 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.Assignment;
 import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.Submission;
 import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 import studentcapture.datalayer.database.User;
+import studentcapture.datalayer.database.User.CourseAssignmentHierarchy;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
 
 import javax.validation.Valid;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,6 +35,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -326,6 +330,29 @@ public class DatalayerCommunicator {
     public List<SubmissionWrapper> getAllSubmissionsWithStudents(
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submission.getAllSubmissionsWithStudents(assignmentID).get();
+    }
+    
+    /**
+     * Returns list of all submissions made in response to a given assignment,
+     * including students that are part of the course but has not yet made a
+     * submission.
+     *
+     * @param assignmentID		assignment identifier
+     * @return					list of submissions
+     */
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.GET,
+    value = "/getHierarchy")
+    @ResponseBody
+    public CourseAssignmentHierarchy getHierarchy(
+    		@RequestParam(value="userID") String userID) {
+    	Optional<CourseAssignmentHierarchy> hierarchy = 
+    			user.getCourseAssignmentHierarchy(userID);
+    	if(hierarchy.isPresent()) 
+    		return hierarchy.get();
+    	return null;
     }
 
     /**

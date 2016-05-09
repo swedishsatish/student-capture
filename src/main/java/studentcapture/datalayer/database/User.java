@@ -1,7 +1,9 @@
 package studentcapture.datalayer.database;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -11,10 +13,12 @@ import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 @Repository
 public class User {
@@ -34,7 +38,14 @@ public class User {
     // This template should be used to send queries to the database
     @Autowired
     protected JdbcTemplate jdbcTemplate;
-
+    
+    @Autowired
+    private Course course;
+    @Autowired
+    private Assignment assignment;
+    @Autowired
+    private Submission submission;
+    
     /**
      * Add a new user to the User-table in the database.
      *
@@ -132,12 +143,148 @@ public class User {
                                                      Boolean.class);
         return exist;
     }
-
-    public Optional<CourseAssignmentHierarchy> getCourseAssignmentHierarchy() {
-    	return null;
+    
+    public Optional<CourseAssignmentHierarchy> getCourseAssignmentHierarchy(
+    		String userID) {
+    	CourseAssignmentHierarchy hierarchy = new CourseAssignmentHierarchy();
+    	int userId = Integer.parseInt(userID);
+    	try {
+    		addStudentHierarchy(hierarchy, userId);
+    		addTeacherHierarchy(hierarchy, userId);
+    		addUserToHierarchy(hierarchy, userId);	
+	    } catch (IncorrectResultSizeDataAccessException e){
+			System.out.println("HEJ");
+		    return Optional.empty();
+		} catch (DataAccessException e1){
+			e1.printStackTrace();
+			return Optional.empty();
+		}
+    	
+    	return Optional.of(hierarchy);
     }
 
-    /**
+    private static final String getUserStatement = "SELECT * FROM Users WHERE "
+    		+ "UserId=?";
+    private void addUserToHierarchy(CourseAssignmentHierarchy hierarchy, int userId) {
+    	Map<String, Object> map = jdbcTemplate.queryForMap(
+    			getUserStatement, new Object[] {userId});
+    	hierarchy.userId = (int) map.get("UserId");
+    	hierarchy.firstName = (String) map.get("FirstName");
+    	hierarchy.lastName = (String) map.get("LastName");
+	}
+
+    private static final String getTeacherHierarchyStatement = "SELECT * FROM "
+    		+ "Participant AS par LEFT JOIN Course AS cou ON par.courseId="
+    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
+    		+ "ass.courseId LEFT JOIN Submission AS sub ON ass.assignmentId="
+    		+ "sub.assignmentId WHERE par.userId=? AND par.function='Teacher'";
+	private void addTeacherHierarchy(CourseAssignmentHierarchy hierarchy, int userId) {
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+    			getTeacherHierarchyStatement, new Object[] {userId});
+    	for (Map<String, Object> row : rows) {
+    		CoursePackage currentCourse = null;
+    		String courseId = (String) row.get("CourseId");
+    		try {
+    			currentCourse = hierarchy.teacherCourses.get(courseId);
+    			if(currentCourse==null)
+    				throw new NullPointerException();
+    		} catch (NullPointerException e) {
+    			currentCourse = new CoursePackage();
+    			currentCourse.course = course.getCourseWithWrapper(courseId);
+    			hierarchy.teacherCourses.put(courseId, currentCourse);
+    		}
+    		
+    		try {
+    			AssignmentPackage currentAssignment = null;
+        		int assignmentId = (int) row.get("AssignmentId");
+    			try {
+        			currentAssignment = currentCourse.assignments.get(assignmentId);
+        			if(currentAssignment==null)
+        				throw new NullPointerException();
+        		} catch (NullPointerException e) {
+        			currentAssignment = new AssignmentPackage();
+        			currentAssignment.assignment = assignment
+        					.getAssignmentWithWrapper(assignmentId).get();
+        			currentCourse.assignments.put(assignmentId, currentAssignment);
+        		}
+    			
+    			SubmissionWrapper currentSubmission = null;
+    			Integer submissionId = (Integer) row.get("SubmissionId");
+    			if(submissionId!=null) {
+    				try {
+    					currentSubmission = currentAssignment
+    							.submissions.get(submissionId);
+    					if(submissionId==null)
+    						throw new NullPointerException();
+    				} catch (Exception e) {
+    					currentSubmission = submission.getSubmissionWithWrapper(
+    							assignmentId,userId).get();
+    				}
+    			}
+    		} catch (Exception e) {
+    			//TODO
+    		}
+    	}
+	}
+
+	private static final String getStudentHierarchyStatement = "SELECT * FROM "
+    		+ "Participant AS par LEFT JOIN Course AS cou ON par.courseId="
+    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
+    		+ "ass.courseId LEFT JOIN Submission AS sub ON par.userId="
+    		+ "sub.studentId AND ass.assignmentId=sub.assignmentId WHERE "
+    		+ "par.userId=? AND par.function='Student'";
+	private void addStudentHierarchy(CourseAssignmentHierarchy hierarchy, int userId) {
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+    			getStudentHierarchyStatement, new Object[] {userId});
+    	for (Map<String, Object> row : rows) {
+    		CoursePackage currentCourse = null;
+    		String courseId = (String) row.get("CourseId");
+    		try {
+    			currentCourse = hierarchy.studentCourses.get(courseId);
+    			if(currentCourse==null)
+    				throw new NullPointerException();
+    		} catch (NullPointerException e) {
+    			currentCourse = new CoursePackage();
+    			currentCourse.course = course.getCourseWithWrapper(courseId);
+    			hierarchy.studentCourses.put(courseId, currentCourse);
+    		}
+    		
+    		try {
+    			AssignmentPackage currentAssignment = null;
+        		int assignmentId = (int) row.get("AssignmentId");
+    			try {
+        			currentAssignment = currentCourse.assignments.get(assignmentId);
+        			if(currentAssignment==null)
+        				throw new NullPointerException();
+        		} catch (NullPointerException e) {
+        			currentAssignment = new AssignmentPackage();
+        			currentAssignment.assignment = assignment
+        					.getAssignmentWithWrapper(assignmentId).get();
+        			currentCourse.assignments.put(assignmentId, currentAssignment);
+        		}
+    			
+    			SubmissionWrapper currentSubmission = null;
+    			Integer submissionId = (Integer) row.get("SubmissionId");
+    			if(submissionId!=null) {
+    				try {
+    					currentSubmission = currentAssignment
+    							.submissions.get(submissionId);
+    					if(submissionId==null)
+    						throw new NullPointerException();
+    				} catch (Exception e) {
+    					currentSubmission = submission.getSubmissionWithWrapper(
+    							assignmentId,userId).get();
+    					currentAssignment.submissions.put(submissionId, currentSubmission);
+    				}
+    			}
+    		} catch (Exception e) {
+    			//TODO
+    		}
+    		
+    	}
+	}
+
+	/**
      *  Used to collect user information, and return a hashmap.
      */
     protected class UserWrapper implements org.springframework.jdbc.core.RowMapper {
@@ -154,19 +301,31 @@ public class User {
         }
     }
 
-    public class CourseAssignmentHierarchy {
-    	public UserWrapper user;
-    	public List<CoursePackage> courses;
+    public static class CourseAssignmentHierarchy {
+    	public int userId;
+    	public String firstName;
+    	public String lastName;
+    	public Map<String, CoursePackage> teacherCourses;
+    	public Map<String, CoursePackage> studentCourses;
+    	
+    	public CourseAssignmentHierarchy() {
+    		teacherCourses = new HashMap<>();
+    		studentCourses = new HashMap<>();
+    	}
     }
 
     public class CoursePackage {
     	public CourseWrapper course;
-    	public List<AssignmentPackage> assignments;
+    	public Map<Integer, AssignmentPackage> assignments;
+    	
+    	public CoursePackage() {
+    		assignments = new HashMap<>();
+    	}
     }
 
     public class AssignmentPackage {
     	public AssignmentWrapper assignment = null;
-    	public SubmissionWrapper submission = null;
+    	public Map<Integer, SubmissionWrapper> submissions = null;
     }
 }
 

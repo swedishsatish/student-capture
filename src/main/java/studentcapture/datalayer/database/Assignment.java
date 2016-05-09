@@ -8,12 +8,17 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.datalayer.database.Assignment.AssignmentWrapper;
+
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by E&S on 4/26/16.
@@ -171,6 +176,34 @@ public class Assignment {
         return jdbcTemplate.queryForObject(sql, new Object[]{assignmentID},String.class);
     }
 
+    private static final String getAssignmentStatement = "SELECT * FROM "
+    		+ "Assignment WHERE AssignmentId=?";
+	public Optional<AssignmentWrapper> getAssignmentWithWrapper(
+			int assignmentId) {
+		try {
+			Map<String, Object> map = jdbcTemplate.queryForMap(
+	    			getAssignmentStatement, new Object[] {assignmentId});
+			AssignmentWrapper result = new AssignmentWrapper();
+	    	result.assignmentId = (int) map.get("AssignmentId");
+	    	result.courseId = (String) map.get("CourseId");
+	    	
+	    	result.title = (String) map.get("Title");
+	    	result.StartDate = ((Timestamp) map.get("StartDate")).toString();
+	    	result.EndDate = ((Timestamp) map.get("EndDate")).toString();
+	    	result.minTime = (int) map.get("MinTime");
+	    	result.maxTime = (int) map.get("MaxTime");
+	    	result.published = (boolean) map.get("Published");
+	    	
+	    	return Optional.of(result);
+		} catch (IncorrectResultSizeDataAccessException e){
+			//TODO
+		    return Optional.empty();
+		} catch (DataAccessException e1){
+			//TODO
+			return Optional.empty();
+		}
+	}
+    
     public boolean updateAssignment(String assignmentID, String assignmentTitle,
                                     String startDate, String endDate, int minTime, int maxTime,
                                     boolean published){
@@ -183,7 +216,7 @@ public class Assignment {
         return true;
     }
 
-    public class AssignmentWrapper {
+    public static class AssignmentWrapper {
     	public int assignmentId;
     	public String courseId;
     	public String title;

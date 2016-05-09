@@ -6,6 +6,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.datalayer.database.Submission.SubmissionWrapper;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -293,8 +295,51 @@ public class Submission {
 
         return Optional.of(submissions);
     }
+    
+    private final static String getStudentSubmissionStatement = "SELECT * FROM"
+    		+ " Submission WHERE AssignmentId=? AND StudentId=?";
+	public Optional<SubmissionWrapper> getSubmissionWithWrapper(int assignmentId,
+			int studentId) {
+		SubmissionWrapper result = new SubmissionWrapper();
+		try {
+	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+	    			getStudentSubmissionStatement, new Object[]
+	    					{assignmentId, studentId});
+	    	for (Map<String, Object> row : rows) {
+	    		result.assignmentId = (int) row.get("AssignmentId");
+	    		result.studentId = (int) row.get("StudentId");
+	    		try {
+	    			result.teacherId = (int) row.get("TeacherId");
+	    		} catch (NullPointerException e) {
+	    			result.teacherId = null;
+	    		}
+	    		try {
+	    			result.grade = (String) row.get("Grade");
+	    		} catch (NullPointerException e) {
+	    			result.grade = null;
+	    		}
+	    		try {
+	    			result.submissionDate = ((Timestamp)
+		    				row.get("SubmissionDate")).toString();
+	    		} catch (NullPointerException e) {
+	    			result.submissionDate = null;
+	    		}
+	    		
+	    		break;
+	    	}
 
-    public class SubmissionWrapper {
+	    } catch (IncorrectResultSizeDataAccessException e){
+			//TODO
+		    return Optional.empty();
+		} catch (DataAccessException e1){
+			//TODO
+			return Optional.empty();
+		}
+
+        return Optional.of(result);
+	}
+
+    public static class SubmissionWrapper {
     	public int assignmentId;
     	public int studentId;
     	public String studentName;
