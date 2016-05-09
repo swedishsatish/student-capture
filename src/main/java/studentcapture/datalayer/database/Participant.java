@@ -88,7 +88,7 @@ public class Participant {
     	List<ParticipantWrapper> participants = new ArrayList<>();
 		try {
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-					getAllParticipantFromCourseStatement, new Object[] {courseId});
+					getAllParticipantFromCourseStatement, courseId);
 			for (Map<String, Object> row : rows) {
 				ParticipantWrapper participant = new ParticipantWrapper();
 				participant.userId = (int) row.get("UserId");
