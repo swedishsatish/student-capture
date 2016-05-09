@@ -145,36 +145,27 @@ public class Participant {
 
 
 
-    /**
-
-     * Removes the connection between a person and a course from the database
-
-     *
-
-     * @param CAS_ID        unique identifier for a person
-
-     * @param CourseID      unique identifier, registration code
-
-     * @return              true if removal worked, else false
-
-     */
 
     private static final String removeParticipantStatement = "DELETE FROM "
     		+ "Participant WHERE (UserId=? AND CourseId=?)";
+
+    /**
+     * Removes the connection between a person and a course from the database
+     *
+     * @param userID        unique identifier for a person
+     * @param courseId      unique identifier, registration code
+     * @return              true if removal worked, else false
+     */
     public boolean removeParticipant(String userID, String courseId){
     	boolean result;
     	int userId = Integer.parseInt(userID);
         try {
             int rowsAffected = jdbcTemplate.update(removeParticipantStatement,
-            		new Object[] {userId, courseId});
-            if(rowsAffected == 1) {
-            	result = true;
-            } else {
-            	result = false;
-            }
-        }catch (IncorrectResultSizeDataAccessException e){
+                    userId, courseId);
+            result = rowsAffected == 1;
+        } catch (IncorrectResultSizeDataAccessException e){
             result = false;
-        }catch (DataAccessException e1){
+        } catch (DataAccessException e1){
             result = false;
         }
         return result;
