@@ -46,25 +46,17 @@ public class Participant {
         return result;
     }
 
-
-
-    /**
-
-     * Get the role for a participant in a selected course
-
-     *
-
-     * @param CAS_ID        unique identifier for a person
-
-     * @param CourseID      unique identifier, registration code
-
-     * @return              role of a person
-
-     */
-
     private static final String getFunctionForParticipantStatement = "SELECT "
     		+ "Function FROM Participant WHERE (UserId=? AND CourseId=?)";
-    public Optional<String> getFunctionForParticipant(String userID, String courseId){
+
+    /**
+     * Get the role for a participant in a selected course
+     *
+     * @param userID        unique identifier for a person
+     * @param courseId      unique identifier, registration code
+     * @return              role of a person
+     */
+    public Optional<String> getFunctionForParticipant(String userID, String courseId) {
     	String result = null;
         int userId = Integer.parseInt(userID);
     	try {
