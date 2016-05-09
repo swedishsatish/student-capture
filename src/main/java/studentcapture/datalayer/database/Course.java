@@ -42,14 +42,14 @@ public class Course {
         try {
             int rowsAffected = jdbcTemplate.update(addCourseStatement,
                     courseID, years, term, courseCode, courseName);
-            if(rowsAffected == 1) {
+            if (rowsAffected == 1) {
             	result = true;
             } else {
             	result = false;
             }
-        }catch (IncorrectResultSizeDataAccessException e){
+        } catch (IncorrectResultSizeDataAccessException e){
             result = false;
-        }catch (DataAccessException e1){
+        } catch (DataAccessException e1){
             result = false;
         }
 
