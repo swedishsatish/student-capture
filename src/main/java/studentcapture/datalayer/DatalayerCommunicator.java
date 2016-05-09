@@ -374,7 +374,7 @@ public class DatalayerCommunicator {
     	}
 
         // ADD to database here
-    	if(submission.addSubmission(assignmentID, userID)){
+    	if (submission.addSubmission(assignmentID, userID)){
 	        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
 	            return "OK";
 	        } else
