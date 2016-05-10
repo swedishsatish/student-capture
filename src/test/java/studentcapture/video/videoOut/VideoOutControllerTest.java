@@ -19,15 +19,6 @@ public class VideoOutControllerTest extends StudentCaptureApplicationTests {
 
     private MockMvc mockMvc;
 
-    @Test
-    public void testVideoDownload() throws Exception {
-
-        mockMvc.perform(get("/videoDownload/bugsbunny"))
-                .andExpect(status().isOk())
-                .andExpect(
-                        content().contentType("video/webm"));
-    }
-
     @Before
     public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
