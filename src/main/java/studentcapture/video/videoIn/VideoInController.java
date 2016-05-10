@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import studentcapture.assignment.AssignmentModel;
 
 import java.security.SecureRandom;
 import java.math.BigInteger;
@@ -35,12 +36,19 @@ public class VideoInController {
             method = RequestMethod.POST, headers = "content-type=multipart/form-data")
     public ResponseEntity<String> uploadVideo(
             @PathVariable("id") String id,
-            @RequestParam("userID") String userID,
-            @RequestParam("assignmentID") String assignmentID,
-            @RequestParam("courseID") String courseID,
-            @RequestParam("courseCode") String courseCode,
+            @RequestParam("video") MultipartFile video,
             @RequestParam("videoType") String videoType,
-            @RequestParam("video") MultipartFile video) {
+            @RequestParam(value = "assignmentID", required = false) String assignmentID,
+            @RequestParam(value = "userID", required = false) String userID,
+            @RequestParam(value = "courseID", required = false) String courseID,
+            @RequestParam(value = "feedbackText", required = false) MultipartFile feedbackText,
+            @RequestParam(value = "studentID", required = false) String studentID,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate,
+            @RequestParam(value = "minTime", required = false) int minTime,
+            @RequestParam(value = "maxTime", required = false) int maxTime,
+            @RequestParam(value = "published", required = false) Boolean published) {
 
         if(video.isEmpty()) {
             // No video was received.
@@ -54,16 +62,52 @@ public class VideoInController {
             // User has not been granted permission to upload files.
             System.err.println("User has not been granted permission to upload video.");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } else if (!videoType.equals("assignment") && !videoType.equals("submission") && !videoType.equals("feedback")) {
-            // Request must contain the type of upload.
-            System.err.println("Wrong video type. Videotype: " + videoType);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        String tempUri;
+        MultiValueMap<String, Object> requestParts = new LinkedMultiValueMap<>();
+
+        // Checks if the parameters required are not null for every case.
+        switch (videoType) {
+            case "assignment":
+                if (courseID == null || title == null || startDate == null || endDate == null
+                        || minTime == 0 || maxTime == 0 || published == null) {
+                    System.err.println("There is an empty parameter.");
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+                tempUri = "https://localhost:8443/DB/createAssignment";
+                requestParts.add("assignmentModel", new AssignmentModel(title, "no info", minTime, maxTime, startDate, endDate, published));
+                break;
+            case "submission":
+                if (courseID == null || assignmentID == null || studentID == null) {
+                    System.err.println("There is an empty parameter.");
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+                tempUri = "https://localhost:8443/DB/addSubmission/" + courseID + "/" + assignmentID + "/" + userID;
+                requestParts.add("courseID", courseID);
+                requestParts.add("assignmentID", assignmentID);
+                requestParts.add("userID", userID);
+                break;
+            case "feedback":
+                if (assignmentID == null || studentID == null || feedbackText == null) {
+                    System.err.println("There is an empty parameter.");
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+                tempUri = "https://localhost:8443/DB/setFeedback";
+                requestParts.add("assID", assignmentID);
+                requestParts.add("studentID", studentID);
+                requestParts.add("feedbackText", feedbackText);
+                break;
+            default:
+                // Request must contain the type of upload.
+                System.err.println("Wrong video type. Videotype: " + videoType + ". Must be either assignment," +
+                        " submission or feedback");
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         // Generate path and filename that will be used by the DataLayerCommunicator.
         final String filename = randomizeFilename(userID) + fileTypeExtension;
-        final String uri = "https://localhost:8443/DB/addSubmission/" +
-                courseCode+"/"+courseID+"/"+assignmentID+"/"+userID;
+        final String uri = tempUri;
 
         try {
             // Get the bytes from the video
@@ -79,7 +123,7 @@ public class VideoInController {
             };
 
             // Send data as a <String, Object> map so that we can receive with @RequestParam("nameOfValue")
-            MultiValueMap<String, Object> requestParts = new LinkedMultiValueMap<>();
+
             requestParts.add("video", videoResource);
             requestParts.add("filename", filename);
 
