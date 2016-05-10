@@ -46,7 +46,7 @@ public class Assignment {
      */
     public int createAssignment(String courseID, String assignmentTitle,
                                 String startDate, String endDate,
-                                int minTime, int maxTime, boolean published)
+                                int minTime, int maxTime, String published)
     throws IllegalArgumentException {
 
         // Check dates
@@ -58,6 +58,12 @@ public class Assignment {
             if (!isValidDateFormat("yyyy-MM-dd HH:mm:ss", endDate)) {
                 throw new IllegalArgumentException("endDate is not in " +
                         "format YYYY-MM-DD HH:MI:SS");
+            }
+            if (!isValidDateFormat("yyyy-MM-dd HH:mm:ss", published)) {
+                if(published != null) {
+                    throw new IllegalArgumentException("published is not in " +
+                            "format YYYY-MM-DD HH:MI:SS");
+                }
             }
         } catch (ParseException e) {
             throw new IllegalArgumentException("Date formatting failed");
@@ -82,7 +88,8 @@ public class Assignment {
                 "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
                 "Published) VALUES (DEFAULT ,?,?, " +
                 "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
-                "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?,?);";
+                "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?," +
+                "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'));";
 
         // Execute query and fetch generated AssignmentID
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -97,7 +104,7 @@ public class Assignment {
                     ps.setString(4, endDate);
                     ps.setInt(5, minTime);
                     ps.setInt(6, maxTime);
-                    ps.setBoolean(7, published);
+                    ps.setString(7, published);
                     return ps;
                 },
                 keyHolder);
