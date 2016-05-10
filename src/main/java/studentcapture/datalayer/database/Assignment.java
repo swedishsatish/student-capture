@@ -82,14 +82,43 @@ public class Assignment {
             throw new IllegalArgumentException("maxTime must be greater " +
                     "than 0");
         }
+        if(published != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:MI:SS");
+            Date date = new Date();
+            Date publishedDate = null;
+            Date currentDate = null;
+            try {
+                publishedDate = sdf.parse(published);
+                currentDate = sdf.parse(sdf.format(date));
+            } catch (Exception e) {
+                System.err.println("Date conversion error");
+            }
+
+            if (publishedDate.before(currentDate)) {
+                throw new IllegalArgumentException("Published date must be before the current date");
+            }
+
+
+        }
+
 
         // Construct query
-        String insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
-                "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
-                "Published) VALUES (DEFAULT ,?,?, " +
-                "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
-                "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?," +
-                "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'));";
+        String insertQueryString;
+        if(published == null) {
+            insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
+                    "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
+                    "Published) VALUES (DEFAULT ,?,?, " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?,?);";
+        } else {
+            insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
+                    "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
+                    "Published) VALUES (DEFAULT ,?,?, " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?," +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'));";
+        }
+
 
         // Execute query and fetch generated AssignmentID
         KeyHolder keyHolder = new GeneratedKeyHolder();
