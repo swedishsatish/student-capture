@@ -4,12 +4,13 @@ var CourseList = React.createClass({
     },
     
     studentSubmitions: function () {
-        /* $.get("/db/getAllSubmitions",{value:1000},function (res) {
-         var users = JSON.parse(res);
-         console.log(res);
-         console.log(users);
-         */
-        var users = [{
+         $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:1000},function (res) {
+             //var users = JSON.parse(res);
+             console.log(res);
+             //console.log(users);
+             ReactDOM.render(<StudentList students={res}/>, document.getElementById('courseContent'));
+         });
+        /*var users = [{
             assignmentID: 1000,
             studentID: 21,
             studentName: "Anton Andersson",
@@ -24,8 +25,8 @@ var CourseList = React.createClass({
                 submitionDate: "2010-06-23",
                 grade: "VG",
                 teacherID: 12
-            }];
-        ReactDOM.render(<StudentList students={users}/>, document.getElementById('courseContent'));
+            }];*/
+        //ReactDOM.render(<StudentList students={users}/>, document.getElementById('courseContent'));
     },
 
     printFeedback : function() {
