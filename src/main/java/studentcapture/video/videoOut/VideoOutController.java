@@ -42,6 +42,7 @@ public class VideoOutController {
             @PathVariable("assignmentId") int assignmentId){
 
         try {
+            //TODO: Hardcoded right now.
             URL url = new URL("https://localhost:8443/DB/getAssignmentVideo/" +
                     courseCode + "/" + courseId + "/"+assignmentId);
 
@@ -86,6 +87,7 @@ public class VideoOutController {
 
             byte[] out = restTemplate.execute(dbURI.toString(),
                     HttpMethod.GET,requestCallback, responseExtractor);
+
             // Free to do something with the file here. decompress, deencrypt?
 
             HttpHeaders responseHeaders = new HttpHeaders();

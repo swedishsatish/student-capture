@@ -150,26 +150,9 @@ public class DatalayerCommunicator {
             @PathVariable("courseId") String courseId,
             @PathVariable("assignmentId") String assignmentId) {
 
-        ResponseEntity<InputStreamResource> responseEntity;
-
-        try {
-            fsi = new FilesystemInterface(); // should not be here? @autowired???
-            FileInputStream videoInputStream = fsi.getAssignmentVideo(courseCode,courseId,assignmentId);
-
-            byte[] out = new byte[fsi.getAssignmentVideoFileSize (courseCode, courseId, assignmentId)];
-
-            // TODO: Result is ignored?
-            videoInputStream.read(out);
-
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.add("content-disposition", "inline; filename=AssignmentVideo");
-
-            responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
-        } catch (FileNotFoundException e) {
-            responseEntity = new ResponseEntity("File not found.", HttpStatus.NOT_FOUND);
-        } catch (IOException e) {
-            responseEntity = new ResponseEntity("Error getting file.", HttpStatus.NOT_FOUND);
-        }
+        String path = FilesystemInterface.generatePath(courseCode,courseId,assignmentId)
+                + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
+        ResponseEntity<InputStreamResource> responseEntity = FilesystemInterface.getVideo(path);
 
         return responseEntity;
     }
