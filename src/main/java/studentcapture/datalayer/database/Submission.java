@@ -102,29 +102,34 @@ public class Submission {
     }
 
     /**
-     * Get information about the grade of a submission
-     *
+     * Gets the grade, grader and time of the submission from the database and returns
+     * it as a hashmap. If and exception was thrown from the database only a single value
+	 * in the hashmap will be returned.
+	 *
      * @param assignmentID     Unique identifier for the assignment submission grade bra
      * @param studentID Unique identifier for the student associated with the submission
      * @return A list containing the grade, date, and grader
      */
     public Map<String, Object> getGrade(int studentID, int assignmentID) {
 
-        String query = "SELECT grade, submissiondate as time, concat(firstname,' ', lastname) as teacher" +
-                " FROM submission JOIN users ON (teacherid = userid) WHERE (studentid = ? AND assignmentid = ?)";
+        String queryForGrade = "SELECT grade, submissiondate as time, " +
+				"concat(firstname,' ', lastname) as teacher FROM " +
+				"submission FULL OUTER JOIN users ON (teacherid = userid)" +
+				" WHERE (studentid = ? AND assignmentid = ?)";
         Map<String, Object> response;
         try {
-            response = jdbcTemplate.queryForMap(query, studentID, assignmentID);
-            //return the time as string instead of timestamp
+            response = jdbcTemplate.queryForMap(queryForGrade,
+					new Object[] {studentID, assignmentID});
             response.put("time", response.get("time").toString());
+			if (response.get("teacher").equals(" "))
+				response.put("teacher", null);
         } catch (IncorrectResultSizeDataAccessException e) {
             response = new HashMap<>();
-            //TODO create better error message
-            response.put("error", e.getMessage());
+			response.put("error", "The given parameters does not have an" +
+					" entry in the database");
         } catch (DataAccessException e) {
             response = new HashMap<>();
-            //TODO create better error message
-            response.put("error", e.getMessage());
+			response.put("error", "Could not connect to the database");
         }
 
         return response;
