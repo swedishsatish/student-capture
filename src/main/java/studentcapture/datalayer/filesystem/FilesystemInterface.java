@@ -60,6 +60,16 @@ public class FilesystemInterface {
 		return path;
 	}
 
+	public static String generatePathFromModel(FeedbackModel model){
+		String path = generatePath(
+				model.getCourseCode(),
+				model.getCourseID(),
+				""+model.getAssignmentID(),
+				""+model.getStudentID());
+
+		return path;
+	}
+
 	/**
 	 * Gets the specified video on the fileserver.
 	 * @param path 	The path to the file on the fileserver.
@@ -157,7 +167,7 @@ public class FilesystemInterface {
 	 * @param userId from database
 	 * @return true if video was stored successfully
 	 */
-	public boolean storeFeedbackVideo(String courseCode, String courseId,
+	public static boolean storeFeedbackVideo(String courseCode, String courseId,
 											String assignmentId, String userId,
 									  MultipartFile source) {
 
@@ -183,7 +193,25 @@ public class FilesystemInterface {
 	 * @param userId from database
 	 * @return true if video was stored successfully
 	 */
-	public boolean storeFeedbackText(String courseCode, String courseId,
+	public static boolean storeFeedbackText(FeedbackModel model, MultipartFile source) {
+		return storeFeedbackText(
+				model.getCourseCode(),
+				model.getCourseID(),
+				""+ model.getAssignmentID(),
+				""+model.getStudentID(),
+				source);
+	}
+
+	/**
+	 * Store the teacher's feedback text to a student submission.
+	 *
+	 * @param courseCode the code for the course.
+	 * @param courseId course id from the database
+	 * @param assignmentId from database
+	 * @param userId from database
+	 * @return true if video was stored successfully
+	 */
+	public static boolean storeFeedbackText(String courseCode, String courseId,
 									 String assignmentId, String userId,
 									 MultipartFile source) {
 
