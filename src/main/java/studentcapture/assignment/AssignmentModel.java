@@ -17,7 +17,8 @@ public class AssignmentModel {
     private int maxTimeSeconds;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private boolean published;
+    private LocalDateTime publishDate;
+    private GradeScale scale;
 
     public AssignmentModel(String title,
                            String info,
@@ -25,7 +26,8 @@ public class AssignmentModel {
                            int maxTimeSeconds,
                            String startDate,
                            String endDate,
-                           boolean published) throws InputMismatchException {
+                           String publishDate,
+                           String scale) throws InputMismatchException {
         this.courseID = "1000"; //should be changed.
         this.title = title;
         this.info = info;
@@ -33,7 +35,8 @@ public class AssignmentModel {
         this.maxTimeSeconds = maxTimeSeconds;
         this.setStartDate(startDate);
         this.setEndDate(endDate);
-        this.published = published;
+        this.setPublished(publishDate);
+        this.scale = GradeScale.valueOf(scale);
 
         validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
         validateStartEndTime(this.startDate, this.endDate);
@@ -47,7 +50,7 @@ public class AssignmentModel {
         this.maxTimeSeconds = 0;
         this.startDate = LocalDateTime.parse("2000-10-12T10:00");
         this.endDate = LocalDateTime.parse("2000-10-13T10:00");
-        this.published = false;
+        this.publishDate = this.startDate;
     }
 
     public String getCourseID() {
@@ -58,12 +61,15 @@ public class AssignmentModel {
         this.courseID = courseID;
     }
 
-    public boolean getPublished() {
-        return published;
+    public String getPublished() {
+        return publishDate.toString().replace('T', ' ') + ":00";
     }
 
-    public void setPublished(boolean published) {
-        this.published = published;
+    public void setPublished(String publishDate) {
+        publishDate = publishDate.replace(' ', 'T');
+        publishDate = publishDate.substring(0, 16);
+        this.publishDate = LocalDateTime.parse(publishDate);
+        validatePublishAndStartTime(this.startDate, this.publishDate);
     }
 
     public String getTitle() {
@@ -122,12 +128,29 @@ public class AssignmentModel {
         //validateStartEndTime(this.startDate, this.endDate);
     }
 
+    public String getScale() {
+        return scale.name();
+    }
+
+    public void setScale(String scale) {
+        this.scale = GradeScale.valueOf(scale);
+    }
+
     private void validateStartEndTime(LocalDateTime startDate,
                                       LocalDateTime endDate)
             throws InputMismatchException {
         if (startDate.isAfter(endDate)) {
-            throw new InputMismatchException("Start Time is after end day, Start time was " + startDate +
+            throw new InputMismatchException("Start Time is after end time, Start time was " + startDate +
                     " and end time " + endDate);
+        }
+    }
+
+    private void validatePublishAndStartTime(LocalDateTime startDate,
+                                             LocalDateTime publishDate)
+            throws InputMismatchException {
+        if (publishDate.isAfter(startDate)) {
+            throw new InputMismatchException("Publish time is after Start time, Start time was " + startDate +
+                    " and publish time " + publishDate);
         }
     }
 
