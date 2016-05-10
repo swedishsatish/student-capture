@@ -23,8 +23,3 @@ before_install:
 # yet (2016-05-10) have native support for multi-language
 # projects. 
 script: "./tests.sh"
-
-notifications:
-  email: true
-    on_success: always
-    on_failure: always
