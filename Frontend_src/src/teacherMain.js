@@ -9,7 +9,11 @@ recordButton.onclick = function() {
 
 
 postButton.onclick = function () {
+<<<<<<< HEAD
     postToServer(blob,"user","5DV151","1337")
+=======
+    postToServer(blob,"user","5DV121","1337");
+>>>>>>> refs/remotes/origin/Front-end
     document.getElementById("post").disabled = true;
 
 

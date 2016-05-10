@@ -29,12 +29,11 @@ public class Submission {
         java.util.Date date = new java.util.Date(System.currentTimeMillis());
         java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
         timestamp.setNanos(0);
-        int rowsAffected = jdbcTemplate.update(sql,new Object[]{Integer.parseInt(assignmentID),Integer.parseInt(studentID),timestamp});
-        if(rowsAffected == 1){
-        	return true;
-        }
-        return false;
-    }
+
+		int rowsAffected = jdbcTemplate.update(sql, Integer.parseInt(assignmentID),Integer.parseInt(studentID),timestamp);
+
+		return rowsAffected == 1;
+	}
     /**
      * Add a grade for a submission
      *
@@ -49,40 +48,36 @@ public class Submission {
         String setGrade = "UPDATE Submission (Grade, TeacherID, Date) = (?, ?, ?) WHERE (AssignmentID = ?) AND (StudentID = ?)";
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         Date date = new Date();
-        int updatedRows = jdbcTemplate.update(setGrade, new Object[]{grade, teacherID, dateFormat.format(date), assID, studentID});
-        if (updatedRows == 1)
-            return true;
-        else
-            return false;
+        int updatedRows = jdbcTemplate.update(setGrade, grade, teacherID, dateFormat.format(date), assID, studentID);
+
+		return updatedRows == 1;
     }
 
-    /**
-     * Remove a submission
-     *
-     * @param assID     Unique identifier for the assignment with the submission being removed
-     * @param studentID Unique identifier for the student whose submission is removed
-     * @return True if everything went well, otherwise false
-     */
-
-    private static final String removeSubmissionStatement = "DELETE FROM "
+	private static final String removeSubmissionStatement = "DELETE FROM "
     		+ "Submission WHERE (AssignmentId=? AND StudentId=?)";
+
+	/**
+	 * Remove a submission
+	 *
+	 * @param assID     Unique identifier for the assignment with the submission being removed
+	 * @param studentID Unique identifier for the student whose submission is removed
+	 * @return True if everything went well, otherwise false
+	 */
     public boolean removeSubmission(String assID, String studentID) {
     	boolean result;
     	int assignmentId = Integer.parseInt(assID);
     	int studentId = Integer.parseInt(studentID);
+
         try {
             int rowsAffected = jdbcTemplate.update(removeSubmissionStatement,
-            		new Object[] {assignmentId, studentId});
-            if(rowsAffected == 1) {
-            	result = true;
-            } else {
-            	result = false;
-            }
-        }catch (IncorrectResultSizeDataAccessException e){
+					assignmentId, studentId);
+			result = rowsAffected == 1;
+        } catch (IncorrectResultSizeDataAccessException e){
             result = false;
-        }catch (DataAccessException e1){
+        } catch (DataAccessException e1){
             result = false;
         }
+
         return result;
     }
 
@@ -96,7 +91,6 @@ public class Submission {
      * @param date      The date the grade was updated
      * @return True if everything went well, otherwise false
      */
-
     public boolean updateGrade(String assID, String teacherID, String studentID, String grade, Date date) {
         return true;
     }
@@ -126,6 +120,7 @@ public class Submission {
             //TODO create better error message
             response.put("error", e.getMessage());
         }
+
         return response;
     }
 
@@ -135,26 +130,27 @@ public class Submission {
      * @param assID The assignment to get submissions for
      * @return A list of ungraded submissions for the assignment
      */
-    private final static String getAllUngradedStatement = "SELECT "
-    		+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
-    		+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
-    		+ "Submission AS sub LEFT JOIN Users AS stu ON "
-    		+ "sub.studentId=stu.userId WHERE (AssignmentId=?) AND "
-    		+ "(Grade IS NULL)";
     public Optional<List<SubmissionWrapper>> getAllUngraded(String assId) {
+
+		String getAllUngradedStatement = "SELECT "
+				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
+				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
+				+ "Submission AS sub LEFT JOIN Users AS stu ON "
+				+ "sub.studentId=stu.userId WHERE (AssignmentId=?) AND "
+				+ "(Grade IS NULL)";
+
     	List<SubmissionWrapper> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
     	try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-	    			getAllUngradedStatement, new Object[] {assignmentId});
+	    			getAllUngradedStatement, assignmentId);
 	    	for (Map<String, Object> row : rows) {
 	    		SubmissionWrapper submission = new SubmissionWrapper();
 	    		submission.assignmentId = (int) row.get("AssignmentId");
 	    		submission.studentId = (int) row.get("StudentId");
 	    		//submission.teacherId = (int) row.get("TeacherId");
 	    		//submission.grade = (String) row.get("Grade");
-	    		submission.submissionDate = ((Timestamp)
-	    				row.get("SubmissionDate")).toString();
+	    		submission.submissionDate = row.get("SubmissionDate").toString();
 	    		try {
 	    			String firstName = (String) row.get("FirstName");
 		    		String lastName = (String) row.get("LastName");
@@ -177,26 +173,24 @@ public class Submission {
         return Optional.of(submissions);
     }
 
-    /**
-
-     * Get all submissions for an assignment
-
-     * @param assID The assignment to get submissions for
-
-     * @return A list of submissions for the assignment
-     */
-
-    private final static String getAllSubmissionsStatement = "SELECT "
-    		+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
-    		+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
-    		+ "Submission AS sub LEFT JOIN Users AS stu ON "
-    		+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
+	/**
+	 * Get all submissions for an assignment
+	 * @param assId The assignment to get submissions for
+	 * @return A list of submissions for the assignment
+	 */
     public Optional<List<SubmissionWrapper>> getAllSubmissions(String assId) {
     	List<SubmissionWrapper> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
+
+		String getAllSubmissionsStatement = "SELECT "
+				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
+				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
+				+ "Submission AS sub LEFT JOIN Users AS stu ON "
+				+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
+
     	try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-	    			getAllSubmissionsStatement, new Object[] {assignmentId});
+	    			getAllSubmissionsStatement, assignmentId);
 	    	for (Map<String, Object> row : rows) {
 	    		SubmissionWrapper submission = new SubmissionWrapper();
 	    		submission.assignmentId = (int) row.get("AssignmentId");
@@ -235,50 +229,52 @@ public class Submission {
         return Optional.of(submissions);
     }
 
-
-    /**
+	/**
 	 *
-     * Get all submissions for an assignment, including students that have not
-     * yet made a submission.
+	 * Get all submissions for an assignment, including students that have not
+	 * yet made a submission.
 	 *
-     * @param assID The assignment to get submissions for
-     * @return A list of submissions for the assignment
-     */
-    private final static String getAllSubmissionsWithStudentsStatement =
-    		"SELECT ass.AssignmentId,par.UserId AS StudentId,sub.SubmissionDate"
-    		+ ",sub.Grade,sub.TeacherId FROM Assignment AS ass RIGHT JOIN "
-    		+ "Participant AS par ON ass.CourseId=par.CourseId LEFT JOIN "
-    		+ "Submission AS sub ON par.userId=sub.studentId WHERE "
-    		+ "(par.function='Student') AND (ass.AssignmentId=?)";
+	 * @param assId The assignment to get submissions for
+	 * @return A list of submissions for the assignment
+	 */
     public Optional<List<SubmissionWrapper>> getAllSubmissionsWithStudents
     		(String assId) {
     	List<SubmissionWrapper> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
+
+		String getAllSubmissionsWithStudentsStatement =
+				"SELECT ass.AssignmentId,par.UserId AS StudentId,sub.SubmissionDate"
+						+ ",sub.Grade,sub.TeacherId FROM Assignment AS ass RIGHT JOIN "
+						+ "Participant AS par ON ass.CourseId=par.CourseId LEFT JOIN "
+						+ "Submission AS sub ON par.userId=sub.studentId WHERE "
+						+ "(par.function='Student') AND (ass.AssignmentId=?)";
+
     	try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-	    			getAllSubmissionsWithStudentsStatement, new Object[]
-	    					{assignmentId});
+	    			getAllSubmissionsWithStudentsStatement, assignmentId);
 	    	for (Map<String, Object> row : rows) {
 	    		SubmissionWrapper submission = new SubmissionWrapper();
 	    		submission.assignmentId = (int) row.get("AssignmentId");
 	    		submission.studentId = (int) row.get("StudentId");
+
 	    		try {
 	    			submission.teacherId = (int) row.get("TeacherId");
 	    		} catch (NullPointerException e) {
 	    			submission.teacherId = null;
 	    		}
+
 	    		try {
 	    			submission.grade = (String) row.get("Grade");
 	    		} catch (NullPointerException e) {
 	    			submission.grade = null;
 	    		}
+
 	    		try {
 	    			submission.submissionDate = ((Timestamp)
 		    				row.get("SubmissionDate")).toString();
 	    		} catch (NullPointerException e) {
 	    			submission.submissionDate = null;
 	    		}
-
 
 	    		submissions.add(submission);
 	    	}
@@ -293,8 +289,54 @@ public class Submission {
 
         return Optional.of(submissions);
     }
+    
+	public Optional<SubmissionWrapper> getSubmissionWithWrapper(int assignmentId,
+			int studentId) {
+		SubmissionWrapper result = new SubmissionWrapper();
 
-    public class SubmissionWrapper {
+		String getStudentSubmissionStatement =
+				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
+
+		try {
+	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+	    			getStudentSubmissionStatement, assignmentId, studentId);
+
+	    	for (Map<String, Object> row : rows) {
+	    		result.assignmentId = (int) row.get("AssignmentId");
+	    		result.studentId = (int) row.get("StudentId");
+
+	    		try {
+	    			result.teacherId = (int) row.get("TeacherId");
+	    		} catch (NullPointerException e) {
+	    			result.teacherId = null;
+	    		}
+	    		try {
+	    			result.grade = (String) row.get("Grade");
+	    		} catch (NullPointerException e) {
+	    			result.grade = null;
+	    		}
+	    		try {
+	    			result.submissionDate = row.get("SubmissionDate").toString();
+	    		} catch (NullPointerException e) {
+	    			result.submissionDate = null;
+	    		}
+
+				// TODO: This break statements negates the for loop (it ends on its first iteration)
+	    		break;
+	    	}
+
+	    } catch (IncorrectResultSizeDataAccessException e){
+			//TODO
+		    return Optional.empty();
+		} catch (DataAccessException e1){
+			//TODO
+			return Optional.empty();
+		}
+
+        return Optional.of(result);
+	}
+
+    public static class SubmissionWrapper {
     	public int assignmentId;
     	public int studentId;
     	public String studentName;

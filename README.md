@@ -1,5 +1,16 @@
-Student Capture
+Student Capture [![Production Build Status](https://travis-ci.org/student-capture/student-capture.svg?branch=Production)](https://travis-ci.org/student-capture/student-capture)
 ===============
+
+**Production:** [![Production Build Status](https://travis-ci.org/student-capture/student-capture.svg?branch=Production)](https://travis-ci.org/student-capture/student-capture)
+
+**Development branch:** [![Build Status Development Branch](https://travis-ci.org/student-capture/student-capture.svg?branch=Development)](https://travis-ci.org/student-capture/student-capture)
+
+![Splash page](docs/img/splash-screen.png)
+
+# Try it out!
+
+You can try out the current state of Student Capture at
+[https://www8.cs.umu.se/~c13lbm/](https://www8.cs.umu.se/~c13lbm/)
 
 # Getting started
 

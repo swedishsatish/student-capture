@@ -1,14 +1,16 @@
 package studentcapture.datalayer.filesystem;
 
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.config.StudentCaptureApplication;
+
 import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class FilesystemInterfaceTest {
     private String courseCode;

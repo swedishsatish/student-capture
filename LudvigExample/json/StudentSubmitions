@@ -1,0 +1,23 @@
+{
+  "title": "StudentSubmitions Schema",
+  "type": "array",
+  "properties": {
+    "userID" : {
+        "type": integer
+    }
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "videoLength": {
+      "description": "Video length in mm:ss",
+      "type": "string"
+    },
+    "grade": {
+        "type" : "string"
+    }
+  },
+  "required": ["userID", "firstName", "lastName", "videoLength"]
+}

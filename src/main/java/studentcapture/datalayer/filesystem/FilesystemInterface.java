@@ -1,13 +1,12 @@
 package studentcapture.datalayer.filesystem;
 
-import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
-import studentcapture.config.StudentCaptureApplication;
+import studentcapture.feedback.FeedbackModel;
 
 import java.io.*;
 
@@ -61,38 +60,28 @@ public class FilesystemInterface {
 		return path;
 	}
 
-    /**
-     * Starts a FileInputStream to an assignment video.
-     * @param courseCode    Courses 6 character identifier.
-     * @param courseId      Courses unique database id.
-     * @param assignmentId  Assignments unique database id.
-     * @return FileInputStream to the Assignment video.
-     * @throws FileNotFoundException If the file does not exist.
+	/**
+	 * Gets the specified video on the fileserver.
+	 * @param path 	The path to the file on the fileserver.
+	 * @return		The video, in the form of an responseentity.
      */
-	public FileInputStream getAssignmentVideo(String courseCode,
-                                              String courseId,
-                                              String assignmentId)
-                                              throws FileNotFoundException {
-        String path = generatePath(courseCode, courseId, assignmentId);
-        return new FileInputStream(path);
-    }
+	public static ResponseEntity<InputStreamResource> getVideo(String path) {
+		ResponseEntity<InputStreamResource> responseEntity;
+		File video = new File(path);
 
-    /**
-     * Returns the size of a specific video file.
-     *
-     * @param courseCode    Courses 6 character identifier.
-     * @param courseId      Courses unique database id.
-     * @param assignmentId  Assignments unique database id.
-     * @return              Video file size.
-     */
-    public int getAssignmentVideoFileSize(String courseCode,
-                                          String courseId,
-                                          String assignmentId) {
-        String path = generatePath(courseCode, courseId, assignmentId)
-                        + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
-        File f = new File(path);
-        return (int)f.length();
-    }
+		try {
+			byte[] out = FileCopyUtils.copyToByteArray(video);
+			HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.add("content-disposition", "inline; filename=AssignmentVideo");
+			responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
+		} catch (FileNotFoundException e) {
+			responseEntity = new ResponseEntity("File not found.", HttpStatus.NOT_FOUND);
+		} catch (IOException e) {
+			responseEntity = new ResponseEntity("Error getting file.", HttpStatus.NOT_FOUND);
+		}
+
+		return responseEntity;
+	}
 
 
 	/**

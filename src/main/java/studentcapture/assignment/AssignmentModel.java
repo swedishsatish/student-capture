@@ -1,7 +1,7 @@
 package studentcapture.assignment;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.InputMismatchException;
 
 /**
  * Created by David Björkstrand on 4/25/16.
@@ -19,9 +19,13 @@ public class AssignmentModel {
     private LocalDateTime endDate;
     private boolean published;
 
-    public AssignmentModel(String title, String info, int minTimeSeconds, int maxTimeSeconds, String startDate,
-                           String endDate, boolean published) throws InputMismatchException
-    {
+    public AssignmentModel(String title,
+                           String info,
+                           int minTimeSeconds,
+                           int maxTimeSeconds,
+                           String startDate,
+                           String endDate,
+                           boolean published) throws InputMismatchException {
         this.courseID = "1000"; //should be changed.
         this.title = title;
         this.info = info;
@@ -82,7 +86,7 @@ public class AssignmentModel {
         return minTimeSeconds;
     }
 
-    public void setMinTimeSeconds(int minTimeSeconds) throws  InputMismatchException {
+    public void setMinTimeSeconds(int minTimeSeconds) throws InputMismatchException {
         this.minTimeSeconds = minTimeSeconds;
         validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
     }
@@ -91,7 +95,7 @@ public class AssignmentModel {
         return maxTimeSeconds;
     }
 
-    public void setMaxTimeSeconds(int maxTimeSeconds) throws  InputMismatchException {
+    public void setMaxTimeSeconds(int maxTimeSeconds) throws InputMismatchException {
         this.maxTimeSeconds = maxTimeSeconds;
         validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
     }
@@ -118,17 +122,21 @@ public class AssignmentModel {
         //validateStartEndTime(this.startDate, this.endDate);
     }
 
-    private void validateStartEndTime(LocalDateTime startDate, LocalDateTime endDate) throws InputMismatchException {
+    private void validateStartEndTime(LocalDateTime startDate,
+                                      LocalDateTime endDate)
+            throws InputMismatchException {
         if (startDate.isAfter(endDate)) {
             throw new InputMismatchException("Start Time is after end day, Start time was " + startDate +
-            " and end time " + endDate);
+                    " and end time " + endDate);
         }
     }
 
     private void validateMinMaxTimeSeconds(int minTimeSeconds, int maxTimeSeconds) {
         if ((minTimeSeconds > maxTimeSeconds) && (maxTimeSeconds != 0)) {
-            throw new InputMismatchException("Minimum time can't be larger than max time, input was, min: " +
-                    minTimeSeconds + " max: " + maxTimeSeconds);
+            throw new InputMismatchException(
+                    "Minimum time can't be larger than max time." +
+                            " Input was, min: " + minTimeSeconds +
+                            " max: " + maxTimeSeconds);
         }
     }
 }

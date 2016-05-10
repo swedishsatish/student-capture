@@ -1,8 +1,9 @@
 package studentcapture.feedback;
 
-
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * This model takes care of the feedback of an assignment. It is used to gather
@@ -10,17 +11,20 @@ import javax.validation.constraints.NotNull;
  *
  * @author Group6
  * @version 0.1
- * @see Submission
+ * @see studentcapture.datalayer.database.Submission
  */
 public class FeedbackModel {
     @NotNull @Min(1)
     private int studentID;
+
     @NotNull @Min(1)
     private int assignmentID;
-    @NotNull @Min(1)
-    private int courseID;
 
-    private int courseCode;
+    @Size(min=1, max=10)
+    private String courseID;
+
+    @Size(min=1, max=6)
+    private String courseCode;
 
     private String grade, feedbackText;
 
@@ -90,14 +94,14 @@ public class FeedbackModel {
     /**
      * @return courseID of the feedback.
      */
-    public int getCourseID() {
+    public String getCourseID() {
         return courseID;
     }
 
     /**
      * @param courseID the courseID of the feedback.
      */
-    public void setCourseID(int courseID) {
+    public void setCourseID(String courseID) {
         this.courseID = courseID;
     }
 
@@ -108,11 +112,11 @@ public class FeedbackModel {
         return teacherID;
     }
 
-    public int getCourseCode() {
+    public String getCourseCode() {
         return courseCode;
     }
 
-    public void setCourseCode(int courseCode) {
+    public void setCourseCode(String courseCode) {
         this.courseCode = courseCode;
     }
 }

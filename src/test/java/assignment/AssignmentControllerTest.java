@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
-import studentcapture.assignment.AssignmentModel;
 import studentcapture.config.StudentCaptureApplicationTests;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
