@@ -26,10 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -55,7 +52,9 @@ public class DatalayerCommunicator {
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
     public Map<String, Object> getGrade(@Valid FeedbackModel model) {
-         return submission.getGrade(model.getStudentID(), model.getAssignmentID());
+        Map result = submission.getGrade(model.getStudentID(), model.getAssignmentID());
+        result.put("feedback", fsi.getFeedbackText(model));
+        return result;
     }
 
 

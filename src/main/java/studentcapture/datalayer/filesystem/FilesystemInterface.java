@@ -200,6 +200,10 @@ public class FilesystemInterface {
 		return true;
 	}
 
+	public static String getFeedbackText(FeedbackModel model) {
+		return "hej";
+	}
+
 	/**
 	 * Stores a file at given path, if path doesn't exist it will be
 	 * created.
@@ -234,4 +238,6 @@ public class FilesystemInterface {
 	    File f = new File(path);
 	    return (int)f.length();
 	}
+
+
 }

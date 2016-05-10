@@ -6,10 +6,12 @@ import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.config.StudentCaptureApplication;
+import studentcapture.feedback.FeedbackModel;
 
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class FilesystemInterfaceTest {
@@ -92,4 +94,15 @@ public class FilesystemInterfaceTest {
 
     }
 
+    @Test
+    public void shouldFindFile() throws Exception {
+        FeedbackModel model = new FeedbackModel();
+        model.setCourseID(courseID);
+        model.setAssignmentID(Integer.parseInt(assignmentID));
+        model.setCourseCode(courseCode);
+        model.setStudentID(15);
+
+        assertNotNull(FilesystemInterface.getFeedbackText(model),"Hej");
+
+    }
 }
