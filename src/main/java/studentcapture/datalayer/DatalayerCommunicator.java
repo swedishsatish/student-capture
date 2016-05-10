@@ -166,28 +166,14 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/getFeedbackVideo",
             method = RequestMethod.GET, produces = "video/webm")
     public ResponseEntity<InputStreamResource> getAssignmentVideo(@Valid FeedbackModel model) {
+        String path = FilesystemInterface.generatePath(
+                                            model.getCourseCode(),
+                                            model.getCourseID(),
+                                            Integer.toString(model.getAssignmentID()),
+                                            Integer.toString(model.getStudentID()));
 
-        ResponseEntity<InputStreamResource> responseEntity;
-        byte[] file = null;
-        String path = FilesystemInterface.generatePath(model);
-        String filename = FilesystemConstants.FEEDBACK_VIDEO_FILENAME;
-
-        File video = new File(path + filename);
-        if(video.exists()) {
-            try {
-                byte[] out = FileCopyUtils.copyToByteArray(video);
-                HttpHeaders responseHeaders = new HttpHeaders();
-                responseHeaders.add("content-disposition", "inline; filename="+filename);
-
-                responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
-            } catch (IOException e) {
-                responseEntity = new ResponseEntity("Error getting file", HttpStatus.OK);
-            }
-        } else {
-            responseEntity = new ResponseEntity("File not found", HttpStatus.OK);
-        }
-        return responseEntity;
-    }
+        return FilesystemInterface.getVideo(path);
+   }
 
     /**
      * Fetches information about an assignment.

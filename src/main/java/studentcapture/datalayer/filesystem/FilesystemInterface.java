@@ -61,17 +61,6 @@ public class FilesystemInterface {
 	}
 
 	/**
-	 *
-	 * @param model
-	 * @return
-     */
-	public static String generatePath(FeedbackModel model) {
-		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + model.getCourseCode()
-				+ "/" + model.getCourseID() + "/" + model.getStudentID()  + "/" + model.getAssignmentID() + "/";
-		return path;
-	}
-
-	/**
 	 * Gets the specified video on the fileserver.
 	 * @param path 	The path to the file on the fileserver.
 	 * @return		The video, in the form of an responseentity.
