@@ -1,16 +1,25 @@
+# Ensure that Travis uses Java 8
+# The path is the path to Java 8 installation on the Travis platform. 
+# 2016-05-10: Travis defaults to Java 7 so this setting is required 
 env:
   global:
     - JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
-# whitelist
+# Only run Travis on the following branches
 branches:
   only:
     - Production
     - Development
 
+# Ensure that we can set our test script as an executable 
 sudo: required
 
+# Mark the test script as an executable
 before_install:
 - sudo chmod +x tests.sh
 
+# Run the test script. We have to run a script to
+# test a multi-language project because Travis does not
+# yet (2016-05-10) have native support for multi-language
+# projects. 
 script: "./tests.sh"
