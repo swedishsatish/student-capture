@@ -5,8 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import studentcapture.feedback.FeedbackModel;
 
-import static org.junit.Assert.*;
-
 /**
  * Will test the LTICommunicator
  * @author ltiChapter

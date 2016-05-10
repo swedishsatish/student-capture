@@ -1,8 +1,5 @@
 package studentcapture.datalayer;
 
-import java.io.*;
-import java.util.Hashtable;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -10,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentModel;
@@ -20,6 +15,7 @@ import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.Submission;
 import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 import studentcapture.datalayer.database.User;
+import studentcapture.datalayer.database.User.CourseAssignmentHierarchy;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
@@ -32,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -134,10 +131,8 @@ public class DatalayerCommunicator {
             fsi.storeFeedbackText(courseCode, courseID, assID, studentID, feedbackText);
             feedback++;
         }
-        if(feedback == 0)
-            return false;
-        else
-            return true;
+
+        return feedback != 0;
     }
 
     /**
@@ -155,24 +150,9 @@ public class DatalayerCommunicator {
             @PathVariable("courseId") String courseId,
             @PathVariable("assignmentId") String assignmentId) {
 
-        ResponseEntity<InputStreamResource> responseEntity;
-
-        try {
-            fsi = new FilesystemInterface(); // should not be here? @autowired???
-            FileInputStream videoInputStream = fsi.getAssignmentVideo(courseCode,courseId,assignmentId);
-
-            byte []out = new byte[fsi.getAssignmentVideoFileSize (courseCode, courseId, assignmentId)];
-            videoInputStream.read(out);
-
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.add("content-disposition", "inline; filename=AssignmentVideo");
-
-            responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
-        } catch (FileNotFoundException e) {
-            responseEntity = new ResponseEntity("File not found.", HttpStatus.NOT_FOUND);
-        } catch (IOException e) {
-            responseEntity = new ResponseEntity("Error getting file.", HttpStatus.NOT_FOUND);
-        }
+        String path = FilesystemInterface.generatePath(courseCode,courseId,assignmentId)
+                + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
+        ResponseEntity<InputStreamResource> responseEntity = FilesystemInterface.getVideo(path);
 
         return responseEntity;
     }
@@ -188,14 +168,14 @@ public class DatalayerCommunicator {
     public ResponseEntity<InputStreamResource> getAssignmentVideo(@Valid FeedbackModel model) {
 
         ResponseEntity<InputStreamResource> responseEntity;
-        byte []file = null;
-        String path = fsi.generatePath(model);
+        byte[] file = null;
+        String path = FilesystemInterface.generatePath(model);
         String filename = FilesystemConstants.FEEDBACK_VIDEO_FILENAME;
 
         File video = new File(path + filename);
         if(video.exists()) {
             try {
-                byte []out = FileCopyUtils.copyToByteArray(video);
+                byte[] out = FileCopyUtils.copyToByteArray(video);
                 HttpHeaders responseHeaders = new HttpHeaders();
                 responseHeaders.add("content-disposition", "inline; filename="+filename);
 
@@ -327,6 +307,29 @@ public class DatalayerCommunicator {
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submission.getAllSubmissionsWithStudents(assignmentID).get();
     }
+    
+    /**
+     * Returns list of all submissions made in response to a given assignment,
+     * including students that are part of the course but has not yet made a
+     * submission.
+     *
+     * @param assignmentID		assignment identifier
+     * @return					list of submissions
+     */
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.GET,
+    value = "/getHierarchy")
+    @ResponseBody
+    public CourseAssignmentHierarchy getHierarchy(
+    		@RequestParam(value="userID") String userID) {
+    	Optional<CourseAssignmentHierarchy> hierarchy = 
+    			user.getCourseAssignmentHierarchy(userID);
+    	if(hierarchy.isPresent()) 
+    		return hierarchy.get();
+    	return null;
+    }
 
     /**
      * Add a submission to the database and filesystem.
@@ -344,7 +347,7 @@ public class DatalayerCommunicator {
                                 @PathVariable(value = "assignmentID") String assignmentID,
                                 @PathVariable(value = "userID") String userID,
                                 @RequestParam(value = "video",required = false) MultipartFile video) {
-    	if(video == null){
+    	if (video == null){
     		if(submission.addSubmission(assignmentID, userID)){
     			return "Student submitted an empty answer";
     		}
@@ -352,13 +355,15 @@ public class DatalayerCommunicator {
     			return "DB failure for student submission";
     		}
     	}
+
         // ADD to database here
-    	if(submission.addSubmission(assignmentID, userID)){
+    	if (submission.addSubmission(assignmentID, userID)){
 	        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
 	            return "OK";
 	        } else
 	            return "Failed to add video to filesystem.";
     	}
+
     	return "failed to add submission to database";
     }
 

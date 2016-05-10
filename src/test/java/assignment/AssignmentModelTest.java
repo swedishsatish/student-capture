@@ -6,9 +6,7 @@ import studentcapture.assignment.AssignmentModel;
 import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by root on 4/25/16.
