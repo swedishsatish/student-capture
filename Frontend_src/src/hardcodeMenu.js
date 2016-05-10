@@ -35,14 +35,21 @@ var CourseList = React.createClass({
     newAssignment : function() {
         ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
     },
-
+    teacherRecordVideo : function() {
+        ReactDOM.render(<TeacherRecordVideo />, document.getElementById('courseContent'));
+    },
+    studentRecordVideo : function() {
+            ReactDOM.render(<StudentRecordVideo />, document.getElementById('courseContent'));
+        },
 	render : function() {
 		var listComponents = [];
         listComponents.push(<div className="menuItem" key={1} onClick={this.printVideo} ><h6 className="navigationText">Video Playback</h6></div>);
         listComponents.push(<div className="menuItem" key={2} onClick={this.printFeedback}><h6 className="navigationText">Feedback</h6></div>);
-        listComponents.push(<div className="menuItem" key={3}><h6 className="navigationText">Item 3</h6></div>);
-        listComponents.push(<div className="menuItem" key={4} onClick={this.studentSubmitions}><h6 className="navigationText">Teacher view assignment</h6></div>);
-        listComponents.push(<div className="menuItem" key={5} onClick={this.newAssignment}><h6 className="navigationText">Teacher new assignment</h6></div>);
+        listComponents.push(<div className="menuItem" key={3} onClick={this.studentSubmitions}><h6 className="navigationText">Teacher view assignment</h6></div>);
+        listComponents.push(<div className="menuItem" key={4} onClick={this.newAssignment}><h6 className="navigationText">Teacher new assignment</h6></div>);
+        listComponents.push(<div className="menuItem" key={5} onClick={this.teacherRecordVideo}><h6 className="navigationText">Teacher Record Video</h6></div>);
+        listComponents.push(<div className="menuItem" key={6} onClick={this.studentRecordVideo}><h6 className="navigationText">Student Record Video</h6></div>);
+
 		return <div>{listComponents}</div>;
 	}
 });

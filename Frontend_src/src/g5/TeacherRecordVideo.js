@@ -2,11 +2,7 @@
  * Created by c13lbm on 4/27/16.
  */
 
-var HardwareTest = React.createClass({
-
-    componentDidMount: function () {
-        //ReactDOM.render();
-    },
+var TeacherRecordVideo = React.createClass({
     formDataBuilder: function (blob, fileName) {
         var fd = new FormData();
         fd.append("videoName", fileName);
@@ -36,49 +32,44 @@ var HardwareTest = React.createClass({
         mediaElement.play();
 
     },
-    calcSpeed: function (blobsize, sendTime) {
+//    calcSpeed: function (blobsize, sendTime) {
 
-        $("#internet-speed").text(function () {
-            var now = Date.now();
-            var mbsec = (blobsize / ((now - sendTime) / 1000));
-            //console.log("mbsec " + mbsec + "now = " + now/1000 + "stime" + sendTime/1000);
-            return "Upload speed = " + mbsec.toFixed(2) + "MB/s"
-        });
-    },
+//        $("#internet-speed").text(function () {
+//            var now = Date.now();
+//            var mbsec = (blobsize / ((now - sendTime) / 1000));
+//            //console.log("mbsec " + mbsec + "now = " + now/1000 + "stime" + sendTime/1000);
+//            return "Upload speed = " + mbsec.toFixed(2) + "MB/s"
+//        });
+//    },
     render: function () {
 
         return (
             <div>
-                <h3>Equipment testing</h3>
+                <h3>Teacher Recording Video</h3>
                 <div className="row" id="">
-                    <div className="six columns" id="rec-test-container"><h5>Recording you</h5>
-                        <Recorder playCallback={this.playVideo} calc={this.calcSpeed}
+                    <div className="six columns">
+                        <Recorder playCallback={this.playVideo} 
                                   postURL="/video/textTest" formDataBuilder={this.formDataBuilder}
                                   recButtonID="record-test" stopButtonID="stop-test" fileName="testVid.webm"
+                                  replay="true" postButtonID="postVideo"
                         />
 
                     </div>
-                    <div id="tst" className="six columns "><h5>The recording from server</h5>
 
-                    </div>
-                </div>
-                <div className="row">
-                    <p id="internet-speed"></p>
                 </div>
                 <div className="row">
                     <div className="four columns u-pull-left">
                         <button id="record-test" className="recControls">Record</button>
 
                         <button id="stop-test" className="recControls" disabled>Stop</button>
+                        <button id="postVideo" className="recControls" disabled>POST</button>
 
                     </div>
-                    <div className="two columns u-pull-right">
-                        <button className="md-close">Close</button>
-                    </div>
+
                 </div>
             </div>
         );
     }
 });
 
-window.HardwareTest = HardwareTest;
+window.TeacherRecordVideo = TeacherRecordVideo;

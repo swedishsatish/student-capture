@@ -1,8 +1,11 @@
 //Created by:
 //Simon Lundmark
 
+//revision by:
+//Filip Golles
+
 //Last update:
-//3/8-16
+//2016-05-04
 
 
 // Class for the login form.
@@ -31,19 +34,17 @@ var LoginForm = React.createClass({
     render: function(){
         return (
             // div containing all the inputs.
-            <div id="loginForm">
-                <h1>Student Capture</h1>
-                <input type="text" 
-                    placeholder="Username" ref="Uname" name="username"/>
+            <div className="forms">
+                <img src="images/sc-logo.png" id="loginLogo" />
+                <input type="text" className="loginField" placeholder="username" ref="Uname" name="username"/>
             
-                <input type="password" 
-                    placeholder="Password" ref="Fpass" name="password"/>
+                <input type="password" className="loginField" placeholder="password" ref="Fpass" name="password"/>
 
-                <button type="button" onClick={this.handleClickLogin}>
+                <button type="button" className="SCButton" id="loginButton" onClick={this.handleClickLogin}>
                     Login
                 </button>
                 
-                <button type="button" onClick={this.handleClickReg}>
+                <button type="button" className="SCButton" id="registerButton" onClick={this.handleClickReg}>
                     Register
                 </button>
                 
@@ -110,43 +111,34 @@ var RegisterForm = React.createClass({
     // atleast and 6 character minimum.
     render: function() {
         return (
-            <div id="registrationForm">
+            <div className="forms" id="regPage">
                 
-                <h1>Registration page</h1>
+                <h2 id="regText">registration</h2>
                 
-                        <input type="text" 
-                               placeholder="First name" ref="Fname" required/>
+                        <input type="text" id="firstName" className="loginField nameField" placeholder="first name" ref="Fname" required/>
                     
-                        <input type="text" 
-                               placeholder="Last name" ref="Lname" required/>
+                        <input type="text" id="lastName" className="loginField nameField" placeholder="last name" ref="Lname" required/>
 
-                        <input type="email" 
-                               placeholder="example@mail.com" ref="EmailInput" required />
+                        <input type="email" className="loginField" placeholder="example@mail.com" ref="EmailInput" required />
          
-                        <input className="u-full-width" type="text" 
-                               placeholder="Username" ref="Uname" required/>
+                        <input className="u-full-width" type="text" className="loginField" placeholder="username" ref="Uname" required/>
     					  
-                        <input type="password" 
-                               placeholder="Password" ref="Fpass" 
+                        <input type="password" id="firstPass" className="loginField nameField"
+                               placeholder="password" ref="Fpass" 
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
                                required/>
 
-                        <input type="password" 
-                               placeholder="Repeat password" ref="Spass" 
+                        <input type="password" id="secondPass" className="loginField nameField"
+                               placeholder="repeat password" ref="Spass" 
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
                                required />
-                               
-                               <p>Password must contain atleast one upper case character,
-    					 one lower case character and one numeric character. 6 characters minimum.</p>
-    					 
-                         
-                <button type="button" onClick={this.validateAllFields}>
-                    Register
-                </button>
-                <button type="button" onClick={this.handleClickCancel}>
+
+                <button type="button" id="cnclBtn" className="SCButton loginField nameField" onClick={this.handleClickCancel}>
                     Cancel
                 </button>
-
+                <button type="button" id="regBtn" className="SCButton loginField nameField" onClick={this.validateAllFields}>
+                    Register
+                </button>
             </div>
         );
     }

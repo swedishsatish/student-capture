@@ -1,18 +1,8 @@
-var NewAssignment = React.createClass({
+var StartPage = React.createClass({
     render : function() {
       return <div>
-                <form id="form" action="assignment" method="post">
-                <input className="inputField" id="title" type="text" defaultValue="title" /><br/>
-                <input className="inputField" id="info" type="text" defaultValue="description" /><br/>
-                <p>VIDEO RECORDING COMPONENT GOES HERE</p>
-                <input id="startDate" type="datetime-local" /><br/>
-                <input id="endDate" type="datetime-local" /><br/>
-                <input id="minTimeSeconds" type="text" defaultValue="minTimeSeconds" /><br/>
-                <input id="maxTimeSeconds" type="text" defaultValue="maxTimeSeconds" /><br/>
-                <input id="isPublished" type="checkbox" value="Car"/>Publish Assignment<br/>
-                <div className="button primary-button" onClick = {handleCancel}> CANCEL </div>
-                <div className="button primary-button" onClick = {submitAssignment}> SUBMIT </div>
-            </form>
+                <h3>Welcome to Student Capture!</h3>
+                <p>A video examination platform</p>
         </div>
     }
 });
@@ -78,4 +68,4 @@ window.CourseContent = React.createClass({
     }
 });
 
-ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
+ReactDOM.render(<StartPage />, document.getElementById('courseContent'));

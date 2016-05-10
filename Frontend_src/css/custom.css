@@ -15,6 +15,10 @@ h1, h2, h3, h4, h5, h6 {
 	color:#FFFFFF;
 }
 
+input {
+	border-radius: 10px !important;
+}
+
 #courseContent h1,
 #courseContent h2,
 #courseContent h3,
@@ -22,10 +26,6 @@ h1, h2, h3, h4, h5, h6 {
 #courseContent h5,
 #courseContent h6 {
     color:#076172;
-}
-
-.inputField {
-
 }
 
 .container {
@@ -87,6 +87,21 @@ h1, h2, h3, h4, h5, h6 {
   	border-bottom: 2px solid #4F9FAE;
 }
 
+.SCButton {
+	height:40px;
+	line-height:40px;
+	border-radius: 10px;
+	background-color: #EC7E15;
+	border: 2px solid #FAFAFA;
+	color:#FAFAFA;
+}
+
+.SCButton:hover {
+	color:#FAFAFA;
+	background-color:#F59B46;
+	border: 2px solid #FAFAFA;
+}
+
 .navigationText {
 	line-height: 24px;
 	font-weight: 300;
@@ -134,16 +149,3 @@ h1, h2, h3, h4, h5, h6 {
 	background-color: #2D728F;
 }
 
-/* SHOW ASSIGNMENT VIDEO */
-
-#countdown-div
-{
-	font-size: 60px;
-}
-
-#assignment-div
-{
-	width: 70%;
-	margin:auto;
-	text-align: center;
-}
