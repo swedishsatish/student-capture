@@ -35,7 +35,7 @@ public class User {
     // This template should be used to send queries to the database
     @Autowired
     protected JdbcTemplate jdbcTemplate;
-    
+
     @Autowired
     private Course course;
     @Autowired
@@ -140,6 +140,13 @@ public class User {
 				Boolean.class);
     }
 
+    /**
+     * Returns an hierarchy of data, retrieved from the database, related to
+     * courses, assignments and submissions a user is participating in.
+     *
+     * @param userID	users identifier
+     * @return			hierarchy of course, assignment and submissiondata
+     */
     public Optional<CourseAssignmentHierarchy> getCourseAssignmentHierarchy(
     		String userID) {
     	CourseAssignmentHierarchy hierarchy = new CourseAssignmentHierarchy();
@@ -147,21 +154,28 @@ public class User {
     	try {
     		addStudentHierarchy(hierarchy, userId);
     		addTeacherHierarchy(hierarchy, userId);
-    		addUserToHierarchy(hierarchy, userId);	
+    		addUserToHierarchy(hierarchy, userId);
 	    } catch (IncorrectResultSizeDataAccessException e){
-			System.out.println("HEJ");
 		    return Optional.empty();
 		} catch (DataAccessException e1){
-			e1.printStackTrace();
 			return Optional.empty();
 		}
-    	
+
     	return Optional.of(hierarchy);
     }
 
-    private static final String getUserStatement = "SELECT * FROM Users WHERE "
-    		+ "UserId=?";
-    private void addUserToHierarchy(CourseAssignmentHierarchy hierarchy, int userId) {
+    /**
+	 * Adds user data, related to a given user,
+	 * from the database to a {@link CourseAssignmentHierarchy}
+	 *
+	 * @param hierarchy		hierarchy added to
+	 * @param userId		student identifier
+	 */
+    private void addUserToHierarchy(CourseAssignmentHierarchy hierarchy,
+    		int userId) {
+    	String getUserStatement = "SELECT * FROM Users WHERE "
+        		+ "UserId=?";
+
     	Map<String, Object> map = jdbcTemplate.queryForMap(
     			getUserStatement, userId);
     	hierarchy.userId = (int) map.get("UserId");
@@ -169,12 +183,23 @@ public class User {
     	hierarchy.lastName = (String) map.get("LastName");
 	}
 
-    private static final String getTeacherHierarchyStatement = "SELECT * FROM "
-    		+ "Participant AS par LEFT JOIN Course AS cou ON par.courseId="
-    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
-    		+ "ass.courseId LEFT JOIN Submission AS sub ON ass.assignmentId="
-    		+ "sub.assignmentId WHERE par.userId=? AND par.function='Teacher'";
-	private void addTeacherHierarchy(CourseAssignmentHierarchy hierarchy, int userId) {
+    /**
+	 * Adds course, assignment and submission data, related to a given teacher,
+	 * from the database to a {@link CourseAssignmentHierarchy}
+	 *
+	 * @param hierarchy		hierarchy added to
+	 * @param userId		teacher identifier
+	 */
+	private void addTeacherHierarchy(CourseAssignmentHierarchy hierarchy, int
+			userId) {
+
+		String getTeacherHierarchyStatement = "SELECT * FROM Participant AS par"
+				+ " LEFT JOIN Course AS cou ON par.courseId="
+	    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
+	    		+ "ass.courseId LEFT JOIN Submission AS sub ON "
+	    		+ "ass.assignmentId=sub.assignmentId WHERE par.userId=? AND "
+	    		+ "par.function='Teacher'";
+
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(
     			getTeacherHierarchyStatement, userId);
     	for (Map<String, Object> row : rows) {
@@ -189,13 +214,15 @@ public class User {
     			currentCourse.course = course.getCourseWithWrapper(courseId);
     			hierarchy.teacherCourses.put(courseId, currentCourse);
     		}
-    		
+
+    		AssignmentPackage currentAssignment;
+
     		try {
-    			AssignmentPackage currentAssignment;
         		int assignmentId = (int) row.get("AssignmentId");
 
     			try {
-        			currentAssignment = currentCourse.assignments.get(assignmentId);
+        			currentAssignment = currentCourse.assignments
+        					.get(assignmentId);
 
 					if (currentAssignment == null) {
 						throw new NullPointerException();
@@ -204,10 +231,10 @@ public class User {
         			currentAssignment = new AssignmentPackage();
         			currentAssignment.assignment = assignment
         					.getAssignmentWithWrapper(assignmentId).get();
-        			currentCourse.assignments.put(assignmentId, currentAssignment);
+        			currentCourse.assignments
+        					.put(assignmentId, currentAssignment);
         		}
 
-				// TODO: unused variable
     			SubmissionWrapper currentSubmission;
     			Integer submissionId = (Integer) row.get("SubmissionId");
 
@@ -218,21 +245,32 @@ public class User {
 					} catch (Exception e) {
     					currentSubmission = submission.getSubmissionWithWrapper(
     							assignmentId,userId).get();
+    					currentAssignment.submissions.put(submissionId,
+    							currentSubmission);
     				}
     			}
-    		} catch (Exception e) {
-    			//TODO
+    		} catch (NullPointerException e) {
+    			currentAssignment = null;
     		}
     	}
 	}
 
-	private static final String getStudentHierarchyStatement = "SELECT * FROM "
-    		+ "Participant AS par LEFT JOIN Course AS cou ON par.courseId="
-    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
-    		+ "ass.courseId LEFT JOIN Submission AS sub ON par.userId="
-    		+ "sub.studentId AND ass.assignmentId=sub.assignmentId WHERE "
-    		+ "par.userId=? AND par.function='Student'";
-	private void addStudentHierarchy(CourseAssignmentHierarchy hierarchy, int userId) {
+	/**
+	 * Adds course, assignment and submission data, related to a given student,
+	 * from the database to a {@link CourseAssignmentHierarchy}
+	 *
+	 * @param hierarchy		hierarchy added to
+	 * @param userId		student identifier
+	 */
+	private void addStudentHierarchy(CourseAssignmentHierarchy hierarchy,
+			int userId) {
+		String getStudentHierarchyStatement = "SELECT * FROM "
+	    		+ "Participant AS par LEFT JOIN Course AS cou ON par.courseId="
+	    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
+	    		+ "ass.courseId LEFT JOIN Submission AS sub ON par.userId="
+	    		+ "sub.studentId AND ass.assignmentId=sub.assignmentId WHERE "
+	    		+ "par.userId=? AND par.function='Student'";
+
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(
     			getStudentHierarchyStatement, userId);
     	for (Map<String, Object> row : rows) {
@@ -247,22 +285,24 @@ public class User {
     			currentCourse.course = course.getCourseWithWrapper(courseId);
     			hierarchy.studentCourses.put(courseId, currentCourse);
     		}
-    		
+
+    		AssignmentPackage currentAssignment;
     		try {
-    			AssignmentPackage currentAssignment;
         		int assignmentId = (int) row.get("AssignmentId");
 
     			try {
-        			currentAssignment = currentCourse.assignments.get(assignmentId);
+        			currentAssignment = currentCourse.assignments.get(
+        					assignmentId);
         			if(currentAssignment==null)
         				throw new NullPointerException();
         		} catch (NullPointerException e) {
         			currentAssignment = new AssignmentPackage();
         			currentAssignment.assignment = assignment
         					.getAssignmentWithWrapper(assignmentId).get();
-        			currentCourse.assignments.put(assignmentId, currentAssignment);
+        			currentCourse.assignments.put(assignmentId,
+        					currentAssignment);
         		}
-    			
+
     			SubmissionWrapper currentSubmission = null;
     			Integer submissionId = (Integer) row.get("SubmissionId");
     			if (submissionId != null) {
@@ -272,14 +312,14 @@ public class User {
 					} catch (Exception e) {
     					currentSubmission = submission.getSubmissionWithWrapper(
     							assignmentId,userId).get();
-    					currentAssignment.submissions.put(submissionId, currentSubmission);
+    					currentAssignment.submissions.put(submissionId,
+    							currentSubmission);
     				}
     			}
-    		} catch (Exception e) {
-    			//TODO
-				throw new RuntimeException("Unimplemented catch-block triggered");
+    		} catch (NullPointerException e) {
+    			currentAssignment = null;
     		}
-    		
+
     	}
 	}
 
@@ -300,28 +340,46 @@ public class User {
         }
     }
 
+    /**
+     * Used to collect all relevant data in a users course-assignment
+     * hierarchy.
+     *
+     * @author tfy12hsm
+     */
     public static class CourseAssignmentHierarchy {
     	public int userId;
     	public String firstName;
     	public String lastName;
     	public Map<String, CoursePackage> teacherCourses;
     	public Map<String, CoursePackage> studentCourses;
-    	
+
     	public CourseAssignmentHierarchy() {
     		teacherCourses = new HashMap<>();
     		studentCourses = new HashMap<>();
     	}
     }
 
+    /**
+     * Used to collect data related to a course in a users course-assignment
+     * hierarchy.
+     *
+     * @author tfy12hsm
+     */
     public class CoursePackage {
     	public CourseWrapper course;
     	public Map<Integer, AssignmentPackage> assignments;
-    	
+
     	public CoursePackage() {
     		assignments = new HashMap<>();
     	}
     }
 
+    /**
+     * Used to collect data related to an assignment in a users
+     * course-assignment hierarchy.
+     *
+     * @author tfy12hsm
+     */
     public class AssignmentPackage {
     	public AssignmentWrapper assignment = null;
     	public Map<Integer, SubmissionWrapper> submissions = null;
