@@ -175,7 +175,7 @@ public class DatalayerCommunicator {
                                             Integer.toString(model.getAssignmentID()),
                                             Integer.toString(model.getStudentID()));
 
-        return FilesystemInterface.getVideo(path);
+        return FilesystemInterface.getVideo(path + FilesystemConstants.FEEDBACK_VIDEO_FILENAME);
    }
 
     /**
