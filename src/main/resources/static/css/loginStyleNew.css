@@ -17,7 +17,14 @@ body {
 	background-repeat: no-repeat;
 }
 
-
+button{	
+	height:40px;
+    line-height:40px;
+    border-radius: 10px;
+    background-color: #EC7E15 ;
+    border: 2px solid #FAFAFA ;
+    color:#FAFAFA ;
+}
 
 #loginLogo {
 	margin-left:3%;
@@ -82,6 +89,11 @@ body {
     color:white; 
     margin:5px; 
  
+}
+
+input{
+	
+	border-radius:20px;
 }
 
 input:invalid{
