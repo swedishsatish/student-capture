@@ -7,15 +7,6 @@ public class HashCodeGenerator {
 
     // TODO: Make more complex
     protected static String generateHash(String userID){
-        int hashCode = 13;
-        hashCode = 31 * hashCode + (int)userID.charAt(1);
-        hashCode = 31 * hashCode + (int)userID.charAt(2);
-        hashCode = 31 * hashCode + (int)userID.charAt(3);
-        hashCode = 31 * hashCode + (int)userID.charAt(0);
-        hashCode = 31 * hashCode + (int)userID.charAt(3);
-        hashCode = 31 * hashCode + (int)userID.charAt(2);
-        hashCode = 31 * hashCode + (int)userID.charAt(1);
-
-        return Integer.toString(hashCode);
+        return Integer.toString(userID.hashCode());
     }
 }

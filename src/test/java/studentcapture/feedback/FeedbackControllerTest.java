@@ -36,6 +36,7 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
                 .queryParam("studentID", "1")
                 .queryParam("assignmentID", "1")
                 .queryParam("courseID", "1")
+                .queryParam("courseCode", "1")
                 .build()
                 .toUri();
     }
@@ -64,6 +65,7 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
         mockMvc.perform(get("/feedback/get")
                 .param("studentID", "1")
                 .param("assignmentID", "1")
+                .param("courseCode", "1")
                 .param("courseID", "1")).andExpect(status().isOk());
     }
 
@@ -78,6 +80,7 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
         mockMvc.perform(get("/feedback/get")
                 .param("studentID", "1")
                 .param("assignmentID", "1")
+                .param("courseCode", "1")
                 .param("courseID", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.grade").value("MVG"))
@@ -93,6 +96,7 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
         mockMvc.perform(get("/feedback/get")
                 .param("studentID", "1")
                 .param("assignmentID", "1")
+                .param("courseCode", "1")
                 .param("courseID", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.error").value("Exception message"));
@@ -106,6 +110,7 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
         mockMvc.perform(get("/feedback/get")
                 .param("studentID", "1")
                 .param("assignmentID", "1")
+                .param("courseCode", "1")
                 .param("courseID", "1"))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
@@ -118,6 +123,7 @@ public class FeedbackControllerTest extends StudentCaptureApplicationTests {
         mockMvc.perform(get("/feedback/get")
                 .param("studentID", "1")
                 .param("assignmentID", "1")
+                .param("courseCode", "1")
                 .param("courseID", "1"))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
