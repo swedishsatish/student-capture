@@ -86,10 +86,10 @@ public class VideoInController {
                     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
 
-                tempUri = "https://localhost:8443/DB/addSubmission/" + courseID + "/" + assignmentID + "/" + userID;
-                requestParts.add("courseID", courseID);
-                requestParts.add("assignmentID", assignmentID);
-                requestParts.add("userID", userID);
+                tempUri = "https://localhost:8443/DB/addSubmission/" + courseID + "/" + assignmentID + "/" + studentID;
+//                requestParts.add("courseID", courseID);
+//                requestParts.add("assignmentID", assignmentID);
+//                requestParts.add("studentID", studentID);
                 break;
             case "feedback":
                 if (isFeedbackAttrNotNull(assignmentID, studentID, feedbackText)) {
