@@ -18,6 +18,8 @@ public class LoginDBController {
 							 @RequestParam(value="username", required = true)  String username,
 							 @RequestParam(value="password", required = true)  String password
 							 ) {
+	    
+	    System.out.println(firstName + lastName + email + username + password);
 		UserAccount user = new UserAccount(firstName, lastName, email, username, password);
 	}
 }

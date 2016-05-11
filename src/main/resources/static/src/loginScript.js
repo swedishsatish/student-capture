@@ -19,10 +19,23 @@ var LoginForm = React.createClass({
             alert("Wrong username or password");
         }
     },
+    
+    submitLoginForm: function(){
+	
+        document.getElementById("loginPage").action = "/login";
+
+    },
+
+    
+
 
     // Render function, defines what is to be shown for this class
     render: function(){
+    	
+    	this.submitLoginForm();
+    	
         return (
+
             // div containing all the inputs.
             <div id="loginForm">
                 <h1>Student Capture</h1>
@@ -47,6 +60,11 @@ var LoginForm = React.createClass({
 
 // Class for the Register form.
 var RegisterForm = React.createClass({
+	
+    
+    submitRegisterForm: function(){
+		document.getElementById("loginPage").action = "/register";
+    },
     
     // Function to check that all the fields are valid
     validateAllFields: function(){
@@ -102,30 +120,33 @@ var RegisterForm = React.createClass({
     // contain one big character, one small and one number 
     // atleast and 6 character minimum.
     render: function() {
+    	
+    	this.submitRegisterForm();
         return (
+        	
             <div id="registrationForm">
                 
                 <h1>Registration page</h1>
                 
                         <input type="text" 
-                               placeholder="First name" ref="Fname" required/>
+                        	name="firstname" placeholder="First name" ref="Fname" required/>
                     
                         <input type="text" 
-                               placeholder="Last name" ref="Lname" required/>
+                        	name="lastname"  placeholder="Last name" ref="Lname" required/>
 
                         <input type="email" 
-                               placeholder="example@mail.com" ref="EmailInput" required />
+                        	name="email" placeholder="example@mail.com" ref="EmailInput" required />
          
                         <input className="u-full-width" type="text" 
-                               placeholder="Username" ref="Uname" required/>
+                        	name="username" placeholder="Username" ref="Uname" required/>
     					  
                         <input type="password" 
-                               placeholder="Password" ref="Fpass" 
+                        	name="password" placeholder="Password" ref="Fpass" 
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
                                required/>
 
                         <input type="password" 
-                               placeholder="Repeat password" ref="Spass" 
+                        	name="confirmpassword"  placeholder="Repeat password" ref="Spass" 
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
                                required />
                                
@@ -133,7 +154,7 @@ var RegisterForm = React.createClass({
     					 one lower case character and one numeric character. 6 characters minimum.</p>
     					 
                          
-                <button type="button" onClick={this.validateAllFields}>
+                <button type="submit">
                     Register
                 </button>
                 <button type="button" onClick={this.handleClickCancel}>
