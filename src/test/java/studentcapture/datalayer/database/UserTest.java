@@ -11,6 +11,8 @@ import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 import studentcapture.datalayer.database.User.CourseAssignmentHierarchy;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,8 +43,6 @@ public class UserTest  extends StudentCaptureApplicationTests {
         //Over writes the actual database with fake.
         H2DataSource src = new H2DataSource();
         jdbcMock.setDataSource(src.dataSource());
-
-
 
     }
 
