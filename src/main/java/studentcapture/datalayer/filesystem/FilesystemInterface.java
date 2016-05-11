@@ -229,7 +229,20 @@ public class FilesystemInterface {
 	}
 
 	public static String getFeedbackText(FeedbackModel model) {
-		return "hej";
+		String path = generatePathFromModel(model)+FilesystemConstants.FEEDBACK_TEXT_FILENAME;
+		String result = "";
+		String line = "";
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(path));
+			while((line = reader.readLine()) != null) {
+				result += line;
+			}
+		} catch (FileNotFoundException e) {
+			return "File not found!";
+		} catch (IOException e) {
+			return "I/O error while reading feedback text file!";
+		}
+		return result;
 	}
 
 	/**

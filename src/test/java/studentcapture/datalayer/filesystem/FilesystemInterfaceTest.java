@@ -11,11 +11,10 @@ import studentcapture.feedback.FeedbackModel;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class FilesystemInterfaceTest {
     private String courseCode;
@@ -115,14 +114,40 @@ public class FilesystemInterfaceTest {
     public void shouldGetFeedbackText() throws Exception {
         FeedbackModel model = createFeedbackModel();
 
-        createMockFile();
-        PrintWriter writer = new PrintWriter("mockTestFile", "UTF-8");
-        writer.println("The first line");
-        writer.close();
-
+        String mockString = "First line in testfile";
+        testFile = new MockMultipartFile("mockTestFile",mockString.getBytes());
         FilesystemInterface.storeFeedbackText(model,testFile);
-        assertEquals(FilesystemInterface.getFeedbackText(model),"The first line");
+        assertEquals(FilesystemInterface.getFeedbackText(model),"First line in testfile");
     }
+    @Test
+    public void shouldGetIncorrectFeedbackText() throws Exception {
+        FeedbackModel model = createFeedbackModel();
+
+        String mockString = "Hejsvejs";
+        testFile = new MockMultipartFile("mockTestFile",mockString.getBytes());
+        FilesystemInterface.storeFeedbackText(model,testFile);
+
+        assertNotEquals(FilesystemInterface.getFeedbackText(model),"First line in testfile");
+    }
+    @Test
+    public void shouldGetMultipleLineFeedbackText() throws Exception {
+        FeedbackModel model = createFeedbackModel();
+
+        String mockString = "First line in testfile\n" +
+                "Second line in testfile\n"+
+                "Third line in testfile";
+        testFile = new MockMultipartFile("mockTestFile",mockString.getBytes());
+        FilesystemInterface.storeFeedbackText(model,testFile);
+
+        assertNotEquals(FilesystemInterface.getFeedbackText(model),mockString);
+    }
+    @Test
+    public void shouldReturnNoFile() throws Exception {
+        FeedbackModel model = createFeedbackModel();
+
+        assertEquals(FilesystemInterface.getFeedbackText(model),"File not found!");
+    }
+
     private FeedbackModel createFeedbackModel() {
         FeedbackModel model = new FeedbackModel();
         model.setCourseID(courseID);
