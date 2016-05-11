@@ -1,10 +1,8 @@
 package studentcapture.login;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -30,6 +28,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class LoginAuthentication implements AuthenticationProvider {
 
     
+    //Using the same method for connecting to DB as in FeedbackController.java
+    
     private static final String dbURI = "https://localhost:8443";
     
     @Autowired
@@ -45,18 +45,15 @@ public class LoginAuthentication implements AuthenticationProvider {
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
 		String username = auth.getName().trim();
 		String password = auth.getCredentials().toString();
-		/*if(username.equals("user") && password.equals("user")) {
-			Authentication a = new UsernamePasswordAuthenticationToken(username, password);
-			return a;
-		} else {
-			return null;
-		}*/
+
 		if(checkUser(username, password)){
+		    //Set role
 		    Collection<? extends GrantedAuthority> authorities = 
 		            Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+		    
 		    Authentication a = new UsernamePasswordAuthenticationToken(username, password, authorities);
-		    //a.setAuthenticated(arg0); //Should not be necessary
-            return a;
+
+		    return a;
 		}
 
 		return null;
@@ -67,10 +64,17 @@ public class LoginAuthentication implements AuthenticationProvider {
 		return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(auth));
 	}
 
+	/**
+	 * Sends username and password to the database, 
+	 *     and checks if they are valid.
+	 * 
+	 * @param username
+	 * @param password
+	 * @return true if username and password match in the database, else false
+	 */
 	public boolean checkUser(String username, String password) {
-		//Send request to DB and check if the username and password exists.
 	    
-	    System.out.println("Checking user data in DB");
+	    //System.out.println("Checking user data in DB");
 	    
 	    URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
                 .path("DB/login")
@@ -79,9 +83,10 @@ public class LoginAuthentication implements AuthenticationProvider {
                 .build()
                 .toUri();
 	    
+	    //Send request to DB and get the boolean answer
 	    Boolean response = requestSender.getForObject(targetUrl, Boolean.class);
 	    
-	    System.out.println("Boolean response received: Checkuser = " + response.toString());
+	    //System.out.println("Boolean response received: Checkuser = " + response.toString());
 	    
 		return response;
 	}
