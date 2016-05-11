@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import studentcapture.config.StudentCaptureApplicationTests;
-import studentcapture.datalayer.database.Submission.SubmissionWrapper;
+import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 import studentcapture.datalayer.database.User.CourseAssignmentHierarchy;
 
 import java.sql.Timestamp;
