@@ -78,20 +78,6 @@ public class SubmissionDAO {
 	}
 
 	/**
-	 * Changes the grade of a submission
-	 *
-	 * @param assID     Unique identifier for the assignment with the submission being graded
-	 * @param teacherID Unique identifier of the teacher updating
-	 * @param studentID Unique identifier for the student
-	 * @param grade     The new grade of the submission
-	 * @param date      The date the grade was updated
-	 * @return True if everything went well, otherwise false
-	 */
-	public boolean updateGrade(String assID, String teacherID, String studentID, String grade, Date date) {
-		return true;
-	}
-
-	/**
 	 * Get information about the grade of a submission
 	 *
 	 * @param assignmentID Unique identifier for the assignment submission grade bra
