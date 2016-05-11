@@ -1,7 +1,6 @@
 /**
  * Created by victor on 2016-05-11.
  */
-
 /**
  * Drop down menu that lets the teacher choose the grade for the student.
  * @type {string} Sting with students selected grade
