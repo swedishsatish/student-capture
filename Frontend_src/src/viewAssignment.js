@@ -80,6 +80,28 @@ var But = React.createClass({
     }
 });
 
+var Question = React.createClass({
+    getInitialState: function() {
+        return {available: false,
+                question: ''};
+    },
+    componentDidMount: function() {
+        this.serverRequest = getJson("test/assignmentdata.json", function (data) {
+            var json = JSON.parse(data);
+            console.log("json is: " + json["AssignmentQuestion"]);
+            this.setState({question: json["AssignmentQuestion"], });
+        }.bind(this));
+    },
+    render: function() {
+        return (
+        <div id="question-div">
+            Question: <br/>
+            {this.state.question}
+        </div>
+        );
+    }
+})
+
 var CountDown = React.createClass({
     getInitialState: function() {
         return { timeLeft: 5 , startRecord : false};
@@ -92,7 +114,14 @@ var CountDown = React.createClass({
         }
     },
     render: function() {
-        var content = this.state.startRecord ? <StudentRecordVideo /> : this.state.timeLeft;
+        var content = this.state.startRecord ? <div id="record-wrap-div">
+                                                    <div id="record-div">
+                                                        <StudentRecordVideo />
+                                                    </div>
+                                                    <div id="question-div">
+                                                        <Question />
+                                                    </div>
+                                                </div> : this.state.timeLeft;
         return (
             <div id="countdown-div">
             { content }
@@ -107,12 +136,18 @@ var CountDown = React.createClass({
 })
 var Vid = React.createClass({
     getInitialState: function() {
-        return {showCountdown: false};
+        return {showCountdown: false,
+                currTime: 0,
+                totalTime: 0,
+                };
     },
     render: function() {
         return (
             <div>
-                { this.state.showCountdown ? <CountDown /> : <video id='videoPlayer' src={this.props.url} width='70%'></video>}
+                { this.state.showCountdown ? <CountDown /> : <div><video id='videoPlayer' src={this.props.url} width='70%'></video>
+                                                             <div>
+                                                                 {Math.round(this.state.currTime)} / {Math.round(this.state.totalTime)}
+                                                             </div></div>}
             </div>
         );
     },
@@ -120,15 +155,27 @@ var Vid = React.createClass({
         var vid = document.getElementById("videoPlayer");
         vid.addEventListener('ended',this.onEnded,false);
         vid.addEventListener('playing',this.onStarted,false);
+        vid.addEventListener('paused', this.onPause, false);
         vid.play();
+        this.interval = setInterval(this.ticker, 1000);
     },
     onEnded: function() {
+        console.log("video ended");
+        clearInterval(this.interval);
         this.setState({showCountdown: true})
     },
     onStarted : function () {
         var vid = document.getElementById("videoPlayer");
+        this.setState({totalTime: vid.duration});
+    },
+    onPause : function () {
+        var vid = document.getElementById("videoPlayer");
+
+    },
+    ticker: function () {
+        var vid = document.getElementById("videoPlayer");
+        this.setState({currTime: vid.currentTime});
         console.log(vid.currentTime);
-        console.log(vid.duration);
     }
 });
 

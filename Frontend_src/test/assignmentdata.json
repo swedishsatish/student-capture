@@ -5,5 +5,6 @@
     "endsAt" : "2016-04-15 16:00",
     "AssignmentName" : "Test assignment",
     "AssignmentInformation" : "BLABLALBA LBALALBLABLA LLA BLABLABL LABLA BLA BLA LBA LBAL BLA BLALBAL B",
-    "assignmentUrl" : "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4"
+    "assignmentUrl" : "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",
+    "AssignmentQuestion" : "Who is Big Buck Bunny?"
 }
