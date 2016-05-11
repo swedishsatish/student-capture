@@ -60,14 +60,13 @@ public class FilesystemInterface {
 		return path;
 	}
 
-	/**
-	 *
-	 * @param model
-	 * @return
-     */
-	public static String generatePath(FeedbackModel model) {
-		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + model.getCourseCode()
-				+ "/" + model.getCourseID() + "/" + model.getStudentID()  + "/" + model.getAssignmentID() + "/";
+	public static String generatePathFromModel(FeedbackModel model){
+		String path = generatePath(
+				model.getCourseCode(),
+				model.getCourseID(),
+				""+model.getAssignmentID(),
+				""+model.getStudentID());
+
 		return path;
 	}
 
@@ -168,7 +167,7 @@ public class FilesystemInterface {
 	 * @param userId from database
 	 * @return true if video was stored successfully
 	 */
-	public boolean storeFeedbackVideo(String courseCode, String courseId,
+	public static boolean storeFeedbackVideo(String courseCode, String courseId,
 											String assignmentId, String userId,
 									  MultipartFile source) {
 
@@ -194,7 +193,25 @@ public class FilesystemInterface {
 	 * @param userId from database
 	 * @return true if video was stored successfully
 	 */
-	public boolean storeFeedbackText(String courseCode, String courseId,
+	public static boolean storeFeedbackText(FeedbackModel model, MultipartFile source) {
+		return storeFeedbackText(
+				model.getCourseCode(),
+				model.getCourseID(),
+				""+ model.getAssignmentID(),
+				""+model.getStudentID(),
+				source);
+	}
+
+	/**
+	 * Store the teacher's feedback text to a student submission.
+	 *
+	 * @param courseCode the code for the course.
+	 * @param courseId course id from the database
+	 * @param assignmentId from database
+	 * @param userId from database
+	 * @return true if video was stored successfully
+	 */
+	public static boolean storeFeedbackText(String courseCode, String courseId,
 									 String assignmentId, String userId,
 									 MultipartFile source) {
 
@@ -209,6 +226,28 @@ public class FilesystemInterface {
 		}
 
 		return true;
+	}
+
+    /**
+     * Reads a feedback text file from a teacher from the moose hard drive and returns it.
+     * @param model the feedback model containing params to generate the path to the file.
+     * @return the teacher's written feedback as a string.
+     */
+	public static String getFeedbackText(FeedbackModel model) {
+		String path = generatePathFromModel(model)+FilesystemConstants.FEEDBACK_TEXT_FILENAME;
+		String feedbackText = "";
+		try {
+			String line;
+			BufferedReader reader = new BufferedReader(new FileReader(path));
+			while((line = reader.readLine()) != null) {
+				feedbackText += line;
+			}
+		} catch (FileNotFoundException e) {
+			return "";
+		} catch (IOException e) {
+			return "I/O error while reading feedback text file!";
+		}
+		return feedbackText;
 	}
 
 	/**
@@ -245,4 +284,6 @@ public class FilesystemInterface {
 	    File f = new File(path);
 	    return (int)f.length();
 	}
+
+
 }

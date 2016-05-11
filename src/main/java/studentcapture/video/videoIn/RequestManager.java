@@ -38,7 +38,7 @@ public class RequestManager {
              //   throw new Exception("Request not valid.");
         }
 
-        String uploadURL = "/uploadVideo/" + HashCodeGenerator.generateHash(userID);
+        String uploadURL = HashCodeGenerator.generateHash(userID);
 
 
         return uploadURL;
