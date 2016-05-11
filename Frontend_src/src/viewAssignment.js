@@ -2,7 +2,8 @@
  * viewAssignment.js
  */
 
-
+var assignmentData = {
+}
 window.AssignmentContent = React.createClass({
     getInitialState: function() {
         return {loaded : false,
@@ -15,6 +16,7 @@ window.AssignmentContent = React.createClass({
     jsonReady: function(data) {
         var json = JSON.parse(data);
         this.setState({loaded: true, assignmentName: json["AssignmentName"], startsAt: json["startsAt"], endsAt: json["endsAt"], assignmentUrl: json["assignmentUrl"]});
+        assignmentData.assignmentUrl = json["assignmentUrl"];
     },
     render: function () {
 
@@ -32,9 +34,7 @@ window.AssignmentContent = React.createClass({
                     <h5 id="assignment-endAt">{this.state.endsAt}</h5>
                 </div>
                 <div id="assignment-interaction">
-                    <BlankBox />
                     <But />
-                    <Vid url={this.state.assignmentUrl}/>
                 </div>
             </div>
         )
@@ -45,6 +45,23 @@ window.AssignmentContent = React.createClass({
 });
 
 
+var AssignmentStart = React.createClass({
+    getInitialState: function() {
+        return {
+                    assignmentUrl : '',
+                    assignmentDescription: ''
+                }
+    },
+    render: function() {
+        return (
+            <div>
+                <Vid url={assignmentData.assignmentUrl}/>
+                <BlankBox />
+            </div>
+        )
+    }
+})
+
 
 var But = React.createClass({
     getInitialState: function() {
@@ -52,12 +69,12 @@ var But = React.createClass({
     },
     onClick: function() {
         this.setState({disabled: true});
-        document.getElementById("videoPlayer").play();
     },
     render: function() {
+        var content = this.state.disabled ? <AssignmentStart /> : <input disabled = {this.state.disabled} type="submit" id="start-video-button" value="Start Assignment" onClick={this.onClick}  /> ;
         return (
             <div>
-            <input disabled = {this.state.disabled} type="submit" id="start-video-button" value="Start Assignment" onClick={this.onClick}  />
+                {content}
             </div>
         );
     }
@@ -75,7 +92,7 @@ var CountDown = React.createClass({
         }
     },
     render: function() {
-        var content = this.state.startRecord ? console.log("Start Recording") : this.state.timeLeft;
+        var content = this.state.startRecord ? <StudentRecordVideo /> : this.state.timeLeft;
         return (
             <div id="countdown-div">
             { content }
@@ -102,9 +119,16 @@ var Vid = React.createClass({
     componentDidMount: function() {
         var vid = document.getElementById("videoPlayer");
         vid.addEventListener('ended',this.onEnded,false);
+        vid.addEventListener('playing',this.onStarted,false);
+        vid.play();
     },
     onEnded: function() {
         this.setState({showCountdown: true})
+    },
+    onStarted : function () {
+        var vid = document.getElementById("videoPlayer");
+        console.log(vid.currentTime);
+        console.log(vid.duration);
     }
 });
 

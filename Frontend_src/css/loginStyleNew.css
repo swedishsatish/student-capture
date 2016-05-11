@@ -87,3 +87,19 @@ body {
 	text-transform: uppercase;
 	text-align: center;
 }
+
+.tooltipText{display: none;}
+
+.forms input:focus + .tooltipText{
+    display: block;
+    position: absolute;
+    top:101%;
+    left: center;
+    color:white; 
+    margin:5px; 
+ 
+}
+
+input:invalid{
+color:red;
+}

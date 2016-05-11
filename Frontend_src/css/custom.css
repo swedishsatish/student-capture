@@ -80,11 +80,16 @@ input {
 .menuItem {
 	margin-top: 5%;
 	margin-left: 3%;
-	height:24px;
 	text-transform: uppercase;
   	cursor: pointer;
   	text-indent: 10px;
+
+}
+
+.menuItem > div{
+	height:24px;
   	border-bottom: 2px solid #4F9FAE;
+    width: 100%;
 }
 
 .SCButton {
@@ -119,6 +124,19 @@ input {
 	color:#D9853B;
 	line-height: 50px;
 	margin:0;
+}
+
+#videoDivFrame {
+    height: calc( 100% - 70px );
+    width: 100%;
+
+}
+
+iframe {
+    height: inherit;
+    width: inherit;
+    overflow: hidden;
+    border: 0px;
 }
 
 /* ERIK MENYGREJER */

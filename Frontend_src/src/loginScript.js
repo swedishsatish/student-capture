@@ -119,7 +119,8 @@ var RegisterForm = React.createClass({
                     
                         <input type="text" id="lastName" className="loginField nameField" placeholder="last name" ref="Lname" required/>
 
-                        <input type="email" className="loginField" placeholder="example@mail.com" ref="EmailInput" required />
+                        <input type="email" className="loginField" placeholder="example@mail.com" ref="EmailInput" required 
+                        pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" />
          
                         <input className="u-full-width" type="text" className="loginField" placeholder="username" ref="Uname" required/>
     					  
@@ -127,11 +128,17 @@ var RegisterForm = React.createClass({
                                placeholder="password" ref="Fpass" 
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
                                required/>
+                        
+                        <p className="tooltipText">Password must contain atleast one upper case character,
+    					 one lower case character and one numeric character.</p> 
 
                         <input type="password" id="secondPass" className="loginField nameField"
                                placeholder="repeat password" ref="Spass" 
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
                                required />
+                               
+                               <p className="tooltipText">Password must contain atleast one upper case character,
+    					 one lower case character and one numeric character.</p> 
 
                 <button type="button" id="cnclBtn" className="SCButton loginField nameField" onClick={this.handleClickCancel}>
                     Cancel

@@ -1,15 +1,13 @@
+
 var StartPage = React.createClass({
-    render : function() {
-      return <div>
-                <h3>Welcome to Student Capture!</h3>
-                <p>A video examination platform</p>
+    render: function () {
+        return <div>
+            <h3>Welcome to Student Capture!</h3>
+            <p>A video examination platform</p>
         </div>
     }
+
 });
-
-function handleCancel() {
-
-}
 
 function submitAssignment() {
     var reqBody = {}
@@ -45,7 +43,8 @@ window.CourseContent = React.createClass({
         var content = [];
         switch(type){
             case "course":
-                content.push(<h1>{type}</h1>);
+                var course = this.props.course;
+                content.push(<h1>{type} {course["name"]}</h1>);
                 break;
             case "assignment":
                 var courseId = this.props.course;
