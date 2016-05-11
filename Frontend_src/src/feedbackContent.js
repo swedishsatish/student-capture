@@ -18,14 +18,14 @@ window.Feedback = React.createClass ({
                     ReactDOM.render(
                         <NewFeedback feedbackResponse={infoFromDb}
                                      sourceInfo={window.globalURL + "/feedback/video?studentID=" + document.getElementById('student').value
-                        + "&assignmentID=" + document.getElementById('ass').value + "&courseID=" + document.getElementById('course').value}/>,
+                        + "&assignmentID=" + document.getElementById('ass').value + "&courseID=" + document.getElementById('course').value + "&courseCode=1"}/>,
                         document.getElementById('courseContent')
                     )
                 )
             }
         };
         xmlHttp.open("GET",window.globalURL + "/feedback/get?studentID=" + document.getElementById('student').value
-            + "&assignmentID=" + document.getElementById('ass').value + "&courseID=" + document.getElementById('course').value, true);
+            + "&assignmentID=" + document.getElementById('ass').value + "&courseID=" + document.getElementById('course').value + "&courseCode=1", true);
         xmlHttp.send();
     },
     render: function () {
@@ -57,6 +57,10 @@ var NewFeedback = React.createClass ({
                     Teacher: {feedbackResponse.teacher} <br />
                     Grade: {feedbackResponse.grade} <br />
                     Time: {feedbackResponse.time} <br />
+                    <span>
+                        <h3>Feedback</h3>
+                        {feedbackResponse.feedback}
+                    </span>
                     <video width="720" height="460" src={this.props.sourceInfo} preload="auto" controls></video>
                 </div>
             )
