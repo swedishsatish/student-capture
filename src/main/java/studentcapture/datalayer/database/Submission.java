@@ -24,13 +24,19 @@ public class Submission {
      * @param studentID Unique identifier for the student submitting
      * @return True if everything went well, otherwise false
      */
-    public boolean addSubmission(String assignmentID,String studentID) {
+    public boolean addSubmission(String assignmentID,String studentID, Boolean studentConsent) {
         String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate) VALUES  (?,?,?)";
         java.util.Date date = new java.util.Date(System.currentTimeMillis());
         java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
         timestamp.setNanos(0);
-
-		int rowsAffected = jdbcTemplate.update(sql, Integer.parseInt(assignmentID),Integer.parseInt(studentID),timestamp);
+		int assID = Integer.parseInt(assignmentID);
+		int subID = Integer.parseInt(studentID);
+		int rowsAffected = 0;
+		try{
+			 rowsAffected = jdbcTemplate.update(sql,assID,subID,timestamp);
+		} catch (Exception e) {
+			return false;
+		}
 
 		return rowsAffected == 1;
 	}
@@ -44,7 +50,7 @@ public class Submission {
      * @return True if everything went well, otherwise false
      */
 
-    public boolean setGrade(int assID, int teacherID, int studentID, String grade) {
+    public boolean setGrade(int assID, int teacherID, int studentID, String grade, Boolean studentConsent) {
         String setGrade = "UPDATE Submission (Grade, TeacherID, Date) = (?, ?, ?) WHERE (AssignmentID = ?) AND (StudentID = ?)";
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         Date date = new Date();

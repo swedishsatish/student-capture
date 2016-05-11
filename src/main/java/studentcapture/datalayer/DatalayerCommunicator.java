@@ -2,6 +2,7 @@ package studentcapture.datalayer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.expression.spel.ast.BooleanLiteral;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -84,6 +85,7 @@ public class DatalayerCommunicator {
      * @param teacherID Teacher identification
      * @param studentID Student identification
      * @param grade Grade
+     * @param teacherConsent Teacher chooses to publish a student's reply
      * @return  True if the grade was successfully saved to the database, else false
      */
     @CrossOrigin
@@ -91,9 +93,10 @@ public class DatalayerCommunicator {
     public boolean setGrade(@RequestParam(value = "assID") String assID,
                             @RequestParam(value = "teacherID") String teacherID,
                             @RequestParam(value = "studentID") String studentID,
-                            @RequestParam(value = "grade") String grade) {
+                            @RequestParam(value = "grade") String grade,
+                            @RequestParam(value = "teacherConsent") Boolean teacherConsent) {
 
-        return submission.setGrade(Integer.parseInt(assID), Integer.parseInt(teacherID), Integer.parseInt(studentID), grade);
+        return submission.setGrade(Integer.parseInt(assID), Integer.parseInt(teacherID), Integer.parseInt(studentID), grade, teacherConsent);
     }
 
     /**
@@ -316,6 +319,7 @@ public class DatalayerCommunicator {
      * @param courseID
      * @param userID
      * @param video
+     * @param studentConsent A student allows his teacher to publish his answer to the other students
      * @return
      */
     @CrossOrigin
@@ -324,9 +328,10 @@ public class DatalayerCommunicator {
                                 @PathVariable(value = "courseID") String courseID,
                                 @PathVariable(value = "assignmentID") String assignmentID,
                                 @PathVariable(value = "userID") String userID,
+                                @RequestParam(value = "studentConsent") Boolean studentConsent,
                                 @RequestParam(value = "video",required = false) MultipartFile video) {
     	if (video == null){
-    		if(submission.addSubmission(assignmentID, userID)){
+    		if(submission.addSubmission(assignmentID, userID, studentConsent)){
     			return "Student submitted an empty answer";
     		}
     		else{
@@ -335,14 +340,14 @@ public class DatalayerCommunicator {
     	}
 
         // ADD to database here
-    	if (submission.addSubmission(assignmentID, userID)){
+    	if (submission.addSubmission(assignmentID, userID, studentConsent)){
 	        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
 	            return "OK";
 	        } else
 	            return "Failed to add video to filesystem.";
     	}
 
-    	return "failed to add submission to database";
+    	return "Student has already submitted an answer.";
     }
 
 }
