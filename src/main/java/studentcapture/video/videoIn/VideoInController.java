@@ -3,6 +3,7 @@ package studentcapture.video.videoIn;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -45,7 +46,7 @@ public class VideoInController {
         if(video.isEmpty()) {
             // No video was received.
             System.err.println("POST request to /uploadVideo with empty video.");
-            return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<String>("Empty video.", HttpStatus.BAD_REQUEST);
         }
 
         // Check if url{id} is generated correctly, first done in Request-Manager
@@ -53,11 +54,11 @@ public class VideoInController {
         if (!temp.equals(id)) {
             // User has not been granted permission to upload files.
             System.err.println("User has not been granted permission to upload video.");
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("No permission to upload video.", HttpStatus.UNAUTHORIZED);
         } else if (!videoType.equals("assignment") && !videoType.equals("submission") && !videoType.equals("feedback")) {
             // Request must contain the type of upload.
             System.err.println("Wrong video type. Videotype: " + videoType);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Unknown type of upload.",HttpStatus.BAD_REQUEST);
         }
 
         // Generate path that will be used by the DataLayerCommunicator.
@@ -85,18 +86,18 @@ public class VideoInController {
             String response = requestSender.postForObject(uri, requestParts, String.class);
 
             if(response == null) {
-                System.err.println("Sending data to DataLayerCommunicator failed.");
-                return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+                System.err.println("Could not save video.");
+                return new ResponseEntity<String>("Could not store video.", HttpStatus.BAD_REQUEST);
             } else if(!response.equals("OK")) {
                 System.err.println("DataLayerComunicator: "+response);
-                return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<String>(response,  HttpStatus.BAD_REQUEST);
             }
         } catch (RestClientException e) {
             System.err.println("Failed to send submission to DataLayerCommunicator.");
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Server error.",  HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IOException e)  {
             System.err.println("Failed to read submitted video.");
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Corrupted video.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<String>(HttpStatus.OK); // Everything went better than expected :)

@@ -80,7 +80,18 @@
 			<artifactId>json-smart</artifactId>
 			<version>RELEASE</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.5.0-b01</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+		</dependency>
+
 		<!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.security</groupId>
