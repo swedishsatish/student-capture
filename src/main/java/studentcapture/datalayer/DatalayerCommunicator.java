@@ -52,7 +52,9 @@ public class DatalayerCommunicator {
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
     public Map<String, Object> getGrade(@Valid FeedbackModel model) {
-         return submission.getGrade(model.getStudentID(), model.getAssignmentID());
+        Map result = submission.getGrade(model.getStudentID(), model.getAssignmentID());
+        result.put("feedback", fsi.getFeedbackText(model));
+        return result;
     }
 
 
@@ -167,7 +169,7 @@ public class DatalayerCommunicator {
                                             Integer.toString(model.getAssignmentID()),
                                             Integer.toString(model.getStudentID()));
 
-        return FilesystemInterface.getVideo(path);
+        return FilesystemInterface.getVideo(path + FilesystemConstants.FEEDBACK_VIDEO_FILENAME);
    }
 
     /**
