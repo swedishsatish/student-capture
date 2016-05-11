@@ -76,6 +76,11 @@
 			<artifactId>json-smart</artifactId>
 			<version>RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+		</dependency>
 		
 		<!-- Spring Security -->
         <dependency>

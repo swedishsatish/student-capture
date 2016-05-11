@@ -25,10 +25,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -71,17 +68,12 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
-    public String createAssignment(@RequestBody AssignmentModel assignmentModel){
+    public String createAssignment(@RequestBody AssignmentModel assignmentModel) throws IllegalArgumentException {
         Integer returnResult;
 
-        try{
-            returnResult = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
-                    assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
-                    assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
-        } catch (IllegalArgumentException e) {
-            //TODO return smarter error msg
-            return e.getMessage();
-        }
+        returnResult = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
+                assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
+                assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
 
         return returnResult.toString();
     }
