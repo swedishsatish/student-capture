@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -57,6 +58,25 @@ public class RequestManagerTest extends StudentCaptureApplicationTests {
 
     }
 
+
+    @Test
+    public void testUserAllowedToUpload() throws Exception {
+        String userID = "user";
+        String courseID = "5DV151";
+        String assignmentID = "1337";
+
+
+        String temporary = mockMvc.perform(get("/video/inrequest")
+                .param("userID", userID)
+                .param("courseID", courseID)
+                .param("assignmentID", assignmentID)
+                .contentType("multipart/form-data"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        assertTrue(temporary);
+
+    }
 
 
     @Test
