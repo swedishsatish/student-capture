@@ -13,24 +13,24 @@ import java.util.*;
 @Repository
 public class SubmissionDAO {
 
-    // This template should be used to send queries to the database
-    @Autowired
-    protected JdbcTemplate jdbcTemplate;
+	// This template should be used to send queries to the database
+	@Autowired
+	protected JdbcTemplate jdbcTemplate;
 
-    /**
-     * Add a new submission for an assignment
-     *
-     * @param assignmentID     Unique identifier for the assignment we're submitting to
-     * @param studentID Unique identifier for the student submitting
-     * @return True if everything went well, otherwise false
-     */
-    public boolean addSubmission(String assignmentID,String studentID, Boolean studentConsent) {
-        String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentConsent) VALUES  (?,?,?,?)";
-        java.util.Date date = new java.util.Date(System.currentTimeMillis());
-        java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
-        timestamp.setNanos(0);
+	/**
+	 * Add a new submission for an assignment
+	 *
+	 * @param assignmentID Unique identifier for the assignment we're submitting to
+	 * @param studentID    Unique identifier for the student submitting
+	 * @return True if everything went well, otherwise false
+	 */
+	public boolean addSubmission(String assignmentID, String studentID, Boolean studentConsent) {
+		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentConsent) VALUES  (?,?,?,?)";
+		java.util.Date date = new java.util.Date(System.currentTimeMillis());
+		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
+		timestamp.setNanos(0);
 
-		int rowsAffected = jdbcTemplate.update(sql, Integer.parseInt(assignmentID),Integer.parseInt(studentID),timestamp,studentConsent);
+		int rowsAffected = jdbcTemplate.update(sql, Integer.parseInt(assignmentID), Integer.parseInt(studentID), timestamp, studentConsent);
 
 		return rowsAffected == 1;
 	}
@@ -39,9 +39,9 @@ public class SubmissionDAO {
 	 * Add a grade for a subsmission
 	 *
 	 * @param submission Object containing assignmentID, studentID
-	 * @param grade Object containing grade, teacherID, date, publish
-     * @return True if a row was changed, otherwise false
-     */
+	 * @param grade      Object containing grade, teacherID, date, publish
+	 * @return True if a row was changed, otherwise false
+	 */
 	public boolean setGrade(Submission submission, Grade grade) {
 		String setGrade = "UPDATE Submission (Grade, TeacherID, Date, teacherConsent) = (?, ?, ?, ?) WHERE (AssignmentID = ?) AND (StudentID = ?)";
 		int updatedRows = jdbcTemplate.update(setGrade, grade.getGrade(), grade.getTeacherID(), grade.getDate(), grade.getPublishStudentSubmission(), submission.getAssignmentID(), submission.getStudentID());
@@ -50,7 +50,7 @@ public class SubmissionDAO {
 	}
 
 	private static final String removeSubmissionStatement = "DELETE FROM "
-    		+ "Submission WHERE (AssignmentId=? AND StudentId=?)";
+			+ "Submission WHERE (AssignmentId=? AND StudentId=?)";
 
 	/**
 	 * Remove a submission
@@ -59,66 +59,54 @@ public class SubmissionDAO {
 	 * @param studentID Unique identifier for the student whose submission is removed
 	 * @return True if everything went well, otherwise false
 	 */
-    public boolean removeSubmission(String assID, String studentID) {
-    	boolean result;
-    	int assignmentId = Integer.parseInt(assID);
-    	int studentId = Integer.parseInt(studentID);
+	public boolean removeSubmission(String assID, String studentID) {
+		boolean result;
+		int assignmentId = Integer.parseInt(assID);
+		int studentId = Integer.parseInt(studentID);
 
-        try {
-            int rowsAffected = jdbcTemplate.update(removeSubmissionStatement,
+		try {
+			int rowsAffected = jdbcTemplate.update(removeSubmissionStatement,
 					assignmentId, studentId);
 			result = rowsAffected == 1;
-        } catch (IncorrectResultSizeDataAccessException e){
-            result = false;
-        } catch (DataAccessException e1){
-            result = false;
-        }
+		} catch (IncorrectResultSizeDataAccessException e) {
+			result = false;
+		} catch (DataAccessException e1) {
+			result = false;
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * Changes the grade of a submission
-     *
-     * @param assID     Unique identifier for the assignment with the submission being graded
-     * @param teacherID Unique identifier of the teacher updating
-     * @param studentID Unique identifier for the student
-     * @param grade     The new grade of the submission
-     * @param date      The date the grade was updated
-     * @return True if everything went well, otherwise false
-     */
-    public boolean updateGrade(String assID, String teacherID, String studentID, String grade, Date date) {
-        return true;
-    }
+	/**
+	 * Get information about the grade of a submission
+	 *
+	 * @param assignmentID Unique identifier for the assignment submission grade bra
+	 * @param studentID    Unique identifier for the student associated with the submission
+	 * @return A list containing the grade, date, and grader
+	 */
+	public Map<String, Object> getGrade(int studentID, int assignmentID) {
+		String queryForGrade = "SELECT grade, submissiondate as time, " +
+				"concat(firstname,' ', lastname) as teacher FROM " +
+				"submission FULL OUTER JOIN users ON (teacherid = userid)" +
+				" WHERE (studentid = ? AND assignmentid = ?)";
+		Map<String, Object> response;
+		try {
+			response = jdbcTemplate.queryForMap(queryForGrade,
+					new Object[]{studentID, assignmentID});
+		response.put("time", response.get("time").toString());
+		if (response.get("teacher").equals(" "))
+			response.put("teacher", null);
+		} catch(IncorrectResultSizeDataAccessException e) {
+			response = new HashMap<>();
+			response.put("error", "The given parameters does not have an" +
+				" entry in the database");
+		} catch(DataAccessException e) {
+			response = new HashMap<>();
+			response.put("error", "Could not connect to the database");
+		}
 
-    /**
-     * Get information about the grade of a submission
-     *
-     * @param assignmentID     Unique identifier for the assignment submission grade bra
-     * @param studentID Unique identifier for the student associated with the submission
-     * @return A list containing the grade, date, and grader
-     */
-    public Map<String, Object> getGrade(int studentID, int assignmentID) {
-
-        String query = "SELECT grade, submissiondate as time, concat(firstname,' ', lastname) as teacher" +
-                " FROM submission JOIN users ON (teacherid = userid) WHERE (studentid = ? AND assignmentid = ?)";
-        Map<String, Object> response;
-        try {
-            response = jdbcTemplate.queryForMap(query, studentID, assignmentID);
-            //return the time as string instead of timestamp
-            response.put("time", response.get("time").toString());
-        } catch (IncorrectResultSizeDataAccessException e) {
-            response = new HashMap<>();
-            //TODO create better error message
-            response.put("error", e.getMessage());
-        } catch (DataAccessException e) {
-            response = new HashMap<>();
-            //TODO create better error message
-            response.put("error", e.getMessage());
-        }
-
-        return response;
-    }
+		return response;
+	}
 
     /**
      * Get all ungraded submissions for an assignment
