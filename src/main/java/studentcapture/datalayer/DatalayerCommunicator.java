@@ -11,11 +11,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentModel;
-import studentcapture.datalayer.database.Assignment;
-import studentcapture.datalayer.database.Course;
-import studentcapture.datalayer.database.Submission;
-import studentcapture.datalayer.database.Submission.SubmissionWrapper;
-import studentcapture.datalayer.database.User;
+import studentcapture.datalayer.database.*;
+import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 import studentcapture.datalayer.database.User.CourseAssignmentHierarchy;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
@@ -26,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +40,7 @@ public class DatalayerCommunicator {
 
 
     @Autowired
-    private Submission submission;
+    private SubmissionDAO submissionDAO;
     @Autowired
     private Assignment assignment;
     @Autowired
@@ -55,83 +53,71 @@ public class DatalayerCommunicator {
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
     public Map<String, Object> getGrade(@Valid FeedbackModel model) {
-         return submission.getGrade(model.getStudentID(), model.getAssignmentID());
+        Map result = submissionDAO.getGrade(model.getStudentID(), model.getAssignmentID());
+        result.put("feedback", fsi.getFeedbackText(model));
+        return result;
+        //return submissionDAO.getGrade(model.getStudentID(), model.getAssignmentID());
     }
 
 
     /**
      *
-     * @param courseID
-     * @param assignmentTitle
-     * @param startDate
-     * @param endDate
-     * @param minTime
-     * @param maxTime
-     * @param published
      * @return
      */
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
-    public String createAssignment(@RequestBody AssignmentModel assignmentModel){
+    public String createAssignment(@RequestBody AssignmentModel assignmentModel) throws IllegalArgumentException {
         Integer returnResult;
 
-        try{
-            returnResult = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
-                    assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
-                    assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
-        } catch (IllegalArgumentException e) {
-            //TODO return smarter error msg
-            return e.getMessage();
-        }
+        returnResult = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
+                assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
+                assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
 
         return returnResult.toString();
     }
 
     /**
      * Save grade for a submission
-     * @param assID Assignment identification
-     * @param teacherID Teacher identification
-     * @param studentID Student identification
-     * @param grade Grade
-     * @param teacherConsent Teacher chooses to publish a student's reply
-     * @return  True if the grade was successfully saved to the database, else false
+     *
+     * @param submission Object containing assignmentID, studentID
+     * @param grade Object containing grade, teacherID, date, publish
+     * @return True if the grade was successfully saved to the database, else false
      */
     @CrossOrigin
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
-    public boolean setGrade(@RequestParam(value = "assID") String assID,
-                            @RequestParam(value = "teacherID") String teacherID,
-                            @RequestParam(value = "studentID") String studentID,
-                            @RequestParam(value = "grade") String grade,
-                            @RequestParam(value = "teacherConsent") Boolean teacherConsent) {
+    public boolean setGrade(@RequestParam(value = "Submission") Submission submission,
+                            @RequestParam(value = "Grade") Grade grade) {
 
-        return submission.setGrade(Integer.parseInt(assID), Integer.parseInt(teacherID), Integer.parseInt(studentID), grade, teacherConsent);
+//        SubmissionDAO submissionDAO = dao.findSubmission();
+//        submissionDAO.setGrade(grade);
+//        dao.storeSubmission(submissionDAO);
+
+        return submissionDAO.setGrade(submission, grade);
     }
 
     /**
-     * Set feedback for a submission, video and text cannot both be null
-     * @param assID Assignment identification
-     * @param studentID Student identification
+     * Set feedbakc for a submission, video and text cannot be null
+     * @param submission Object containing assignmentID, studentID
      * @param feedbackVideo Video feedback
      * @param feedbackText Text feedback
      * @return True if feedback was successfully saved to the database, else false
      */
     @CrossOrigin
     @RequestMapping(value = "/setFeedback", method = RequestMethod.POST)
-    public boolean setFeedback(@RequestParam(value = "assID") String assID,
-                               @RequestParam(value = "studentID") String studentID,
+    public boolean setFeedback(@RequestParam(value = "Submission") Submission submission,
                                @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
                                @RequestParam(value = "feedbackText") MultipartFile feedbackText) {
 
 
-        String courseID = assignment.getCourseIDForAssignment(assID);
+        String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID() + "");
         String courseCode = course.getCourseCodeFromId(courseID);
         int feedback = 0;
     	if(feedbackVideo != null) {
-            fsi.storeFeedbackVideo(courseCode, courseID, assID, studentID, feedbackVideo);
+            fsi.storeFeedbackVideo(courseCode, courseID, submission.getAssignmentID() + "", submission.getStudentID() + "", feedbackVideo); // submission.getstudentID() should be int/String?
             feedback++;
         }
         if(feedbackText != null) {
-            fsi.storeFeedbackText(courseCode, courseID, assID, studentID, feedbackText);
+            fsi.storeFeedbackText(courseCode, courseID, submission.getAssignmentID() + "", submission.getStudentID() + "", feedbackText); // submission.getstudentID() should be int/String?
             feedback++;
         }
 
@@ -257,7 +243,7 @@ public class DatalayerCommunicator {
     @ResponseBody
     public List<SubmissionWrapper> getAllSubmissions(
     		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submission.getAllSubmissions(assignmentID).get();
+    	return submissionDAO.getAllSubmissions(assignmentID).get();
     }
 
     /**
@@ -275,13 +261,13 @@ public class DatalayerCommunicator {
     @ResponseBody
     public List<SubmissionWrapper> getAllUngradedSubmissions(
     		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submission.getAllUngraded(assignmentID).get();
+    	return submissionDAO.getAllUngraded(assignmentID).get();
     }
 
     /**
      * Returns list of all submissions made in response to a given assignment,
      * including students that are part of the course but has not yet made a
-     * submission.
+     * submissionDAO.
      *
      * @param assignmentID		assignment identifier
      * @return					list of submissions
@@ -294,13 +280,13 @@ public class DatalayerCommunicator {
     @ResponseBody
     public List<SubmissionWrapper> getAllSubmissionsWithStudents(
     		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submission.getAllSubmissionsWithStudents(assignmentID).get();
+    	return submissionDAO.getAllSubmissionsWithStudents(assignmentID).get();
     }
     
     /**
      * Returns list of all submissions made in response to a given assignment,
      * including students that are part of the course but has not yet made a
-     * submission.
+     * submissionDAO.
      *
      * @param assignmentID		assignment identifier
      * @return					list of submissions
@@ -339,7 +325,7 @@ public class DatalayerCommunicator {
                                 @RequestParam(value = "studentConsent") Boolean studentConsent,
                                 @RequestParam(value = "video",required = false) MultipartFile video) {
     	if (video == null){
-    		if(submission.addSubmission(assignmentID, userID, studentConsent)){
+    		if(submissionDAO.addSubmission(assignmentID, userID, studentConsent)){
     			return "Student submitted an empty answer";
     		}
     		else{
@@ -348,7 +334,7 @@ public class DatalayerCommunicator {
     	}
 
         // ADD to database here
-    	if (submission.addSubmission(assignmentID, userID, studentConsent)){
+    	if (submissionDAO.addSubmission(assignmentID, userID, studentConsent)){
 	        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
 	            return "OK";
 	        } else
