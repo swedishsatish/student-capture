@@ -19,6 +19,7 @@ public class AssignmentModel {
     private LocalDateTime endDate;
     private LocalDateTime publishDate;
     private GradeScale scale;
+    private String recap;
 
     public AssignmentModel(String title,
                            String info,
@@ -27,7 +28,8 @@ public class AssignmentModel {
                            String startDate,
                            String endDate,
                            String publishDate,
-                           String scale) throws InputMismatchException {
+                           String scale,
+                           String recap) throws InputMismatchException {
         this.courseID = "1000"; //should be changed.
         this.title = title;
         this.info = info;
@@ -37,6 +39,7 @@ public class AssignmentModel {
         this.setEndDate(endDate);
         this.setPublished(publishDate);
         this.scale = GradeScale.valueOf(scale);
+        this.recap = recap;
 
         validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
         validateStartEndTime(this.startDate, this.endDate);
@@ -51,6 +54,8 @@ public class AssignmentModel {
         this.startDate = LocalDateTime.parse("2000-10-12T10:00");
         this.endDate = LocalDateTime.parse("2000-10-13T10:00");
         this.publishDate = this.startDate;
+        this.scale = GradeScale.valueOf("NUMBER_SCALE");
+        this.recap = "Default Recap";
     }
 
     public String getCourseID() {
@@ -134,6 +139,14 @@ public class AssignmentModel {
 
     public void setScale(String scale) {
         this.scale = GradeScale.valueOf(scale);
+    }
+
+    public String getRecap() {
+        return recap;
+    }
+
+    public void setRecap(String recap) {
+        this.recap = recap;
     }
 
     private void validateStartEndTime(LocalDateTime startDate,
