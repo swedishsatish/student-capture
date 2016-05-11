@@ -75,7 +75,7 @@ var CountDown = React.createClass({
         }
     },
     render: function() {
-        var content = this.state.startRecord ? console.log("Start Recording") : this.state.timeLeft;
+        var content = this.state.startRecord ? <StudentRecordVideo /> : this.state.timeLeft;
         return (
             <div id="countdown-div">
             { content }

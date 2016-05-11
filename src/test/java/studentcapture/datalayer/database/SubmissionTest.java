@@ -42,12 +42,15 @@ public class SubmissionTest  extends StudentCaptureApplicationTests {
 
     @Test
     public void shouldBeAbleToConnectToDB(){
-        String sqlQuery = "SELECT grade, submissiondate as time, concat(firstname,' ', lastname) as teacher" +
-                " FROM submission JOIN users ON (teacherid = userid) WHERE (studentid = ? AND assignmentid = ?)";
+        String sqlQuery = "SELECT grade, submissiondate as time, " +
+                "concat(firstname,' ', lastname) as teacher FROM " +
+                "submission FULL OUTER JOIN users ON (teacherid = userid)" +
+                " WHERE (studentid = ? AND assignmentid = ?)";
 
         Map responseFromMock = new HashMap();
         responseFromMock.put("grade", "vg");
         responseFromMock.put("time", "10100101");
+        responseFromMock.put("teacher", "Lillis");
 
 
         when(jdbcMock.queryForMap(sqlQuery, 1, 1)).

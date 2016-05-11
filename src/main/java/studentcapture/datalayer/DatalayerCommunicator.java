@@ -2,8 +2,12 @@ package studentcapture.datalayer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.expression.spel.ast.BooleanLiteral;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentModel;
@@ -15,6 +19,11 @@ import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +53,9 @@ public class DatalayerCommunicator {
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
     public Map<String, Object> getGrade(@Valid FeedbackModel model) {
+        Map result = submissionDAO.getGrade(model.getStudentID(), model.getAssignmentID());
+        result.put("feedback", fsi.getFeedbackText(model));
+        return result;
          return submissionDAO.getGrade(model.getStudentID(), model.getAssignmentID());
     }
 
@@ -54,17 +66,12 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
-    public String createAssignment(@RequestBody AssignmentModel assignmentModel){
+    public String createAssignment(@RequestBody AssignmentModel assignmentModel) throws IllegalArgumentException {
         Integer returnResult;
 
-        try{
-            returnResult = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
-                    assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
-                    assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
-        } catch (IllegalArgumentException e) {
-            //TODO return smarter error msg
-            return e.getMessage();
-        }
+        returnResult = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
+                assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
+                assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
 
         return returnResult.toString();
     }
@@ -154,7 +161,7 @@ public class DatalayerCommunicator {
                                             Integer.toString(model.getAssignmentID()),
                                             Integer.toString(model.getStudentID()));
 
-        return FilesystemInterface.getVideo(path);
+        return FilesystemInterface.getVideo(path + FilesystemConstants.FEEDBACK_VIDEO_FILENAME);
    }
 
     /**
@@ -300,7 +307,7 @@ public class DatalayerCommunicator {
     }
 
     /**
-     * Add a submissionDAO to the database and filesystem.
+     * Add a submission to the database and filesystem.
      *
      * @param assignmentID
      * @param courseID
@@ -322,7 +329,7 @@ public class DatalayerCommunicator {
     			return "Student submitted an empty answer";
     		}
     		else{
-    			return "DB failure for student submissionDAO";
+    			return "DB failure for student submission";
     		}
     	}
 
@@ -334,7 +341,7 @@ public class DatalayerCommunicator {
 	            return "Failed to add video to filesystem.";
     	}
 
-    	return "failed to add submissionDAO to database";
+    	return "Student has already submitted an answer.";
     }
 
 }

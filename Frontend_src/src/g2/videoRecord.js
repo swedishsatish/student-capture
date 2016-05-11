@@ -30,9 +30,10 @@ var Recorder = React.createClass({
       var sendTime;
 
 
-      var autoRec = typeof props.recButtonID === "undefined";
+      var autoRec = (typeof props.recButtonID === "undefined");
+
       var replay = props.replay == "true";
-      function PostBlob(blob) {
+      function PostBlob(blob, siteView) {
           // FormData
           var formData = props.formDataBuilder(blob,props.fileName);
 
@@ -43,12 +44,47 @@ var Recorder = React.createClass({
           }
 
           //call xhr with full url, data and callback function
-          xhr(window.globalURL + props.postURL, formData, props.playCallback);
+          if(siteView == "createAssignment" || siteView == "submission") {
+              var xhReq = new XMLHttpRequest();
+
+              xhReq.onreadystatechange = function () {
+                  if (xhReq.readyState === 4 && xhReq.status == 200) {
+                      var dataPOST = new FormData();
+
+                      console.log(xhReq.responseText);
+
+
+                      var xhrPOST = new XMLHttpRequest();
+
+                      if ("withCredentials" in xhReq) { // Chrome, Firefox, Opera
+
+                          xhr(window.globalURL + props.postURL + xhReq.responseText, formData, props.playCallback);
+
+
+                      } else if (typeof XDomainRequest !== "undefined") { // IE
+                          xhr(window.globalURL + props.postURL + xhReq.responseText, formData, props.playCallback);
+                      }
+                  }
+              };
+
+              var userID = "26";
+              var courseID = "60";
+              var assignmentID = "1000";
+
+              var url = window.globalURL+"/video/inrequest?userID=" + userID + "&courseID=" + courseID +
+                      "&assignmentID=" + assignmentID;
+              var method = "GET";
+
+              xhReq.open(method, url, true);
+              xhReq.send();
+
+
+          } else {
+              xhr(window.globalURL + props.postURL, formData, props.playCallback);
+         }
       }
 
-
-      if(!autoRec){
-
+      if(!autoRec) {
           var record = document.getElementById(props.recButtonID);
       }
 
@@ -143,9 +179,14 @@ var Recorder = React.createClass({
                       preview.removeAttribute("muted");
                   }
 
-
                   if(postbutton == null) {
-                      PostBlob(recordVideo.getBlob());
+                      if(props.siteView !== null) {
+                          PostBlob(recordVideo.getBlob(), props.siteView);
+                      } else {
+                          PostBlob(recordVideo.getBlob());
+                      }
+
+
                   }
                   else {
                       preview.src = url;
@@ -154,9 +195,11 @@ var Recorder = React.createClass({
                       postbutton.disabled = false;
                       postbutton.onclick = function () {
                           
-                          PostBlob(recordVideo.getBlob());
-                          
-
+                          if(props.siteView !== null) {
+                              PostBlob(recordVideo.getBlob(), props.siteView);
+                          } else {
+                              PostBlob(recordVideo.getBlob());
+                          }
                       }
                   }
               });
@@ -194,6 +237,8 @@ var Recorder = React.createClass({
           request.onreadystatechange = function () {
               if (request.readyState == 4 && request.status == 200) {
                   callback(request.responseText);
+              } else if(request.readyState == 4 && request.status !== 200) {
+                  alert(request.responseText);
               }
           };
 
