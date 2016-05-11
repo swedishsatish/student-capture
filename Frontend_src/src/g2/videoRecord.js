@@ -53,10 +53,11 @@ var Recorder = React.createClass({
       }
 
       var stop = document.getElementById(props.stopButtonID);
-
-
-      var preview = document.getElementById('preview');
-
+      var preview;
+      if(typeof props.calc !== "undefined")
+          preview = document.getElementById('prev-test');
+      else
+          preview = document.getElementById('preview');
       //check webbrowse.
       //var isFirefox = !!navigator.mediaDevices.getUserMedia;
 
@@ -67,6 +68,7 @@ var Recorder = React.createClass({
 
 
       var recordAudio, recordVideo;
+      var localStream;
       var startRecord = function () {
           if(!autoRec){
               record.disabled = true;
@@ -88,7 +90,7 @@ var Recorder = React.createClass({
               //start stream to record
               preview.src = window.URL.createObjectURL(stream);
               preview.play();
-
+                localStream = stream;
 
               recordAudio = RecordRTC(stream, {
 
@@ -159,6 +161,9 @@ var Recorder = React.createClass({
 
                       }
                   }
+                  localStream.stop();
+                  localStream = null;
+
               });
           /*}else {
 
@@ -239,11 +244,15 @@ var Recorder = React.createClass({
       }
   },
   render: function() {
-
+      var id;
+    if(typeof this.props.calc !== "undefined")
+        id="prev-test"
+    else
+        id="preview"
     return (
         <div>
-            <div>
-                <video id="preview" muted height="100%" width="100%" ></video>
+            <div id="prev-container">
+                <video id={id} muted height="100%" width="100%" ></video>
             </div>
 
 

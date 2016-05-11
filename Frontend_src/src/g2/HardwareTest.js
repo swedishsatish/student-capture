@@ -70,7 +70,7 @@ var HardwareTest = React.createClass({
                         <button id="record-test" className="recControls">Record</button>
 
                         <button id="stop-test" className="recControls" disabled>Stop</button>
-
+                        
                     </div>
                     <div className="two columns u-pull-right">
                         <button className="md-close">Close</button>
