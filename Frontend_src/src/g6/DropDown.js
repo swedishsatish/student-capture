@@ -7,7 +7,6 @@
  * @type {string} Sting with students selected grade
  */
 // variable to keep track of grade, used in submission button
-var dropDownGrade = 'U';
 var DropDown = React.createClass({
 
     getInitialState: function() {
@@ -17,7 +16,6 @@ var DropDown = React.createClass({
     },
 
     change: function(event) {
-        dropDownGrade = event.target.value;
         this.setState({value: event.target.value})
     },
 

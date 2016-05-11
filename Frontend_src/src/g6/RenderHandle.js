@@ -2,11 +2,12 @@
  * Created by sejiaw on 2016-05-10.
  */
 
+
 /**
  * Renders all the different built components for the GUI in prioritizing order.
  * For example: First it renders Recorder, then CommentBox and so on.
- */
-var RenderHandle = React.createClass({
+*/
+ var RenderHandle = React.createClass({
     render: function () {
         return(
             <div class="row">

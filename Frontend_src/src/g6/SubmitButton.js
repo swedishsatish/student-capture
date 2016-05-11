@@ -1,6 +1,9 @@
 /**
  * Created by sejiaw on 2016-05-10.
  */
+/**
+ * Created by sejiaw on 2016-05-10.
+ */
 
 
 /**
@@ -8,13 +11,14 @@
  * See TODO: on top of page.
  * Upon clicking on the button it sends the feedback information to the student.(Not yet implemented)
  */
-var SubmitButton = React.createClass({
 
+var SubmitButton = React.createClass({
     // Upon clicking on the button a popup confirming window is shown,
+
     onClick: function() {
         // answer contains true if Ok is pressed., false if cancel is pressed.
         var passedStatus = 'No pass';
-        if(isPassed===1){
+        if(document.getElementById('ifStudentPass').checked){
             passedStatus = 'Pass';
         }else {
             passedStatus = 'No pass'
@@ -22,7 +26,7 @@ var SubmitButton = React.createClass({
 
         //TODO: Create a popup window that lets the teacher confirm the given grading.
 
-        var answer = confirm("You are about to give Kalle a " + passedStatus + " with the following grade: "+dropDownGrade);
+        var answer = confirm("You are about to give Kalle a " + passedStatus + " with the following grade: "+document.getElementById('dropDownMenu').value);
         if(answer){
 
         }else{
