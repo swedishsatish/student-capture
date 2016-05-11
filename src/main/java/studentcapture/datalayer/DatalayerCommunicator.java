@@ -56,7 +56,7 @@ public class DatalayerCommunicator {
         Map result = submissionDAO.getGrade(model.getStudentID(), model.getAssignmentID());
         result.put("feedback", fsi.getFeedbackText(model));
         return result;
-         return submissionDAO.getGrade(model.getStudentID(), model.getAssignmentID());
+        //return submissionDAO.getGrade(model.getStudentID(), model.getAssignmentID());
     }
 
 

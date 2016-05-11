@@ -243,7 +243,7 @@ public class User {
     					currentSubmission = currentAssignment
     							.submissions.get(studentId);
 					} catch (NullPointerException e) {
-    					currentSubmission = submission.getSubmissionWithWrapper(
+    					currentSubmission = submissionDAO.getSubmissionWithWrapper(
     							assignmentId,userId).get();
     					currentAssignment.submissions.put(studentId,
     							currentSubmission);
@@ -310,7 +310,7 @@ public class User {
     					currentSubmission = currentAssignment
     							.submissions.get(studentId);
 					} catch (NullPointerException e) {
-    					currentSubmission = submission.getSubmissionWithWrapper(
+    					currentSubmission = submissionDAO.getSubmissionWithWrapper(
     							assignmentId,userId).get();
     					currentAssignment.submissions.put(studentId,
     							currentSubmission);
