@@ -236,8 +236,8 @@ public class FilesystemInterface {
 	public static String getFeedbackText(FeedbackModel model) {
 		String path = generatePathFromModel(model)+FilesystemConstants.FEEDBACK_TEXT_FILENAME;
 		String feedbackText = "";
-		String line = "";
 		try {
+			String line;
 			BufferedReader reader = new BufferedReader(new FileReader(path));
 			while((line = reader.readLine()) != null) {
 				feedbackText += line;
