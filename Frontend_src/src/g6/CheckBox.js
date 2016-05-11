@@ -8,7 +8,6 @@
  * @type {number} current state of passed
  */
 var TestCheckBox = React.createClass({
-
     //Sets initial state for the checkbox to false.
     getInitialState: function() {
         return {

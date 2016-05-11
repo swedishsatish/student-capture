@@ -19,7 +19,6 @@ var DropDown = React.createClass({
         this.setState({value: event.target.value})
     },
 
-
     render: function() {
 
         return(
