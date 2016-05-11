@@ -338,6 +338,7 @@ public class DatalayerCommunicator {
      * @param courseID
      * @param userID
      * @param video
+     * @param studentConsent A student allows his teacher to publish his answer to the other students
      * @return
      */
     @CrossOrigin
@@ -346,25 +347,25 @@ public class DatalayerCommunicator {
                                 @PathVariable(value = "courseID") String courseID,
                                 @PathVariable(value = "assignmentID") String assignmentID,
                                 @PathVariable(value = "userID") String userID,
+                                @RequestParam(value = "studentConsent", required = false) Boolean studentConsent,
                                 @RequestParam(value = "video",required = false) MultipartFile video) {
-    	if (video == null){
-    		if(submission.addSubmission(assignmentID, userID)){
+    	if (video == null) {
+    		if(submission.addSubmission(assignmentID, userID)) {
     			return "Student submitted an empty answer";
-    		}
-    		else{
+    		} else {
     			return "DB failure for student submission";
     		}
     	}
 
         // ADD to database here
-    	if (submission.addSubmission(assignmentID, userID)){
+    	if (submission.addSubmission(assignmentID, userID)) {
 	        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
 	            return "OK";
 	        } else
 	            return "Failed to add video to filesystem.";
     	}
 
-    	return "failed to add submission to database";
+    	return "Student has already submitted an answer.";
     }
 
 }
