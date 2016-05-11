@@ -44,7 +44,7 @@ public class Submission {
      * @return True if everything went well, otherwise false
      */
 
-    public boolean setGrade(String assID, String teacherID, String studentID, String grade) {
+    public boolean setGrade(int assID, int teacherID, int studentID, String grade) {
         String setGrade = "UPDATE Submission (Grade, TeacherID, Date) = (?, ?, ?) WHERE (AssignmentID = ?) AND (StudentID = ?)";
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         Date date = new Date();
