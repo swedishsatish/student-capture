@@ -6,13 +6,16 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 import studentcapture.datalayer.database.Assignment.AssignmentWrapper;
 import studentcapture.datalayer.database.Course.CourseWrapper;
 import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,7 +148,7 @@ public class User {
      * courses, assignments and submissions a user is participating in.
      *
      * @param userID	users identifier
-     * @return			hierarchy of course, assignment and submissiondata
+     * @return			hierarchy of course, assignment and submission data
      */
     public Optional<CourseAssignmentHierarchy> getCourseAssignmentHierarchy(
     		String userID) {
@@ -155,12 +158,15 @@ public class User {
     		addStudentHierarchy(hierarchy, userId);
     		addTeacherHierarchy(hierarchy, userId);
     		addUserToHierarchy(hierarchy, userId);
+    		//hierarchy.moveMapsToLists();
 	    } catch (IncorrectResultSizeDataAccessException e){
+	    	e.printStackTrace();
 		    return Optional.empty();
 		} catch (DataAccessException e1){
+			e1.printStackTrace();
 			return Optional.empty();
 		}
-
+    	
     	return Optional.of(hierarchy);
     }
 
@@ -193,7 +199,10 @@ public class User {
 	private void addTeacherHierarchy(CourseAssignmentHierarchy hierarchy, int
 			userId) {
 
-		String getTeacherHierarchyStatement = "SELECT * FROM Participant AS par"
+		String getTeacherHierarchyStatement = "SELECT par.courseId AS "
+				+ "CourseId,ass.assignmentId AS AssignmentId,"
+				+ "sub.submissionDate AS SubmissionDate,sub.studentId"
+				+ " AS StudentId FROM Participant AS par"
 				+ " LEFT JOIN Course AS cou ON par.courseId="
 	    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
 	    		+ "ass.courseId LEFT JOIN Submission AS sub ON "
@@ -231,17 +240,20 @@ public class User {
         			currentAssignment = new AssignmentPackage();
         			currentAssignment.assignment = assignment
         					.getAssignmentWithWrapper(assignmentId).get();
+        			currentAssignment.submissions = new HashMap<>();
         			currentCourse.assignments
         					.put(assignmentId, currentAssignment);
         		}
-
+    			
     			SubmissionWrapper currentSubmission;
+    			Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
     			Integer studentId = (Integer) row.get("StudentId");
-
-				if (studentId != null) {
+				if (submissionDate != null) {
     				try {
     					currentSubmission = currentAssignment
     							.submissions.get(studentId);
+    					if(currentSubmission==null)
+    						throw new NullPointerException();
 					} catch (NullPointerException e) {
     					currentSubmission = submission.getSubmissionWithWrapper(
     							assignmentId,userId).get();
@@ -250,7 +262,7 @@ public class User {
     				}
     			}
     		} catch (NullPointerException e) {
-    			currentAssignment = null;
+    			continue;
     		}
     	}
 	}
@@ -264,8 +276,10 @@ public class User {
 	 */
 	private void addStudentHierarchy(CourseAssignmentHierarchy hierarchy,
 			int userId) {
-		String getStudentHierarchyStatement = "SELECT * FROM "
-	    		+ "Participant AS par LEFT JOIN Course AS cou ON par.courseId="
+		String getStudentHierarchyStatement = "SELECT par.courseId AS CourseId,"
+				+ "ass.assignmentId AS AssignmentId,sub.submissionDate AS "
+				+ "SubmissionDate,sub.studentId AS StudentId "
+	    		+ "FROM Participant AS par LEFT JOIN Course AS cou ON par.courseId="
 	    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
 	    		+ "ass.courseId LEFT JOIN Submission AS sub ON par.userId="
 	    		+ "sub.studentId AND ass.assignmentId=sub.assignmentId WHERE "
@@ -299,16 +313,20 @@ public class User {
         			currentAssignment = new AssignmentPackage();
         			currentAssignment.assignment = assignment
         					.getAssignmentWithWrapper(assignmentId).get();
+        			currentAssignment.submissions = new HashMap<>();
         			currentCourse.assignments.put(assignmentId,
         					currentAssignment);
         		}
 
     			SubmissionWrapper currentSubmission = null;
+    			Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
     			Integer studentId = (Integer) row.get("StudentId");
-    			if (studentId != null) {
+    			if (submissionDate != null) {
     				try {
     					currentSubmission = currentAssignment
     							.submissions.get(studentId);
+    					if(currentSubmission==null)
+    						throw new NullPointerException();
 					} catch (NullPointerException e) {
     					currentSubmission = submission.getSubmissionWithWrapper(
     							assignmentId,userId).get();
@@ -317,7 +335,7 @@ public class User {
     				}
     			}
     		} catch (NullPointerException e) {
-    			currentAssignment = null;
+    			continue;
     		}
 
     	}
@@ -352,10 +370,29 @@ public class User {
     	public String lastName;
     	public Map<String, CoursePackage> teacherCourses;
     	public Map<String, CoursePackage> studentCourses;
+    	public List<CoursePackage> teacherCoursesList;
+    	public List<CoursePackage> studentCoursesList;
 
     	public CourseAssignmentHierarchy() {
     		teacherCourses = new HashMap<>();
     		studentCourses = new HashMap<>();
+    		teacherCoursesList = null;
+    		studentCoursesList = null;
+    	}
+    	
+    	public void moveMapsToLists() {
+    		teacherCoursesList = new ArrayList<>(teacherCourses.values());
+    		for(CoursePackage course : teacherCoursesList) {
+    			course.moveMapsToLists();
+    		}
+    		
+    		studentCoursesList = new ArrayList<>(studentCourses.values());
+    		for(CoursePackage course : studentCoursesList) {
+    			course.moveMapsToLists();
+    		}
+    		
+    		teacherCourses = null;
+    		studentCourses = null;
     	}
     }
 
@@ -368,10 +405,21 @@ public class User {
     public class CoursePackage {
     	public CourseWrapper course;
     	public Map<Integer, AssignmentPackage> assignments;
+    	public List<AssignmentPackage> assignmentsList;
 
     	public CoursePackage() {
     		assignments = new HashMap<>();
+    		assignmentsList = null;
     	}
+
+		public void moveMapsToLists() {
+			assignmentsList = new ArrayList<>(assignments.values());
+			for(AssignmentPackage assignment : assignmentsList) {
+				assignment.moveMapsToLists();
+			}
+			
+			assignments = null;
+		}
     }
 
     /**
@@ -383,6 +431,15 @@ public class User {
     public class AssignmentPackage {
     	public AssignmentWrapper assignment = null;
     	public Map<Integer, SubmissionWrapper> submissions = null;
+    	public List<SubmissionWrapper> submissionsList = null;
+		
+    	public void moveMapsToLists() {
+    		if(submissions!=null) {
+    			submissionsList = new ArrayList<>(submissions.values());
+    		
+    			submissions = null;
+    		}
+		}
     }
 }
 

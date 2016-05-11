@@ -70,13 +70,13 @@ public class UserTest  extends StudentCaptureApplicationTests {
     	Map responseFromMockStudent = new HashMap();
     	List<Map<String, Object>> listFromMockStudent = new ArrayList<>();
     	listFromMockStudent.add(responseFromMockStudent);
-    	when(jdbcMock.queryForList(getUserStatement, 1)).
+    	when(jdbcMock.queryForList(getStudentHierarchyStatement, 1)).
 			thenReturn(listFromMockStudent);
 
     	Map responseFromMockTeacher = new HashMap();
     	List<Map<String, Object>> listFromMockTeacher = new ArrayList<>();
     	listFromMockStudent.add(responseFromMockTeacher);
-    	when(jdbcMock.queryForList(getUserStatement, 1)).
+    	when(jdbcMock.queryForList(getTeacherHierarchyStatement, 1)).
 			thenReturn(listFromMockTeacher);
 
     	CourseAssignmentHierarchy result =
