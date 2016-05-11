@@ -101,7 +101,7 @@ public class DatalayerCommunicator {
                             @RequestParam(value = "studentID") String studentID,
                             @RequestParam(value = "grade") String grade) {
 
-        return submission.setGrade(assID, teacherID, studentID, grade);
+        return submission.setGrade(Integer.parseInt(assID), Integer.parseInt(teacherID), Integer.parseInt(studentID), grade);
     }
 
     /**
