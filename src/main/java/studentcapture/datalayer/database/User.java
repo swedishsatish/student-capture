@@ -69,11 +69,10 @@ public class User {
 
         try {
             jdbcTemplate.update(SQL_ADD_USR, args,types);
-
         } catch (DataIntegrityViolationException e) {
-            System.out.println(e);
-            return false;
+			return false;
         }
+
         return true;
     }
 
