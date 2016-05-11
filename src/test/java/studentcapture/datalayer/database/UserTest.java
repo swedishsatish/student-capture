@@ -38,15 +38,6 @@ public class UserTest  extends StudentCaptureApplicationTests {
     @Autowired
     private JdbcTemplate jdbcMock;
 
-    @Before
-    public void setUp() {
-        //Over writes the actual database with fake.
-        H2DataSource src = new H2DataSource();
-        jdbcMock.setDataSource(src.dataSource());
-
-    }
-
-
     @Test
     public void testAddUser() {
 
