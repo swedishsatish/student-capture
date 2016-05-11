@@ -7,7 +7,6 @@ var assignmentData = {
 window.AssignmentContent = React.createClass({
     getInitialState: function() {
         return {loaded : false,
-                assignmentName : '',
                 startsAt : '',
                 endsAt : '',
                 assignmentUrl : '',
@@ -15,8 +14,11 @@ window.AssignmentContent = React.createClass({
     },
     jsonReady: function(data) {
         var json = JSON.parse(data);
-        this.setState({loaded: true, assignmentName: json["AssignmentName"], startsAt: json["startsAt"], endsAt: json["endsAt"], assignmentUrl: json["assignmentUrl"]});
-        assignmentData.assignmentUrl = json["assignmentUrl"];
+        assignmentData.assignmentName = json["AssignmentName"];
+        assignmentData.maxTime = json["MaxTime"];
+        assignmentData.minTime = json["MinTime"];
+        assignmentData.assignmentUrl = json["AssignmentUrl"];
+        this.setState({loaded: true, startsAt: json["startsAt"], endsAt: json["endsAt"], assignmentUrl: json["assignmentUrl"]});
     },
     render: function () {
 
@@ -29,9 +31,11 @@ window.AssignmentContent = React.createClass({
         return (
             <div id="assignment-div">
                 <div id="assignment-desc">
-                    <h1 id="assignment-title">{this.state.assignmentName}</h1>
-                    <h5 id="assignment-startAt">{this.state.startsAt}</h5>
-                    <h5 id="assignment-endAt">{this.state.endsAt}</h5>
+                    <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
+                    <h5 id="assignment-startAt">Assignment opens: {this.state.startsAt}</h5>
+                    <h5 id="assignment-endAt">Assignment closes: {this.state.endsAt}</h5>
+                    <h5 id="assignment-mintime">Min video duration: {assignmentData.minTime} seconds</h5>
+                    <h5 id="assignment-maxtime">Max video duration: {assignmentData.maxTime} seconds</h5>
                 </div>
                 <div id="assignment-interaction">
                     <But />
@@ -44,17 +48,22 @@ window.AssignmentContent = React.createClass({
     }
 });
 
-
+/*
+* Shows the video and everything else.
+* TODO: Make this popout (modal).
+*/
 var AssignmentStart = React.createClass({
     getInitialState: function() {
         return {
                     assignmentUrl : '',
-                    assignmentDescription: ''
+                    assignmentDescription: '',
+                    assignmentName : ''
                 }
     },
     render: function() {
         return (
-            <div>
+            <div id="assignment-content" className="modal-content">
+                <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
                 <Vid url={assignmentData.assignmentUrl}/>
                 <BlankBox />
             </div>
@@ -68,12 +77,14 @@ var But = React.createClass({
         return { disabled: false};
     },
     onClick: function() {
+        var modal = document.getElementById("assignment-modal");
+        modal.style.display = 'block';
         this.setState({disabled: true});
     },
     render: function() {
         var content = this.state.disabled ? <AssignmentStart /> : <input disabled = {this.state.disabled} type="submit" id="start-video-button" value="Start Assignment" onClick={this.onClick}  /> ;
         return (
-            <div>
+            <div id="assignment-modal" className="modal">
                 {content}
             </div>
         );
@@ -83,7 +94,7 @@ var But = React.createClass({
 var Question = React.createClass({
     getInitialState: function() {
         return {available: false,
-                question: ''};
+                question: 'No question!'};
     },
     componentDidMount: function() {
         this.serverRequest = getJson("test/assignmentdata.json", function (data) {
@@ -139,48 +150,51 @@ var Vid = React.createClass({
         return {showCountdown: false,
                 currTime: 0,
                 totalTime: 0,
+                loaded: false
                 };
     },
     render: function() {
         return (
             <div>
-                { this.state.showCountdown ? <CountDown /> : <div><video id='videoPlayer' src={this.props.url} width='70%'></video>
-                                                             <div>
-                                                                 {Math.round(this.state.currTime)} / {Math.round(this.state.totalTime)}
-                                                             </div></div>}
+                { this.state.showCountdown ? <CountDown /> : <div>
+                                                                 <video id='videoPlayer' src={this.props.url} width='70%'></video>
+                                                                 <div>
+                                                                     <progress value={this.state.currTime} max={this.state.totalTime}/>
+                                                                     {Math.round(this.state.currTime)} / {Math.round(this.state.totalTime)}
+                                                                 </div>
+                                                             </div>
+                                                            }
             </div>
         );
     },
     componentDidMount: function() {
         var vid = document.getElementById("videoPlayer");
         vid.addEventListener('ended',this.onEnded,false);
-        vid.addEventListener('playing',this.onStarted,false);
-        vid.addEventListener('paused', this.onPause, false);
+        vid.addEventListener('pause', this.onPause, false);
+        vid.addEventListener('canplay', this.canPlay, false);
         vid.play();
         this.interval = setInterval(this.ticker, 1000);
     },
+    canPlay: function () {
+        var vid = document.getElementById("videoPlayer");
+        this.setState({totalTime: vid.duration, loaded: true});
+    },
     onEnded: function() {
-        console.log("video ended");
         clearInterval(this.interval);
         this.setState({showCountdown: true})
     },
-    onStarted : function () {
-        var vid = document.getElementById("videoPlayer");
-        this.setState({totalTime: vid.duration});
-    },
     onPause : function () {
         var vid = document.getElementById("videoPlayer");
-
+        vid.play();
     },
     ticker: function () {
         var vid = document.getElementById("videoPlayer");
         this.setState({currTime: vid.currentTime});
-        console.log(vid.currentTime);
     }
 });
 
 /*
- *
+ * Gets json code from the URL and then calls the callback function.
  */
 function getJson(URL, callback) {
     var xmlHttp = new XMLHttpRequest();
