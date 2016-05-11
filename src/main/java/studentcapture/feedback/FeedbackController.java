@@ -47,6 +47,7 @@ public class FeedbackController {
                 .queryParam("studentID", model.getStudentID())
                 .queryParam("assignmentID", model.getAssignmentID())
                 .queryParam("courseID", model.getCourseID())
+                .queryParam("courseCode", model.getCourseCode())
                 .build()
                 .toUri();
 
