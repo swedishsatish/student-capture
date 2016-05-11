@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
+import studentcapture.datalayer.database.H2DataSource;
 
 import javax.sql.DataSource;
 import java.nio.charset.Charset;
@@ -23,9 +24,6 @@ import java.nio.charset.Charset;
 @Configuration
 public class StudentCaptureApplicationTests {
 
-	@Autowired
-	DataSource dataSource;
-
 	@Bean
 	@Primary
 	public RestTemplate restTemplateMock() {
@@ -35,7 +33,7 @@ public class StudentCaptureApplicationTests {
 	@Bean
 	@Primary
 	public JdbcTemplate jdbcTemplateMock() {
-		return new JdbcTemplate(dataSource);
+		return new JdbcTemplate(H2DataSource.dataSource());
 	}
 
 	public final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
