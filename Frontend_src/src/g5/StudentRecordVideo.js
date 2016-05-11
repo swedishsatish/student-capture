@@ -7,11 +7,18 @@ var StudentRecordVideo = React.createClass({
         var fd = new FormData();
         fd.append("videoName", fileName);
         fd.append("video", blob);
+
+        fd.append("videoType", "submission"); // submission/answer/feedback
+        fd.append("userID", "26");
+        fd.append("assignmentID", "60");
+        fd.append("courseID", "1000");
+        fd.append("courseCode", "1000");
+
         return fd;
     },
     playVideo: function (fName) {
         
-
+/*
         var container = document.getElementById("tst");
         if (container.childNodes.length > 1) {
             container.removeChild(container.childNodes.item(1));
@@ -30,7 +37,7 @@ var StudentRecordVideo = React.createClass({
         mediaElement.controls = true;
         container.appendChild(mediaElement)
         mediaElement.play();
-
+*/
     },
 //    calcSpeed: function (blobsize, sendTime) {
 
@@ -49,8 +56,8 @@ var StudentRecordVideo = React.createClass({
                 <div className="row" id="">
                     <div className="six columns"><h5 id="isRecording"></h5>
                         <Recorder playCallback={this.playVideo} 
-                                  postURL="/video/textTest" formDataBuilder={this.formDataBuilder}
-                                  stopButtonID="stop-test" fileName="testVid.webm"
+                                  postURL="/uploadVideo/" formDataBuilder={this.formDataBuilder}
+                                  stopButtonID="stop-test" siteView="submission" fileName="submission.webm"
 
                         />
 
@@ -61,7 +68,7 @@ var StudentRecordVideo = React.createClass({
                     <div className="four columns u-pull-left">
 
 
-                        <button id="stop-test" className="recControls" disabled>Stop</button>
+                        <button id="stop-test" className="recControls" disabled>Submit answer</button>
 
                     </div>
 
