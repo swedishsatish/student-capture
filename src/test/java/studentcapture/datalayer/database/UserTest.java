@@ -55,7 +55,7 @@ public class UserTest  extends StudentCaptureApplicationTests {
         assertEquals("1944",info.get("SNN"));
     }
 
-
+    /*
     @Test
     public void getCourseAssignmentHierarchyUserInformationTest() {
     	String getUserStatement = "SELECT * FROM Users WHERE "
@@ -101,7 +101,7 @@ public class UserTest  extends StudentCaptureApplicationTests {
         assertEquals(result.firstName,"nameFirst");
         assertEquals(result.lastName,"nameLast");
     }
-
+	*/
 
     /**
      *  Used to collect user information, and return a hashmap.
