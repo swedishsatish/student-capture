@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import studentcapture.datalayer.database.Assignment.AssignmentWrapper;
 import studentcapture.datalayer.database.Course.CourseWrapper;
-import studentcapture.datalayer.database.Submission.SubmissionWrapper;
+import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,7 +41,7 @@ public class User {
     @Autowired
     private Assignment assignment;
     @Autowired
-    private Submission submission;
+    private SubmissionDAO submissionDAO;
 
 
 
@@ -184,7 +184,7 @@ public class User {
 	}
 
     /**
-	 * Adds course, assignment and submission data, related to a given teacher,
+	 * Adds course, assignment and submissionDAO data, related to a given teacher,
 	 * from the database to a {@link CourseAssignmentHierarchy}
 	 *
 	 * @param hierarchy		hierarchy added to
@@ -196,7 +196,7 @@ public class User {
 		String getTeacherHierarchyStatement = "SELECT * FROM Participant AS par"
 				+ " LEFT JOIN Course AS cou ON par.courseId="
 	    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
-	    		+ "ass.courseId LEFT JOIN Submission AS sub ON "
+	    		+ "ass.courseId LEFT JOIN SubmissionDAO AS sub ON "
 	    		+ "ass.assignmentId=sub.assignmentId WHERE par.userId=? AND "
 	    		+ "par.function='Teacher'";
 
@@ -243,7 +243,7 @@ public class User {
     					currentSubmission = currentAssignment
     							.submissions.get(submissionId);
 					} catch (Exception e) {
-    					currentSubmission = submission.getSubmissionWithWrapper(
+    					currentSubmission = submissionDAO.getSubmissionWithWrapper(
     							assignmentId,userId).get();
     					currentAssignment.submissions.put(submissionId,
     							currentSubmission);
@@ -256,7 +256,7 @@ public class User {
 	}
 
 	/**
-	 * Adds course, assignment and submission data, related to a given student,
+	 * Adds course, assignment and submissionDAO data, related to a given student,
 	 * from the database to a {@link CourseAssignmentHierarchy}
 	 *
 	 * @param hierarchy		hierarchy added to
@@ -267,7 +267,7 @@ public class User {
 		String getStudentHierarchyStatement = "SELECT * FROM "
 	    		+ "Participant AS par LEFT JOIN Course AS cou ON par.courseId="
 	    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
-	    		+ "ass.courseId LEFT JOIN Submission AS sub ON par.userId="
+	    		+ "ass.courseId LEFT JOIN SubmissionDAO AS sub ON par.userId="
 	    		+ "sub.studentId AND ass.assignmentId=sub.assignmentId WHERE "
 	    		+ "par.userId=? AND par.function='Student'";
 
@@ -310,7 +310,7 @@ public class User {
     					currentSubmission = currentAssignment
     							.submissions.get(submissionId);
 					} catch (Exception e) {
-    					currentSubmission = submission.getSubmissionWithWrapper(
+    					currentSubmission = submissionDAO.getSubmissionWithWrapper(
     							assignmentId,userId).get();
     					currentAssignment.submissions.put(submissionId,
     							currentSubmission);
