@@ -24,7 +24,7 @@ public class Submission {
      * @param studentID Unique identifier for the student submitting
      * @return True if everything went well, otherwise false
      */
-    public boolean addSubmission(String assignmentID,String studentID) {
+    public boolean addSubmission(String assignmentID,String studentID, Boolean studentConsent) {
         String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate) VALUES  (?,?,?)";
         java.util.Date date = new java.util.Date(System.currentTimeMillis());
         java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
