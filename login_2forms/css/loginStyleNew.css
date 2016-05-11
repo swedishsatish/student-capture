@@ -1,0 +1,150 @@
+/* by Filip Golles 2016-05-04 */
+
+html, body {
+	margin:0;
+	width:100%;
+	height:100%;
+	max-height:100vh;
+}
+
+body {
+	background: rgb(79, 159, 174);
+	background: -moz-linear-gradient(81deg, rgb(79, 159, 174) 49.9%, rgb(7, 97, 114) 50%);
+	background: -webkit-linear-gradient(81deg, rgb(79, 159, 174) 49.9%, rgb(7, 97, 114) 50%);
+	background: -o-linear-gradient(81deg, rgb(79, 159, 174) 49.9%, rgb(7, 97, 114) 50%);
+	background: -ms-linear-gradient(81deg, rgb(79, 159, 174) 49.9%, rgb(7, 97, 114) 50%);
+	background: linear-gradient(171deg, rgb(79, 159, 174) 49.9%, rgb(7, 97, 114) 50%);
+	background-repeat: no-repeat;
+}
+
+
+
+#loginLogo {
+	margin-left:3%;
+	margin-right:3%;
+	width:94%;
+}
+
+#loginDiv{
+	height:100%;
+}
+
+#registerButton {
+	position:fixed;
+	top:10px;
+	right:120px;
+}
+
+#loginButton {
+	margin-left:4%;
+	margin-right:4%;
+	width:92%;
+}
+
+.loginField {
+	margin-left:4%;
+	margin-right:4%;
+	width:92%;
+}
+
+
+
+
+.forms {
+	border-radius: 20px;
+	position:relative;
+	top: calc(50% - 130px);
+	background-color: #107D91;
+}
+
+
+#regText {
+	text-transform: uppercase;
+	text-align: center;
+}
+
+
+
+
+
+#registerPage {
+    display:none;
+}
+
+
+.tooltipText{display: none;}
+
+.forms input:focus + .tooltipText{
+    display: block;
+    position: absolute;
+    top:101%;
+    left: center;
+    color:white; 
+    margin:5px; 
+ 
+}
+
+input:invalid{
+color:red;
+}
+
+/*------------------------------------modal-----------------------------------*/
+
+#modalBtn {
+	position:fixed;
+	top:10px;
+	right:10px;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover, {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: rgb(7, 97, 114);
+    color: white;
+    
+}
+
+.modal-body {
+    padding: 2px 16px;
+}
+
+
+

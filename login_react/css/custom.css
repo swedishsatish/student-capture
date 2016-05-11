@@ -15,10 +15,6 @@ h1, h2, h3, h4, h5, h6 {
 	color:#FFFFFF;
 }
 
-input {
-	border-radius: 10px !important;
-}
-
 #courseContent h1,
 #courseContent h2,
 #courseContent h3,
@@ -26,6 +22,10 @@ input {
 #courseContent h5,
 #courseContent h6 {
     color:#076172;
+}
+
+.inputField {
+	
 }
 
 .container {
@@ -60,8 +60,8 @@ input {
 	margin-top:1%;
 	background-color: #FAFAFA;
 	border-radius: 5px;
+	overflow-x: hidden;
 	overflow-y:auto;
-	overflow-x:hidden;
 }
 
 .innerContent {
@@ -70,8 +70,8 @@ input {
 
 #desktopNavigation {
 	height: calc( 100% - 40px );
-	overflow-y:auto;
-	overflow-x:hidden;
+	overflow-y: auto;
+	overflow-x: hidden;
 	background-color: #2E8697;
 	border-right: 2px solid #2E8697;
 	margin:0;
@@ -80,31 +80,11 @@ input {
 .menuItem {
 	margin-top: 5%;
 	margin-left: 3%;
+	height:24px;
 	text-transform: uppercase;
   	cursor: pointer;
   	text-indent: 10px;
-
-}
-
-.menuItem > div{
-	height:24px;
   	border-bottom: 2px solid #4F9FAE;
-    width: 100%;
-}
-
-.SCButton {
-	height:40px;
-	line-height:40px;
-	border-radius: 10px;
-	background-color: #EC7E15;
-	border: 2px solid #FAFAFA;
-	color:#FAFAFA;
-}
-
-.SCButton:hover {
-	color:#FAFAFA;
-	background-color:#F59B46;
-	border: 2px solid #FAFAFA;
 }
 
 .navigationText {
@@ -124,19 +104,6 @@ input {
 	color:#D9853B;
 	line-height: 50px;
 	margin:0;
-}
-
-#videoDivFrame {
-    height: calc( 100% - 70px );
-    width: 100%;
-
-}
-
-iframe {
-    height: inherit;
-    width: inherit;
-    overflow: hidden;
-    border: 0px;
 }
 
 /* ERIK MENYGREJER */
@@ -161,9 +128,5 @@ iframe {
 }
 #desktopNavigation li.active {
     color: white;
-}
-
-#students-table tbody tr:hover{
-	background-color: #2D728F;
 }
 

@@ -32,7 +32,7 @@
 		
 		<!-- forms -->
 		<div id="loginDiv">
-		<form id="loginPage" class="forms four columns offset-by-four" th:action="@{/login}" method="POST">
+		<form id="loginPage" class="forms four columns offset-by-four">
 		
 		    <!-- div containing all the inputs.-->
             
@@ -51,46 +51,45 @@
 		</form>
 		
 		<!-- forms -->
-		<form id="registerPage" class="forms four columns offset-by-four" th:action="@{/register}" method="POST">
+		<form id="registerPage" class="forms four columns offset-by-four">
 		
                 <h2 id="regText">registration</h2>
                 
                         <input type="text" id="firstName" 
                                class="loginField nameField" 
                                placeholder="first name" 
-                               name="firstname" 
-                               required="required"/>
+                               name="firstName" 
+                               required/>
                     
-                        <input type="text" id="lastName" class="loginField nameField" placeholder="last name" ref="Lname" name="lastname" required="required"/>
+                        <input type="text" id="lastName" class="loginField nameField" placeholder="last name" ref="Lname" required/>
 
-                        <input type="email" class="loginField" placeholder="example@mail.com" ref="EmailInput" required="required" name="email" 
+                        <input type="email" class="loginField" placeholder="example@mail.com" ref="EmailInput" required 
                         pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" />
          
-                        <input type="text" class="loginField" placeholder="username" ref="Uname" name="username" required="required"/>
+                        <input type="text" class="loginField" placeholder="username" ref="Uname" required/>
     					  
                         <input type="password" id="firstPass" class="loginField nameField"
-                               placeholder="password" ref="Fpass" name="password"  
+                               placeholder="password" ref="Fpass" 
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
-                               required="required"/>
+                               required/>
                         
                         <p class="tooltipText">Password must contain atleast one upper case character,
     					 one lower case character and one numeric character.</p> 
 
                         <input type="password" id="secondPass" class="loginField nameField"
-                               placeholder="repeat password" ref="Spass" name="confirmpassword" 
+                               placeholder="repeat password" ref="Spass" 
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
-                               required="required" />
+                               required />
                                
                                <p class="tooltipText">Password must contain atleast one upper case character,
     					 one lower case character and one numeric character.</p> 
 
-                <button type="submit" id="regBtn" class="SCButton loginField nameField">
-                    Register
-                </button>
                 <button type="button" id="cnclBtn" class="SCButton loginField nameField">
                     Cancel
                 </button>
-
+                <button type="submit" id="regBtn" class="SCButton loginField nameField">
+                    Register
+                </button>
 
 		</form>
 		</div>
