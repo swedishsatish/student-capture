@@ -236,16 +236,16 @@ public class User {
         		}
 
     			SubmissionWrapper currentSubmission;
-    			Integer submissionId = (Integer) row.get("SubmissionId");
+    			Integer studentId = (Integer) row.get("StudentId");
 
-				if (submissionId != null) {
+				if (studentId != null) {
     				try {
     					currentSubmission = currentAssignment
-    							.submissions.get(submissionId);
-					} catch (Exception e) {
+    							.submissions.get(studentId);
+					} catch (NullPointerException e) {
     					currentSubmission = submission.getSubmissionWithWrapper(
     							assignmentId,userId).get();
-    					currentAssignment.submissions.put(submissionId,
+    					currentAssignment.submissions.put(studentId,
     							currentSubmission);
     				}
     			}
@@ -304,15 +304,15 @@ public class User {
         		}
 
     			SubmissionWrapper currentSubmission = null;
-    			Integer submissionId = (Integer) row.get("SubmissionId");
-    			if (submissionId != null) {
+    			Integer studentId = (Integer) row.get("StudentId");
+    			if (studentId != null) {
     				try {
     					currentSubmission = currentAssignment
-    							.submissions.get(submissionId);
-					} catch (Exception e) {
+    							.submissions.get(studentId);
+					} catch (NullPointerException e) {
     					currentSubmission = submission.getSubmissionWithWrapper(
     							assignmentId,userId).get();
-    					currentAssignment.submissions.put(submissionId,
+    					currentAssignment.submissions.put(studentId,
     							currentSubmission);
     				}
     			}
