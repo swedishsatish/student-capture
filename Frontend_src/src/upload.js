@@ -30,7 +30,11 @@ function postToServer(blob, userID, courseID, assignmentID) {
             var methodPOST = "POST";
 
             dataPOST.append("video", blob);
+<<<<<<< HEAD
             dataPOST.append("videoType", "submission");
+=======
+            dataPOST.append("videoType", "answer");
+>>>>>>> refs/remotes/origin/Front-end
             dataPOST.append("userID", userID);
             dataPOST.append("assignmentID", assignmentID);
             dataPOST.append("courseID", courseID);

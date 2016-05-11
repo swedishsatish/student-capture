@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
   <head>
     <!-- Meta data -->
@@ -19,11 +19,15 @@
 
     <!-- FONT  Libre Baskerville-->
     <link href='https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-   
+
     <!-- CSS -->
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/skeleton.css">
     <link rel="stylesheet" href="css/custom.css">
+      <link rel="stylesheet" href="css/component.css">
+      <link rel="stylesheet" href="css/hwTest.css">
+      <link rel="stylesheet" href="css/viewAssignment.css">
+
 
     <!-- Scripts -->
     <script src="build/react.js"></script>
@@ -31,6 +35,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+    <script src="src/communicationsLibrary.js"></script>
+    <script src="src/g2/RecordRTC.js"></script>
+    <script src="src/viewAssignment.js" type="text/babel"></script>
+      <script src="src/g2/sorttable.js"></script>
+
 
 
 
@@ -40,22 +49,38 @@
 
   <!-- Primary Page Layout -->
   <body>
+  <script>
+      window.globalURL = "";
+  </script>
+      <div class="md-modal md-effect-19" id="modal-19">
+          <div class="md-content" id="modal-container">
+              <button class="md-close">Close</button>
+          </div>
+      </div>
     <div class="container">
         <div class="row">
             <div class="twelve columns header" id="desktopHeader"></div>
             <script type="text/babel" src="src/profile.js"></script>
         </div>
 
-        <div class="three columns navigation" id="desktopNavigation"></div>
+        <div class="three columns" id="desktopNavigation"></div>
         <script type="text/babel" src="src/desktopNavigation.js"></script>
 
         <div class="nine columns" id="courseContent"></div>
         <script type="text/babel" src="src/courseContent.js"></script>
     </div>
-
-    <div class="footer" id="footer">
+      <div class="md-overlay"></div>
+    <!--div class="footer" id="footer">
         <script type="text/babel" src="src/footer.js"></script>
-    </div>  
+    </div-->
+
+
+
+      <script type="text/babel" src="src/g2/videoRecord.js"></script>
+      <script type="text/babel" src="src/g2/HardwareTest.js"></script>
+      <script type="text/babel" src="src/g2/StudentList.js"></script>
+
+
   </body>
 <!-- End Document -->
 </html>

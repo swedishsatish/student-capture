@@ -5,23 +5,18 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
-
 import studentcapture.config.StudentCaptureApplicationTests;
-import studentcapture.datalayer.database.Submission.SubmissionWrapper;
+import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -35,7 +30,7 @@ public class SubmissionTest  extends StudentCaptureApplicationTests {
     //jdbcTemplate.queryForObject(s[1], new Object[]{studIDInt, assIDInt}, String.class);
 
     @Autowired
-    Submission sub;
+    SubmissionDAO sub;
 
     @Autowired
     private JdbcTemplate jdbcMock;
@@ -47,12 +42,15 @@ public class SubmissionTest  extends StudentCaptureApplicationTests {
 
     @Test
     public void shouldBeAbleToConnectToDB(){
-        String sqlQuery = "SELECT grade, submissiondate as time, concat(firstname,' ', lastname) as teacher" +
-                " FROM submission JOIN users ON (teacherid = userid) WHERE (studentid = ? AND assignmentid = ?)";
+        String sqlQuery = "SELECT grade, submissiondate as time, " +
+                "concat(firstname,' ', lastname) as teacher FROM " +
+                "submission FULL OUTER JOIN users ON (teacherid = userid)" +
+                " WHERE (studentid = ? AND assignmentid = ?)";
 
         Map responseFromMock = new HashMap();
         responseFromMock.put("grade", "vg");
         responseFromMock.put("time", "10100101");
+        responseFromMock.put("teacher", "Lillis");
 
 
         when(jdbcMock.queryForMap(sqlQuery, 1, 1)).
@@ -61,6 +59,40 @@ public class SubmissionTest  extends StudentCaptureApplicationTests {
 
         assertEquals("vg", response.get("grade"));
     }
+
+    /*@Test
+    public void setGradeTest() {
+        String getAllSubmissionsStatement = "SELECT "
+                + "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
+                + "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
+                + "Submission AS sub LEFT JOIN Users AS stu ON "
+                + "sub.studentId=stu.userId WHERE (AssignmentId=?)";
+
+        Map responseFromMock = new HashMap<>();
+        responseFromMock.put("AssignmentID", 1);
+        responseFromMock.put("StudentId", 3);
+        responseFromMock.put("TeacherId", 2);
+        responseFromMock.put("Grade", "VG");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        Date date = new Date();
+        responseFromMock.put("Date", dateFormat.format(date));
+
+        sub.setGrade(1, 2, 3, "VG");
+
+        List<Map<String, Object>> listFromMock = new ArrayList<>();
+        listFromMock.add(responseFromMock);
+
+        when(jdbcMock.queryForList(getAllSubmissionsStatement, 1)).
+                thenReturn(listFromMock);
+
+        List<SubmissionWrapper> response = sub.getAllSubmissions("1").get();
+
+        assertEquals(response.get(0).assignmentId,1);
+        assertEquals(response.get(0).studentId,3);
+        assertEquals(response.get(0).teacherId,new Integer(2));
+        //assertEquals(response.get(0).submissionDate, dateFormat.format(date));
+        assertEquals(response.get(0).grade, "VG");
+    }*/
 
     @Test
     public void getAllSubmissionsTest() {

@@ -8,16 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import studentcapture.config.StudentCaptureApplication;
-import studentcapture.datalayer.filesystem.FilesystemInterface;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -43,6 +42,7 @@ public class VideoOutController {
             @PathVariable("assignmentId") int assignmentId){
 
         try {
+            //TODO: Hardcoded right now.
             URL url = new URL("https://localhost:8443/DB/getAssignmentVideo/" +
                     courseCode + "/" + courseId + "/"+assignmentId);
 
@@ -85,8 +85,9 @@ public class VideoOutController {
                 }
             };
 
-            byte []out = restTemplate.execute(dbURI.toString(),
+            byte[] out = restTemplate.execute(dbURI.toString(),
                     HttpMethod.GET,requestCallback, responseExtractor);
+
             // Free to do something with the file here. decompress, deencrypt?
 
             HttpHeaders responseHeaders = new HttpHeaders();

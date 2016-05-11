@@ -14,6 +14,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by E&S on 4/26/16.
@@ -44,7 +46,7 @@ public class Assignment {
      */
     public int createAssignment(String courseID, String assignmentTitle,
                                 String startDate, String endDate,
-                                int minTime, int maxTime, boolean published)
+                                int minTime, int maxTime, String published)
     throws IllegalArgumentException {
 
         // Check dates
@@ -56,6 +58,12 @@ public class Assignment {
             if (!isValidDateFormat("yyyy-MM-dd HH:mm:ss", endDate)) {
                 throw new IllegalArgumentException("endDate is not in " +
                         "format YYYY-MM-DD HH:MI:SS");
+            }
+            if (!isValidDateFormat("yyyy-MM-dd HH:mm:ss", published)) {
+                if(published != null) {
+                    throw new IllegalArgumentException("published is not in " +
+                            "format YYYY-MM-DD HH:MI:SS");
+                }
             }
         } catch (ParseException e) {
             throw new IllegalArgumentException("Date formatting failed");
@@ -74,13 +82,43 @@ public class Assignment {
             throw new IllegalArgumentException("maxTime must be greater " +
                     "than 0");
         }
+        if(published != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:MI:SS");
+            Date date = new Date();
+            Date publishedDate = null;
+            Date currentDate = null;
+            try {
+                publishedDate = sdf.parse(published);
+                currentDate = sdf.parse(sdf.format(date));
+            } catch (Exception e) {
+                System.err.println("Date conversion error");
+            }
+
+            if (publishedDate.before(currentDate)) {
+                throw new IllegalArgumentException("Published date must be before the current date");
+            }
+
+
+        }
+
 
         // Construct query
-        String insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
-                "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
-                "Published) VALUES (DEFAULT ,?,?, " +
-                "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
-                "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?,?);";
+        String insertQueryString;
+        if(published == null) {
+            insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
+                    "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
+                    "Published) VALUES (DEFAULT ,?,?, " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?,?);";
+        } else {
+            insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
+                    "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
+                    "Published) VALUES (DEFAULT ,?,?, " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?," +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'));";
+        }
+
 
         // Execute query and fetch generated AssignmentID
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -95,7 +133,7 @@ public class Assignment {
                     ps.setString(4, endDate);
                     ps.setInt(5, minTime);
                     ps.setInt(6, maxTime);
-                    ps.setBoolean(7, published);
+                    ps.setString(7, published);
                     return ps;
                 },
                 keyHolder);
@@ -116,11 +154,8 @@ public class Assignment {
             throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         Date date = sdf.parse(value);
-        if (value.equals(sdf.format(date))) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return value.equals(sdf.format(date));
     }
 
     /**
@@ -171,19 +206,46 @@ public class Assignment {
         return jdbcTemplate.queryForObject(sql, new Object[]{assignmentID},String.class);
     }
 
+	public Optional<AssignmentWrapper> getAssignmentWithWrapper(
+			int assignmentId) {
+		try {
+            String getAssignmentStatement = "SELECT * FROM "
+                    + "Assignment WHERE AssignmentId=?";
+
+			Map<String, Object> map = jdbcTemplate.queryForMap(
+	    			getAssignmentStatement, assignmentId);
+			AssignmentWrapper result = new AssignmentWrapper();
+	    	result.assignmentId = (int) map.get("AssignmentId");
+	    	result.courseId = (String) map.get("CourseId");
+	    	
+	    	result.title = (String) map.get("Title");
+	    	result.StartDate = map.get("StartDate").toString();
+	    	result.EndDate = map.get("EndDate").toString();
+	    	result.minTime = (int) map.get("MinTime");
+	    	result.maxTime = (int) map.get("MaxTime");
+	    	result.published = (boolean) map.get("Published");
+	    	
+	    	return Optional.of(result);
+		} catch (IncorrectResultSizeDataAccessException e){
+			//TODO
+		    return Optional.empty();
+		} catch (DataAccessException e1){
+			//TODO
+			return Optional.empty();
+		}
+	}
+    
     public boolean updateAssignment(String assignmentID, String assignmentTitle,
                                     String startDate, String endDate, int minTime, int maxTime,
                                     boolean published){
-        //TODO
-        return true;
+        throw new UnsupportedOperationException();
     }
 
     public boolean removeAssignment(String assignmentID){
-        //TODO
-        return true;
+        throw new UnsupportedOperationException();
     }
 
-    public class AssignmentWrapper {
+    public static class AssignmentWrapper {
     	public int assignmentId;
     	public String courseId;
     	public String title;

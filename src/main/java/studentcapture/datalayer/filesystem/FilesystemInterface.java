@@ -1,13 +1,12 @@
 package studentcapture.datalayer.filesystem;
 
-import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
-import studentcapture.config.StudentCaptureApplication;
+import studentcapture.feedback.FeedbackModel;
 
 import java.io.*;
 
@@ -61,38 +60,38 @@ public class FilesystemInterface {
 		return path;
 	}
 
-    /**
-     * Starts a FileInputStream to an assignment video.
-     * @param courseCode    Courses 6 character identifier.
-     * @param courseId      Courses unique database id.
-     * @param assignmentId  Assignments unique database id.
-     * @return FileInputStream to the Assignment video.
-     * @throws FileNotFoundException If the file does not exist.
-     */
-	public FileInputStream getAssignmentVideo(String courseCode,
-                                              String courseId,
-                                              String assignmentId)
-                                              throws FileNotFoundException {
-        String path = generatePath(courseCode, courseId, assignmentId);
-        return new FileInputStream(path);
-    }
+	public static String generatePathFromModel(FeedbackModel model){
+		String path = generatePath(
+				model.getCourseCode(),
+				model.getCourseID(),
+				""+model.getAssignmentID(),
+				""+model.getStudentID());
 
-    /**
-     * Returns the size of a specific video file.
-     *
-     * @param courseCode    Courses 6 character identifier.
-     * @param courseId      Courses unique database id.
-     * @param assignmentId  Assignments unique database id.
-     * @return              Video file size.
+		return path;
+	}
+
+	/**
+	 * Gets the specified video on the fileserver.
+	 * @param path 	The path to the file on the fileserver.
+	 * @return		The video, in the form of an responseentity.
      */
-    public int getAssignmentVideoFileSize(String courseCode,
-                                          String courseId,
-                                          String assignmentId) {
-        String path = generatePath(courseCode, courseId, assignmentId)
-                        + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
-        File f = new File(path);
-        return (int)f.length();
-    }
+	public static ResponseEntity<InputStreamResource> getVideo(String path) {
+		ResponseEntity<InputStreamResource> responseEntity;
+		File video = new File(path);
+
+		try {
+			byte[] out = FileCopyUtils.copyToByteArray(video);
+			HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.add("content-disposition", "inline; filename=AssignmentVideo");
+			responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
+		} catch (FileNotFoundException e) {
+			responseEntity = new ResponseEntity("File not found.", HttpStatus.NOT_FOUND);
+		} catch (IOException e) {
+			responseEntity = new ResponseEntity("Error getting file.", HttpStatus.NOT_FOUND);
+		}
+
+		return responseEntity;
+	}
 
 
 	/**
@@ -168,7 +167,7 @@ public class FilesystemInterface {
 	 * @param userId from database
 	 * @return true if video was stored successfully
 	 */
-	public boolean storeFeedbackVideo(String courseCode, String courseId,
+	public static boolean storeFeedbackVideo(String courseCode, String courseId,
 											String assignmentId, String userId,
 									  MultipartFile source) {
 
@@ -194,7 +193,25 @@ public class FilesystemInterface {
 	 * @param userId from database
 	 * @return true if video was stored successfully
 	 */
-	public boolean storeFeedbackText(String courseCode, String courseId,
+	public static boolean storeFeedbackText(FeedbackModel model, MultipartFile source) {
+		return storeFeedbackText(
+				model.getCourseCode(),
+				model.getCourseID(),
+				""+ model.getAssignmentID(),
+				""+model.getStudentID(),
+				source);
+	}
+
+	/**
+	 * Store the teacher's feedback text to a student submission.
+	 *
+	 * @param courseCode the code for the course.
+	 * @param courseId course id from the database
+	 * @param assignmentId from database
+	 * @param userId from database
+	 * @return true if video was stored successfully
+	 */
+	public static boolean storeFeedbackText(String courseCode, String courseId,
 									 String assignmentId, String userId,
 									 MultipartFile source) {
 
@@ -209,6 +226,28 @@ public class FilesystemInterface {
 		}
 
 		return true;
+	}
+
+    /**
+     * Reads a feedback text file from a teacher from the moose hard drive and returns it.
+     * @param model the feedback model containing params to generate the path to the file.
+     * @return the teacher's written feedback as a string.
+     */
+	public static String getFeedbackText(FeedbackModel model) {
+		String path = generatePathFromModel(model)+FilesystemConstants.FEEDBACK_TEXT_FILENAME;
+		String feedbackText = "";
+		try {
+			String line;
+			BufferedReader reader = new BufferedReader(new FileReader(path));
+			while((line = reader.readLine()) != null) {
+				feedbackText += line;
+			}
+		} catch (FileNotFoundException e) {
+			return "";
+		} catch (IOException e) {
+			return "I/O error while reading feedback text file!";
+		}
+		return feedbackText;
 	}
 
 	/**
@@ -245,4 +284,6 @@ public class FilesystemInterface {
 	    File f = new File(path);
 	    return (int)f.length();
 	}
+
+
 }
