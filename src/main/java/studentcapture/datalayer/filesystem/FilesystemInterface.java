@@ -228,21 +228,26 @@ public class FilesystemInterface {
 		return true;
 	}
 
+    /**
+     * Reads a feedback text file from a teacher from the moose hard drive and returns it.
+     * @param model the feedback model containing params to generate the path to the file.
+     * @return the teacher's written feedback as a string.
+     */
 	public static String getFeedbackText(FeedbackModel model) {
 		String path = generatePathFromModel(model)+FilesystemConstants.FEEDBACK_TEXT_FILENAME;
-		String result = "";
+		String feedbackText = "";
 		String line = "";
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(path));
 			while((line = reader.readLine()) != null) {
-				result += line;
+				feedbackText += line;
 			}
 		} catch (FileNotFoundException e) {
-			return "File not found!";
+			return "";
 		} catch (IOException e) {
 			return "I/O error while reading feedback text file!";
 		}
-		return result;
+		return feedbackText;
 	}
 
 	/**

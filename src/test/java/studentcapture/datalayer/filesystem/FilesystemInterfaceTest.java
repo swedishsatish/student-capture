@@ -145,7 +145,7 @@ public class FilesystemInterfaceTest {
     public void shouldReturnNoFile() throws Exception {
         FeedbackModel model = createFeedbackModel();
 
-        assertEquals(FilesystemInterface.getFeedbackText(model),"File not found!");
+        assertEquals(FilesystemInterface.getFeedbackText(model),"");
     }
 
     private FeedbackModel createFeedbackModel() {
