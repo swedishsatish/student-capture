@@ -57,6 +57,40 @@ public class SubmissionTest  extends StudentCaptureApplicationTests {
         assertEquals("vg", response.get("grade"));
     }
 
+    /*@Test
+    public void setGradeTest() {
+        String getAllSubmissionsStatement = "SELECT "
+                + "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
+                + "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
+                + "Submission AS sub LEFT JOIN Users AS stu ON "
+                + "sub.studentId=stu.userId WHERE (AssignmentId=?)";
+
+        Map responseFromMock = new HashMap<>();
+        responseFromMock.put("AssignmentID", 1);
+        responseFromMock.put("StudentId", 3);
+        responseFromMock.put("TeacherId", 2);
+        responseFromMock.put("Grade", "VG");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        Date date = new Date();
+        responseFromMock.put("Date", dateFormat.format(date));
+
+        sub.setGrade(1, 2, 3, "VG");
+
+        List<Map<String, Object>> listFromMock = new ArrayList<>();
+        listFromMock.add(responseFromMock);
+
+        when(jdbcMock.queryForList(getAllSubmissionsStatement, 1)).
+                thenReturn(listFromMock);
+
+        List<SubmissionWrapper> response = sub.getAllSubmissions("1").get();
+
+        assertEquals(response.get(0).assignmentId,1);
+        assertEquals(response.get(0).studentId,3);
+        assertEquals(response.get(0).teacherId,new Integer(2));
+        //assertEquals(response.get(0).submissionDate, dateFormat.format(date));
+        assertEquals(response.get(0).grade, "VG");
+    }*/
+
     @Test
     public void getAllSubmissionsTest() {
     	String getAllSubmissionsStatement = "SELECT "

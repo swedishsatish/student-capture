@@ -28,6 +28,8 @@ public class AssignmentController {
 
             try {
                 // TODO: Result of Integer.parseInt() is ignored. What should actually be done here?
+                // This is a hacky error response. It throws an exception if the string is not representing a integer.
+                // Better error handling in progress.
                 Integer.parseInt(res);
             } catch (NumberFormatException e) {
                 throw new IOException(res);

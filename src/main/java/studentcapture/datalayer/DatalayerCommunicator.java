@@ -2,6 +2,7 @@ package studentcapture.datalayer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.expression.spel.ast.BooleanLiteral;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -92,6 +93,7 @@ public class DatalayerCommunicator {
      * @param teacherID Teacher identification
      * @param studentID Student identification
      * @param grade Grade
+     * @param teacherConsent Teacher chooses to publish a student's reply
      * @return  True if the grade was successfully saved to the database, else false
      */
     @CrossOrigin
@@ -99,9 +101,10 @@ public class DatalayerCommunicator {
     public boolean setGrade(@RequestParam(value = "assID") String assID,
                             @RequestParam(value = "teacherID") String teacherID,
                             @RequestParam(value = "studentID") String studentID,
-                            @RequestParam(value = "grade") String grade) {
+                            @RequestParam(value = "grade") String grade,
+                            @RequestParam(value = "teacherConsent") Boolean teacherConsent) {
 
-        return submission.setGrade(assID, teacherID, studentID, grade);
+        return submission.setGrade(Integer.parseInt(assID), Integer.parseInt(teacherID), Integer.parseInt(studentID), grade, teacherConsent);
     }
 
     /**
@@ -166,28 +169,14 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/getFeedbackVideo",
             method = RequestMethod.GET, produces = "video/webm")
     public ResponseEntity<InputStreamResource> getAssignmentVideo(@Valid FeedbackModel model) {
+        String path = FilesystemInterface.generatePath(
+                                            model.getCourseCode(),
+                                            model.getCourseID(),
+                                            Integer.toString(model.getAssignmentID()),
+                                            Integer.toString(model.getStudentID()));
 
-        ResponseEntity<InputStreamResource> responseEntity;
-        byte[] file = null;
-        String path = FilesystemInterface.generatePath(model);
-        String filename = FilesystemConstants.FEEDBACK_VIDEO_FILENAME;
-
-        File video = new File(path + filename);
-        if(video.exists()) {
-            try {
-                byte[] out = FileCopyUtils.copyToByteArray(video);
-                HttpHeaders responseHeaders = new HttpHeaders();
-                responseHeaders.add("content-disposition", "inline; filename="+filename);
-
-                responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
-            } catch (IOException e) {
-                responseEntity = new ResponseEntity("Error getting file", HttpStatus.OK);
-            }
-        } else {
-            responseEntity = new ResponseEntity("File not found", HttpStatus.OK);
-        }
-        return responseEntity;
-    }
+        return FilesystemInterface.getVideo(path);
+   }
 
     /**
      * Fetches information about an assignment.
@@ -347,18 +336,19 @@ public class DatalayerCommunicator {
                                 @PathVariable(value = "courseID") String courseID,
                                 @PathVariable(value = "assignmentID") String assignmentID,
                                 @PathVariable(value = "userID") String userID,
-                                @RequestParam(value = "studentConsent", required = false) Boolean studentConsent,
+                                @RequestParam(value = "studentConsent") Boolean studentConsent,
                                 @RequestParam(value = "video",required = false) MultipartFile video) {
-    	if (video == null) {
-    		if(submission.addSubmission(assignmentID, userID)) {
+    	if (video == null){
+    		if(submission.addSubmission(assignmentID, userID, studentConsent)){
     			return "Student submitted an empty answer";
-    		} else {
+    		}
+    		else{
     			return "DB failure for student submission";
     		}
     	}
 
         // ADD to database here
-    	if (submission.addSubmission(assignmentID, userID)) {
+    	if (submission.addSubmission(assignmentID, userID, studentConsent)){
 	        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
 	            return "OK";
 	        } else
