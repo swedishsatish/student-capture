@@ -58,7 +58,7 @@ var PopUpStudentName = React.createClass({
             //return studentname
         }else{
             return(
-                <h2 id="uniquestudent">Error Errorsson</h2>
+                <h2 id="uniquestudent">{this.props.student}</h2>
             )
         }
     }
@@ -73,7 +73,7 @@ var PopUpRender = React.createClass({
                 <PopUpOkButton/>
                 <PopUpPassBox/>
                 <PopUpGrade/>
-                <PopUpStudentName/>
+                <PopUpStudentName student={this.props.student}/>
             </div>
         )
     }
@@ -150,7 +150,7 @@ var SubmitButton = React.createClass({
 
     },
     popUpRender: function () {
-        ReactDOM.render(<PopUpRender/>,document.getElementById('popUpDiv'));
+        ReactDOM.render(<PopUpRender student={this.props.student}/>,document.getElementById('popUpDiv'));
     }, blanket_size: function(popUpDivVar) {
         var popUpDiv_height;
         var viewportheight;
