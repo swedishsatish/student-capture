@@ -2,38 +2,30 @@ package studentcapture.datalayer.database;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import studentcapture.config.StudentCaptureApplicationTests;
 // import studentcapture.datalayer.database.Submission.SubmissionWrapper;
-import studentcapture.datalayer.database.User.CourseAssignmentHierarchy;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by tfy12hsm.
  */
-public class UserTest  extends StudentCaptureApplicationTests {
+public class UserDAOTest extends StudentCaptureApplicationTests {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    User user;
+    UserDAO userDAO;
 
     @Autowired
     private JdbcTemplate jdbcMock;
@@ -46,7 +38,7 @@ public class UserTest  extends StudentCaptureApplicationTests {
     @Test
     public void testAddUser() {
 
-        user.addUser("userPelle","Pelle","Jönsson","pelle@gmail.com","saltad0f991238","mypassword123");
+        userDAO.addUser("userPelle","Pelle","Jönsson","pelle@gmail.com","saltad0f991238","mypassword123");
 
         String sql = "SELECT * FROM users WHERE username = 'userPelle'";
 
@@ -65,7 +57,7 @@ public class UserTest  extends StudentCaptureApplicationTests {
     @Test
     public void testEmailIsUniqueAddUser() {
 
-        user.addUser("user1","förnamn","efternamn","user1@gmail.com",
+        userDAO.addUser("user1","förnamn","efternamn","user1@gmail.com",
                      "saltet","mittlösen");
 
 //        String res = user.addUser("user2","förnamn","efternamn","user1@gmail.com",

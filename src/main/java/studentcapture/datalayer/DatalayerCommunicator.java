@@ -2,28 +2,20 @@ package studentcapture.datalayer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.expression.spel.ast.BooleanLiteral;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.*;
 import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
-import studentcapture.datalayer.database.User.CourseAssignmentHierarchy;
+import studentcapture.datalayer.database.UserDAO.CourseAssignmentHierarchy;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
 
 import javax.validation.Valid;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +38,7 @@ public class DatalayerCommunicator {
     @Autowired
     private CourseDAO course;
     @Autowired
-    private User user;
+    private UserDAO userDAO;
 
     //@Autowired
     FilesystemInterface fsi;
@@ -208,7 +200,7 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public boolean login(@RequestParam(value = "username") String username,
                          @RequestParam(value = "pswd") String pswd) {
-        return   user.userExist(username,pswd);
+        return   userDAO.userExist(username,pswd);
     }
 
     //  public void add user
@@ -250,14 +242,8 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public  void addUser(@RequestParam(value = "userName") String userName,
-                                @RequestParam(value = "fName") String fName,
-                                @RequestParam(value = "lName") String lName,
-                                @RequestParam(value = "email") String email,
-                                @RequestParam(value = "salt") String salt,
-                                @RequestParam(value = "pwd") String pwd) {
-
-        user.addUser(userName,fName,lName,email,salt,pwd);
+    public  void addUser(@RequestParam(value = "user") User user) {
+        userDAO.addUser(user);
     }
 
     /**
@@ -331,7 +317,7 @@ public class DatalayerCommunicator {
     public CourseAssignmentHierarchy getHierarchy(
     		@RequestParam(value="userID") String userID) {
     	Optional<CourseAssignmentHierarchy> hierarchy = 
-    			user.getCourseAssignmentHierarchy(userID);
+    			userDAO.getCourseAssignmentHierarchy(userID);
     	if(hierarchy.isPresent()) 
     		return hierarchy.get();
     	return null;
