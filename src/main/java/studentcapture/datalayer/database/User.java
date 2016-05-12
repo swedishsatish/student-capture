@@ -72,11 +72,10 @@ public class User {
 
         try {
             jdbcTemplate.update(SQL_ADD_USR, args,types);
-
         } catch (DataIntegrityViolationException e) {
-            System.out.println(e);
-            return false;
+			return false;
         }
+
         return true;
     }
 
@@ -190,7 +189,7 @@ public class User {
 	}
 
     /**
-	 * Adds course, assignment and submissionDAO data, related to a given teacher,
+	 * Adds course, assignment and submission data, related to a given teacher,
 	 * from the database to a {@link CourseAssignmentHierarchy}
 	 *
 	 * @param hierarchy		hierarchy added to
@@ -205,7 +204,7 @@ public class User {
 				+ " AS StudentId FROM Participant AS par"
 				+ " LEFT JOIN Course AS cou ON par.courseId="
 	    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
-	    		+ "ass.courseId LEFT JOIN SubmissionDAO AS sub ON "
+	    		+ "ass.courseId LEFT JOIN Submission AS sub ON "
 	    		+ "ass.assignmentId=sub.assignmentId WHERE par.userId=? AND "
 	    		+ "par.function='Teacher'";
 
@@ -268,7 +267,7 @@ public class User {
 	}
 
 	/**
-	 * Adds course, assignment and submissionDAO data, related to a given student,
+	 * Adds course, assignment and submission data, related to a given student,
 	 * from the database to a {@link CourseAssignmentHierarchy}
 	 *
 	 * @param hierarchy		hierarchy added to
@@ -281,7 +280,7 @@ public class User {
 				+ "SubmissionDate,sub.studentId AS StudentId "
 	    		+ "FROM Participant AS par LEFT JOIN Course AS cou ON par.courseId="
 	    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
-	    		+ "ass.courseId LEFT JOIN SubmissionDAO AS sub ON par.userId="
+	    		+ "ass.courseId LEFT JOIN Submission AS sub ON par.userId="
 	    		+ "sub.studentId AND ass.assignmentId=sub.assignmentId WHERE "
 	    		+ "par.userId=? AND par.function='Student'";
 

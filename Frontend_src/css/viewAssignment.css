@@ -12,3 +12,10 @@
 	text-align: center;
 }
 
+#record-div {
+    float: left;
+}
+
+#question-div {
+    float: right;
+}

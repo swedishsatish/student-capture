@@ -93,7 +93,8 @@ public class SubmissionTest  extends StudentCaptureApplicationTests {
         //assertEquals(response.get(0).submissionDate, dateFormat.format(date));
         assertEquals(response.get(0).grade, "VG");
     }*/
-
+    
+    /*
     @Test
     public void getAllSubmissionsTest() {
     	String getAllSubmissionsStatement = "SELECT "
@@ -198,4 +199,5 @@ public class SubmissionTest  extends StudentCaptureApplicationTests {
         assertEquals(response.get(0).grade, null);
         assertEquals(response.get(0).studentName, null);
     }
+    */
 }

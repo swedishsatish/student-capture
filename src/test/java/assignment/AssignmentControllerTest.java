@@ -25,7 +25,8 @@ public class AssignmentControllerTest extends StudentCaptureApplicationTests {
 
     private static String json_test_string = "{\"title\":\"TheTitle\",\"Info\":\"Assignment info\"," +
             "\"minTimeSeconds\":0,\"maxTimeSeconds\":320,\"startDate\":\"2016-10-01T10:00\"," +
-            "\"endDate\":\"2016-10-02T10:00\",\"published\":\"2016-10-01T10:00\",\"scale\":\"NUMBER_SCALE\",\"recap\":\"this is a recap\"}";
+            "\"endDate\":\"2016-10-02T10:00\",\"published\":\"2016-10-01T10:00\"," +
+            "\"scale\":\"NUMBER_SCALE\",\"recap\":\"recap\"}";
 
     @Before
     public void setup() {

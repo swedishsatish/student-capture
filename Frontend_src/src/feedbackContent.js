@@ -54,20 +54,22 @@ var NewFeedback = React.createClass ({
         if(feedbackResponse.error === undefined) {
             return (
                 <div>
-                    Teacher: {feedbackResponse.teacher} <br />
-                    Grade: {feedbackResponse.grade} <br />
-                    Time: {feedbackResponse.time} <br />
-                    <span>
-                        <h3>Feedback</h3>
-                        {feedbackResponse.feedback}
-                    </span>
+                    <h5>Teacher:</h5>
+                    {feedbackResponse.teacher}
+                    <h5>Grade:</h5>
+                    {feedbackResponse.grade}
+                    <h5>Time:</h5>
+                    {feedbackResponse.time}
+                    <h5>Feedback:</h5>
+                    {feedbackResponse.feedback}
+                    <br />
                     <video width="720" height="460" src={this.props.sourceInfo} preload="auto" controls></video>
                 </div>
             )
         } else {
             return (
                 <div>
-                    Error: {feedbackResponse.error} <br />
+                    <h1>Error: {feedbackResponse.error}</h1> <br />
                 </div>
             )
         }
