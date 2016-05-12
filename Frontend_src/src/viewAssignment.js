@@ -63,10 +63,12 @@ var AssignmentStart = React.createClass({
     },
     render: function() {
         return (
-            <div id="assignment-content" className="modal-content">
-                <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
-                <Vid url={assignmentData.assignmentUrl}/>
-                <BlankBox />
+            <div  id="assignment-modal">
+                <div id="assignment-content" className="modal-content">
+                    <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
+                    <Vid url={assignmentData.assignmentUrl}/>
+                    <BlankBox />
+                </div>
             </div>
         )
     }
@@ -78,8 +80,6 @@ var But = React.createClass({
         return {disabled: false};
     },
     onClick: function() {
-        var modal = document.getElementById("assignment-modal");
-        modal.style.display = "block";
         this.setState({disabled: true});
     },
     render: function() {
@@ -92,7 +92,7 @@ var But = React.createClass({
                             value="Start Assignment"
                             onClick={this.onClick} />;
         return (
-            <div id="assignment-modal" className="modal">
+            <div>
                 {content}
             </div>
         );
