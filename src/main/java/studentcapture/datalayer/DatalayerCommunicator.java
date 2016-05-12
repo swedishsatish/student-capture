@@ -47,6 +47,8 @@ public class DatalayerCommunicator {
     private Course course;
     @Autowired
     private User user;
+    @Autowired
+    private Participant participant;
 
     //@Autowired
     FilesystemInterface fsi;
