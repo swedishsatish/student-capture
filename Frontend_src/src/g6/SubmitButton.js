@@ -52,15 +52,11 @@ var PopUpGrade = React.createClass({
 });
 var PopUpStudentName = React.createClass({
     render: function () {
-        var studentname = 'error';
-        if(studentname != 'error'){
-            //studentname = user.studentname??
-            //return studentname
-        }else{
-            return(
-                <h2 id="uniquestudent">{this.props.student}</h2>
-            )
-        }
+
+        return(
+            <h2 id="popUpStudentName">{this.props.student}</h2>
+        )
+
     }
 });
 
