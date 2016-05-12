@@ -11,8 +11,8 @@
     render: function () {
         return(
             <div class="row">
-                <div id="blanket" style="display:none;"></div>
-                <div id="popUpDiv" style="display:none;"></div>
+                <div id="blanket" style={{"display":"none"}}></div>
+                <div id="popUpDiv" style={{"display":"none"}}></div>
                 <div id="recorder">
                     <Recorder />
                 </div>

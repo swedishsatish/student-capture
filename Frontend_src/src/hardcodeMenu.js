@@ -14,7 +14,7 @@ var CourseList = React.createClass({
             assignmentID: 1000,
             studentID: 21,
             studentName: "Anton Andersson",
-            submitionDate: "2010-06-23",
+            submissionDate: "2010-06-23",
             grade: "G",
             teacherID: 12
         },
@@ -22,7 +22,7 @@ var CourseList = React.createClass({
                 assignmentID: 1000,
                 studentID: 21,
                 studentName: "Lukas Lundberg",
-                submitionDate: "2010-06-23",
+                submissionDate: "2010-06-23",
                 grade: "K",
                 teacherID: 12
             }];
