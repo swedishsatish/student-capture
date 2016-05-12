@@ -29,6 +29,9 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     @Autowired
     SubmissionDAO submissionDAO;
 
+    /**
+     * Inserts dummy data to test against h2Database
+     */
     @Before
     public void setUp() {
         String sql1 = "INSERT INTO Users VALUES (1, null, 'mkyong', 'abcd', 'defg', 'mkyong@gmail.com', 'MyPassword');";
@@ -46,6 +49,9 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         jdbcMock.update(sql6);
     }
 
+    /**
+     * Remove all content from the database
+     */
     @After
     public void tearDown() {
         String sql1 = "DELETE FROM Users;";
@@ -59,6 +65,9 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         jdbcMock.update(sql1);
     }
 
+    /**
+     * Tests that the insertion of test data works
+     */
     @Test
     public void databaseSetUpTest() {
         String sql = "SELECT * FROM Submission WHERE assignmentID = 1";
@@ -73,6 +82,9 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         assertEquals("2016-05-13 11:00:00.0",info.get("SubmissionDate"));
     }
 
+    /**
+     * Tests the correct insertion of values from method setGrade
+     */
     @Test
     public void setGradeValues() {
         Submission submission = new Submission(1,1);
@@ -93,6 +105,9 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         assertEquals("3",info.get("TeacherId"));
     }
 
+    /**
+     * Checks the returnvalue from an insertion with correct values
+     */
     @Test
     public void setGradeReturnTrue() {
         Submission submission = new Submission(1,1);
@@ -103,6 +118,9 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         assertTrue(returnValue);
     }
 
+    /**
+     * Checks the returnvalue from an insertion with incorrect values
+     */
     @Test
     public void setGradeReturnFalse() {
         Submission submission = new Submission(2,1);

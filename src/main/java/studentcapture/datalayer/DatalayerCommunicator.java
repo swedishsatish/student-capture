@@ -97,16 +97,11 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
     public boolean setGrade(@RequestParam(value = "Submission") Submission submission,
                             @RequestParam(value = "Grade") Grade grade) {
-
-//        SubmissionDAO submissionDAO = dao.findSubmission();
-//        submissionDAO.setGrade(grade);
-//        dao.storeSubmission(submissionDAO);
-
         return submissionDAO.setGrade(submission, grade);
     }
 
     /**
-     * Set feedbakc for a submission, video and text cannot be null
+     * Set feedback for a submission, video and text cannot be null
      * @param submission Object containing assignmentID, studentID
      * @param feedbackVideo Video feedback
      * @param feedbackText Text feedback
@@ -117,8 +112,6 @@ public class DatalayerCommunicator {
     public boolean setFeedback(@RequestParam(value = "Submission") Submission submission,
                                @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
                                @RequestParam(value = "feedbackText") MultipartFile feedbackText) {
-
-
         String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID() + "");
         String courseCode = course.getCourseCodeFromId(courseID);
         int feedback = 0;
