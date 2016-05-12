@@ -1,23 +1,32 @@
 /**
- * Created by ben on 2016-05-12.
+ * Made by Andreas Savva and Benjamin Björklund, Squad 8
+ *
+ * This is a settings menu for the user interface.
  */
 
 window.Settings = React.createClass({
 
+    /*
+    These attributes are currently not used.
+     */
     textSize: 12,
     emailAddress: "",
     language: "",
 
+    /*
+    Switches state of the input field for the email address to be
+    disabled or not disabled.
+     */
     changeEmailInputState: function () {
         var emailInputStateDisabled = document.getElementById("emailAddressInput");
 
-        if (emailInputStateDisabled.disabled) {
-            emailInputStateDisabled.disabled = false;
-        } else {
-            emailInputStateDisabled.disabled = true;
-        }
+        emailInputStateDisabled.disabled = !emailInputStateDisabled.disabled;
     },
 
+    /*
+    When the user presses "Save" to save their settings, this function will
+    send a HTTP POST request to save the settings in the database.
+     */
     sendPOST: function () {
         NotificationManager.success('YAY', 'this is awesome');
         $.post(
@@ -35,6 +44,9 @@ window.Settings = React.createClass({
 
     },
 
+    /*
+    Render function.
+     */
     render: function () {
         return (
             <div>
