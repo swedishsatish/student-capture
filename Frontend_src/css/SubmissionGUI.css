@@ -7,6 +7,37 @@
 * Video recorder
 */
 
+#smallText{
+    text-align: center;
+    font-size: 200%;
+    color: orange;
+    display: inline;
+}
+h2 {
+    text-align: center;
+    font-size: 80%;
+    color: black;
+}
+h3 {
+    text-align: center;
+    font-size: 200%;
+    color: black;
+    display: inline;
+}
+h4 {
+    text-align: center;
+    font-size: 250%;
+    color: green;
+    display: inline;
+}
+h5 {
+    color: black;
+}
+h6 {
+    text-align: center;
+}
+
+
 #recorder{
     width: 50%;
     margin-left: auto ;
@@ -133,13 +164,38 @@ button{
     height:100%;
 }
 #popUpDiv {
-    position:absolute;
-    background-color: white;
+    position:relative;
     background-size: 100%;
-    width:25%;
-    height:38%;
+    background-color: #2D728F;
+    width:30%;
+    height: 7%;
     border:5px solid #000;
-    top:20px;
-    left:20px;
     z-index: 9002;
+}
+#confirmationButton {
+    float: right;
+    margin-right: 15%;
+}
+#cancelButton {
+    float: left;
+    margin-left: 15%;
+}
+#popUpButtonContainer {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+#textContainer {
+    word-break: break-all;
+    height: 150px;
+}
+#popUpPass {
+    font-size: 50%;
+    color: greenyellow;
+}
+#popUpFail {
+    color: red;
+}
+#popUpGrade {
+    color: greenyellow;
 }

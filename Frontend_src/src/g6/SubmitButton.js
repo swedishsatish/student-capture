@@ -3,7 +3,7 @@
  */
 
 
-var PopUpCloseButton = React.createClass({
+var PopUpCancelButton = React.createClass({
     onclick: function () {
         close();
     },
@@ -14,14 +14,14 @@ var PopUpCloseButton = React.createClass({
     }
 
 });
-var PopUpOkButton = React.createClass({
+var PopUpConfirmButton = React.createClass({
     onclick: function () {
         sendData();
         close();
     },
     render: function () {
         return(
-            <button id="okButton" onClick={this.onclick}>ok </button>
+            <button id="confirmationButton" onClick={this.onclick}>ok </button>
         )
     }
 });
@@ -44,7 +44,7 @@ var PopUpGrade = React.createClass({
 
     render: function () {
         return(
-            <h2 id="U">{document.getElementById('dropDownMenu').value}</h2>
+            <h2 id="popUpGrade">{document.getElementById('dropDownMenu').value}</h2>
         )
 
 
@@ -60,16 +60,19 @@ var PopUpStudentName = React.createClass({
     }
 });
 
-
 var PopUpRender = React.createClass({
     render: function () {
         return(
             <div class="row">
-                <PopUpCloseButton/>
-                <PopUpOkButton/>
-                <PopUpPassBox/>
-                <PopUpGrade/>
-                <PopUpStudentName student={this.props.student}/>
+                <h1 id="smallText"</h1>
+        <h1>You are about to give</h1> <PopUpStudentName student={this.props.student}/> <h1>a</h1> <h4><PopUpPassBox/></h4> <h3>with grade</h3> <h3><PopUpGrade/></h3>
+                <PopUpStudentName student={this.props.student}/> <h3>will be notified</h3>
+                <div id="popUpButtonContainer">
+                    <PopUpCancelButton/>
+                    <PopUpConfirmButton/>
+
+                </div>
+
             </div>
         )
     }
