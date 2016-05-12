@@ -69,7 +69,6 @@ public class DatalayerCommunicator {
     public String createAssignment(@RequestBody AssignmentModel assignmentModel)
             throws IllegalArgumentException, IOException {
         Integer assignmentID;
-        Course course = new Course();
         String courseCode;
 
         assignmentID = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
