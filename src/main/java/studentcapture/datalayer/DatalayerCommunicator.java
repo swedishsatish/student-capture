@@ -1,5 +1,7 @@
 package studentcapture.datalayer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
@@ -234,8 +236,16 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public  void addUser(@RequestParam(value = "user") User user) {
-        userDAO.addUser(user);
+    public  void addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
+        ObjectMapper mapper = new ObjectMapper();
+        User user = null;
+        try {
+            user = mapper.readValue(jsonStringUser,User.class);
+            userDAO.addUser(user);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
     
     /**
