@@ -1,9 +1,10 @@
 CREATE TABLE IF NOT EXISTS Users (
     UserId       SERIAL         PRIMARY KEY,
+    UserSalt     VARCHAR(128),
     UserName     VARCHAR(64)    UNIQUE,
     FirstName    VARCHAR(64)    NOT NULL,
     LastName     VARCHAR(64)    NOT NULL,
-    PersNr       CHAR(10)       NOT NULL,
+    Email        TEXT           NOT NULL,
     Pswd         VARCHAR(64)    NOT NULL
     );
 
@@ -25,7 +26,7 @@ CREATE TABLE IF NOT EXISTS Participant (
 CREATE TABLE IF NOT EXISTS Assignment (
     AssignmentId      SERIAL         PRIMARY KEY,
     CourseId          VARCHAR(10)    references Course(CourseId) NOT NULL,
-    Title	          TEXT	         NOT NULL,
+    Title	      TEXT	     NOT NULL,
     StartDate         timestamp      NOT NULL,
     EndDate           timestamp      NOT NULL,
     MinTime           INT            NOT NULL,
