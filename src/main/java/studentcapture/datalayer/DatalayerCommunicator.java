@@ -239,7 +239,7 @@ public class DatalayerCommunicator {
                                 @RequestParam(value = "pNr") String pNr,
                                 @RequestParam(value = "pwd") String pwd) {
 
-        return user.addUser(userName,fName,lName,pNr,pwd);
+        return user.addUser(userName,fName,lName,pNr,pwd,"s");
     }
 
     /**
