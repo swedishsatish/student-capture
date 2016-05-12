@@ -20,7 +20,7 @@ function reloadScripts() {
 }
 
 
-var NewProfile = React.createClass({
+window.NewProfile = React.createClass({
 	componentDidMount: function(){
 
 		genScripts();
@@ -42,7 +42,7 @@ var NewProfile = React.createClass({
 		</div>*/
 		return (
 			<div className="three columns offset-by-nine dropdown" id="profile">
-				<h6 id="profileName" className="dropdown-head">{profileData.name}</h6>
+				<h6 id="profileName" className="dropdown-head">{this.props.name}</h6>
 				<div className="dropdown-content">
 					<h6 onClick={this.clickHandler} className="md-trigger md-setperspective dropdown-head" data-modal="modal-19">Test equipment</h6>
 				</div>
@@ -52,6 +52,6 @@ var NewProfile = React.createClass({
 	}
 });
 
-var profileData = {name:'React Reactson'};
 
-ReactDOM.render(<NewProfile />, document.getElementById('desktopHeader'));
+
+//ReactDOM.render(<NewProfile />, document.getElementById('desktopHeader'));

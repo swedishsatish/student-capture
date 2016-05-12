@@ -86,7 +86,10 @@ perspective effects (not including the modals and the overlay).
 	background: rgba(255, 255, 255, 0);
 	border-radius: 3px 3px 0 0;
 }
+.md-content h5 {
+	color: #000000 !important;
 
+}
 .md-content > div {
 	padding: 15px 40px 30px;
 	margin: 0;

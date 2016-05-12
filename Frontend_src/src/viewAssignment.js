@@ -65,10 +65,12 @@ var AssignmentStart = React.createClass({
     },
     render: function() {
         return (
-            <div id="assignment-content" className="modal-content">
-                <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
-                <Vid url={assignmentData.assignmentUrl}/>
-                <BlankBox />
+            <div  id="assignment-modal">
+                <div id="assignment-content" className="modal-content">
+                    <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
+                    <Vid url={assignmentData.assignmentUrl}/>
+                    <BlankBox />
+                </div>
             </div>
         )
     }
@@ -81,8 +83,6 @@ var But = React.createClass({
     onClick: function() {
         if (confirm("Once the assignment starts it cannot be interrupted or paused.\n" +
                     "Are you sure you want to begin the assignment?")) {
-            var modal = document.getElementById("assignment-modal");
-            modal.style.display = "block";
             this.setState({disabled: true});
         }
     },
@@ -96,7 +96,7 @@ var But = React.createClass({
                             value="Start Assignment"
                             onClick={this.onClick} />;
         return (
-            <div id="assignment-modal" className="modal">
+            <div>
                 {content}
             </div>
         );
@@ -109,6 +109,13 @@ var Question = React.createClass({
                 question: "No question!"
                 };
     },
+    componentDidMount: function() {
+        this.serverRequest = getJson("test/assignmentdata.json", function (data) {
+            var json = JSON.parse(data);
+            console.log("json is: " + json["AssignmentQuestion"]);
+            this.setState({question: json["AssignmentQuestion"], });
+        }.bind(this));
+    },
     render: function() {
         return (
         <div id="question-div">
@@ -116,13 +123,6 @@ var Question = React.createClass({
             {this.state.question}
         </div>
         );
-    },
-    componentDidMount: function() {
-        this.serverRequest = getJson("test/assignmentdata.json", function (data) {
-            var json = JSON.parse(data);
-            console.log("json is: " + json["AssignmentQuestion"]);
-            this.setState({question: json["AssignmentQuestion"], });
-        }.bind(this));
     }
 });
 
