@@ -2,3 +2,12 @@
 .recControls {
     display: inline-block !important;
 }
+
+#faq-text{
+    overflow-y: scroll;
+    max-height: 500px;
+}
+
+#faq-className {
+    height: 70%;
+}
