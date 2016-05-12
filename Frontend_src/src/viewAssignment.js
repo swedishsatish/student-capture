@@ -42,7 +42,9 @@ window.AssignmentContent = React.createClass({
                     <h5 id="assignment-information">Assignment information: {this.state.assignmentInformation}</h5>
                 </div>
                 <div id="assignment-interaction">
-                    <But />
+                    <But /><br />
+                    NOTE: Once the assignment starts it cannot be interrupted or paused,<br />
+                    remember to test your hardware before you begin!
                 </div>
             </div>
         )
@@ -72,15 +74,17 @@ var AssignmentStart = React.createClass({
     }
 });
 
-
 var But = React.createClass({
     getInitialState: function() {
         return {disabled: false};
     },
     onClick: function() {
-        var modal = document.getElementById("assignment-modal");
-        modal.style.display = "block";
-        this.setState({disabled: true});
+        if (confirm("Once the assignment starts it cannot be interrupted or paused.\n" +
+                    "Are you sure you want to begin the assignment?")) {
+            var modal = document.getElementById("assignment-modal");
+            modal.style.display = "block";
+            this.setState({disabled: true});
+        }
     },
     render: function() {
         var content = this.state.disabled
@@ -105,13 +109,6 @@ var Question = React.createClass({
                 question: "No question!"
                 };
     },
-    componentDidMount: function() {
-        this.serverRequest = getJson("test/assignmentdata.json", function (data) {
-            var json = JSON.parse(data);
-            console.log("json is: " + json["AssignmentQuestion"]);
-            this.setState({question: json["AssignmentQuestion"], });
-        }.bind(this));
-    },
     render: function() {
         return (
         <div id="question-div">
@@ -119,12 +116,19 @@ var Question = React.createClass({
             {this.state.question}
         </div>
         );
+    },
+    componentDidMount: function() {
+        this.serverRequest = getJson("test/assignmentdata.json", function (data) {
+            var json = JSON.parse(data);
+            console.log("json is: " + json["AssignmentQuestion"]);
+            this.setState({question: json["AssignmentQuestion"], });
+        }.bind(this));
     }
 });
 
 var CountDown = React.createClass({
     getInitialState: function() {
-        return {timeLeft: 5,
+        return {timeLeft: 3,
                 startRecord: false
                 };
     },
