@@ -41,7 +41,7 @@ public class UserTest  extends StudentCaptureApplicationTests {
     @Test
     public void testAddUser() {
 
-       boolean res =  user.addUser("userPelle","Pelle","Jönsson","1944","mypassword123");
+       //boolean res =  user.addUser("userPelle","Pelle","Jönsson","1944","mypassword123");
 
         String sql = "SELECT * FROM users WHERE username = 'userPelle'";
 
@@ -53,6 +53,23 @@ public class UserTest  extends StudentCaptureApplicationTests {
         assertEquals("Pelle",info.get("fName"));
         assertEquals("Jönsson",info.get("lName"));
         assertEquals("1944",info.get("SNN"));
+    }
+
+    @Test
+    public void testEmailIsUniqueAddUser() {
+
+        user.addUser("user1","förnamn","efternamn","user1@gmail.com",
+                     "saltet","mittlösen");
+
+        String res = user.addUser("user2","förnamn","efternamn","user1@gmail.com",
+                "saltet","mittlösen");
+
+        assertEquals("EMAIL EXIST",res);
+    }
+
+    @Test
+    public void testUserNameIsUniqueAddUser() {
+
     }
 
     /*

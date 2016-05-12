@@ -58,7 +58,8 @@ public class User {
      * @param pwd       Password
      * @return          true if success, else false.
      */
-    public boolean addUser(String userName, String fName, String lName, String pNr, String pwd) {
+    public boolean addUser(String userName, String fName, String lName,
+                           String email, String salt,  String pwd) {
         // TODO:
         //Check that user doesn't exist
 
@@ -66,7 +67,7 @@ public class User {
         // Create idSalt by combining salt with user name
         // register user info with idSalt.
 
-        Object[] args = new Object[] {userName, fName,lName,pNr,pwd};
+        Object[] args = new Object[] {userName, fName,lName,email,pwd};
         int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
                                       Types.CHAR,Types.VARCHAR};
 
