@@ -44,11 +44,9 @@ public class DatalayerCommunicator {
     @Autowired
     private Assignment assignment;
     @Autowired
-    private Course course;
+    private CourseDAO course;
     @Autowired
     private User user;
-    @Autowired
-    private Participant participant;
 
     //@Autowired
     FilesystemInterface fsi;
@@ -68,14 +66,24 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
-    public String createAssignment(@RequestBody AssignmentModel assignmentModel) throws IllegalArgumentException {
-        Integer returnResult;
+    public String createAssignment(@RequestBody AssignmentModel assignmentModel)
+            throws IllegalArgumentException, IOException {
+        Integer assignmentID;
+        String courseCode;
 
-        returnResult = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
+        assignmentID = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
                 assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
                 assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
 
-        return returnResult.toString();
+        courseCode = course.getCourseCodeFromId(assignmentModel.getCourseID());
+        FilesystemInterface.storeAssignmentText(courseCode, assignmentModel.getCourseID(),
+                assignmentID.toString(), assignmentModel.getInfo(),
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+        FilesystemInterface.storeAssignmentText(courseCode, assignmentModel.getCourseID(),
+                assignmentID.toString(), assignmentModel.getRecap(),
+                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+
+        return assignmentID.toString();
     }
 
     /**
@@ -89,16 +97,11 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
     public boolean setGrade(@RequestParam(value = "Submission") Submission submission,
                             @RequestParam(value = "Grade") Grade grade) {
-
-//        SubmissionDAO submissionDAO = dao.findSubmission();
-//        submissionDAO.setGrade(grade);
-//        dao.storeSubmission(submissionDAO);
-
         return submissionDAO.setGrade(submission, grade);
     }
 
     /**
-     * Set feedbakc for a submission, video and text cannot be null
+     * Set feedback for a submission, video and text cannot be null
      * @param submission Object containing assignmentID, studentID
      * @param feedbackVideo Video feedback
      * @param feedbackText Text feedback
@@ -109,8 +112,6 @@ public class DatalayerCommunicator {
     public boolean setFeedback(@RequestParam(value = "Submission") Submission submission,
                                @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
                                @RequestParam(value = "feedbackText") MultipartFile feedbackText) {
-
-
         String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID() + "");
         String courseCode = course.getCourseCodeFromId(courseID);
         int feedback = 0;

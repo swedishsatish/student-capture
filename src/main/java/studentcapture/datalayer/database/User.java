@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import studentcapture.datalayer.database.Assignment.AssignmentWrapper;
-import studentcapture.datalayer.database.Course.CourseWrapper;
+import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 
 import java.sql.ResultSet;
@@ -40,7 +40,7 @@ public class User {
     protected JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private Course course;
+    private CourseDAO course;
     @Autowired
     private Assignment assignment;
     @Autowired
@@ -228,7 +228,7 @@ public class User {
     				throw new NullPointerException();
     		} catch (NullPointerException e) {
     			currentCourse = new CoursePackage();
-    			currentCourse.course = course.getCourseWithWrapper(courseId);
+    			currentCourse.course = course.getCourse(courseId);
     			hierarchy.teacherCourses.put(courseId, currentCourse);
     		}
 
@@ -304,7 +304,7 @@ public class User {
     				throw new NullPointerException();
     		} catch (NullPointerException e) {
     			currentCourse = new CoursePackage();
-    			currentCourse.course = course.getCourseWithWrapper(courseId);
+    			currentCourse.course = course.getCourse(courseId);
     			hierarchy.studentCourses.put(courseId, currentCourse);
     		}
 
@@ -411,7 +411,7 @@ public class User {
      * @author tfy12hsm
      */
     public class CoursePackage {
-    	public CourseWrapper course;
+    	public Course course;
     	public Map<Integer, AssignmentPackage> assignments;
     	public List<AssignmentPackage> assignmentsList;
 

@@ -35,6 +35,7 @@ public class FeedbackController {
     private static final String dataLayerHostURI = "https://localhost:8443";
     private static final String dataLayerSetGrade = "DB/setGrade";
     private static final String dataLayerGetGrade = "DB/getGrade";
+    private static final String dataLayerGetFeedbackVideo = "DB/getFeedbackVideo";
 
 
     @Autowired
@@ -44,22 +45,13 @@ public class FeedbackController {
     @RequestMapping(value = "get", method = RequestMethod.GET)
     public HashMap handleFeedbackRequestFromStudent(@Valid FeedbackModel model) {
         //TODO Unsafe data needs to be cleaned
-        URI targetURI = constructURI(model, dataLayerHostURI);
+        URI targetURI = constructURI(model, dataLayerHostURI + dataLayerGetGrade);
 
-        HashMap<String, String> response;
-        try {
-            response = requestSender.getForObject(targetURI, HashMap.class);
-        } catch (RestClientException e) {
-            //TODO Maybe not good to send exceptions to browser?
-            response = new HashMap<String, String>();
-            response.put("error", e.getMessage());
-        }
-        return response;
+        return getExternalResponse(targetURI);
     }
 
     private URI constructURI(@Valid FeedbackModel model, String baseURI) {
         return UriComponentsBuilder.fromUriString(baseURI)
-                    .path(dataLayerGetGrade)
                     .queryParam("studentID", model.getStudentID())
                     .queryParam("assignmentID", model.getAssignmentID())
                     .queryParam("courseID", model.getCourseID())
@@ -77,7 +69,7 @@ public class FeedbackController {
         HttpEntity<String> entity = new HttpEntity(headers);
         ResponseEntity<byte[]> response = null;
 
-        URI targetUrl = constructURI(model, dataLayerHostURI + "/DB/getFeedbackVideo");
+        URI targetUrl = constructURI(model, dataLayerHostURI + dataLayerGetFeedbackVideo);
 
         try {
             response = requestSender.exchange(targetUrl, HttpMethod.GET, entity, byte[].class);
