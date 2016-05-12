@@ -9,10 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import studentcapture.config.StudentCaptureApplication;
 import studentcapture.feedback.FeedbackModel;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 
 import static org.junit.Assert.*;
 
@@ -146,6 +143,46 @@ public class FilesystemInterfaceTest {
         FeedbackModel model = createFeedbackModel();
 
         assertEquals(FilesystemInterface.getFeedbackText(model),"");
+    }
+
+    @Test
+    public void shouldCreateNewFile() throws IOException {
+        String path;
+        File file;
+
+        FilesystemInterface.storeAssignmentText(courseCode, courseID, assignmentID, "This is a test",
+                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+
+        path = FilesystemInterface.generatePath(courseCode, courseID, assignmentID) +
+                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME;
+        file = new File(path);
+
+        assertTrue(file.isFile());
+    }
+
+    @Test
+    public void shouldOverwriteExistingFile() throws IOException {
+        String path;
+        File file;
+        FileReader fileReader;
+        char[] buf = new char[22];
+        String content;
+
+        FilesystemInterface.storeAssignmentText(courseCode, courseID, assignmentID, "This should be overwritten",
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+        FilesystemInterface.storeAssignmentText(courseCode, courseID, assignmentID, "This should be in file",
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+
+        path = FilesystemInterface.generatePath(courseCode, courseID, assignmentID) +
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
+        file = new File(path);
+        fileReader = new FileReader(file);
+        fileReader.read(buf);
+        fileReader.close();
+        content = new String(buf);
+
+        assertEquals("This should be in file", content);
+
     }
 
     private FeedbackModel createFeedbackModel() {

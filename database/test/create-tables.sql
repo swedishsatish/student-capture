@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS Users (
     Email        VARCHAR(128)   NOT NULL,
     Pswd         VARCHAR(64)    NOT NULL
     );
+
 CREATE TABLE IF NOT EXISTS Course (
     CourseId             VARCHAR(10)    PRIMARY KEY,
     Year                 INT            NOT NULL,
@@ -22,6 +23,7 @@ CREATE TABLE IF NOT EXISTS Participant (
     CourseId     VARCHAR(10)   references Course(CourseId),
     Function     VARCHAR(64)   NOT NULL
     );
+
 CREATE TABLE IF NOT EXISTS Assignment (
     AssignmentId      SERIAL         PRIMARY KEY,
     CourseId          VARCHAR(10)    references Course(CourseId),
@@ -33,6 +35,7 @@ CREATE TABLE IF NOT EXISTS Assignment (
     Published         timestamp,
     GradeScale        VARCHAR(64)    NOT NULL
     );
+
 CREATE TABLE IF NOT EXISTS Submission (
     AssignmentId    INT          references Assignment(AssignmentId),
     StudentId           INT          references Users(UserId),

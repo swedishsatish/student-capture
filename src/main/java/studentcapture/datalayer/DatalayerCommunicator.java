@@ -66,14 +66,25 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
-    public String createAssignment(@RequestBody AssignmentModel assignmentModel) throws IllegalArgumentException {
-        Integer returnResult;
+    public String createAssignment(@RequestBody AssignmentModel assignmentModel)
+            throws IllegalArgumentException, IOException {
+        Integer assignmentID;
+        Course course = new Course();
+        String courseCode;
 
-        returnResult = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
+        assignmentID = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
                 assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
                 assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
 
-        return returnResult.toString();
+        courseCode = course.getCourseCodeFromId(assignmentModel.getCourseID());
+        FilesystemInterface.storeAssignmentText(courseCode, assignmentModel.getCourseID(),
+                assignmentID.toString(), assignmentModel.getInfo(),
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+        FilesystemInterface.storeAssignmentText(courseCode, assignmentModel.getCourseID(),
+                assignmentID.toString(), assignmentModel.getRecap(),
+                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+
+        return assignmentID.toString();
     }
 
     /**
@@ -226,7 +237,7 @@ public class DatalayerCommunicator {
                                 @RequestParam(value = "pNr") String pNr,
                                 @RequestParam(value = "pwd") String pwd) {
 
-        return user.addUser(userName,fName,lName,pNr,pwd);
+        return user.addUser(userName,fName,lName,pNr,pwd,"s");
     }
 
     /**
