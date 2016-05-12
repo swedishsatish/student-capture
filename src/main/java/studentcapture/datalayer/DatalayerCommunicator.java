@@ -197,18 +197,53 @@ public class DatalayerCommunicator {
     }
 
 
+//    /**
+//     * Check if given user name and password exist in database.
+//     * @param username a unique user name.
+//     * @param pswd password for the unique username
+//     * @return true  if correct user password and username is given otherwise false
+//     */
+//    @CrossOrigin
+//    @RequestMapping(value = "/login", method = RequestMethod.GET)
+//    public boolean login(@RequestParam(value = "username") String username,
+//                         @RequestParam(value = "pswd") String pswd) {
+//        return   user.userExist(username,pswd);
+//    }
+
+    //  public void add user
+    // public void userExist
+    // public void userEmailExist
+
+
     /**
-     * Check if given user name and password exist in database.
-     * @param username a unique user name.
-     * @param pswd password for the unique username
-     * @return true  if correct user password and username is given otherwise false
+     *
      */
     @CrossOrigin
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public boolean login(@RequestParam(value = "username") String username,
-                         @RequestParam(value = "pswd") String pswd) {
-        return   user.userExist(username,pswd);
+    @RequestMapping(value = "/addUsr", method = RequestMethod.POST)
+    public void addUsr() {
+
     }
+
+    /**
+     *
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/srNameExist", method = RequestMethod.GET)
+    public boolean usrNameExist() {
+
+    }
+
+    /**
+     *
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/usrEmailExist", method = RequestMethod.GET)
+    public boolean usrEmailExist() {
+
+    }
+
 
     /**
      * Register user by given information.
@@ -222,7 +257,7 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public boolean registerUser(@RequestParam(value = "userName") String userName,
+    public  registerUser(@RequestParam(value = "userName") String userName,
                                 @RequestParam(value = "fName") String fName,
                                 @RequestParam(value = "lName") String lName,
                                 @RequestParam(value = "pNr") String pNr,
