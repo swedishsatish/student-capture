@@ -1,9 +1,10 @@
 CREATE TABLE IF NOT EXISTS Users (
     UserId       SERIAL         PRIMARY KEY,
+    UserSalt     VARCHAR(128),
     UserName     VARCHAR(64)    UNIQUE,
     FirstName    VARCHAR(64)    NOT NULL,
     LastName     VARCHAR(64)    NOT NULL,
-    PersNr       CHAR(10)       NOT NULL,
+    Email        VARCHAR(128)   NOT NULL,
     Pswd         VARCHAR(64)    NOT NULL
     );
 CREATE TABLE IF NOT EXISTS Course (
@@ -12,7 +13,12 @@ CREATE TABLE IF NOT EXISTS Course (
     Term        CHAR(4)        NOT NULL,
     CourseCode  CHAR(6)        NOT NULL,
     CourseName  VARCHAR(64)
+    Term        VARCHAR(8)     NOT NULL,
+    CourseCode  VARCHAR(8)     NOT NULL,
+    CourseName  VARCHAR(64),
+    Active      BOOLEAN        NOT NULL
     );
+
 CREATE TABLE IF NOT EXISTS Participant (
     UserId       INT           references Users(UserId),
     CourseId     VARCHAR(10)   references Course(CourseId),
