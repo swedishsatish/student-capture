@@ -10,15 +10,15 @@
 #smallText{
     text-align: center;
     font-size: 200%;
-    color: orange;
+    color: black;
     display: inline;
 }
-h2 {
+#smallText2 {
     text-align: center;
     font-size: 80%;
     color: black;
 }
-h3 {
+#smallText3 {
     text-align: center;
     font-size: 200%;
     color: black;
