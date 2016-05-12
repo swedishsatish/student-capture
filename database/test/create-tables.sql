@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS Users (
     UserName     VARCHAR(64)    UNIQUE,
     FirstName    VARCHAR(64)    NOT NULL,
     LastName     VARCHAR(64)    NOT NULL,
-    Email        TEXT           NOT NULL,
+    Email        VARCHAR(128)   NOT NULL,
     Pswd         VARCHAR(64)    NOT NULL
     );
 
