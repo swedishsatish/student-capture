@@ -9,12 +9,13 @@ CREATE TABLE IF NOT EXISTS Users (
     );
 
 CREATE TABLE IF NOT EXISTS Course (
-    CourseId    VARCHAR(10)    PRIMARY KEY,
-    Year        INT            NOT NULL,
-    Term        VARCHAR(8)     NOT NULL,
-    CourseCode  VARCHAR(8)     NOT NULL,
-    CourseName  VARCHAR(64),
-    Active      BOOLEAN        NOT NULL
+    CourseId             VARCHAR(10)    PRIMARY KEY,
+    Year                 INT            NOT NULL,
+    Term                 VARCHAR(8)     NOT NULL,
+    CourseCode           VARCHAR(8)     NOT NULL,
+    CourseName           VARCHAR(64),
+    CourseDescription    VARCHAR(1024),
+    Active               BOOLEAN        NOT NULL
     );
 
 CREATE TABLE IF NOT EXISTS Participant (
