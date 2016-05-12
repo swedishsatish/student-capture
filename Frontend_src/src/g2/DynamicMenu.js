@@ -4,10 +4,16 @@
 
 
 var objToList = function (obj) {
-    var res = Object.keys(obj).map(function(key){
-        return obj[key];
-    });
-    return res;
+    if(typeof obj !== "undefined"){
+        var res = Object.keys(obj).map(function(key){
+            return obj[key];
+        });
+        return res;
+    }
+    else {
+        return [];
+    }
+
 }
 
 
@@ -143,8 +149,8 @@ var DynamicMenu = React.createClass({
 });
 
 $.get(window.globalURL + "/DB/getHierarchy", {userID: 1}, function (res) {
-    console.log(res);
 
+   // if(res)
     var SCList = objToList(res.studentCourses);
     var TCList = objToList(res.teacherCourses);
     var name = res.firstName + " " + res.lastName;
