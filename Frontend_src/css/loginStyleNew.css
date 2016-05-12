@@ -112,6 +112,7 @@ color:red;
 	background-color: #424242;
 	height:50px;
 	text-align: center;
+	overflow-y:auto;
 }
 
 #sysReqs {
