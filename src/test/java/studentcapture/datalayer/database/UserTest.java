@@ -46,7 +46,7 @@ public class UserTest  extends StudentCaptureApplicationTests {
     @Test
     public void testAddUser() {
 
-        user.addUser("userPelle","Pelle","Jönsson","1944","salt","mypassword123");
+        user.addUser("userPelle","Pelle","Jönsson","pelle@gmail.com","saltad0f991238","mypassword123");
 
         String sql = "SELECT * FROM users WHERE username = 'userPelle'";
 
@@ -57,7 +57,9 @@ public class UserTest  extends StudentCaptureApplicationTests {
         assertEquals("userPelle",info.get("username"));
         assertEquals("Pelle",info.get("fName"));
         assertEquals("Jönsson",info.get("lName"));
-        assertEquals("1944",info.get("SNN"));
+        assertEquals("pelle@gmail.com",info.get("email"));
+        assertEquals("saltad0f991238",info.get("salt"));
+        assertEquals("mypassword123",info.get("pswd"));
     }
 
     @Test
@@ -137,7 +139,8 @@ public class UserTest  extends StudentCaptureApplicationTests {
             info.put("username",rs.getString("UserName"));
             info.put("fName",rs.getString("FirstName"));
             info.put("lName",rs.getString("LastName"));
-            info.put("SNN",rs.getString("persnr"));
+            info.put("email",rs.getString("email"));
+            info.put("salt",rs.getString("salt"));
             info.put("pswd",rs.getString("pswd"));
             return info;
         }

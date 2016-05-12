@@ -24,10 +24,6 @@ import java.util.Optional;
 public class User {
 
 
-    private final String SQL_ADD_USR = "INSERT INTO users"
-                                       + " (username, firstname, lastname, persnr, pswd)"
-                                        + " VALUES (?, ?, ?, ?, ?)";
-
     private final String SQL_GET_USR_BY_ID = "SELECT  * FROM users WHERE userid = ?";
     private final String SQL_USR_EXIST     = "SELECT EXISTS (SELECT 1 FROM users "
                                            + "WHERE  username = ? AND pswd = ?)";
@@ -54,19 +50,21 @@ public class User {
      * @param fName     First name of a user
      * @param lName     Last name of a user
      * @param email
-     * @param pwd       Password
-     * @return          "SUCCESS" if successfull reg. or else "ERR:EMAIL EXISTIS" or "ERR: .
+     * @param salt      salt for the password
+     * @param pswd      Password in hash
      */
     public void addUser(String userName, String fName, String lName,
-                           String email, String salt,  String pwd) {
+                           String email, String salt,  String pswd) {
 
-        String sql = "";
+        String sql = "INSERT INTO users"
+                + " (username, firstname, lastname, email, salt, pswd)"
+                + " VALUES (?, ?, ?, ?, ?, ?)";
 
-        Object[] args = new Object[] {userName, fName,lName,email,pwd};
+        Object[] args = new Object[] {userName, fName,lName,email,salt,pswd};
         int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
-                                      Types.CHAR,Types.VARCHAR};
+                                      Types.CHAR,Types.VARCHAR,Types.VARCHAR};
         try {
-            jdbcTemplate.update(SQL_ADD_USR, args,types);
+            jdbcTemplate.update(sql, args,types);
         } catch (DataIntegrityViolationException e) {
 		}
     }
