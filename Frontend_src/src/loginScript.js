@@ -185,3 +185,23 @@ window.onclick = function(event) {
 
 
 //window.RegisterForm = RegisterForm;
+
+//--------------------------------error handling--------------------------------
+var urlVars = window.location.search.toLowerCase().substr(1).split("&");
+var err = false, type = "";
+for(var i=0; i<urlVars.length; i++) {
+    var varSplit = urlVars[i].split("=");
+    if(varSplit[0]==="error"){
+        console.log(varSplit);
+        if(varSplit.length>1){
+            for(var j=1; j<varSplit.length; j++) {
+                type += varSplit[j];
+            }
+        }
+        err = true;
+        break;
+    }
+}
+if(err){
+
+}
