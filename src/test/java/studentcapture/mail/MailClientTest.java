@@ -5,12 +5,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.jvnet.mock_javamail.Mailbox;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import java.io.IOException;
-import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Random;
 
@@ -18,7 +16,7 @@ import static org.junit.Assert.*;
 
 /**
  * Class:       MailClientTest
- * <p>
+ * <p/>
  * Author:      Isak Hjelt, Emil Vannebäck
  * cs-user:     dv14iht, c13evk
  * Date:        5/12/16
@@ -38,12 +36,10 @@ public class MailClientTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
-//    @Test
-//    public void testNullSubjectAndBody() throws Exception{
-//        subject = null;
-//        body = null;
-//        mail.send("test.dest@hotmail.com", "test.scr", subject, body);
-//    }
+    @Test
+    public void testNullSubjectAndBody() throws Exception {
+        mail.send("test.dest@hotmail.com", "test.scr", null, null);
+    }
 
     @Test
     public void testNullTo() throws Exception {
@@ -78,7 +74,7 @@ public class MailClientTest {
         body = "";
         mail.send("test.dest@nutpan.com", "test.src@nutpan.com", subject, body);
         List<Message> inbox = Mailbox.get("test.dest@nutpan.com");
-        assertEquals("test subject",inbox.get(0).getSubject());
+        assertEquals("test subject", inbox.get(0).getSubject());
     }
 
     @Test
@@ -87,9 +83,8 @@ public class MailClientTest {
         body = "test body";
         mail.send("test.dest@nutpan.com", "test.src@nutpan.com", subject, body);
         List<Message> inbox = Mailbox.get("test.dest@nutpan.com");
-        assertEquals("test body",inbox.get(0).getContent());
+        assertEquals("test body", inbox.get(0).getContent());
     }
-
 
     @Test
     public void testRandomAmountOfMails() throws AddressException {
@@ -97,10 +92,10 @@ public class MailClientTest {
         body = "";
         Random genRand = new Random();
         int rand = genRand.nextInt(10) + 2;
-        for (int i=0; i < rand; i++) {
+        for (int i = 0; i < rand; i++) {
             mail.send("test.dest@nutpan.com", "test.src@nutpan.com", subject, body);
         }
         List<Message> inbox = Mailbox.get("test.dest@nutpan.com");
-        assertEquals(rand,inbox.size());
+        assertEquals(rand, inbox.size());
     }
 }
