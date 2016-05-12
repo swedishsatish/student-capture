@@ -71,6 +71,12 @@ for(var i=0; i<urlVars.length; i++) {
         break;
     }
 }
+/*
+error=invalidEmail
+error=invallidPassword
+error=duplicateUsername
+error=duplicateEmail
+*/
 if(err){
     var msg;
     switch(type){
@@ -79,6 +85,18 @@ if(err){
             break;
         case "register":
             msg = "Registration failed";
+            break;
+        case "invalidEmail":
+            msg = "Invalid Email";
+            break;
+        case "invalidPassword":
+            msg = "Invalid Email";
+            break;
+        case "duplicateUsername":
+            msg = "Username already taken";
+            break;
+        case "duplicateEmail":
+            msg = "Email already associated with an account";
             break;
         default:
             msg = "Unknown Error";
