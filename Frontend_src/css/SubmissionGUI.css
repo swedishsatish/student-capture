@@ -141,3 +141,30 @@ button{
     z-index: 9002;
 
 }
+#confirmationButton {
+    float: right;
+    margin-right: 15%;
+}
+#cancelButton {
+    float: left;
+    margin-left: 15%;
+}
+#popUpButtonContainer {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+#textContainer {
+    word-break: break-all;
+    height: 150px;
+}
+#popUpPass {
+    font-size: 50%;
+    color: greenyellow;
+}
+#popUpFail {
+    color: red;
+}
+#popUpGrade {
+    color: greenyellow;
+}
