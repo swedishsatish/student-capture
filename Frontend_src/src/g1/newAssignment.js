@@ -3,11 +3,12 @@ var NewAssignment = React.createClass({
       return <div>
             <form id="form" action="assignment" method="post">
                 <h1>CREATE NEW ASSIGNMENT FOR COURSE (course code, course id)</h1>
-                <input className="inputField" id="newAssTitle" type="text" placeholder="title" /><br/>
-                <textarea className="inputField" id="newAssDescription" type="text" placeholder="description" /><br/>
+                <input className="inputField" id="title" type="text" placeholder="title" /><br/>
+                <textarea className="inputField" id="description" type="text" placeholder="description" /><br/>
                 <p>VIDEO RECORDING COMPONENT GOES HERE</p>
-                <input id="newAssStartDate" type="datetime-local" /><br/>
-                <input id="newAssEndDate" type="datetime-local" /><br/>
+                <textarea className="inputField" id="questionInformation" type="text" placeholder="question" /><br />
+                <input id="startDate" type="datetime-local" /><br/>
+                <input id="endDate" type="datetime-local" /><br/>
                 <input id="minTimeSeconds" type="text" placeholder="minTimeSeconds" /><br/>
                 <input id="maxTimeSeconds" type="text" placeholder="maxTimeSeconds" /><br/>
                 <input id="isPublished" type="checkbox" value="Car"/>Publish Assignment<br/>
@@ -25,7 +26,8 @@ function handleCancel() {
 function submitAssignment() {
     var reqBody = {}
     reqBody["title"] = $("#title").val();
-    reqBody["info"] = $("#info").val();
+    reqBody["info"] = $("#description").val();
+    reqBody["question"] = $("#questionInformation").val();
     reqBody["minTimeSeconds"] = $("#minTimeSeconds").val();
     reqBody["maxTimeSeconds"] = $("#maxTimeSeconds").val();
     reqBody["startDate"] = $("#startDate").val();
