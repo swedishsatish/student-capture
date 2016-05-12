@@ -44,7 +44,7 @@ public class DatalayerCommunicator {
     @Autowired
     private Assignment assignment;
     @Autowired
-    private Course course;
+    private CourseDAO course;
     @Autowired
     private User user;
 
@@ -66,14 +66,24 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
-    public String createAssignment(@RequestBody AssignmentModel assignmentModel) throws IllegalArgumentException {
-        Integer returnResult;
+    public String createAssignment(@RequestBody AssignmentModel assignmentModel)
+            throws IllegalArgumentException, IOException {
+        Integer assignmentID;
+        String courseCode;
 
-        returnResult = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
+        assignmentID = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
                 assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
                 assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
 
-        return returnResult.toString();
+        courseCode = course.getCourseCodeFromId(assignmentModel.getCourseID());
+        FilesystemInterface.storeAssignmentText(courseCode, assignmentModel.getCourseID(),
+                assignmentID.toString(), assignmentModel.getInfo(),
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+        FilesystemInterface.storeAssignmentText(courseCode, assignmentModel.getCourseID(),
+                assignmentID.toString(), assignmentModel.getRecap(),
+                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+
+        return assignmentID.toString();
     }
 
     /**
@@ -87,16 +97,11 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
     public boolean setGrade(@RequestParam(value = "Submission") Submission submission,
                             @RequestParam(value = "Grade") Grade grade) {
-
-//        SubmissionDAO submissionDAO = dao.findSubmission();
-//        submissionDAO.setGrade(grade);
-//        dao.storeSubmission(submissionDAO);
-
         return submissionDAO.setGrade(submission, grade);
     }
 
     /**
-     * Set feedbakc for a submission, video and text cannot be null
+     * Set feedback for a submission, video and text cannot be null
      * @param submission Object containing assignmentID, studentID
      * @param feedbackVideo Video feedback
      * @param feedbackText Text feedback
@@ -107,8 +112,6 @@ public class DatalayerCommunicator {
     public boolean setFeedback(@RequestParam(value = "Submission") Submission submission,
                                @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
                                @RequestParam(value = "feedbackText") MultipartFile feedbackText) {
-
-
         String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID() + "");
         String courseCode = course.getCourseCodeFromId(courseID);
         int feedback = 0;
@@ -208,25 +211,53 @@ public class DatalayerCommunicator {
         return   user.userExist(username,pswd);
     }
 
+    //  public void add user
+    // public void userExist
+    // public void userEmailExist
+
+
+    /**
+     * @param userName
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/userNameExist", method = RequestMethod.GET)
+    public boolean userNameExist(
+                  @RequestParam(value = "userName") String userName) {
+        return false;
+    }
+
+    /**
+     * @param email
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/usrEmailExist", method = RequestMethod.GET)
+    public boolean userEmailExist(@RequestParam(value = "email") String email) {
+        return false;
+    }
+
     /**
      * Register user by given information.
      *
      * @param userName user name for the user to be registerd
      * @param fName    First name
      * @param lName    last name
-     * @param pNr      social security number
+     * @param email
+     * @param salt     salt for password
      * @param pwd      password
      * @return true if registration was successfull else false
      */
     @CrossOrigin
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public boolean registerUser(@RequestParam(value = "userName") String userName,
+    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
+    public  void addUser(@RequestParam(value = "userName") String userName,
                                 @RequestParam(value = "fName") String fName,
                                 @RequestParam(value = "lName") String lName,
-                                @RequestParam(value = "pNr") String pNr,
+                                @RequestParam(value = "email") String email,
+                                @RequestParam(value = "salt") String salt,
                                 @RequestParam(value = "pwd") String pwd) {
 
-        return user.addUser(userName,fName,lName,pNr,pwd);
+        user.addUser(userName,fName,lName,email,salt,pwd);
     }
 
     /**

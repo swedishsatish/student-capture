@@ -95,7 +95,7 @@ public class Assignment {
             }
 
             if (publishedDate.before(currentDate)) {
-                throw new IllegalArgumentException("Published date must be before the current date");
+                throw new IllegalArgumentException("Published date must be after the current date");
             }
 
 
