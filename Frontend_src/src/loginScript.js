@@ -72,5 +72,17 @@ for(var i=0; i<urlVars.length; i++) {
     }
 }
 if(err){
-
+    var msg;
+    switch(type){
+        case "login":
+            msg = "Login failed";
+            break;
+        case "register":
+            msg = "Registration failed";
+            break;
+        default:
+            msg = "Unknown Error";
+            break;
+    }
+    alert("TERRIBLE ERROR \n"+msg);
 }
