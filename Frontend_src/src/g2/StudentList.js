@@ -23,6 +23,7 @@ var StudentList = React.createClass ({
         }*/
         console.log(user.studentName + "_" + user.submissionDate + "_" + user.grade + "_" + user.assignmentID);
         console.log("jebjeb");
+        document.getElementById("answerContainer").innerHTML = ""; //TODO: find better solution.
         ReactDOM.render(<RenderHandle />,document.getElementById("answerContainer"));
         //TODO: render other user story.
     },
