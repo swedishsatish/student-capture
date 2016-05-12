@@ -26,16 +26,18 @@ public class CourseDAO {
      * @return			true if successful, else false
      */
     public boolean addCourse(String courseID, String courseCode, String year,
-    		String term, String courseName) {
+    		String term, String courseName, String courseDescription, 
+    		Boolean active) {
     	boolean result;
     	int years = Integer.parseInt(year);
 
         String addCourseStatement =
-                "INSERT INTO Course VALUES (?,?,?,?,?)";
+                "INSERT INTO Course VALUES (?,?,?,?,?,?,?)";
 
         try {
             int rowsAffected = jdbcTemplate.update(addCourseStatement,
-                    courseID, years, term, courseCode, courseName);
+                    courseID, years, term, courseCode, courseName, 
+                    courseDescription, active);
             if (rowsAffected == 1) {
             	result = true;
             } else {
@@ -52,7 +54,8 @@ public class CourseDAO {
 
 
     public String getCourseID(String term,String courseCode){
-    	String sql = "SELECT courseID from course WHERE CourseCode = ? AND Term = ?";
+    	String sql = "SELECT courseID from course WHERE CourseCode=? "
+    			+ "AND Term=?";
     	return jdbcTemplate.queryForObject(sql, new Object[]{courseCode,term}, String.class);
     }
     
