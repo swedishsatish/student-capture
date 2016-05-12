@@ -10,7 +10,7 @@
 // Class for the login form.
 var LoginForm = React.createClass({
     
-    // Function that swaps the ligin form with the register form. 
+    // Function that swaps the login form with the register form. 
     handleClickReg: function(){
         ReactDOM.render(<RegisterForm />, document.getElementById('loginPage'))
     },

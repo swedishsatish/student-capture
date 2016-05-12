@@ -28,8 +28,8 @@ body {
 
 #registerButton {
 	position:fixed;
-	top:10px;
-	right:120px;
+	top:60px;
+	right:10px;
 }
 
 #loginButton {
@@ -107,9 +107,20 @@ color:red;
 /*------------------------------------modal-----------------------------------*/
 
 #modalBtn {
-	position:fixed;
-	top:10px;
-	right:10px;
+	position: absolute;
+	top:0;
+	background-color: #424242;
+	height:50px;
+	text-align: center;
+}
+
+#sysReqs {
+	color: #fafafa;
+	margin: auto;
+}
+
+#readMore {
+	color: #EC7E15;
 }
 
 /* The Modal (background) */
@@ -122,7 +133,7 @@ color:red;
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
+    overflow-y: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
