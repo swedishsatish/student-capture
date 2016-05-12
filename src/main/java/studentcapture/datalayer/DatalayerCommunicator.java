@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,6 +46,8 @@ public class DatalayerCommunicator {
     private CourseDAO course;
     @Autowired
     private User user;
+    @Autowired
+    private ParticipantDAO participant;
 
     //@Autowired
     FilesystemInterface fsi;
@@ -290,6 +293,31 @@ public class DatalayerCommunicator {
     			courseDescription, active);
     }
     
+    @Transactional(rollbackFor=Exception.class)
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.POST,
+    value = "/addCourseWithTeacher")
+    @ResponseBody
+    public Boolean addCourseWithTeacher(
+    		@RequestParam(value="courseID") String courseID,
+    		@RequestParam(value="courseCode") String courseCode, 
+    		@RequestParam(value="year") String year,
+    		@RequestParam(value="term") String term, 
+    		@RequestParam(value="courseName") String courseName, 
+    		@RequestParam(value="courseDescription") String courseDescription,
+    		@RequestParam(value="active") Boolean active,
+    		@RequestParam(value="userID") String userID) {
+    	 Boolean result1 = course.addCourse(courseID, courseCode, year, term, 
+    			 courseName, courseDescription, active);
+    	 Boolean result2 = participant.addParticipant(userID, courseID, 
+    			 "Teacher");
+    	 if(!(result1 && result2))
+    		 throw new RuntimeException();
+    	 return (result1 && result2);
+    }
+    
     /**
      * Returns a course with given identifier.
      *
@@ -306,6 +334,62 @@ public class DatalayerCommunicator {
     	return course.getCourse(courseID);
     }
 
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.POST,
+    value = "/addParticipant")
+    @ResponseBody
+    public Boolean addParticipant(
+    		@RequestParam(value="userID") String userID, 
+    		@RequestParam(value="courseID") String courseID,
+    		@RequestParam(value="function") String function) {
+    	return participant.addParticipant(userID, courseID, function);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.GET,
+    value = "/getFunctionForParticipant")
+    @ResponseBody
+    public String getFunctionForParticipant(
+    		@RequestParam(value="userID") String userID, 
+    		@RequestParam(value="courseID") String courseID) {
+    	Optional<String> result = participant.getFunctionForParticipant(userID, courseID);
+    	if(result.isPresent())
+    		return result.get();
+    	return null;
+    }
+    
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.GET,
+    value = "/getAllCoursesIDsForParticipant")
+    @ResponseBody
+    public List<Participant> getAllCoursesIDsForParticipant(
+    		@RequestParam(value="userID") String userID) {
+    	Optional<List<Participant>> result = participant.getAllCoursesIDsForParticipant(userID);
+    	if(result.isPresent())
+    		return result.get();
+    	return null;
+    }
+    
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.GET,
+    value = "/getAllParticipantsFromCourse")
+    @ResponseBody
+    public List<Participant> getAllParticipantsFromCourse( 
+    		@RequestParam(value="courseID") String courseID) {
+    	Optional<List<Participant>> result = participant.getAllParticipantsFromCourse(courseID);
+    	if(result.isPresent())
+    		return result.get();
+    	return null;
+    }
+    
     /**
      * Returns list of all submissions made in response to a given assignment.
      *
