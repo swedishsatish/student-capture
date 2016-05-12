@@ -1,13 +1,16 @@
 package studentcapture.mail;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.jvnet.mock_javamail.Mailbox;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Random;
 
@@ -32,12 +35,40 @@ public class MailClientTest {
         Mailbox.clearAll();
     }
 
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
+
+//    @Test
+//    public void testNullSubjectAndBody() throws Exception{
+//        subject = null;
+//        body = null;
+//        mail.send("test.dest@hotmail.com", "test.scr", subject, body);
+//    }
+
+    @Test
+    public void testNullTo() throws Exception {
+        subject = "fff";
+        body = "222";
+
+        exception.expect(Exception.class);
+        mail.send(null, "test.scr", subject, body);
+    }
+
+    @Test
+    public void testNullFrom() throws Exception {
+        subject = "fff";
+        body = "222";
+
+        exception.expect(Exception.class);
+        mail.send("test.dest@hotmail.com", null, subject, body);
+    }
+
     @Test
     public void testSendSingleMail() throws Exception {
         subject = "test";
         body = "123";
-        mail.send("vanneback@hotmail.com", "c13evk@cs.umu.se", subject, body);
-        List<Message> inbox = Mailbox.get("vanneback@hotmail.com");
+        mail.send("test.dest@hotmail.com", "test.scr@hotmail.com", subject, body);
+        List<Message> inbox = Mailbox.get("test.dest@hotmail.com");
         assertTrue(inbox.size() == 1);
     }
 
