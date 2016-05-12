@@ -257,12 +257,20 @@ public class DatalayerCommunicator {
 
         user.addUser(userName,fName,lName,email,salt,pwd);
     }
-	
+    
     /**
      * Adds a course to the database.
-     *
-     * @param assignmentID		assignment identifier
-     * @return					list of submissions
+     * 
+     * @param courseID
+     * @param courseCode
+     * @param year
+     * @param term
+     * @param courseName
+     * @param courseDescription		
+     * @param active				
+     * @return						true i successful, else false
+     * 
+     * @see Course
      */
     @CrossOrigin
     @RequestMapping(
@@ -280,6 +288,22 @@ public class DatalayerCommunicator {
     		@RequestParam(value="active") Boolean active) {
     	return course.addCourse(courseID, courseCode, year, term, courseName,
     			courseDescription, active);
+    }
+    
+    /**
+     * Returns a course with given identifier.
+     *
+     * @param courseID		    course identifier
+     * @return					found course
+     */
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.GET,
+    value = "/getCourse")
+    @ResponseBody
+    public Course getCourse(@RequestParam(value="courseID") String courseID) {
+    	return course.getCourse(courseID);
     }
 
     /**
