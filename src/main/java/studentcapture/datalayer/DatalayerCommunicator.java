@@ -94,7 +94,7 @@ public class DatalayerCommunicator {
     @CrossOrigin
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
     public boolean setGrade(@RequestParam(value = "Submission") Submission submission,
-                            @RequestParam(value = "Grade") Grade grade) {
+                            @RequestParam(value = "Grade") Grade grade) throws IllegalFormatException {
         return submissionDAO.setGrade(submission, grade);
     }
 
