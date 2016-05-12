@@ -209,11 +209,6 @@ public class DatalayerCommunicator {
         return   userDAO.userExist(username,pswd);
     }
 
-    //  public void add user
-    // public void userExist
-    // public void userEmailExist
-
-
     /**
      * @param userName
      * @return
@@ -222,28 +217,22 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/userNameExist", method = RequestMethod.GET)
     public boolean userNameExist(
                   @RequestParam(value = "userName") String userName) {
-        return false;
+        return userDAO.userNameExist(userName);
     }
 
     /**
      * @param email
-     * @return
+     * @return true if email exist else false
      */
     @CrossOrigin
     @RequestMapping(value = "/usrEmailExist", method = RequestMethod.GET)
     public boolean userEmailExist(@RequestParam(value = "email") String email) {
-        return false;
+        return userDAO.emailExist(email);
     }
 
     /**
      * Register user by given information.
      *
-     * @param userName user name for the user to be registerd
-     * @param fName    First name
-     * @param lName    last name
-     * @param email
-     * @param salt     salt for password
-     * @param pwd      password
      * @return true if registration was successfull else false
      */
     @CrossOrigin
