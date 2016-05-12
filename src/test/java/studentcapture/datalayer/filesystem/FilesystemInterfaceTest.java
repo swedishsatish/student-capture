@@ -9,10 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import studentcapture.config.StudentCaptureApplication;
 import studentcapture.feedback.FeedbackModel;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 
 import static org.junit.Assert.*;
 
@@ -146,6 +143,41 @@ public class FilesystemInterfaceTest {
         FeedbackModel model = createFeedbackModel();
 
         assertEquals(FilesystemInterface.getFeedbackText(model),"");
+    }
+
+    @Test
+    public void shouldCreateNewFile() throws IOException {
+        String path;
+        File file;
+
+        FilesystemInterface.storeAssignmentDescription(courseCode, courseID, assignmentID, "This is a test");
+
+        path = FilesystemInterface.generatePath(courseCode, courseID, assignmentID) + "/description.txt";
+        file = new File(path);
+
+        assertTrue(file.isFile());
+    }
+
+    @Test
+    public void shouldOverwriteExistingFile() throws IOException {
+        String path;
+        File file;
+        FileReader fileReader;
+        char[] buf = new char[22];
+        String content;
+
+        FilesystemInterface.storeAssignmentDescription(courseCode, courseID, assignmentID, "This should be overwritten");
+        FilesystemInterface.storeAssignmentDescription(courseCode, courseID, assignmentID, "This should be in file");
+
+        path = FilesystemInterface.generatePath(courseCode, courseID, assignmentID) + "/description.txt";
+        file = new File(path);
+        fileReader = new FileReader(file);
+        fileReader.read(buf);
+        fileReader.close();
+        content = new String(buf);
+
+        assertEquals("This should be in file", content);
+
     }
 
     private FeedbackModel createFeedbackModel() {
