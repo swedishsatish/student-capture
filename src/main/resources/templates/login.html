@@ -66,10 +66,10 @@
                         <input type="email" class="loginField" placeholder="example@mail.com" ref="EmailInput" required="required" name="email" 
                         pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" />
          
-                        <input type="text" class="loginField" placeholder="username" ref="Uname" name="username" required="required"/>
+                        <input type="text" class="loginField" placeholder="username" name="username" required="required"/>
     					  
                         <input type="password" id="firstPass" class="loginField nameField"
-                               placeholder="password" ref="Fpass" name="password"  
+                               placeholder="password" name="password"  
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
                                required="required"/>
                         
@@ -77,14 +77,14 @@
     					 one lower case character and one numeric character.</p> 
 
                         <input type="password" id="secondPass" class="loginField nameField"
-                               placeholder="repeat password" ref="Spass" name="confirmpassword" 
+                               placeholder="repeat password" name="confirmpassword" 
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
                                required="required" />
                                
                                <p class="tooltipText">Password must contain atleast one upper case character,
     					 one lower case character and one numeric character.</p> 
 
-                <button type="submit" id="regBtn" class="SCButton loginField nameField">
+                <button type="submit" id="regBtn" class="SCButton loginField nameField" href="lol">
                     Register
                 </button>
                 <button type="button" id="cnclBtn" class="SCButton loginField nameField">
@@ -94,10 +94,6 @@
 
 		</form>
 		</div>
-	
-	
-	
-	
 	
 	
 	<!--                        Modal                       -->

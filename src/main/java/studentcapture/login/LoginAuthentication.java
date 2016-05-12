@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -89,5 +90,10 @@ public class LoginAuthentication implements AuthenticationProvider {
 	    //System.out.println("Boolean response received: Checkuser = " + response.toString());
 	    
 		return response;
+	}
+	
+	public boolean comparePassword(String password) {
+		String hashed = "";
+		return BCrypt.checkpw(password, hashed);
 	}
 }
