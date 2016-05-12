@@ -26,7 +26,7 @@ var FAQInfo = React.createClass({
                            mer relevant information
                         </p>
                         <h5>Hur svara man på frågan?</h5>
-                        <p>Samma sak som ovanstående, men inom en paragraf istället.</p>
+                        <p>Samma sak som ovanstående, men inom en paragraf istället..</p>
                         <h5>Question 3</h5>
                         <p>Hejsan</p>
                         <h5>Question 4</h5>
