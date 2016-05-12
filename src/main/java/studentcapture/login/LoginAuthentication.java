@@ -74,7 +74,8 @@ public class LoginAuthentication implements AuthenticationProvider {
 	 */
 	public boolean checkUser(String username, String password) {
 	    
-	    //System.out.println("Checking user data in DB");
+	    System.out.println("checkUser() in Authenticator");
+	    System.out.println("Checking user data in DB with user: " + username + " and password: " + password);
 	    
 	    URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
                 .path("DB/login")
@@ -83,10 +84,12 @@ public class LoginAuthentication implements AuthenticationProvider {
                 .build()
                 .toUri();
 	    
+	    System.out.println(targetUrl.toString());
+	    
 	    //Send request to DB and get the boolean answer
 	    Boolean response = requestSender.getForObject(targetUrl, Boolean.class);
 	    
-	    //System.out.println("Boolean response received: Checkuser = " + response.toString());
+	    System.out.println("Boolean response received: Checkuser = " + response.toString());
 	    
 		return response;
 	}

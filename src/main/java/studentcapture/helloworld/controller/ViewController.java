@@ -37,9 +37,10 @@ public class ViewController {
         return "loggedin";
     }
     
+    /*
     @RequestMapping(value="/register")
     public String save() {
         return "register";
-    }
+    }*/
     
 }
