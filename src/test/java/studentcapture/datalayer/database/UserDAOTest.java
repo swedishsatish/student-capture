@@ -54,7 +54,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     public void testAddUser() {
 
         User user = new User("userPelle","Pelle","Jönsson","pelle@gmail.com",
-                            "saltad0f991238","mypassword123");
+                            "mypassword123");
 
         userDAO.addUser(user);
 
@@ -152,7 +152,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         public Object mapRow(ResultSet rs, int i) throws SQLException {
             User user = new User(rs.getString("username"),rs.getString("firstname"),
                     rs.getString("lastname"),rs.getString("email"),
-                    rs.getString("salt"),rs.getString("pswd"));
+                    rs.getString("pswd"));
             return user;
         }
     }

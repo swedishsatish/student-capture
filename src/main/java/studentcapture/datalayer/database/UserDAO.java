@@ -42,15 +42,15 @@ public class UserDAO {
     public void addUser(User user) {
 
         String sql = "INSERT INTO users"
-                + " (username, firstname, lastname, email, salt, pswd)"
-                + " VALUES (?, ?, ?, ?, ?, ?)";
+                + " (username, firstname, lastname, email, pswd)"
+                + " VALUES (?, ?, ?, ?, ?)";
 
         Object[] args = new Object[] {user.getUserName(),user.getfName(),
                                       user.getlName(),user.getEmail(),
                                       user.getPswd()};
 
         int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
-                                      Types.CHAR,Types.VARCHAR,Types.VARCHAR};
+                                      Types.VARCHAR,Types.VARCHAR};
         try {
             jdbcTemplate.update(sql, args,types);
         } catch (DataIntegrityViolationException e) {
