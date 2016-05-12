@@ -8,9 +8,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import studentcapture.config.StudentCaptureApplicationTests;
-import studentcapture.datalayer.database.Submission.SubmissionWrapper;
+// import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 import studentcapture.datalayer.database.User.CourseAssignmentHierarchy;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,10 +39,47 @@ public class UserTest  extends StudentCaptureApplicationTests {
     private JdbcTemplate jdbcMock;
 
     @Before
-    public void setUp() {
-        Mockito.reset(jdbcMock);
+    public void setup() {
+
     }
 
+    @Test
+    public void testAddUser() {
+
+        user.addUser("userPelle","Pelle","Jönsson","pelle@gmail.com","saltad0f991238","mypassword123");
+
+        String sql = "SELECT * FROM users WHERE username = 'userPelle'";
+
+        //Getting values from table user
+        HashMap<String,String> info = (HashMap<String,String>)
+                jdbcMock.queryForObject(sql, new UserWrapper());
+
+        assertEquals("userPelle",info.get("username"));
+        assertEquals("Pelle",info.get("fName"));
+        assertEquals("Jönsson",info.get("lName"));
+        assertEquals("pelle@gmail.com",info.get("email"));
+        assertEquals("saltad0f991238",info.get("salt"));
+        assertEquals("mypassword123",info.get("pswd"));
+    }
+
+    @Test
+    public void testEmailIsUniqueAddUser() {
+
+        user.addUser("user1","förnamn","efternamn","user1@gmail.com",
+                     "saltet","mittlösen");
+
+//        String res = user.addUser("user2","förnamn","efternamn","user1@gmail.com",
+//                "saltet","mittlösen");
+//
+//        assertEquals("EMAIL EXIST",res);
+    }
+
+    @Test
+    public void testUserNameIsUniqueAddUser() {
+
+    }
+
+    /*
     @Test
     public void getCourseAssignmentHierarchyUserInformationTest() {
     	String getUserStatement = "SELECT * FROM Users WHERE "
@@ -86,4 +125,25 @@ public class UserTest  extends StudentCaptureApplicationTests {
         assertEquals(result.firstName,"nameFirst");
         assertEquals(result.lastName,"nameLast");
     }
+	*/
+
+    /**
+     *  Used to collect user information, and return a hashmap.
+     */
+    protected class UserWrapper implements org.springframework.jdbc.core.RowMapper {
+
+        @Override
+        public Object mapRow(ResultSet rs, int i) throws SQLException {
+            HashMap<String,String> info = new HashMap();
+            info.put("userID",rs.getString("userid"));
+            info.put("username",rs.getString("UserName"));
+            info.put("fName",rs.getString("FirstName"));
+            info.put("lName",rs.getString("LastName"));
+            info.put("email",rs.getString("email"));
+            info.put("salt",rs.getString("salt"));
+            info.put("pswd",rs.getString("pswd"));
+            return info;
+        }
+    }
+
 }

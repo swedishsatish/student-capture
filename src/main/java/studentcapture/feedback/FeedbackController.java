@@ -32,7 +32,10 @@ import java.util.HashMap;
 @RestController
 @RequestMapping(value = "feedback")
 public class FeedbackController {
-    private static final String dbURI = "https://localhost:8443";
+    private static final String dataLayerHostURI = "https://localhost:8443";
+    private static final String dataLayerSetGrade = "DB/setGrade";
+    private static final String dataLayerGetGrade = "DB/getGrade";
+    private static final String dataLayerGetFeedbackVideo = "DB/getFeedbackVideo";
 
 
     @Autowired
@@ -42,23 +45,19 @@ public class FeedbackController {
     @RequestMapping(value = "get", method = RequestMethod.GET)
     public HashMap handleFeedbackRequestFromStudent(@Valid FeedbackModel model) {
         //TODO Unsafe data needs to be cleaned
-        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
-                .path("DB/getGrade")
-                .queryParam("studentID", model.getStudentID())
-                .queryParam("assignmentID", model.getAssignmentID())
-                .queryParam("courseID", model.getCourseID())
-                .build()
-                .toUri();
+        URI targetURI = constructURI(model, dataLayerHostURI + dataLayerGetGrade);
 
-        HashMap<String, String> response;
-        try {
-            response = requestSender.getForObject(targetUrl, HashMap.class);
-        } catch (RestClientException e) {
-            //TODO Maybe not good to send exceptions to browser?
-            response = new HashMap<String, String>();
-            response.put("error", e.getMessage());
-        }
-        return response;
+        return getExternalResponse(targetURI);
+    }
+
+    private URI constructURI(@Valid FeedbackModel model, String baseURI) {
+        return UriComponentsBuilder.fromUriString(baseURI)
+                    .queryParam("studentID", model.getStudentID())
+                    .queryParam("assignmentID", model.getAssignmentID())
+                    .queryParam("courseID", model.getCourseID())
+                    .queryParam("courseCode", model.getCourseCode())
+                    .build()
+                    .toUri();
     }
 
     @CrossOrigin
@@ -70,13 +69,8 @@ public class FeedbackController {
         HttpEntity<String> entity = new HttpEntity(headers);
         ResponseEntity<byte[]> response = null;
 
-        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI + "/DB/getFeedbackVideo")
-                .queryParam("studentID", model.getStudentID())
-                .queryParam("assignmentID", model.getAssignmentID())
-                .queryParam("courseID", model.getCourseID())
-                .queryParam("courseCode", model.getCourseCode())
-                .build()
-                .toUri();
+        URI targetUrl = constructURI(model, dataLayerHostURI + dataLayerGetFeedbackVideo);
+
         try {
             response = requestSender.exchange(targetUrl, HttpMethod.GET, entity, byte[].class);
         } catch (RestClientException e) {
@@ -94,8 +88,8 @@ public class FeedbackController {
     @RequestMapping(value = "set", method = RequestMethod.POST)
     public HashMap<String, String> setFeedback(@RequestBody FeedbackModel fm) {
 
-        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
-                .path("DB/setGrade")
+        URI targetUrl = UriComponentsBuilder.fromUriString(dataLayerHostURI)
+                .path(dataLayerSetGrade)
                 .queryParam("assID", String.valueOf(fm.getAssignmentID()))
                 .queryParam("teacherID", fm.getTeacherID())
                 .queryParam("studentID", String.valueOf(fm.getStudentID()))

@@ -33,7 +33,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     private RestTemplate templateMock;
 
     private MockMvc mockMvc;
-    private String id = "-1129137218";
+    private String userID = "26";
 
     private byte[] fileContent;
 
@@ -41,7 +41,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testUploadCorrectHeaderAndEmptyBody() throws Exception {
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
-        mockMvc.perform(post("/uploadVideo/" + id)
+        mockMvc.perform(post("/uploadVideo/" + Integer.toString(userID.hashCode()))
                 .contentType("multipart/form-data"))
                 .andExpect(status().isBadRequest());
     }
@@ -50,9 +50,9 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testUploadBadID() throws Exception {
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
-        mockMvc.perform(fileUpload("/uploadVideo/" + id + "asdsad")
+        mockMvc.perform(fileUpload("/uploadVideo/" + Integer.toString(userID.hashCode()) + "asdsad")
                 .file(new MockMultipartFile("video", fileContent))
-                .param("userID", "user")
+                .param("userID", userID)
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
@@ -65,9 +65,9 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testWithWrongHeader() throws Exception {
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
-        mockMvc.perform(fileUpload("/uploadVideo/"+id)
+        mockMvc.perform(fileUpload("/uploadVideo/"+Integer.toString(userID.hashCode()))
                 .file(new MockMultipartFile("bugsbunny", fileContent))
-                .param("userID", "user")
+                .param("userID", userID)
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
@@ -80,7 +80,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testUploadWrongHeaderAndEmptyBody() throws Exception {
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
-        mockMvc.perform(post("/uploadVideo/"+id)
+        mockMvc.perform(post("/uploadVideo/"+Integer.toString(userID.hashCode()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnsupportedMediaType());
     }
@@ -89,9 +89,9 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testCorrectVideoUpload() throws Exception {
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
-        mockMvc.perform(fileUpload("/uploadVideo/"+id)
+        mockMvc.perform(fileUpload("/uploadVideo/"+Integer.toString(userID.hashCode()))
                 .file(new MockMultipartFile("video", fileContent))
-                .param("userID", "user")
+                .param("userID", userID)
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
@@ -104,45 +104,45 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testCorrectVideoUploadButFileTransferFails() throws Exception {
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("Failed");
 
-        mockMvc.perform(fileUpload("/uploadVideo/"+id)
+        mockMvc.perform(fileUpload("/uploadVideo/"+Integer.toString(userID.hashCode()))
                 .file(new MockMultipartFile("video", fileContent))
-                .param("userID", "user")
+                .param("userID", userID)
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
                 .param("videoType", "submission")
                 .contentType("multipart/form-data"))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testCorrectVideoUploadButFileTransferFails2() throws Exception {
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("Server error");
 
-        mockMvc.perform(fileUpload("/uploadVideo/"+id)
+        mockMvc.perform(fileUpload("/uploadVideo/"+Integer.toString(userID.hashCode()))
                 .file(new MockMultipartFile("video", fileContent))
-                .param("userID", "user")
+                .param("userID", userID)
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
                 .param("videoType", "submission")
                 .contentType("multipart/form-data"))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testCorrectVideoUploadButFileTransferResponseReturnsNull() throws Exception {
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn(null);
 
-        mockMvc.perform(fileUpload("/uploadVideo/"+id)
+        mockMvc.perform(fileUpload("/uploadVideo/"+Integer.toString(userID.hashCode()))
                 .file(new MockMultipartFile("video", fileContent))
-                .param("userID", "user")
+                .param("userID", userID)
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
                 .param("videoType", "submission")
                 .contentType("multipart/form-data"))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -150,9 +150,9 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
-        mockMvc.perform(fileUpload("/uploadVideo/"+id)
+        mockMvc.perform(fileUpload("/uploadVideo/"+Integer.toString(userID.hashCode()))
                 .file(new MockMultipartFile("video", fileContent))
-                .param("userID", "user")
+                .param("userID", userID)
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
                 .param("videoType", "submission")
@@ -165,9 +165,9 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
-        mockMvc.perform(fileUpload("/uploadVideo/"+id)
+        mockMvc.perform(fileUpload("/uploadVideo/"+Integer.toString(userID.hashCode()))
                 .file(new MockMultipartFile("videoo", fileContent))
-                .param("userIDD", "user")
+                .param("userIDD", userID)
                 .param("assignmentIDD", "1337")
                 .param("courseIDD", "5DV151")
                 .param("courseCodee", "5DV151")
@@ -180,7 +180,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     public void testUploadWithWrongParamValues() throws Exception {
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
-        mockMvc.perform(fileUpload("/uploadVideo/"+id)
+        mockMvc.perform(fileUpload("/uploadVideo/"+Integer.toString(userID.hashCode()))
                 .file(new MockMultipartFile("videoName", fileContent))
                 .param("userID", "user123123213123")
                 .param("assignmentID", "1337")
@@ -197,15 +197,15 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
 
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
-        mockMvc.perform(fileUpload("/uploadVideo/"+id)
+        mockMvc.perform(fileUpload("/uploadVideo/"+Integer.toString(userID.hashCode()))
                 .file(new MockMultipartFile("video", emptyVideoFile))
-                .param("userID", "user")
+                .param("userID", userID)
                 .param("assignmentID", "1337")
                 .param("courseID", "5DV151")
                 .param("courseCode", "5DV151")
                 .param("videoType", "submission")
                 .contentType("multipart/form-data"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isBadRequest());
     }
 
     @Before
@@ -218,7 +218,7 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
         Mockito.reset(templateMock);
         try {
             mockMvc.perform(get("/video/inrequest")
-                            .param("userID", "user")
+                            .param("userID", userID)
                             .param("courseID", "5DV151")
                             .param("assignmentID", "1337")
             );

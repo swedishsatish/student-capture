@@ -1,16 +1,17 @@
 package studentcapture.datalayer.filesystem;
 
+import javassist.bytecode.ByteArray;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.config.StudentCaptureApplication;
+import studentcapture.feedback.FeedbackModel;
 
-import java.io.File;
+import java.io.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class FilesystemInterfaceTest {
     private String courseCode;
@@ -25,6 +26,7 @@ public class FilesystemInterfaceTest {
         courseID = "5DV151";
         assignmentID = "1337";
         userID = "user";
+
     }
 
     /**
@@ -64,8 +66,7 @@ public class FilesystemInterfaceTest {
 
 	@Test
 	public void shouldStoreFileToNewPath(){
-		byte[] mockBytes = {1,2,4};
-        testFile = new MockMultipartFile("mockTestFile", mockBytes);
+        createMockFile();
 		FilesystemInterface.storeStudentVideo(courseCode,courseID,assignmentID,userID,testFile);
 
 		File storedFile = new File(StudentCaptureApplication.ROOT+"/moose/"+courseCode+"/"+courseID+
@@ -92,4 +93,109 @@ public class FilesystemInterfaceTest {
 
     }
 
+    @Test
+    public void shouldFindFile() throws Exception {
+        FeedbackModel model = createFeedbackModel();
+
+        createMockFile();
+        FilesystemInterface.storeFeedbackText(model,testFile);
+        File storedFile = new File(FilesystemInterface.generatePathFromModel(model)+FilesystemConstants.FEEDBACK_TEXT_FILENAME);
+        assertTrue(storedFile.exists());
+        //assertNotNull(FilesystemInterface.getFeedbackText(model),"Hej");
+
+    }
+
+
+
+    @Test
+    public void shouldGetFeedbackText() throws Exception {
+        FeedbackModel model = createFeedbackModel();
+
+        String mockString = "First line in testfile";
+        testFile = new MockMultipartFile("mockTestFile",mockString.getBytes());
+        FilesystemInterface.storeFeedbackText(model,testFile);
+        assertEquals(FilesystemInterface.getFeedbackText(model),"First line in testfile");
+    }
+    @Test
+    public void shouldGetIncorrectFeedbackText() throws Exception {
+        FeedbackModel model = createFeedbackModel();
+
+        String mockString = "Hejsvejs";
+        testFile = new MockMultipartFile("mockTestFile",mockString.getBytes());
+        FilesystemInterface.storeFeedbackText(model,testFile);
+
+        assertNotEquals(FilesystemInterface.getFeedbackText(model),"First line in testfile");
+    }
+    @Test
+    public void shouldGetMultipleLineFeedbackText() throws Exception {
+        FeedbackModel model = createFeedbackModel();
+
+        String mockString = "First line in testfile\n" +
+                "Second line in testfile\n"+
+                "Third line in testfile";
+        testFile = new MockMultipartFile("mockTestFile",mockString.getBytes());
+        FilesystemInterface.storeFeedbackText(model,testFile);
+
+        assertNotEquals(FilesystemInterface.getFeedbackText(model),mockString);
+    }
+    @Test
+    public void shouldReturnNoFile() throws Exception {
+        FeedbackModel model = createFeedbackModel();
+
+        assertEquals(FilesystemInterface.getFeedbackText(model),"");
+    }
+
+    @Test
+    public void shouldCreateNewFile() throws IOException {
+        String path;
+        File file;
+
+        FilesystemInterface.storeAssignmentText(courseCode, courseID, assignmentID, "This is a test",
+                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+
+        path = FilesystemInterface.generatePath(courseCode, courseID, assignmentID) +
+                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME;
+        file = new File(path);
+
+        assertTrue(file.isFile());
+    }
+
+    @Test
+    public void shouldOverwriteExistingFile() throws IOException {
+        String path;
+        File file;
+        FileReader fileReader;
+        char[] buf = new char[22];
+        String content;
+
+        FilesystemInterface.storeAssignmentText(courseCode, courseID, assignmentID, "This should be overwritten",
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+        FilesystemInterface.storeAssignmentText(courseCode, courseID, assignmentID, "This should be in file",
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+
+        path = FilesystemInterface.generatePath(courseCode, courseID, assignmentID) +
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
+        file = new File(path);
+        fileReader = new FileReader(file);
+        fileReader.read(buf);
+        fileReader.close();
+        content = new String(buf);
+
+        assertEquals("This should be in file", content);
+
+    }
+
+    private FeedbackModel createFeedbackModel() {
+        FeedbackModel model = new FeedbackModel();
+        model.setCourseID(courseID);
+        model.setAssignmentID(Integer.parseInt(assignmentID));
+        model.setCourseCode(courseCode);
+        model.setStudentID(15);
+        return model;
+    }
+
+    private void createMockFile() {
+        byte[] mockBytes = {1,2,4};
+        testFile = new MockMultipartFile("mockTestFile", mockBytes);
+    }
 }
