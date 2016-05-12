@@ -11,10 +11,9 @@ import studentcapture.config.StudentCaptureApplicationTests;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.sql.Types;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by tfy12hsm.
@@ -26,13 +25,28 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
 
     @Autowired
     UserDAO userDAO;
+    private static boolean setupHasRun = false;
 
     @Autowired
     private JdbcTemplate jdbcMock;
 
     @Before
     public void setup() {
+        if(setupHasRun) return; // if setup has run before, dont run setup.
 
+        String sql = "INSERT INTO users"
+                +" (username, firstname, lastname, email, pswd)"
+                +" VALUES (?, ?, ?, ?, ?)";
+
+        Object[] args = new Object[] {"testUser", "testFName", "testLName",
+                                      "testEmail@example.com", "Testtest123"};
+
+        int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
+                Types.VARCHAR,Types.VARCHAR};
+
+        jdbcMock.update(sql,args,types);
+
+        setupHasRun = true;
     }
 
     @Test
@@ -56,28 +70,22 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testEmailExist() {
-
-//        User userFirst = new User("userPelle_1","Pelle","Jönsson","pelle_1@gmail.com",
-//                "saltad0f991238","mypassword123");
-//
-//        User userSec = new User("userPelle_2","Pelle","Jönsson","pelle_2@gmail.com",
-//                "saltad0f991238","mypassword123");
-//
-//
-//        userDAO.addUser("user1","förnamn","efternamn","user1@gmail.com",
-//                     "saltet","mittlösen");
-
-
-
-//        String res = user.addUser("user2","förnamn","efternamn","user1@gmail.com",
-//                "saltet","mittlösen");
-//
-//        assertEquals("EMAIL EXIST",res);
+        assertTrue(userDAO.emailExist("testEmail@example.com"));
     }
 
     @Test
-    public void testUserNameIsUniqueAddUser() {
+    public void testEmailDoesNotExist() {
+        assertFalse(userDAO.emailExist("testEmail2@example.com"));
+    }
 
+    @Test
+    public void testUserExist() {
+        assertTrue(userDAO.userNameExist("testUser"));
+    }
+
+    @Test
+    public void testUserDoesNotExist() {
+        assertFalse(userDAO.userNameExist("test321321321321User"));
     }
 
     /*

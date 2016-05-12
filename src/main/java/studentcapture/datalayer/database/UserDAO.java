@@ -24,14 +24,6 @@ import java.util.Optional;
 @Repository
 public class UserDAO {
 
-
-    private final String SQL_GET_USR_BY_ID = "SELECT  * FROM users WHERE userid = ?";
-    private final String SQL_USR_EXIST     = "SELECT EXISTS (SELECT 1 FROM users "
-                                           + "WHERE  username = ? AND pswd = ?)";
-
-    private final String SQL_GET_PSWDS = "";
-    private final String SQL_RM_USR   = "";
-
     // This template should be used to send queries to the database
     @Autowired
     protected JdbcTemplate jdbcTemplate;
@@ -70,8 +62,14 @@ public class UserDAO {
      * @param userName user name for user.
      * @return true if it exists else false
      */
-    public boolean UserNameExist(String userName) {
-        return false;
+    public boolean userNameExist(String userName) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM users "
+                + "WHERE  UserName = ?)";
+
+        Object[] args = new Object[]{userName};
+        int[] types = new int[]{Types.VARCHAR};
+
+        return jdbcTemplate.queryForObject(sql,args,types,Boolean.class);
     }
 
     /**
@@ -80,7 +78,15 @@ public class UserDAO {
      * @return true if email exist else false
      */
     public boolean emailExist(String email) {
-        return false;
+        String sql     = "SELECT EXISTS (SELECT 1 FROM users "
+                        +"WHERE  Email = ?)";
+
+        Object[] args = new Object[]{email};
+
+        int[] types = new int[]{Types.VARCHAR};
+
+        return jdbcTemplate.queryForObject(sql,args,types,
+                                            Boolean.class);
     }
 
     /**
@@ -95,7 +101,9 @@ public class UserDAO {
     }
 
     public boolean removeUser(String casID) {
-		throw new UnsupportedOperationException();
+        String sql = "";
+
+        throw new UnsupportedOperationException();
     }
 
 
@@ -122,11 +130,11 @@ public class UserDAO {
      * @return          The list with info of a person.
      */
     public User getUserByID(String userID) {
+        String sql = "SELECT  * FROM users WHERE userid = ?";
 
-        String sql = "SELECT * FROM users WHERE userid = ?";
 
         Object[] arg = new Object[]{Integer.parseInt(userID)};
-        User user = (User) jdbcTemplate.queryForObject(SQL_GET_USR_BY_ID, arg,
+        User user = (User) jdbcTemplate.queryForObject(sql, arg,
                     new UserWrapper());
 
         return user;
@@ -138,7 +146,10 @@ public class UserDAO {
      * @return true if user exist, otherwise false.
      */
     public boolean userExist(String userName,String pswd) {
-		return jdbcTemplate.queryForObject(SQL_USR_EXIST,
+        String sql = "SELECT EXISTS (SELECT 1 FROM users "
+                + "WHERE  username = ? AND pswd = ?)";
+
+        return jdbcTemplate.queryForObject(sql,
 				new Object[] {userName,pswd},
 				Boolean.class);
     }
