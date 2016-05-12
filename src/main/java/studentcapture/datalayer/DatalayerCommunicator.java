@@ -44,11 +44,9 @@ public class DatalayerCommunicator {
     @Autowired
     private Assignment assignment;
     @Autowired
-    private Course course;
+    private CourseDAO course;
     @Autowired
     private User user;
-    @Autowired
-    private Participant participant;
 
     //@Autowired
     FilesystemInterface fsi;
