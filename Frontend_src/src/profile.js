@@ -36,7 +36,7 @@ var NewProfile = React.createClass({
 		$("#internet-speed").text("");
 	},
     clickHandlerSettings: function () {
-        ReactDOM.render(<Settings />, document.getElementById('modal-container'));
+        ReactDOM.render(<Settings profile={profileData}/>, document.getElementById('modal-container'));
         reloadScripts();
     },
 	render : function() {
