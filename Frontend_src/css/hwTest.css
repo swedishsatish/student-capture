@@ -6,6 +6,7 @@
 #faq-text{
     overflow-y: scroll;
     max-height: 500px;
+    text-align:left;
 }
 
 #faq-className {
@@ -18,7 +19,7 @@
 }
 
 #FAQ-header {
-    background-color: #2E8697;
+    background-color: #076172;;
     color:white;
     text-align:center;
     padding:5px;
