@@ -12,7 +12,11 @@ var NewAssignment = React.createClass({
                 <input id="minTimeSeconds" type="number" defaultValue="minTimeSeconds" /><br/>
                 <input id="maxTimeSeconds" type="number" defaultValue="maxTimeSeconds" /><br/>
                 <input id="publish" type="button" value="yyyy-mm-dd 00:00"/>Publish Date<br/>
-
+                    <select id="scale">
+                        <option value="NUMBER_SCALE">1,2,3,4,5</option>
+                        <option value="U_G_VG_MVG">U,G,VG,MVG</option>
+                        <option value="U_O_K_G">U,O,K,G</option>
+                    </select>Grade scale<br/>
                 <div className="button primary-button" onClick = {handleCancel}> CANCEL </div>
                 <div className="button primary-button" onClick = {submitAssignment}> SUBMIT </div>
             </form>
@@ -74,7 +78,7 @@ function submitAssignment() {
     reqBody["endDate"] = $("#endDate").val();
     reqBody["published"] = $("#publish").val();
     reqBody["recap"] = $("#recap").val();
-    reqBody["scale"] = "NUMBER_SCALE";
+    reqBody["scale"] = $("#scale").val();
     $.ajax({
         type : "POST",
         contentType : "application/json",
