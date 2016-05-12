@@ -87,9 +87,11 @@ function submitForm() {
     reqBody["TeacherComments"] = document.getElementById('teachercomments').value;
     reqBody["DropDown"] = document.getElementById('dropDownMenu').value;
     reqBody["StudentPass"] = document.getElementById('ifStudentPass').checked;
-    reqBody["AssignmentID"] = 1;
-    reqBody["CourseID"] = 2;
-    reqBody["TeacherID"] = 3;
+    reqBody["AssignmentID"] = window.assignmentID;
+    reqBody["CourseID"] = window.courseID;
+    reqBody["TeacherID"] = window.teacherID;
+    //console.log(window.assignmentID+" "+ window.courseID+ " "+ window.teacherID);
+
     $.ajax({
         type: "POST",
         contentType: "application/json",

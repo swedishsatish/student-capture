@@ -22,7 +22,10 @@ var StudentList = React.createClass ({
             grade: event.currentTarget.childNodes[2].innerText,
         }*/
         console.log(user.studentName + "_" + user.submissionDate + "_" + user.grade + "_" + user.assignmentID);
-        console.log("jebjeb");
+        window.studentName=user.studentName;
+        window.assignmentID=user.assignmentID;
+        window.courseID=user.courseID;
+        window.teacherID=user.teacherID;
         document.getElementById("answerContainer").innerHTML = ""; //TODO: find better solution.
         ReactDOM.render(<RenderHandle student={user.studentName} />,document.getElementById("courseContent"));
         //TODO: render other user story.
