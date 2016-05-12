@@ -38,10 +38,15 @@ public class UserTest  extends StudentCaptureApplicationTests {
     @Autowired
     private JdbcTemplate jdbcMock;
 
+    @Before
+    public void setup() {
+
+    }
+
     @Test
     public void testAddUser() {
 
-       //boolean res =  user.addUser("userPelle","Pelle","Jönsson","1944","mypassword123");
+        user.addUser("userPelle","Pelle","Jönsson","1944","salt","mypassword123");
 
         String sql = "SELECT * FROM users WHERE username = 'userPelle'";
 
