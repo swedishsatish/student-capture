@@ -15,9 +15,9 @@ window.AssignmentContent = React.createClass({
     },
     jsonReady: function(data) {
         var json = JSON.parse(data);
-        assignmentData.assignmentName = json["AssignmentName"];
-        assignmentData.maxTime = json["MaxTime"];
         assignmentData.minTime = json["MinTime"];
+        assignmentData.maxTime = json["MaxTime"];
+        assignmentData.assignmentName = json["AssignmentName"];
         assignmentData.assignmentUrl = json["AssignmentUrl"];
         this.setState({loaded: true,
                        startsAt: json["startsAt"],
@@ -35,11 +35,14 @@ window.AssignmentContent = React.createClass({
             <div id="assignment-div">
                 <div id="assignment-desc">
                     <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
-                    <h5 id="assignment-startAt">Assignment opens: {this.state.startsAt}</h5>
-                    <h5 id="assignment-endAt">Assignment closes: {this.state.endsAt}</h5>
-                    <h5 id="assignment-mintime">Min video duration: {assignmentData.minTime} seconds</h5>
-                    <h5 id="assignment-maxtime">Max video duration: {assignmentData.maxTime} seconds</h5>
-                    <h5 id="assignment-information">Assignment information: {this.state.assignmentInformation}</h5>
+                    <h5 id="assignment-startAt">Assignment opens: <p id="descriptor">{this.state.startsAt}</p></h5>
+                    <h5 id="assignment-endAt">Assignment closes: <p id="descriptor">{this.state.endsAt}</p></h5>
+                    <h5 id="assignment-mintime">Min video duration: <p id="descriptor">{assignmentData.minTime} seconds</p></h5>
+                    <h5 id="assignment-maxtime">Max video duration: <p id="descriptor">{assignmentData.maxTime} seconds</p></h5>
+                    <h5 id="assignment-information">
+                        Assignment information:<br />
+                        <p id="descriptor">{this.state.assignmentInformation}</p>
+                    </h5>
                 </div>
                 <div id="assignment-interaction">
                     <But /><br />
@@ -54,25 +57,61 @@ window.AssignmentContent = React.createClass({
 });
 
 /*
-* Shows the video and everything else.
-* TODO: Make this popout (modal).
-*/
+ * Shows the video and everything else.
+ * TODO: start recording AFTER countdown!
+ */
 var AssignmentStart = React.createClass({
     getInitialState: function() {
-        return {assignmentUrl: '',
-                assignmentQuestion: ''
+        return {startCountDown: false,
+                startRecording: false,
+                time: 0
                 };
     },
     render: function() {
+        var questionContent = this.state.startCountDown
+                              ? <Question />
+                              : <div />;
+        var countDownContent = this.state.startCountDown
+                               ? <CountDown record={this.record} />
+                               : <div />;
+        var recordContent = this.state.startRecording
+                            ? <div>
+                                <StudentRecordVideo /><br />
+                                Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
+                                Current video length: {this.state.time}<br />
+                                <BlankBox />
+                              </div>
+                            : <div>
+                                <StudentRecordVideo /><br />
+                                <BlankBox />
+                              </div>;
         return (
-            <div  id="assignment-modal">
+            <div id="assignment-modal">
                 <div id="assignment-content" className="modal-content">
                     <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
-                    <Vid url={assignmentData.assignmentUrl}/>
-                    <BlankBox />
+                    <div id="question-div">
+                        <Vid url={assignmentData.assignmentUrl} count={this.count}/><br />
+                        {questionContent}
+                    </div>
+                    <div id="countdown-div">
+                        {countDownContent}
+                    </div>
+                    <div id="answer-div">
+                        {recordContent}
+                    </div>
                 </div>
             </div>
         )
+    },
+    tick: function() {
+        this.setState({time: this.state.time + 1});
+    },
+    count: function() {
+        this.setState({startCountDown: true});
+    },
+    record: function() {
+        this.setState({startRecording: true});
+        this.interval = setInterval(this.tick, 1000);
     }
 });
 
@@ -95,94 +134,65 @@ var But = React.createClass({
                             id="start-video-button"
                             value="Start Assignment"
                             onClick={this.onClick} />;
-        return (
-            <div>
-                {content}
-            </div>
-        );
+        return (<div>{content}</div>);
     }
 });
 
 var Question = React.createClass({
     getInitialState: function() {
-        return {available: false,
-                question: "No question!"
-                };
+        return {question: ''};
+    },
+    render: function() {
+        return (
+            <div>
+                Question summary: <br/>
+                {this.state.question}
+            </div>
+        );
     },
     componentDidMount: function() {
         this.serverRequest = getJson("test/assignmentdata.json", function (data) {
             var json = JSON.parse(data);
-            console.log("json is: " + json["AssignmentQuestion"]);
-            this.setState({question: json["AssignmentQuestion"], });
+//            console.log("json is: " + json["AssignmentQuestion"]);
+            this.setState({question: json["AssignmentQuestion"]});
         }.bind(this));
-    },
-    render: function() {
-        return (
-        <div id="question-div">
-            Question: <br/>
-            {this.state.question}
-        </div>
-        );
     }
 });
 
 var CountDown = React.createClass({
     getInitialState: function() {
-        return {timeLeft: 3,
-                startRecord: false
-                };
+        return {timeLeft: 3};
+    },
+    render: function() {
+        return <div>{this.state.timeLeft}</div>;
+    },
+    componentDidMount: function() {
+        this.interval = setInterval(this.tick, 1000);
     },
     tick: function() {
         this.setState({timeLeft: this.state.timeLeft - 1});
         if(this.state.timeLeft <= 0) {
+            this.setState({timeLeft: ''});
             clearInterval(this.interval);
-            this.setState({startRecord: true})
+            this.props.record();
         }
-    },
-    render: function() {
-        var content =
-            this.state.startRecord
-                ? <div id="record-wrap-div">
-                      <div id="record-div">
-                          <StudentRecordVideo />
-                      </div>
-                      <div id="question-div">
-                          <Question />
-                      </div>
-                  </div>
-                : this.state.timeLeft;
-        return (
-            <div id="countdown-div">
-                {content}
-            </div>
-        );
-    },
-    componentDidMount: function() {
-        this.interval = setInterval(this.tick, 1000);
     }
 });
 
 var Vid = React.createClass({
     getInitialState: function() {
-        return {showCountdown: false,
-                currTime: 0,
-                totalTime: 0,
-                loaded: false
+        return {currTime: 0,
+                totalTime: 0
                 };
     },
     render: function() {
         return (
             <div>
-                {this.state.showCountdown
-                    ? <CountDown />
-                    : <div>
-                          <video id='videoPlayer' src={this.props.url} width='70%'></video>
-                          <div>
-                              <progress value={this.state.currTime} max={this.state.totalTime} />
-                              {Math.round(this.state.currTime)} / {Math.round(this.state.totalTime)}
-                          </div>
-                      </div>
-                }
+                <video id='videoPlayer' src={this.props.url}></video>
+                <div>
+                    <progress id="progress-bar" value={this.state.currTime} max={this.state.totalTime} />
+                    {Math.round(this.state.currTime)} / {Math.round(this.state.totalTime)}
+                </div>
             </div>
         );
     },
@@ -194,21 +204,24 @@ var Vid = React.createClass({
         vid.play();
         this.interval = setInterval(this.ticker, 1000);
     },
+    ticker: function () {
+        var vid = document.getElementById("videoPlayer");
+        this.setState({currTime: vid.currentTime});
+    },
     canPlay: function () {
         var vid = document.getElementById("videoPlayer");
-        this.setState({totalTime: vid.duration, loaded: true});
-    },
-    onEnded: function() {
-        clearInterval(this.interval);
-        this.setState({showCountdown: true})
+        this.setState({totalTime: vid.duration});
     },
     onPause : function () {
         var vid = document.getElementById("videoPlayer");
         vid.play();
     },
-    ticker: function () {
+    onEnded: function() {
         var vid = document.getElementById("videoPlayer");
-        this.setState({currTime: vid.currentTime});
+        vid.removeEventListener('pause', this.onPause, false);
+        vid.pause();
+        clearInterval(this.interval);
+        this.props.count();
     }
 });
 
