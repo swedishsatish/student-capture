@@ -50,6 +50,19 @@ var PopUpGrade = React.createClass({
 
     }
 });
+var PopUpStudentName = React.createClass({
+    render: function () {
+        var studentname = 'error';
+        if(studentname != 'error'){
+            //studentname = user.studentname??
+            //return studentname
+        }else{
+            return(
+                <h2 id="uniquestudent">Error Errorsson</h2>
+            )
+        }
+    }
+});
 
 
 var PopUpRender = React.createClass({
@@ -60,6 +73,7 @@ var PopUpRender = React.createClass({
                 <PopUpOkButton/>
                 <PopUpPassBox/>
                 <PopUpGrade/>
+                <PopUpStudentName/>
             </div>
         )
     }
@@ -195,7 +209,6 @@ var SubmitButton = React.createClass({
             this.popUpConfirmation('popUpDiv');
         }
     },
-    
     /**
      *     <div id="blanket" style="display:none;"></div>
      <div id="popUpDiv" style="display:none;">
