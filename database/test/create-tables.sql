@@ -16,11 +16,10 @@ CREATE TABLE IF NOT EXISTS Course (
     Active      BOOLEAN        NOT NULL
     );
 
-CREATE TYPE role AS ENUM ('Teacher', 'Student', 'Assistant');
 CREATE TABLE IF NOT EXISTS Participant (
     UserId       INT           references Users(UserId),
     CourseId     VARCHAR(10)   references Course(CourseId),
-    Function     role          NOT NULL
+    Function     VARCHAR(32)   NOT NULL
     );
 
 CREATE TABLE IF NOT EXISTS Assignment (
