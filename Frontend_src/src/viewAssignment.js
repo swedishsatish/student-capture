@@ -4,13 +4,14 @@
 
 var assignmentData = {
 }
+
 window.AssignmentContent = React.createClass({
     getInitialState: function() {
-        return {loaded : false,
-                startsAt : '',
-                endsAt : '',
-                assignmentUrl : '',
-                }
+        return {loaded: false,
+                startsAt: '',
+                endsAt: '',
+                assignmentInformation: ''
+                };
     },
     jsonReady: function(data) {
         var json = JSON.parse(data);
@@ -18,16 +19,18 @@ window.AssignmentContent = React.createClass({
         assignmentData.maxTime = json["MaxTime"];
         assignmentData.minTime = json["MinTime"];
         assignmentData.assignmentUrl = json["AssignmentUrl"];
-        this.setState({loaded: true, startsAt: json["startsAt"], endsAt: json["endsAt"], assignmentUrl: json["assignmentUrl"]});
+        this.setState({loaded: true,
+                       startsAt: json["startsAt"],
+                       endsAt: json["endsAt"],
+                       assignmentInformation: json["AssignmentInformation"]
+                       });
     },
     render: function () {
-
         var assignment = this.props.assignment;
         var course = this.props.course;
-        if(!this.state.loaded)
+        if(!this.state.loaded) {
             getJson("test/assignmentdata.json", this.jsonReady);
-
-
+        }
         return (
             <div id="assignment-div">
                 <div id="assignment-desc">
@@ -36,6 +39,7 @@ window.AssignmentContent = React.createClass({
                     <h5 id="assignment-endAt">Assignment closes: {this.state.endsAt}</h5>
                     <h5 id="assignment-mintime">Min video duration: {assignmentData.minTime} seconds</h5>
                     <h5 id="assignment-maxtime">Max video duration: {assignmentData.maxTime} seconds</h5>
+                    <h5 id="assignment-information">Assignment information: {this.state.assignmentInformation}</h5>
                 </div>
                 <div id="assignment-interaction">
                     <But />
@@ -44,7 +48,6 @@ window.AssignmentContent = React.createClass({
         )
     },
     componentDidMount: function() {
-
     }
 });
 
@@ -54,11 +57,9 @@ window.AssignmentContent = React.createClass({
 */
 var AssignmentStart = React.createClass({
     getInitialState: function() {
-        return {
-                    assignmentUrl : '',
-                    assignmentDescription: '',
-                    assignmentName : ''
-                }
+        return {assignmentUrl: '',
+                assignmentQuestion: ''
+                };
     },
     render: function() {
         return (
@@ -69,20 +70,27 @@ var AssignmentStart = React.createClass({
             </div>
         )
     }
-})
+});
 
 
 var But = React.createClass({
     getInitialState: function() {
-        return { disabled: false};
+        return {disabled: false};
     },
     onClick: function() {
         var modal = document.getElementById("assignment-modal");
-        modal.style.display = 'block';
+        modal.style.display = "block";
         this.setState({disabled: true});
     },
     render: function() {
-        var content = this.state.disabled ? <AssignmentStart /> : <input disabled = {this.state.disabled} type="submit" id="start-video-button" value="Start Assignment" onClick={this.onClick}  /> ;
+        var content = this.state.disabled
+                      ? <AssignmentStart />
+                      : <input
+                            disabled = {this.state.disabled}
+                            type="submit"
+                            id="start-video-button"
+                            value="Start Assignment"
+                            onClick={this.onClick} />;
         return (
             <div id="assignment-modal" className="modal">
                 {content}
@@ -94,7 +102,8 @@ var But = React.createClass({
 var Question = React.createClass({
     getInitialState: function() {
         return {available: false,
-                question: 'No question!'};
+                question: "No question!"
+                };
     },
     componentDidMount: function() {
         this.serverRequest = getJson("test/assignmentdata.json", function (data) {
@@ -111,40 +120,44 @@ var Question = React.createClass({
         </div>
         );
     }
-})
+});
 
 var CountDown = React.createClass({
     getInitialState: function() {
-        return { timeLeft: 5 , startRecord : false};
+        return {timeLeft: 5,
+                startRecord: false
+                };
     },
     tick: function() {
-        this.setState({timeLeft : this.state.timeLeft - 1});
+        this.setState({timeLeft: this.state.timeLeft - 1});
         if(this.state.timeLeft <= 0) {
             clearInterval(this.interval);
-            this.setState({startRecord : true})
+            this.setState({startRecord: true})
         }
     },
     render: function() {
-        var content = this.state.startRecord ? <div id="record-wrap-div">
-                                                    <div id="record-div">
-                                                        <StudentRecordVideo />
-                                                    </div>
-                                                    <div id="question-div">
-                                                        <Question />
-                                                    </div>
-                                                </div> : this.state.timeLeft;
+        var content =
+            this.state.startRecord
+                ? <div id="record-wrap-div">
+                      <div id="record-div">
+                          <StudentRecordVideo />
+                      </div>
+                      <div id="question-div">
+                          <Question />
+                      </div>
+                  </div>
+                : this.state.timeLeft;
         return (
             <div id="countdown-div">
-            { content }
+                {content}
             </div>
         );
     },
-
     componentDidMount: function() {
         this.interval = setInterval(this.tick, 1000);
     }
+});
 
-})
 var Vid = React.createClass({
     getInitialState: function() {
         return {showCountdown: false,
@@ -156,14 +169,16 @@ var Vid = React.createClass({
     render: function() {
         return (
             <div>
-                { this.state.showCountdown ? <CountDown /> : <div>
-                                                                 <video id='videoPlayer' src={this.props.url} width='70%'></video>
-                                                                 <div>
-                                                                     <progress value={this.state.currTime} max={this.state.totalTime}/>
-                                                                     {Math.round(this.state.currTime)} / {Math.round(this.state.totalTime)}
-                                                                 </div>
-                                                             </div>
-                                                            }
+                {this.state.showCountdown
+                    ? <CountDown />
+                    : <div>
+                          <video id='videoPlayer' src={this.props.url} width='70%'></video>
+                          <div>
+                              <progress value={this.state.currTime} max={this.state.totalTime} />
+                              {Math.round(this.state.currTime)} / {Math.round(this.state.totalTime)}
+                          </div>
+                      </div>
+                }
             </div>
         );
     },
@@ -199,8 +214,9 @@ var Vid = React.createClass({
 function getJson(URL, callback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
             callback(JSON.parse(JSON.stringify(xmlHttp.responseText)));
+        }
     }
     xmlHttp.open("GET", URL, true);
     xmlHttp.send();

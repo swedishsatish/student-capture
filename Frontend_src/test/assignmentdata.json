@@ -7,6 +7,6 @@
     "AssignmentInformation" : "BLABLALBA LBALALBLABLA LLA BLABLABL LABLA BLA BLA LBA LBAL BLA BLALBAL B",
     "AssignmentUrl" : "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",
     "AssignmentQuestion" : "Who is Big Buck Bunny?",
-    "MaxTime" : "120",
-    "MinTime" : "130"
+    "MinTime" : "60",
+    "MaxTime" : "120"
 }

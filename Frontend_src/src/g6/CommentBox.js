@@ -1,6 +1,9 @@
 /**
  * Created by sejiaw on 2016-05-10.
  */
+/**
+ * Created by sejiaw on 2016-05-10.
+ */
 
 var hasEdited = false;
 /**
@@ -10,7 +13,7 @@ var hasEdited = false;
 var CommentBox = React.createClass({
 
     getInitialState: function () {
-        return {currentValue: this.props.children, value: 'Write comments regarding feedback here...'};
+        return {currentValue: this.props.children};
     },
     handleChange: function(event) {
         this.setState({value: event.target.value});
@@ -19,13 +22,15 @@ var CommentBox = React.createClass({
     onClick: function (event) {
         if(!hasEdited){
             this.setState({value: ''});
+            hasEdited=true;
         }
-        hasEdited=true;
     },
+
     // The render function for the component CommentBox
     render: function () {
         return (
-            <textarea value={this.state.value} onChange={this.handleChange} onClick={this.onClick} />
+            <textarea placeholder="Write comments regarding feedback here..." id="teachercomments"
+                      value={this.state.value} onChange={this.handleChange} onClick={this.onClick} />
 
         );
     }
