@@ -10,23 +10,32 @@
 window.Feedback = React.createClass ({
 
     handleClick: function () {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = function() {
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                var infoFromDb = JSON.parse(xmlHttp.responseText);
+        var formValues = {};
+        formValues["studentID"] = $("#student").val();
+        formValues["assignmentID"] = $("#ass").val();
+        formValues["courseID"] = $("#course").val();
+        formValues["courseCode"] = 1;
+
+        $.ajax({
+            type : "GET",
+            url : window.globalURL+"/feedback/get",
+            data : formValues,
+            timeout : 100000,
+            success : function(response) {
+                console.log("SUCCESS: ", response);
+                var params = $.param(formValues);
                 return (
                     ReactDOM.render(
-                        <NewFeedback feedbackResponse={infoFromDb}
-                                     sourceInfo={window.globalURL + "/feedback/video?studentID=" + document.getElementById('student').value
-                        + "&assignmentID=" + document.getElementById('ass').value + "&courseID=" + document.getElementById('course').value + "&courseCode=1"}/>,
+                        <NewFeedback feedbackResponse={response}
+                                     sourceInfo={window.globalURL + "/feedback/video?" + params}/>,
                         document.getElementById('courseContent')
                     )
                 )
+            }, error : function(e) {
+                console.log("ERROR: ", e);
             }
-        };
-        xmlHttp.open("GET",window.globalURL + "/feedback/get?studentID=" + document.getElementById('student').value
-            + "&assignmentID=" + document.getElementById('ass').value + "&courseID=" + document.getElementById('course').value + "&courseCode=1", true);
-        xmlHttp.send();
+        });
+
     },
     render: function () {
         return (
@@ -63,7 +72,7 @@ var NewFeedback = React.createClass ({
                     <h5>Feedback:</h5>
                     {feedbackResponse.feedback}
                     <br />
-                    <video width="720" height="460" src={this.props.sourceInfo} preload="auto" controls></video>
+                    <video width="720" height="460" src={this.props.sourceInfo} preload="auto" controls/>
                 </div>
             )
         } else {
