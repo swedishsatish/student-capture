@@ -9,8 +9,11 @@ var FAQInfo = React.createClass({
     render: function () {
 
         return (
-            <div>
-                <h3>FAQ</h3>
+            <div >
+                <div id="FAQ-header">
+                    <h1>FAQ</h1>
+                </div>
+
                 <div className="row" id="faq-className">
                     <div className="twelve columns" id="faq-text">
                     <h5>Question 1</h5>
@@ -30,12 +33,6 @@ var FAQInfo = React.createClass({
                         <h5>Question 2</h5>
                         <p>Hejsan</p>
                         <h5>Question 1</h5>
-                        <p>Hejsan</p>
-                        <h5>Question 2</h5>
-                        <p>Hejsan</p>
-                        <h5>Question 1</h5>
-                        <p>Hejsan</p>
-                        <h5>Question 2</h5>
                         <p>Hejsan</p>
                     </div>
                 </div>

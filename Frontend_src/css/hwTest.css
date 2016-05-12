@@ -10,4 +10,31 @@
 
 #faq-className {
     height: 70%;
+    background-color:white;
+    color:black;
+    clear:both;
+    text-align:center;
+    padding:5px;
+}
+
+#FAQ-header {
+    background-color: #2E8697;
+    color:white;
+    text-align:center;
+    padding:5px;
+
+}
+
+#FAQ-section {
+    width:350px;
+    float:left;
+    padding:10px;
+}
+
+#FAQ-footer {
+    background-color:black;
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px;
 }
