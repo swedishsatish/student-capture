@@ -10,11 +10,11 @@ var CourseList = React.createClass({
              //console.log(users);
              ReactDOM.render(<StudentList students={res}/>, document.getElementById('courseContent'));
          });
-        /*var users = [{
+        var users = [{
             assignmentID: 1000,
             studentID: 21,
             studentName: "Anton Andersson",
-            submitionDate: "2010-06-23",
+            submissionDate: "2010-06-23",
             grade: "G",
             teacherID: 12
         },
@@ -22,11 +22,12 @@ var CourseList = React.createClass({
                 assignmentID: 1000,
                 studentID: 21,
                 studentName: "Lukas Lundberg",
-                submitionDate: "2010-06-23",
-                grade: "VG",
+                submissionDate: "2010-06-23",
+                grade: "K",
                 teacherID: 12
-            }];*/
-        //ReactDOM.render(<StudentList students={users}/>, document.getElementById('courseContent'));
+            }];
+        ReactDOM.render(<StudentList students={users}/>, document.getElementById('courseContent'));
+        var tf1 = setFilterGrid("students-table");
     },
 
     printFeedback : function() {

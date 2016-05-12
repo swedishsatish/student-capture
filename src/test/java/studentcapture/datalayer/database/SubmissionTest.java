@@ -35,12 +35,12 @@ public class SubmissionTest  extends StudentCaptureApplicationTests {
     @Autowired
     private JdbcTemplate jdbcMock;
 
-    @Before
+    /*@Before
     public void setUp() {
         Mockito.reset(jdbcMock);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void shouldBeAbleToConnectToDB(){
         String sqlQuery = "SELECT grade, submissiondate as time, " +
                 "concat(firstname,' ', lastname) as teacher FROM " +
@@ -58,7 +58,7 @@ public class SubmissionTest  extends StudentCaptureApplicationTests {
         Map<String, Object> response = sub.getGrade(1, 1);
 
         assertEquals("vg", response.get("grade"));
-    }
+    }*/
 
     /*@Test
     public void setGradeTest() {
@@ -93,7 +93,8 @@ public class SubmissionTest  extends StudentCaptureApplicationTests {
         //assertEquals(response.get(0).submissionDate, dateFormat.format(date));
         assertEquals(response.get(0).grade, "VG");
     }*/
-
+    
+    /*
     @Test
     public void getAllSubmissionsTest() {
     	String getAllSubmissionsStatement = "SELECT "
@@ -198,4 +199,5 @@ public class SubmissionTest  extends StudentCaptureApplicationTests {
         assertEquals(response.get(0).grade, null);
         assertEquals(response.get(0).studentName, null);
     }
+    */
 }

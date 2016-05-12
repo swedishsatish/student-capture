@@ -10,4 +10,5 @@ public final class FilesystemConstants {
 	public final static String FEEDBACK_TEXT_FILENAME = "feedback.xml";
 	public final static String ASSIGNMENT_VIDEO_FILENAME = "video";
     public final static String ASSIGNMENT_DESCRIPTION_FILENAME = "description.xml";
+	public final static String ASSIGNMENT_RECAP_FILENAME = "recap.txt";
 }

@@ -11,10 +11,9 @@
     render: function () {
         return(
             <div class="row">
-                <div id="recorder">
-                    <Recorder />
+                <div id="blanket" style={{"display":"none"}}></div>
+                <div id="popUpDiv" style={{"display":"none"}}></div>
 
-                </div>
                 <div id="feedBackContainer">
                     <div id="submissioncontainer">
                         <div id="commentbox">

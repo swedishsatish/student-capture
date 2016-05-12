@@ -22,13 +22,10 @@ public class MailClient {
     private Session session;
 
     public MailClient() {
-
-
         properties = new Properties();
         properties.put("mail.smtp.host", "mail.cs.umu.se");
         properties.put("mail.smtp.port", "587");
         session = Session.getDefaultInstance(properties);
-
     }
 
     public void send(String to, String from, String subject, String msg) {
@@ -40,7 +37,6 @@ public class MailClient {
             message.setSubject(subject);
             message.setText(msg);
             Transport.send(message);
-
         } catch (MessagingException e) {
             e.printStackTrace();
         }

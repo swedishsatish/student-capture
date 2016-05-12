@@ -3,7 +3,7 @@
  */
 
 
-var CloseButton = React.createClass({
+var PopUpCloseButton = React.createClass({
     onclick: function () {
         close();
     },
@@ -14,7 +14,7 @@ var CloseButton = React.createClass({
     }
 
 });
-var OkButton = React.createClass({
+var PopUpOkButton = React.createClass({
     onclick: function () {
         sendData();
         close();
@@ -25,13 +25,55 @@ var OkButton = React.createClass({
         )
     }
 });
+var PopUpPassBox = React.createClass({
+    render: function () {
+        if(document.getElementById('ifStudentPass').checked){
+            return(
+                <h2 id="popUpPass">PASS</h2>
+            )
+        }else{
+            return(
+                <h2 id="popUpFail">NOT PASSED</h2>
+            )
+        }
+    }
+
+
+});
+var PopUpGrade = React.createClass({
+
+    render: function () {
+        return(
+            <h2 id="U">{document.getElementById('dropDownMenu').value}</h2>
+        )
+
+
+    }
+});
+var PopUpStudentName = React.createClass({
+    render: function () {
+        var studentname = 'error';
+        if(studentname != 'error'){
+            //studentname = user.studentname??
+            //return studentname
+        }else{
+            return(
+                <h2 id="uniquestudent">Error Errorsson</h2>
+            )
+        }
+    }
+});
+
 
 var PopUpRender = React.createClass({
     render: function () {
         return(
             <div class="row">
-                <CloseButton/>
-                <OkButton/>
+                <PopUpCloseButton/>
+                <PopUpOkButton/>
+                <PopUpPassBox/>
+                <PopUpGrade/>
+                <PopUpStudentName/>
             </div>
         )
     }
@@ -75,7 +117,6 @@ function sendData () {
     } else {
         passedStatus = 'No pass'
     }
-    alert(passedStatus);
     submitForm();
 
 }
