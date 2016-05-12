@@ -150,9 +150,11 @@ public class FilesystemInterfaceTest {
         String path;
         File file;
 
-        FilesystemInterface.storeAssignmentDescription(courseCode, courseID, assignmentID, "This is a test");
+        FilesystemInterface.storeAssignmentText(courseCode, courseID, assignmentID, "This is a test",
+                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
 
-        path = FilesystemInterface.generatePath(courseCode, courseID, assignmentID) + "/description.txt";
+        path = FilesystemInterface.generatePath(courseCode, courseID, assignmentID) +
+                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME;
         file = new File(path);
 
         assertTrue(file.isFile());
@@ -166,10 +168,13 @@ public class FilesystemInterfaceTest {
         char[] buf = new char[22];
         String content;
 
-        FilesystemInterface.storeAssignmentDescription(courseCode, courseID, assignmentID, "This should be overwritten");
-        FilesystemInterface.storeAssignmentDescription(courseCode, courseID, assignmentID, "This should be in file");
+        FilesystemInterface.storeAssignmentText(courseCode, courseID, assignmentID, "This should be overwritten",
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+        FilesystemInterface.storeAssignmentText(courseCode, courseID, assignmentID, "This should be in file",
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
 
-        path = FilesystemInterface.generatePath(courseCode, courseID, assignmentID) + "/description.txt";
+        path = FilesystemInterface.generatePath(courseCode, courseID, assignmentID) +
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
         file = new File(path);
         fileReader = new FileReader(file);
         fileReader.read(buf);

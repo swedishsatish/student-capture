@@ -233,13 +233,16 @@ public class FilesystemInterface {
 	 * @param courseCode courses 6 character identifier
 	 * @param courseId a unique database id
 	 * @param assignmentId a unique database id
-	 * @param description the assignment description
+	 * @param contents The contents in the file
+	 * @param fileName the name of the file, (i.e. FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME or
+	 *                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME)
      * @throws IOException
      */
-	public static void storeAssignmentDescription(String courseCode,
-												  String courseId,
-												  String assignmentId,
-												  String description) throws IOException {
+	public static void storeAssignmentText(String courseCode,
+										   String courseId,
+										   String assignmentId,
+										   String contents,
+										   String fileName) throws IOException {
 
 		String dirPath = generatePath(courseCode, courseId, assignmentId);
 		File dir = new File(dirPath);
@@ -250,11 +253,10 @@ public class FilesystemInterface {
 			dir.mkdirs();
 		}
 
-		file = new File(dirPath + "/description.txt");
+		file = new File(dirPath + fileName);
 		fileWriter = new FileWriter(file);
-		fileWriter.write(description);
+		fileWriter.write(contents);
 		fileWriter.close();
-
 	}
 
     /**
