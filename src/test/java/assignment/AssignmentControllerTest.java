@@ -25,7 +25,8 @@ public class AssignmentControllerTest extends StudentCaptureApplicationTests {
 
     private static String json_test_string = "{\"title\":\"TheTitle\",\"Info\":\"Assignment info\"," +
             "\"minTimeSeconds\":0,\"maxTimeSeconds\":320,\"startDate\":\"2016-10-01T10:00\"," +
-            "\"endDate\":\"2016-10-02T10:00\",\"published\":true}";
+            "\"endDate\":\"2016-10-02T10:00\",\"published\":\"2016-10-01T10:00\"," +
+            "\"scale\":\"NUMBER_SCALE\",\"recap\":\"recap\"}";
 
     @Before
     public void setup() {
@@ -41,7 +42,7 @@ public class AssignmentControllerTest extends StudentCaptureApplicationTests {
      * @throws Exception
      */
     @Test(expected = NestedServletException.class)
-    public void shouldWorkToSendPost() throws Exception{
+    public void shouldWorkToSendPost() throws Exception {
         mvc.perform(post("/assignment").contentType(MediaType.APPLICATION_JSON).content(json_test_string))
                 .andExpect(status().isOk());
 

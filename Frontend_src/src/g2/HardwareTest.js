@@ -54,7 +54,7 @@ var HardwareTest = React.createClass({
                     <div className="six columns" id="rec-test-container"><h5 color="black">Recording you</h5>
                         <Recorder playCallback={this.playVideo} calc={this.calcSpeed}
                                   postURL="/video/textTest" formDataBuilder={this.formDataBuilder}
-                                  stopButtonID="stop-test" fileName="testVid.webm"
+                                  recButtonID="record-test" stopButtonID="stop-test" fileName="testVid.webm"
                         />
 
                     </div>

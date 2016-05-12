@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import studentcapture.datalayer.database.Assignment.AssignmentWrapper;
-import studentcapture.datalayer.database.Course.CourseWrapper;
+import studentcapture.datalayer.database.Course;
 import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 
 import java.sql.ResultSet;
@@ -24,10 +24,6 @@ import java.util.Optional;
 public class User {
 
 
-    private final String SQL_ADD_USR = "INSERT INTO users"
-                                       + " (username, firstname, lastname, persnr, pswd)"
-                                        + " VALUES (?, ?, ?, ?, ?)";
-
     private final String SQL_GET_USR_BY_ID = "SELECT  * FROM users WHERE userid = ?";
     private final String SQL_USR_EXIST     = "SELECT EXISTS (SELECT 1 FROM users "
                                            + "WHERE  username = ? AND pswd = ?)";
@@ -40,12 +36,11 @@ public class User {
     protected JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private Course course;
+    private CourseDAO course;
     @Autowired
     private Assignment assignment;
     @Autowired
     private SubmissionDAO submissionDAO;
-
 
 
     /**
@@ -54,32 +49,43 @@ public class User {
      * @param userName  unique identifier for a person
      * @param fName     First name of a user
      * @param lName     Last name of a user
-     * @param pNr       Person-Number
-     * @param pwd       Password
-     * @return          true if success, else false.
+     * @param email
+     * @param salt      salt for the password
+     * @param pswd      Password in hash
      */
-    public boolean addUser(String userName, String fName, String lName, String pNr, String pwd) {
-        // TODO:
-        //Check that user doesn't exist
+    public void addUser(String userName, String fName, String lName,
+                           String email, String salt,  String pswd) {
 
-        // Generate salt
-        // Create idSalt by combining salt with user name
-        // register user info with idSalt.
+        String sql = "INSERT INTO users"
+                + " (username, firstname, lastname, email, salt, pswd)"
+                + " VALUES (?, ?, ?, ?, ?, ?)";
 
-        Object[] args = new Object[] {userName, fName,lName,pNr,pwd};
+        Object[] args = new Object[] {userName, fName,lName,email,salt,pswd};
         int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
-                                      Types.CHAR,Types.VARCHAR};
-
+                                      Types.CHAR,Types.VARCHAR,Types.VARCHAR};
         try {
-            jdbcTemplate.update(SQL_ADD_USR, args,types);
-
+            jdbcTemplate.update(sql, args,types);
         } catch (DataIntegrityViolationException e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
+		}
     }
 
+
+    /**
+     * @param userName user name for user.
+     * @return true if it exists else false
+     */
+    public boolean UserNameExist(String userName) {
+        return false;
+    }
+
+    /**
+     *
+     * @param email
+     * @return true if email exist else false
+     */
+    public boolean emailExist(String email) {
+        return false;
+    }
 
     /**
      * Remove a user from the User-table in the database.
@@ -220,7 +226,7 @@ public class User {
     				throw new NullPointerException();
     		} catch (NullPointerException e) {
     			currentCourse = new CoursePackage();
-    			currentCourse.course = course.getCourseWithWrapper(courseId);
+    			currentCourse.course = course.getCourse(courseId);
     			hierarchy.teacherCourses.put(courseId, currentCourse);
     		}
 
@@ -296,7 +302,7 @@ public class User {
     				throw new NullPointerException();
     		} catch (NullPointerException e) {
     			currentCourse = new CoursePackage();
-    			currentCourse.course = course.getCourseWithWrapper(courseId);
+    			currentCourse.course = course.getCourse(courseId);
     			hierarchy.studentCourses.put(courseId, currentCourse);
     		}
 
@@ -403,7 +409,7 @@ public class User {
      * @author tfy12hsm
      */
     public class CoursePackage {
-    	public CourseWrapper course;
+    	public Course course;
     	public Map<Integer, AssignmentPackage> assignments;
     	public List<AssignmentPackage> assignmentsList;
 
