@@ -47,7 +47,6 @@ public class MailClientTest {
         body = "";
         mail.send("test.dest@nutpan.com", "test.src@nutpan.com", subject, body);
         List<Message> inbox = Mailbox.get("test.dest@nutpan.com");
-        System.out.println(inbox.get(0).getSubject());
         assertEquals("test subject",inbox.get(0).getSubject());
     }
 
