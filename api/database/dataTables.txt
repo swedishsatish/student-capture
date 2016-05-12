@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS Assignment (
 CREATE TABLE IF NOT EXISTS Submission (
     AssignmentId    INT          references Assignment(AssignmentId) NOT NULL,
     StudentId           INT          references Users(UserId) NOT NULL,
-    StudentPublishContent   Boolean ,
+    StudentPublishConsent   Boolean ,
     SubmissionDate      timestamp    NOT NULL,
     Grade               VARCHAR (3),
     TeacherId           INT          references Users(UserId),

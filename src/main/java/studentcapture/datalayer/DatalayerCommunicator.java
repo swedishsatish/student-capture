@@ -47,6 +47,8 @@ public class DatalayerCommunicator {
     private Course course;
     @Autowired
     private User user;
+    @Autowired
+    private Participant participant;
 
     //@Autowired
     FilesystemInterface fsi;
@@ -226,7 +228,7 @@ public class DatalayerCommunicator {
                                 @RequestParam(value = "pNr") String pNr,
                                 @RequestParam(value = "pwd") String pwd) {
 
-        return user.addUser(userName,fName,lName,pNr,pwd);
+        return user.addUser(userName,fName,lName,pNr,pwd,"s");
     }
 
     /**

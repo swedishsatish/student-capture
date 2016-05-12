@@ -1,9 +1,10 @@
 CREATE TABLE IF NOT EXISTS Users (
     UserId       SERIAL         PRIMARY KEY,
+    UserSalt     VARCHAR(128),
     UserName     VARCHAR(64)    UNIQUE,
     FirstName    VARCHAR(64)    NOT NULL,
     LastName     VARCHAR(64)    NOT NULL,
-    PersNr       CHAR(10)       NOT NULL,
+    Email        TEXT           NOT NULL,
     Pswd         VARCHAR(64)    NOT NULL
     );
 CREATE TABLE IF NOT EXISTS Course (
@@ -13,11 +14,10 @@ CREATE TABLE IF NOT EXISTS Course (
     CourseCode  CHAR(6)        NOT NULL,
     CourseName  VARCHAR(64)
     );
-CREATE TYPE role AS ENUM ('Teacher', 'Student', 'Assistant');
 CREATE TABLE IF NOT EXISTS Participant (
     UserId       INT           references Users(UserId),
     CourseId     VARCHAR(10)   references Course(CourseId),
-    Function     role          NOT NULL
+    Function     VARCHAR(64)   NOT NULL
     );
 CREATE TABLE IF NOT EXISTS Assignment (
     AssignmentId      SERIAL         PRIMARY KEY,
@@ -33,17 +33,16 @@ CREATE TABLE IF NOT EXISTS Assignment (
 CREATE TABLE IF NOT EXISTS Submission (
     AssignmentId    INT          references Assignment(AssignmentId) NOT NULL,
     StudentId           INT          references Users(UserId) NOT NULL,
-    StudentPublishContent   Boolean ,
+    StudentPublishConsent   Boolean ,
     SubmissionDate      timestamp    NOT NULL,
     Grade               VARCHAR (3),
     TeacherId           INT          references Users(UserId),
     PublishStudentSubmission    Boolean ,
     PRIMARY KEY (AssignmentId, StudentId)
     );
-CREATE TYPE lang AS ENUM ('Swedish', 'English', 'Klingon');
 CREATE TABLE IF NOT EXISTS Config (
     UserId              INT         references Users(UserId),
-    Language            lang        NOT NULL,
+    Language            VARCHAR(64) NOT NULL,
     Email               VARCHAR(100),
     TextSize            INT         NOT NULL,
     );
