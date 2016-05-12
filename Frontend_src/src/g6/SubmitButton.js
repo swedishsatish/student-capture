@@ -195,6 +195,7 @@ var SubmitButton = React.createClass({
             this.popUpConfirmation('popUpDiv');
         }
     },
+    
     /**
      *     <div id="blanket" style="display:none;"></div>
      <div id="popUpDiv" style="display:none;">
