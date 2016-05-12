@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.*;
 import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
-import studentcapture.datalayer.database.User.CourseAssignmentHierarchy;
+import studentcapture.datalayer.database.UserDAO.CourseAssignmentHierarchy;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
@@ -43,11 +43,11 @@ public class DatalayerCommunicator {
     @Autowired
     private Assignment assignment;
     @Autowired
-    private CourseDAO course;
+    private CourseDAO courseDAO;
     @Autowired
-    private User user;
+    private UserDAO userDAO;
     @Autowired
-    private ParticipantDAO participant;
+    private ParticipantDAO participantDAO;
 
     //@Autowired
     FilesystemInterface fsi;
@@ -76,7 +76,7 @@ public class DatalayerCommunicator {
                 assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
                 assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
 
-        courseCode = course.getCourseCodeFromId(assignmentModel.getCourseID());
+        courseCode = courseDAO.getCourseCodeFromId(assignmentModel.getCourseID());
         FilesystemInterface.storeAssignmentText(courseCode, assignmentModel.getCourseID(),
                 assignmentID.toString(), assignmentModel.getInfo(),
                 FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
@@ -114,7 +114,7 @@ public class DatalayerCommunicator {
                                @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
                                @RequestParam(value = "feedbackText") MultipartFile feedbackText) {
         String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID() + "");
-        String courseCode = course.getCourseCodeFromId(courseID);
+        String courseCode = courseDAO.getCourseCodeFromId(courseID);
         int feedback = 0;
     	if(feedbackVideo != null) {
             fsi.storeFeedbackVideo(courseCode, courseID, submission.getAssignmentID() + "", submission.getStudentID() + "", feedbackVideo); // submission.getstudentID() should be int/String?
@@ -209,13 +209,8 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public boolean login(@RequestParam(value = "username") String username,
                          @RequestParam(value = "pswd") String pswd) {
-        return   user.userExist(username,pswd);
+        return   userDAO.userExist(username,pswd);
     }
-
-    //  public void add user
-    // public void userExist
-    // public void userEmailExist
-
 
     /**
      * @param userName
@@ -225,40 +220,28 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/userNameExist", method = RequestMethod.GET)
     public boolean userNameExist(
                   @RequestParam(value = "userName") String userName) {
-        return false;
+        return userDAO.userNameExist(userName);
     }
 
     /**
      * @param email
-     * @return
+     * @return true if email exist else false
      */
     @CrossOrigin
     @RequestMapping(value = "/usrEmailExist", method = RequestMethod.GET)
     public boolean userEmailExist(@RequestParam(value = "email") String email) {
-        return false;
+        return userDAO.emailExist(email);
     }
 
     /**
      * Register user by given information.
      *
-     * @param userName user name for the user to be registerd
-     * @param fName    First name
-     * @param lName    last name
-     * @param email
-     * @param salt     salt for password
-     * @param pwd      password
      * @return true if registration was successfull else false
      */
     @CrossOrigin
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public  void addUser(@RequestParam(value = "userName") String userName,
-                                @RequestParam(value = "fName") String fName,
-                                @RequestParam(value = "lName") String lName,
-                                @RequestParam(value = "email") String email,
-                                @RequestParam(value = "salt") String salt,
-                                @RequestParam(value = "pwd") String pwd) {
-
-        user.addUser(userName,fName,lName,email,salt,pwd);
+    public  void addUser(@RequestParam(value = "user") User user) {
+        userDAO.addUser(user);
     }
     
     /**
@@ -289,7 +272,7 @@ public class DatalayerCommunicator {
     		@RequestParam(value="courseName") String courseName, 
     		@RequestParam(value="courseDescription") String courseDescription,
     		@RequestParam(value="active") Boolean active) {
-    	return course.addCourse(courseID, courseCode, year, term, courseName,
+    	return courseDAO.addCourse(courseID, courseCode, year, term, courseName,
     			courseDescription, active);
     }
     
@@ -309,9 +292,9 @@ public class DatalayerCommunicator {
     		@RequestParam(value="courseDescription") String courseDescription,
     		@RequestParam(value="active") Boolean active,
     		@RequestParam(value="userID") String userID) {
-    	 Boolean result1 = course.addCourse(courseID, courseCode, year, term, 
+    	 Boolean result1 = courseDAO.addCourse(courseID, courseCode, year, term, 
     			 courseName, courseDescription, active);
-    	 Boolean result2 = participant.addParticipant(userID, courseID, 
+    	 Boolean result2 = participantDAO.addParticipant(userID, courseID, 
     			 "Teacher");
     	 if(!(result1 && result2))
     		 throw new RuntimeException();
@@ -331,7 +314,7 @@ public class DatalayerCommunicator {
     value = "/getCourse")
     @ResponseBody
     public Course getCourse(@RequestParam(value="courseID") String courseID) {
-    	return course.getCourse(courseID);
+    	return courseDAO.getCourse(courseID);
     }
 
     @CrossOrigin
@@ -344,7 +327,7 @@ public class DatalayerCommunicator {
     		@RequestParam(value="userID") String userID, 
     		@RequestParam(value="courseID") String courseID,
     		@RequestParam(value="function") String function) {
-    	return participant.addParticipant(userID, courseID, function);
+    	return participantDAO.addParticipant(userID, courseID, function);
     }
     
     @CrossOrigin
@@ -356,7 +339,7 @@ public class DatalayerCommunicator {
     public String getFunctionForParticipant(
     		@RequestParam(value="userID") String userID, 
     		@RequestParam(value="courseID") String courseID) {
-    	Optional<String> result = participant.getFunctionForParticipant(userID, courseID);
+    	Optional<String> result = participantDAO.getFunctionForParticipant(userID, courseID);
     	if(result.isPresent())
     		return result.get();
     	return null;
@@ -370,7 +353,7 @@ public class DatalayerCommunicator {
     @ResponseBody
     public List<Participant> getAllCoursesIDsForParticipant(
     		@RequestParam(value="userID") String userID) {
-    	Optional<List<Participant>> result = participant.getAllCoursesIDsForParticipant(userID);
+    	Optional<List<Participant>> result = participantDAO.getAllCoursesIDsForParticipant(userID);
     	if(result.isPresent())
     		return result.get();
     	return null;
@@ -384,7 +367,7 @@ public class DatalayerCommunicator {
     @ResponseBody
     public List<Participant> getAllParticipantsFromCourse( 
     		@RequestParam(value="courseID") String courseID) {
-    	Optional<List<Participant>> result = participant.getAllParticipantsFromCourse(courseID);
+    	Optional<List<Participant>> result = participantDAO.getAllParticipantsFromCourse(courseID);
     	if(result.isPresent())
     		return result.get();
     	return null;
@@ -461,7 +444,7 @@ public class DatalayerCommunicator {
     public CourseAssignmentHierarchy getHierarchy(
     		@RequestParam(value="userID") String userID) {
     	Optional<CourseAssignmentHierarchy> hierarchy = 
-    			user.getCourseAssignmentHierarchy(userID);
+    			userDAO.getCourseAssignmentHierarchy(userID);
     	if(hierarchy.isPresent()) 
     		return hierarchy.get();
     	return null;
