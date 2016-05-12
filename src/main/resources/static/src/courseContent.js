@@ -4,16 +4,52 @@ var NewAssignment = React.createClass({
                 <form id="form" action="assignment" method="post">
                 <input className="inputField" id="title" type="text" defaultValue="title" /><br/>
                 <input className="inputField" id="info" type="text" defaultValue="description" /><br/>
+                    <input className="inputField" id="recap" type="text" defaultValue="recap" /><br/>
+                    
                 <p>VIDEO RECORDING COMPONENT GOES HERE</p>
-                <input id="startDate" type="datetime-local" /><br/>
-                <input id="endDate" type="datetime-local" /><br/>
-                <input id="minTimeSeconds" type="text" defaultValue="minTimeSeconds" /><br/>
-                <input id="maxTimeSeconds" type="text" defaultValue="maxTimeSeconds" /><br/>
-                <input id="published" type="datetime-local" /><br/>
+                <input id="startDate" type="button" value="yyyy-mm-dd 00:00"/>Start Date<br/>
+                <input id="endDate" type="button" value="yyyy-mm-dd 00:00"/>End Date<br/>
+                <input id="minTimeSeconds" type="number" defaultValue="minTimeSeconds" /><br/>
+                <input id="maxTimeSeconds" type="number" defaultValue="maxTimeSeconds" /><br/>
+                <input id="publish" type="button" value="yyyy-mm-dd 00:00"/>Publish Date<br/>
+
                 <div className="button primary-button" onClick = {handleCancel}> CANCEL </div>
                 <div className="button primary-button" onClick = {submitAssignment}> SUBMIT </div>
             </form>
         </div>
+    },
+
+    componentDidMount: function () {
+        $("#startDate").datetimepicker(
+            {
+                dateFormat: "yy-mm-dd",
+                /*
+                 minDate
+                 jQuery datepicker option
+                 which set today date as minimum date
+                 */
+                minDate: 0
+            });
+        $("#endDate").datetimepicker(
+            {
+                dateFormat: "yy-mm-dd",
+                /*
+                 minDate
+                 jQuery datepicker option
+                 which set today date as minimum date
+                 */
+                minDate: 0
+            });
+        $("#publish").datetimepicker(
+            {
+                dateFormat: "yy-mm-dd",
+                /*
+                 minDate
+                 jQuery datepicker option
+                 which set today date as minimum date
+                 */
+                minDate: 0
+            });
     }
 });
 
@@ -36,7 +72,8 @@ function submitAssignment() {
     reqBody["maxTimeSeconds"] = $("#maxTimeSeconds").val();
     reqBody["startDate"] = $("#startDate").val();
     reqBody["endDate"] = $("#endDate").val();
-    reqBody["published"] = $("#published").val();
+    reqBody["published"] = $("#publish").val();
+    reqBody["recap"] = $("#recap").val();
     reqBody["scale"] = "NUMBER_SCALE";
     $.ajax({
         type : "POST",
