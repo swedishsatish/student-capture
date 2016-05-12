@@ -8,9 +8,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import studentcapture.config.StudentCaptureApplicationTests;
-import studentcapture.datalayer.database.Submission.SubmissionWrapper;
+// import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 import studentcapture.datalayer.database.User.CourseAssignmentHierarchy;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,11 +38,24 @@ public class UserTest  extends StudentCaptureApplicationTests {
     @Autowired
     private JdbcTemplate jdbcMock;
 
-    @Before
-    public void setUp() {
-        Mockito.reset(jdbcMock);
+    @Test
+    public void testAddUser() {
+
+       boolean res =  user.addUser("userPelle","Pelle","Jönsson","1944","mypassword123");
+
+        String sql = "SELECT * FROM users WHERE username = 'userPelle'";
+
+        //Getting values from table user
+        HashMap<String,String> info = (HashMap<String,String>)
+                jdbcMock.queryForObject(sql, new UserWrapper());
+
+        assertEquals("userPelle",info.get("username"));
+        assertEquals("Pelle",info.get("fName"));
+        assertEquals("Jönsson",info.get("lName"));
+        assertEquals("1944",info.get("SNN"));
     }
 
+    /*
     @Test
     public void getCourseAssignmentHierarchyUserInformationTest() {
     	String getUserStatement = "SELECT * FROM Users WHERE "
@@ -86,4 +101,24 @@ public class UserTest  extends StudentCaptureApplicationTests {
         assertEquals(result.firstName,"nameFirst");
         assertEquals(result.lastName,"nameLast");
     }
+	*/
+
+    /**
+     *  Used to collect user information, and return a hashmap.
+     */
+    protected class UserWrapper implements org.springframework.jdbc.core.RowMapper {
+
+        @Override
+        public Object mapRow(ResultSet rs, int i) throws SQLException {
+            HashMap<String,String> info = new HashMap();
+            info.put("userID",rs.getString("userid"));
+            info.put("username",rs.getString("UserName"));
+            info.put("fName",rs.getString("FirstName"));
+            info.put("lName",rs.getString("LastName"));
+            info.put("SNN",rs.getString("persnr"));
+            info.put("pswd",rs.getString("pswd"));
+            return info;
+        }
+    }
+
 }
