@@ -149,6 +149,10 @@ var Recorder = React.createClass({
               //}
 
               stop.disabled = false;
+              if(typeof props.calc !== "undefined")
+                  document.getElementById('rec-text-test').innerHTML = "Recording";
+              else
+                  document.getElementById('rec-text').innerHTML = "Recording";
           }, function (error) {
               alert("Problem occured, make sure camera is not\nused elsewhere and that you are connected\nby https.");
           });
@@ -206,6 +210,10 @@ var Recorder = React.createClass({
                   }
                   localStream.stop();
                   localStream = null;
+                  if(typeof props.calc !== "undefined")
+                      document.getElementById('rec-text-test').innerHTML = "";
+                  else
+                      document.getElementById('rec-text').innerHTML = "";
 
               });
           /*}else {
@@ -290,16 +298,22 @@ var Recorder = React.createClass({
   },
   render: function() {
       var id;
-    if(typeof this.props.calc !== "undefined")
-        id="prev-test"
-    else
+      var pId;
+    if(typeof this.props.calc !== "undefined"){
+        id="prev-test";
+        pId="rec-text-test";
+    }
+
+    else{
         id="preview"
+        pId="rec-text";
+    }
     return (
         <div>
             <div id="prev-container">
                 <video id={id} muted height="100%" width="100%" ></video>
             </div>
-
+            <p id={pId}></p>
 
 
         </div>

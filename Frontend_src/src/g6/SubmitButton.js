@@ -5,10 +5,7 @@
 
 var CloseButton = React.createClass({
     onclick: function () {
-        var popUpElement = document.getElementById('popUpDiv');
-        var blanketElement = document.getElementById('blanket');
-        blanketElement.style.display='none';
-        popUpElement.style.display='none';
+        close();
     },
     render: function () {
         return(
@@ -18,10 +15,9 @@ var CloseButton = React.createClass({
 
 });
 var OkButton = React.createClass({
-
     onclick: function () {
-        //send data=??SASD
-        alert("SKICKA STUFF FOR ME");
+        sendData();
+        close();
     },
     render: function () {
         return(
@@ -29,6 +25,7 @@ var OkButton = React.createClass({
         )
     }
 });
+
 var PopUpRender = React.createClass({
     render: function () {
         return(
@@ -39,6 +36,50 @@ var PopUpRender = React.createClass({
         )
     }
 });
+function close(){
+    var popUpElement = document.getElementById('popUpDiv');
+    var blanketElement = document.getElementById('blanket');
+    blanketElement.style.display='none';
+    popUpElement.style.display='none';
+}
+function submitForm() {
+    var reqBody = {};
+    reqBody["TeacherComments"] = document.getElementById('teachercomments').value;
+    reqBody["DropDown"] = document.getElementById('dropDownMenu').value;
+    reqBody["StudentPass"] = document.getElementById('ifStudentPass').checked;
+    reqBody["AssignmentID"] = 1;
+    reqBody["CourseID"] = 2;
+    reqBody["TeacherID"] = 3;
+    $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "feedback",
+        data: JSON.stringify(reqBody),
+        timeout: 100000,
+        success: function (response) {
+            console.log("SUCCESS: ", response);
+            ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
+        }, error: function (e) {
+            console.log("ERROR: ", e);
+        }, done: function (e) {
+            console.log("DONE");
+        }
+    });
+}
+function sendData () {
+    // answer contains true if Ok is pressed., false if cancel is pressed.
+    var passedStatus = 'No pass';
+    // alert(document.getElementById('teachercomments').value);
+    if (document.getElementById('ifStudentPass').checked) {
+        passedStatus = 'Pass';
+    } else {
+        passedStatus = 'No pass'
+    }
+    alert(passedStatus);
+    submitForm();
+
+}
+
 
 /**
  * Creates the submit button used by the GUI.
@@ -49,30 +90,7 @@ var PopUpRender = React.createClass({
 
 var SubmitButton = React.createClass({
     // Upon clicking on the button a popup confirming window is shown,
-    submitForm: function(){
-        var reqBody = {};
-        reqBody["TeacherComments"] = document.getElementById('teachercomments').value;
-        reqBody["DropDown"] = document.getElementById('dropDownMenu').value;
-        reqBody["StudentPass"] = document.getElementById('ifStudentPass').checked;
-        reqBody["AssignmentID"] = 1;
-        reqBody["CourseID"] = 2;
-        reqBody["TeacherID"] =3;
-        $.ajax({
-            type : "POST",
-            contentType : "application/json",
-            url : "feedback",
-            data : JSON.stringify(reqBody),
-            timeout : 100000,
-            success : function(response) {
-                console.log("SUCCESS: ", response);
-                ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
-            }, error : function(e) {
-                console.log("ERROR: ", e);
-            }, done : function(e) {
-                console.log("DONE");
-            }
-        });
-    },
+
     toggle: function(div_id) {
         var element = document.getElementById(div_id);
         if ( element.style.display == 'none' ) {
@@ -143,33 +161,11 @@ var SubmitButton = React.createClass({
             var saftyCheck = confirm("Are you sure you want to leave comment box empty?");
             if(saftyCheck){
                 this.popUpConfirmation('popUpDiv');
-                this.sendData();
             }else{
                 void(0);
             }
         }else{
             this.popUpConfirmation('popUpDiv');
-            this.sendData();
-        }
-    },
-
-    sendData: function () {
-        // answer contains true if Ok is pressed., false if cancel is pressed.
-        var passedStatus = 'No pass';
-        // alert(document.getElementById('teachercomments').value);
-        if(document.getElementById('ifStudentPass').checked){
-            passedStatus = 'Pass';
-        }else {
-            passedStatus = 'No pass'
-        }
-        //TODO: Create a popup window that lets the teacher confirm the given grading.
-
-        var answer = confirm("You are about to give Kalle a " + passedStatus + " with the following grade: "+document.getElementById('dropDownMenu').value);
-        if(answer){
-            this.submitForm();
-        }else{
-            //Go back
-            void(0);
         }
     },
     /**
