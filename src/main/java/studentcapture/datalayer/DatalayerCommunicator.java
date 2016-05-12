@@ -197,18 +197,18 @@ public class DatalayerCommunicator {
     }
 
 
-//    /**
-//     * Check if given user name and password exist in database.
-//     * @param username a unique user name.
-//     * @param pswd password for the unique username
-//     * @return true  if correct user password and username is given otherwise false
-//     */
-//    @CrossOrigin
-//    @RequestMapping(value = "/login", method = RequestMethod.GET)
-//    public boolean login(@RequestParam(value = "username") String username,
-//                         @RequestParam(value = "pswd") String pswd) {
-//        return   user.userExist(username,pswd);
-//    }
+    /**
+     * Check if given user name and password exist in database.
+     * @param username a unique user name.
+     * @param pswd password for the unique username
+     * @return true  if correct user password and username is given otherwise false
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public boolean login(@RequestParam(value = "username") String username,
+                         @RequestParam(value = "pswd") String pswd) {
+        return   user.userExist(username,pswd);
+    }
 
     //  public void add user
     // public void userExist
@@ -216,34 +216,25 @@ public class DatalayerCommunicator {
 
 
     /**
-     *
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/addUsr", method = RequestMethod.POST)
-    public void addUsr() {
-
-    }
-
-    /**
-     *
+     * @param userName
      * @return
      */
     @CrossOrigin
-    @RequestMapping(value = "/srNameExist", method = RequestMethod.GET)
-    public boolean usrNameExist() {
-
+    @RequestMapping(value = "/userNameExist", method = RequestMethod.GET)
+    public boolean userNameExist(
+                  @RequestParam(value = "userName") String userName) {
+        return false;
     }
 
     /**
-     *
+     * @param email
      * @return
      */
     @CrossOrigin
     @RequestMapping(value = "/usrEmailExist", method = RequestMethod.GET)
-    public boolean usrEmailExist() {
-
+    public boolean userEmailExist(@RequestParam(value = "email") String email) {
+        return false;
     }
-
 
     /**
      * Register user by given information.
@@ -251,19 +242,21 @@ public class DatalayerCommunicator {
      * @param userName user name for the user to be registerd
      * @param fName    First name
      * @param lName    last name
-     * @param pNr      social security number
+     * @param email
+     * @param salt     salt for password
      * @param pwd      password
      * @return true if registration was successfull else false
      */
     @CrossOrigin
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public  registerUser(@RequestParam(value = "userName") String userName,
+    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
+    public  void addUser(@RequestParam(value = "userName") String userName,
                                 @RequestParam(value = "fName") String fName,
                                 @RequestParam(value = "lName") String lName,
-                                @RequestParam(value = "pNr") String pNr,
+                                @RequestParam(value = "email") String email,
+                                @RequestParam(value = "salt") String salt,
                                 @RequestParam(value = "pwd") String pwd) {
 
-        return user.addUser(userName,fName,lName,pNr,pwd,"s");
+        user.addUser(userName,fName,lName,email,salt,pwd);
     }
 
     /**

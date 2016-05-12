@@ -47,39 +47,47 @@ public class User {
     private SubmissionDAO submissionDAO;
 
 
-
     /**
      * Add a new user to the User-table in the database.
      *
      * @param userName  unique identifier for a person
      * @param fName     First name of a user
      * @param lName     Last name of a user
-     * @param pNr       Person-Number
+     * @param email
      * @param pwd       Password
-     * @return          true if success, else false.
+     * @return          "SUCCESS" if successfull reg. or else "ERR:EMAIL EXISTIS" or "ERR: .
      */
-    public boolean addUser(String userName, String fName, String lName,
+    public void addUser(String userName, String fName, String lName,
                            String email, String salt,  String pwd) {
-        // TODO:
-        //Check that user doesn't exist
 
-        // Generate salt
-        // Create idSalt by combining salt with user name
-        // register user info with idSalt.
+        String sql = "";
 
         Object[] args = new Object[] {userName, fName,lName,email,pwd};
         int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
                                       Types.CHAR,Types.VARCHAR};
-
         try {
             jdbcTemplate.update(SQL_ADD_USR, args,types);
         } catch (DataIntegrityViolationException e) {
-			return false;
-        }
-
-        return true;
+		}
     }
 
+
+    /**
+     * @param userName user name for user.
+     * @return true if it exists else false
+     */
+    public boolean UserNameExist(String userName) {
+        return false;
+    }
+
+    /**
+     *
+     * @param email
+     * @return true if email exist else false
+     */
+    public boolean emailExist(String email) {
+        return false;
+    }
 
     /**
      * Remove a user from the User-table in the database.
