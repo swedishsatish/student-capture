@@ -42,7 +42,9 @@ window.AssignmentContent = React.createClass({
                     <h5 id="assignment-information">Assignment information: {this.state.assignmentInformation}</h5>
                 </div>
                 <div id="assignment-interaction">
-                    <But />
+                    <But /><br />
+                    NOTE: Once the assignment starts it cannot be interrupted or paused,<br />
+                    remember to test your hardware before you begin!
                 </div>
             </div>
         )
@@ -63,24 +65,26 @@ var AssignmentStart = React.createClass({
     },
     render: function() {
         return (
-            <div id="assignment-content" className="modal-content">
-                <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
-                <Vid url={assignmentData.assignmentUrl}/>
-                <BlankBox />
+            <div  id="assignment-modal">
+                <div id="assignment-content" className="modal-content">
+                    <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
+                    <Vid url={assignmentData.assignmentUrl}/>
+                    <BlankBox />
+                </div>
             </div>
         )
     }
 });
-
 
 var But = React.createClass({
     getInitialState: function() {
         return {disabled: false};
     },
     onClick: function() {
-        var modal = document.getElementById("assignment-modal");
-        modal.style.display = "block";
-        this.setState({disabled: true});
+        if (confirm("Once the assignment starts it cannot be interrupted or paused.\n" +
+                    "Are you sure you want to begin the assignment?")) {
+            this.setState({disabled: true});
+        }
     },
     render: function() {
         var content = this.state.disabled
@@ -92,7 +96,7 @@ var But = React.createClass({
                             value="Start Assignment"
                             onClick={this.onClick} />;
         return (
-            <div id="assignment-modal" className="modal">
+            <div>
                 {content}
             </div>
         );
@@ -124,7 +128,7 @@ var Question = React.createClass({
 
 var CountDown = React.createClass({
     getInitialState: function() {
-        return {timeLeft: 5,
+        return {timeLeft: 3,
                 startRecord: false
                 };
     },
