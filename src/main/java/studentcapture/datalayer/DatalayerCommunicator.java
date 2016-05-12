@@ -10,24 +10,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.*;
 import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
-import studentcapture.datalayer.database.User.CourseAssignmentHierarchy;
+import studentcapture.datalayer.database.UserDAO.CourseAssignmentHierarchy;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
 
 import javax.validation.Valid;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -46,7 +44,7 @@ public class DatalayerCommunicator {
     @Autowired
     private CourseDAO course;
     @Autowired
-    private User user;
+    private UserDAO userDAO;
 
     //@Autowired
     FilesystemInterface fsi;
@@ -208,7 +206,7 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public boolean login(@RequestParam(value = "username") String username,
                          @RequestParam(value = "pswd") String pswd) {
-        return   user.userExist(username,pswd);
+        return   userDAO.userExist(username,pswd);
     }
 
     //  public void add user
@@ -250,14 +248,56 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public  void addUser(@RequestParam(value = "userName") String userName,
-                                @RequestParam(value = "fName") String fName,
-                                @RequestParam(value = "lName") String lName,
-                                @RequestParam(value = "email") String email,
-                                @RequestParam(value = "salt") String salt,
-                                @RequestParam(value = "pwd") String pwd) {
-
-        user.addUser(userName,fName,lName,email,salt,pwd);
+    public  void addUser(@RequestParam(value = "user") User user) {
+        userDAO.addUser(user);
+    }
+    
+    /**
+     * Adds a course to the database.
+     * 
+     * @param courseID
+     * @param courseCode
+     * @param year
+     * @param term
+     * @param courseName
+     * @param courseDescription		
+     * @param active				
+     * @return						true i successful, else false
+     * 
+     * @see Course
+     */
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.POST,
+    value = "/addCourse")
+    @ResponseBody
+    public Boolean addCourse(
+    		@RequestParam(value="courseID") String courseID,
+    		@RequestParam(value="courseCode") String courseCode, 
+    		@RequestParam(value="year") String year,
+    		@RequestParam(value="term") String term, 
+    		@RequestParam(value="courseName") String courseName, 
+    		@RequestParam(value="courseDescription") String courseDescription,
+    		@RequestParam(value="active") Boolean active) {
+    	return course.addCourse(courseID, courseCode, year, term, courseName,
+    			courseDescription, active);
+    }
+    
+    /**
+     * Returns a course with given identifier.
+     *
+     * @param courseID		    course identifier
+     * @return					found course
+     */
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.GET,
+    value = "/getCourse")
+    @ResponseBody
+    public Course getCourse(@RequestParam(value="courseID") String courseID) {
+    	return course.getCourse(courseID);
     }
 
     /**
@@ -331,7 +371,7 @@ public class DatalayerCommunicator {
     public CourseAssignmentHierarchy getHierarchy(
     		@RequestParam(value="userID") String userID) {
     	Optional<CourseAssignmentHierarchy> hierarchy = 
-    			user.getCourseAssignmentHierarchy(userID);
+    			userDAO.getCourseAssignmentHierarchy(userID);
     	if(hierarchy.isPresent()) 
     		return hierarchy.get();
     	return null;

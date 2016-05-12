@@ -120,7 +120,9 @@ button{
 }
 
 
-
+/*
+*Popout box
+*/
 #blanket {
     background-color:#111;
     opacity: 0.65;
@@ -132,6 +134,7 @@ button{
 }
 #popUpDiv {
     position:absolute;
+    background-color: white;
     background-size: 100%;
     width:25%;
     height:38%;
@@ -139,32 +142,4 @@ button{
     top:20px;
     left:20px;
     z-index: 9002;
-
-}
-#confirmationButton {
-    float: right;
-    margin-right: 15%;
-}
-#cancelButton {
-    float: left;
-    margin-left: 15%;
-}
-#popUpButtonContainer {
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-}
-#textContainer {
-    word-break: break-all;
-    height: 150px;
-}
-#popUpPass {
-    font-size: 50%;
-    color: greenyellow;
-}
-#popUpFail {
-    color: red;
-}
-#popUpGrade {
-    color: greenyellow;
 }

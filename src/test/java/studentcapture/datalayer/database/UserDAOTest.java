@@ -2,38 +2,30 @@ package studentcapture.datalayer.database;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import studentcapture.config.StudentCaptureApplicationTests;
 // import studentcapture.datalayer.database.Submission.SubmissionWrapper;
-import studentcapture.datalayer.database.User.CourseAssignmentHierarchy;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by tfy12hsm.
  */
-public class UserTest  extends StudentCaptureApplicationTests {
+public class UserDAOTest extends StudentCaptureApplicationTests {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    User user;
+    UserDAO userDAO;
 
     @Autowired
     private JdbcTemplate jdbcMock;
@@ -46,27 +38,36 @@ public class UserTest  extends StudentCaptureApplicationTests {
     @Test
     public void testAddUser() {
 
-        user.addUser("userPelle","Pelle","Jönsson","pelle@gmail.com","saltad0f991238","mypassword123");
+        User user = new User("userPelle","Pelle","Jönsson","pelle@gmail.com",
+                            "saltad0f991238","mypassword123");
 
-        String sql = "SELECT * FROM users WHERE username = 'userPelle'";
+        userDAO.addUser(user);
 
         //Getting values from table user
-        HashMap<String,String> info = (HashMap<String,String>)
-                jdbcMock.queryForObject(sql, new UserWrapper());
+        String sql = "SELECT * FROM users WHERE username = 'userPelle'";
+        User dbUser = (User) jdbcMock.queryForObject(sql, new UserWrapper());
 
-        assertEquals("userPelle",info.get("username"));
-        assertEquals("Pelle",info.get("fName"));
-        assertEquals("Jönsson",info.get("lName"));
-        assertEquals("pelle@gmail.com",info.get("email"));
-        assertEquals("saltad0f991238",info.get("salt"));
-        assertEquals("mypassword123",info.get("pswd"));
+        assertEquals("userPelle",dbUser.getUserName());
+        assertEquals("Pelle",dbUser.getfName());
+        assertEquals("Jönsson",dbUser.getlName());
+        assertEquals("pelle@gmail.com",dbUser.getEmail());
+        assertEquals("mypassword123",dbUser.getPswd());
     }
 
     @Test
-    public void testEmailIsUniqueAddUser() {
+    public void testEmailExist() {
 
-        user.addUser("user1","förnamn","efternamn","user1@gmail.com",
-                     "saltet","mittlösen");
+//        User userFirst = new User("userPelle_1","Pelle","Jönsson","pelle_1@gmail.com",
+//                "saltad0f991238","mypassword123");
+//
+//        User userSec = new User("userPelle_2","Pelle","Jönsson","pelle_2@gmail.com",
+//                "saltad0f991238","mypassword123");
+//
+//
+//        userDAO.addUser("user1","förnamn","efternamn","user1@gmail.com",
+//                     "saltet","mittlösen");
+
+
 
 //        String res = user.addUser("user2","förnamn","efternamn","user1@gmail.com",
 //                "saltet","mittlösen");
@@ -134,15 +135,10 @@ public class UserTest  extends StudentCaptureApplicationTests {
 
         @Override
         public Object mapRow(ResultSet rs, int i) throws SQLException {
-            HashMap<String,String> info = new HashMap();
-            info.put("userID",rs.getString("userid"));
-            info.put("username",rs.getString("UserName"));
-            info.put("fName",rs.getString("FirstName"));
-            info.put("lName",rs.getString("LastName"));
-            info.put("email",rs.getString("email"));
-            info.put("salt",rs.getString("salt"));
-            info.put("pswd",rs.getString("pswd"));
-            return info;
+            User user = new User(rs.getString("username"),rs.getString("firstname"),
+                    rs.getString("lastname"),rs.getString("email"),
+                    rs.getString("salt"),rs.getString("pswd"));
+            return user;
         }
     }
 

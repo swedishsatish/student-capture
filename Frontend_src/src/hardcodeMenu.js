@@ -27,7 +27,11 @@ var CourseList = React.createClass({
                 teacherID: 12
             }];
         ReactDOM.render(<StudentList students={users}/>, document.getElementById('courseContent'));
-        var tf1 = setFilterGrid("students-table");
+        var table11_Props = {
+            filters_row_index: 1,
+            remember_grid_values: true
+        };
+        setFilterGrid( "students-table",table11_Props )
     },
 
     printFeedback : function() {

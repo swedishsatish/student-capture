@@ -15,8 +15,18 @@ public class Course {
 		
 	}
 	
+	public Course(Map<String, Object> map) {
+		parseMap(map);
+	}
+	
 	public void parseMap(Map<String, Object> map) {
-		
+		courseId = (String) map.get("CourseId");
+		year = (Integer) map.get("Year");
+		term = (String) map.get("Term");
+		courseCode = (String) map.get("CourseCode");
+		courseName = (String) map.get("CourseName");
+		courseDescription = (String) map.get("CourseDescription");
+		active = (Boolean) map.get("Active");
 	}
 	
 	/**
