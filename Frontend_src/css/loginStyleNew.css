@@ -113,15 +113,18 @@ color:red;
 	height:50px;
 	text-align: center;
 	overflow-y:auto;
+	cursor: pointer;
 }
 
 #sysReqs {
 	color: #fafafa;
 	margin: auto;
+	cursor: pointer;
 }
 
 #readMore {
 	color: #EC7E15;
+	cursor: pointer;
 }
 
 /* The Modal (background) */
@@ -155,6 +158,7 @@ color:red;
     float: right;
     font-size: 28px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .close:hover, {
