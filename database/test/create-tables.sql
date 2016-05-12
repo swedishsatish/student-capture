@@ -51,5 +51,6 @@ CREATE TABLE IF NOT EXISTS Config (
     UserId              INT         references Users(UserId),
     Language            VARCHAR(64) NOT NULL,
     Email               VARCHAR(100),
-    TextSize            INT         NOT NULL
+    TextSize            INT         NOT NULL,
+    PRIMARY KEY (UserId)
     );
