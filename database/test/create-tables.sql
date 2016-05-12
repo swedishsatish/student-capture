@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS Participant (
 
 CREATE TABLE IF NOT EXISTS Assignment (
     AssignmentId      SERIAL         PRIMARY KEY,
-    CourseId          VARCHAR(10)    references Course(CourseId) NOT NULL,
+    CourseId          VARCHAR(10)    references Course(CourseId),
     Title	          VARCHAR(64)	 NOT NULL,
     StartDate         timestamp      NOT NULL,
     EndDate           timestamp      NOT NULL,
@@ -35,8 +35,7 @@ CREATE TABLE IF NOT EXISTS Assignment (
     );
 
 CREATE TABLE IF NOT EXISTS Submission (
-    AssignmentId	INT          references Assignment(AssignmentId) NOT NULL,
-    StudentId           INT          references Users(UserId) NOT NULL,
+    StudentId           INT          references Users(UserId),
     SubmissionDate      timestamp    NOT NULL,
     Grade               VARCHAR (3),
     TeacherId           INT          references Users(UserId),
