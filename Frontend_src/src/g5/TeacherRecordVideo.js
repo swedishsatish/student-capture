@@ -7,14 +7,21 @@ var TeacherRecordVideo = React.createClass({
         var fd = new FormData();
         fd.append("videoName", fileName);
         fd.append("video", blob);
+
+        fd.append("videoType", "assignment"); // submission/question/feedback
+        fd.append("userID", "26");
+        fd.append("assignmentID", "60");
+        fd.append("courseID", "1000");
+        fd.append("courseCode", "1000");
+
         return fd;
     },
     playVideo: function (fName) {
-        
 
-        var container = document.getElementById("tst");
+/*
+        var container = document.getElementById("videocontainer");
         if (container.childNodes.length > 1) {
-            container.removeChild(container.childNodes.item(1));
+            container.removeChild(container.childNodes.item(0));
         }
 
         var mediaElement = document.createElement("video");
@@ -30,7 +37,7 @@ var TeacherRecordVideo = React.createClass({
         mediaElement.controls = true;
         container.appendChild(mediaElement)
         mediaElement.play();
-
+*/
     },
 //    calcSpeed: function (blobsize, sendTime) {
 
@@ -47,12 +54,13 @@ var TeacherRecordVideo = React.createClass({
             <div>
                 <h3>Teacher Recording Video</h3>
                 <div className="row" id="">
-                    <div className="six columns">
-                        <Recorder playCallback={this.playVideo} 
-                                  postURL="/video/textTest" formDataBuilder={this.formDataBuilder}
-                                  recButtonID="record-test" stopButtonID="stop-test" fileName="testVid.webm"
-                                  replay="true" postButtonID="postVideo"
+                    <div id="videocontainer" className="six columns">
+                        <Recorder playCallback={this.playVideo}
+                                  postURL="/uploadVideo/" formDataBuilder={this.formDataBuilder}
+                                  recButtonID="record-test" stopButtonID="stop-test" fileName="assignment.webm"
+                                  replay="true" postButtonID="postVideo" siteView="createAssignment"
                         />
+
 
                     </div>
 

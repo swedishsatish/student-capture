@@ -30,9 +30,10 @@ var Recorder = React.createClass({
       var sendTime;
 
 
-      var autoRec = typeof props.recButtonID === "undefined";
+      var autoRec = (typeof props.recButtonID === "undefined");
+
       var replay = props.replay == "true";
-      function PostBlob(blob) {
+      function PostBlob(blob, siteView) {
           // FormData
           var formData = props.formDataBuilder(blob,props.fileName);
 
@@ -43,20 +44,56 @@ var Recorder = React.createClass({
           }
 
           //call xhr with full url, data and callback function
-          xhr(window.globalURL + props.postURL, formData, props.playCallback);
+          if(siteView == "createAssignment" || siteView == "submission") {
+              var xhReq = new XMLHttpRequest();
+
+              xhReq.onreadystatechange = function () {
+                  if (xhReq.readyState === 4 && xhReq.status == 200) {
+                      var dataPOST = new FormData();
+
+                      console.log(xhReq.responseText);
+
+
+                      var xhrPOST = new XMLHttpRequest();
+
+                      if ("withCredentials" in xhReq) { // Chrome, Firefox, Opera
+
+                          xhr(window.globalURL + props.postURL + xhReq.responseText, formData, props.playCallback);
+
+
+                      } else if (typeof XDomainRequest !== "undefined") { // IE
+                          xhr(window.globalURL + props.postURL + xhReq.responseText, formData, props.playCallback);
+                      }
+                  }
+              };
+
+              var userID = "26";
+              var courseID = "60";
+              var assignmentID = "1000";
+
+              var url = window.globalURL+"/video/inrequest?userID=" + userID + "&courseID=" + courseID +
+                      "&assignmentID=" + assignmentID;
+              var method = "GET";
+
+              xhReq.open(method, url, true);
+              xhReq.send();
+
+
+          } else {
+              xhr(window.globalURL + props.postURL, formData, props.playCallback);
+         }
       }
 
-
-      if(!autoRec){
-
+      if(!autoRec) {
           var record = document.getElementById(props.recButtonID);
       }
 
       var stop = document.getElementById(props.stopButtonID);
-
-
-      var preview = document.getElementById('preview');
-
+      var preview;
+      if(typeof props.calc !== "undefined")
+          preview = document.getElementById('prev-test');
+      else
+          preview = document.getElementById('preview');
       //check webbrowse.
       //var isFirefox = !!navigator.mediaDevices.getUserMedia;
 
@@ -67,6 +104,7 @@ var Recorder = React.createClass({
 
 
       var recordAudio, recordVideo;
+      var localStream;
       var startRecord = function () {
           if(!autoRec){
               record.disabled = true;
@@ -88,7 +126,7 @@ var Recorder = React.createClass({
               //start stream to record
               preview.src = window.URL.createObjectURL(stream);
               preview.play();
-
+                localStream = stream;
 
               recordAudio = RecordRTC(stream, {
 
@@ -143,9 +181,14 @@ var Recorder = React.createClass({
                       preview.removeAttribute("muted");
                   }
 
-
                   if(postbutton == null) {
-                      PostBlob(recordVideo.getBlob());
+                      if(props.siteView !== null) {
+                          PostBlob(recordVideo.getBlob(), props.siteView);
+                      } else {
+                          PostBlob(recordVideo.getBlob());
+                      }
+
+
                   }
                   else {
                       preview.src = url;
@@ -154,11 +197,16 @@ var Recorder = React.createClass({
                       postbutton.disabled = false;
                       postbutton.onclick = function () {
                           
-                          PostBlob(recordVideo.getBlob());
-                          
-
+                          if(props.siteView !== null) {
+                              PostBlob(recordVideo.getBlob(), props.siteView);
+                          } else {
+                              PostBlob(recordVideo.getBlob());
+                          }
                       }
                   }
+                  localStream.stop();
+                  localStream = null;
+
               });
           /*}else {
 
@@ -194,6 +242,8 @@ var Recorder = React.createClass({
           request.onreadystatechange = function () {
               if (request.readyState == 4 && request.status == 200) {
                   callback(request.responseText);
+              } else if(request.readyState == 4 && request.status !== 200) {
+                  alert(request.responseText);
               }
           };
 
@@ -239,11 +289,15 @@ var Recorder = React.createClass({
       }
   },
   render: function() {
-
+      var id;
+    if(typeof this.props.calc !== "undefined")
+        id="prev-test"
+    else
+        id="preview"
     return (
         <div>
-            <div>
-                <video id="preview" muted height="100%" width="100%" ></video>
+            <div id="prev-container">
+                <video id={id} muted height="100%" width="100%" ></video>
             </div>
 
 

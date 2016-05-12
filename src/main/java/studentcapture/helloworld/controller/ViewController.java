@@ -38,5 +38,5 @@ public class ViewController {
     public String loggedinView() {
         return "loggedin";
     }
-  
+
 }

@@ -25,7 +25,7 @@ import studentcapture.datalayer.*;
 
 /**
  * Controller for handling HTTP requests related to the login page.
- * @author Oskar Suikki
+ * @author Oskar Suikki, c13hbd
  *
  */
 @RestController
@@ -103,6 +103,7 @@ public class LoginDBController {
 	    	mav.setViewName("redirect:login");
 	    	return mav;
 	    } else {
+	    	//registration failed
 	    	System.out.println("Registration failed");
 	    }
 	    return mav;

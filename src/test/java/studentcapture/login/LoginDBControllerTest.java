@@ -41,12 +41,24 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
     }
     
     @Test
-    public void registerUser() throws Exception {
+    public void getDatabaseLoginPage() throws Exception{
+        mockMvc.perform(get("/DB/login"))
+                .andExpect(status().isBadRequest()); //Expect error status 400
+    }
+    
+    @Test
+    public void getDatabaseRegisterPage() throws Exception{
+        mockMvc.perform(get("/DB/register"))
+                .andExpect(status().isBadRequest()); //Expect error status 400
+    }
+    
+    @Test
+    public void createAndInsertUserTest() throws Exception {
         
     }
     
     @Test
-    public void userAlreadyExistsInDB() throws Exception {
+    public void getCorrectUser() throws Exception {
     	
     }    
     

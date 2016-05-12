@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class AssignmentModelTest {
 
     private AssignmentModel assignmentModel = new AssignmentModel("Test", "Info", 120, 300, "2016-01-22T15:00",
-            "2016-01-24T10:00", "2016-01-22T15:00", "NUMBER_SCALE");
+            "2016-01-24T10:00", "2016-01-22T15:00", "NUMBER_SCALE", "Recap");
 
     @Test
     public void titleShouldBeTest() {
@@ -36,6 +36,17 @@ public class AssignmentModelTest {
     public void infoShouldBeTest1() {
         assignmentModel.setInfo("Test1");
         assertEquals("Test1", assignmentModel.getInfo());
+    }
+
+    @Test
+    public void recapShouldBeRecap() {
+        assertEquals("Recap", assignmentModel.getRecap());
+    }
+
+    @Test
+    public void recapShouldBeTest1() {
+        assignmentModel.setRecap("Test1");
+        assertEquals("Test1", assignmentModel.getRecap());
     }
 
     @Test
@@ -90,31 +101,31 @@ public class AssignmentModelTest {
     @Test
     public void shouldNotThrowDateTimeParseException() {
         new AssignmentModel("Test", "info", 120, 300, "2015-01-20 10:00:00", "2015-01-22 10:00:00",
-                "2015-01-20 10:00:00", "NUMBER_SCALE");
+                "2015-01-20 10:00:00", "NUMBER_SCALE", "Recap");
     }
 
     @Test(expected = DateTimeParseException.class)
     public void shouldThrowDateTimeParseExceptionBecauseNotValidMonth() {
         new AssignmentModel("Test", "info", 120, 300, "2015-20-20T10:00", "2015-01-20T10:00",
-                "2015-01-20 10:00:00", "NUMBER_SCALE");
+                "2015-01-20 10:00:00", "NUMBER_SCALE", "Recap");
     }
 
     @Test(expected = DateTimeParseException.class)
     public void shouldBe28DaysInFeb() {
         new AssignmentModel("Test", "info", 120, 300, "2015-02-29T10:00", "2015-01-20T10:00",
-                "2015-01-20 10:00:00", "NUMBER_SCALE");
+                "2015-01-20 10:00:00", "NUMBER_SCALE", "Recap");
     }
 
     @Test(expected = DateTimeParseException.class)
     public void hourShouldBeUnder23() {
         new AssignmentModel("Test", "info", 120, 300, "2015-01-20T24:00", "2015-01-20T10:00",
-                "2015-01-20 10:00:00", "NUMBER_SCALE");
+                "2015-01-20 10:00:00", "NUMBER_SCALE", "Recap");
     }
 
     @Test(expected = DateTimeParseException.class)
     public void minuteShouldBeUnder59() {
         new AssignmentModel("Test", "info",  120, 300, "2015-01-20T10:60", "2015-01-20T10:00",
-                "2015-01-20 10:00:00", "NUMBER_SCALE");
+                "2015-01-20 10:00:00", "NUMBER_SCALE", "Recap");
     }
 
     @Test(expected = InputMismatchException.class)
