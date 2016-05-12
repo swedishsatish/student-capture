@@ -22,7 +22,7 @@ body {
 	width:94%;
 }
 
-#loginPage {
+#loginDiv {
 	height:100%;
 }
 
@@ -45,7 +45,7 @@ body {
 }
 
 .nameField {
-	width:44%;
+	width:43%;
 }
 
 #firstName {
@@ -76,11 +76,11 @@ body {
 }
 
 #cnclBtn {
-	margin-right:2%;
+	margin-right:0%;
 }
 
 #regBtn {
-	margin-left:2%; 
+	margin-left:4%; 
 }
 
 #regText {
@@ -98,6 +98,10 @@ body {
     color:white; 
     margin:5px; 
  
+}
+
+#registerPage {
+    display:none;
 }
 
 input:invalid{
