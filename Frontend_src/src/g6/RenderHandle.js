@@ -33,7 +33,7 @@
                             <BackButton />
                         </div>
                         <div id="submitButton">
-                            <SubmitButton />
+                            <SubmitButton student={this.props.student} />
                         </div>
 
                     </div>
