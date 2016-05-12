@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS Course (
 CREATE TABLE IF NOT EXISTS Participant (
     UserId       INT           references Users(UserId),
     CourseId     VARCHAR(10)   references Course(CourseId),
-    Function     VARCHAR(64)   NOT NULL
+    Function     VARCHAR(64)   NOT NULL,
+    PRIMARY KEY (UserId, CourseId)
     );
 
 CREATE TABLE IF NOT EXISTS Assignment (
