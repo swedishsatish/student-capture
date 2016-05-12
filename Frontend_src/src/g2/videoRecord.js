@@ -12,6 +12,8 @@
  * postButtonID:    [Optional] Id of the post video button. If left out the stop button posts the video to server.
  * replay:          replay="true" if you want the recording to be playable in the same video tag.
  * fileName:        The name the video recording should have.
+ * camOn:           camOn="true" If the camera is to start before recording. User will have to click stopbutton to be able
+ *                  to reuse camera.
  *
  *
  * watch HardwareTest.js for example of use.
@@ -26,6 +28,8 @@ var Recorder = React.createClass({
         //used for hw testing
         var blobsize;
         var sendTime;
+
+        var camOn = props.camOn=="true";
 
         var autoRec = (typeof props.recButtonID === "undefined");
 
@@ -87,7 +91,8 @@ var Recorder = React.createClass({
 
         if(!autoRec) {
             var record = document.getElementById(props.recButtonID);
-            record.disabled = true;
+            if(camOn)
+                record.disabled = true;
         }
 
         var stop = document.getElementById(props.stopButtonID);
@@ -111,6 +116,8 @@ var Recorder = React.createClass({
                 record.disabled = true;
             }
             stop.disabled = false;
+            //startCam();
+
             recordAudio.startRecording();
             if(typeof props.calc !== "undefined") {
                 document.getElementById("test-rec-text").innerHTML = "Recording..";
@@ -122,54 +129,64 @@ var Recorder = React.createClass({
 
         // Start stream from webcam and start record if autoRecording is true,
         // will record with forced low settings for smaller files.
-        navigator.getUserMedia({
-            audio: true,
-            video: {
-                mandatory: {
-                    minWidth: 160,
-                    maxWidth: 320,
-                    minHeight: 120,
-                    maxHeight: 240,
-                    minFrameRate: 5,
-                    maxFrameRate: 10
+        var startCam = function () {
+            navigator.getUserMedia({
+                audio: true,
+                video: {
+                    mandatory: {
+                        minWidth: 160,
+                        maxWidth: 320,
+                        minHeight: 120,
+                        maxHeight: 240,
+                        minFrameRate: 5,
+                        maxFrameRate: 10
+                    }
                 }
-            }
-        }, function (stream) {
-            preview.src = window.URL.createObjectURL(stream);
-            preview.play();
-            localStream = stream;
+            }, function (stream) {
+                preview.src = window.URL.createObjectURL(stream);
+                preview.play();
+                localStream = stream;
 
-            recordAudio = RecordRTC(stream, {
-                onAudioProcessStarted: function () {
-                    recordVideo.startRecording();
+                recordAudio = RecordRTC(stream, {
+                    onAudioProcessStarted: function () {
+                        recordVideo.startRecording();
+                    }
+                });
+
+                recordVideo = RecordRTC(stream, {
+                    type: 'video'
+                });
+
+                recordAudio = RecordRTC(localStream, {
+                    onAudioProcessStarted: function () {
+                        recordVideo.startRecording();
+                    }
+                });
+
+                recordVideo = RecordRTC(localStream, {
+                    type: 'video'
+                });
+
+                if(!autoRec && camOn) {
+                    
+                        record.disabled = false;
+
+
+                }else {
+                    startRecord();
                 }
+
+            }, function (error) {
+                alert("Problem occured, make sure camera is not\nused elsewhere and that you are connected\nby https.");
             });
 
-            recordVideo = RecordRTC(stream, {
-                type: 'video'
-            });
-
-            recordAudio = RecordRTC(localStream, {
-                onAudioProcessStarted: function () {
-                    recordVideo.startRecording();
-                }
-            });
-
-            recordVideo = RecordRTC(localStream, {
-                type: 'video'
-            });
-
-            if(!autoRec) {
-                record.disabled = false;
-            } else {
-                startRecord();
-            }
-        }, function (error) {
-            alert("Problem occured, make sure camera is not\nused elsewhere and that you are connected\nby https.");
-        });
-
+        }
+        console.log(camOn)
         if(!autoRec) {
-            record.onclick = startRecord;
+            if(camOn)
+                record.onclick = startRecord;
+            else
+                record.onclick = startCam;
         }
 
         stop.onclick = function () {
@@ -264,6 +281,13 @@ var Recorder = React.createClass({
             request.open('POST', url,true);
             request.send(data);
         }
+
+
+        if(camOn){
+
+            startCam();
+        }
+
     },
     render: function() {
         var id;
