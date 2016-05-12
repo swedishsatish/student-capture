@@ -11,17 +11,15 @@ public class User {
     private String fName;
     private String lName;
     private String email;
-    private String salt;
     private String pswd;
 
     public User(String userName, String fName, String lName,
-                String email, String salt,  String pswd) {
+                String email,String pswd) {
 
         this.userName = userName;
         this.fName = fName;
         this.lName = lName;
         this.email = email;
-        this.salt = salt;
         this.pswd = pswd;
 
     }
@@ -48,14 +46,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public String getPswd() {

@@ -47,7 +47,7 @@ public class UserDAO {
 
         Object[] args = new Object[] {user.getUserName(),user.getfName(),
                                       user.getlName(),user.getEmail(),
-                                      user.getSalt(),user.getPswd()};
+                                      user.getPswd()};
 
         int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
                                       Types.CHAR,Types.VARCHAR,Types.VARCHAR};
@@ -361,7 +361,7 @@ public class UserDAO {
         public Object mapRow(ResultSet rs, int i) throws SQLException {
             User user = new User(rs.getString("username"),rs.getString("firstname"),
                                  rs.getString("lastname"),rs.getString("email"),
-                                 rs.getString("salt"),rs.getString("pswd"));
+                                 rs.getString("pswd"));
             return user;
         }
     }

@@ -1,5 +1,6 @@
 package studentcapture.datalayer.database;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,6 +136,12 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         assertEquals(result.lastName,"nameLast");
     }
 	*/
+
+
+    @After
+    public void tearDown() {
+
+    }
 
     /**
      *  Used to collect user information, and return a hashmap.
