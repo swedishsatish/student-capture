@@ -12,9 +12,6 @@ CREATE TABLE IF NOT EXISTS Course (
     Year        INT            NOT NULL,
     Term        CHAR(4)        NOT NULL,
     CourseCode  CHAR(6)        NOT NULL,
-    CourseName  VARCHAR(64)
-    Term        VARCHAR(8)     NOT NULL,
-    CourseCode  VARCHAR(8)     NOT NULL,
     CourseName  VARCHAR(64),
     Active      BOOLEAN        NOT NULL
     );
