@@ -83,8 +83,6 @@ var But = React.createClass({
     onClick: function() {
         if (confirm("Once the assignment starts it cannot be interrupted or paused.\n" +
                     "Are you sure you want to begin the assignment?")) {
-            var modal = document.getElementById("assignment-modal");
-            modal.style.display = "block";
             this.setState({disabled: true});
         }
     },
