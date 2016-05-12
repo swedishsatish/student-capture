@@ -42,7 +42,7 @@ public class AssignmentControllerTest extends StudentCaptureApplicationTests {
      * @throws Exception
      */
     @Test(expected = NestedServletException.class)
-    public void shouldWorkToSendPost() throws Exception{
+    public void shouldWorkToSendPost() throws Exception {
         mvc.perform(post("/assignment").contentType(MediaType.APPLICATION_JSON).content(json_test_string))
                 .andExpect(status().isOk());
 

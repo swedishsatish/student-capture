@@ -22,12 +22,12 @@ public class AssignmentErrorHandler implements ResponseErrorHandler {
 
     @Override
     public void handleError(ClientHttpResponse clientHttpResponse) throws IOException {
-        String body = readResponseBody(clientHttpResponse);
+        String body = getResponseBody(clientHttpResponse);
         String errorMessage = getErrorMessage(body);
         throw new IOException(errorMessage);
     }
 
-    private String readResponseBody(ClientHttpResponse clientHttpResponse) throws IOException {
+    private String getResponseBody(ClientHttpResponse clientHttpResponse) throws IOException {
         InputStream inputStream = clientHttpResponse.getBody();
         try (BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream))) {
             return buffer.lines().collect(Collectors.joining("\n"));
