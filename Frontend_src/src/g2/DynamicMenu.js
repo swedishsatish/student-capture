@@ -148,12 +148,16 @@ var DynamicMenu = React.createClass({
     }
 });
 
-$.get(window.globalURL + "/DB/getHierarchy", {userID: 1}, function (res) {
+window.RenderMenu = function (userID) {
+    $.get(window.globalURL + "/DB/getHierarchy", {userID}, function (res) {
 
-   // if(res)
-    var SCList = objToList(res.studentCourses);
-    var TCList = objToList(res.teacherCourses);
-    var name = res.firstName + " " + res.lastName;
-    ReactDOM.render(<DynamicMenu tList={TCList} sList={SCList} uid={res.userId}/>, document.getElementById("desktopNavigation"));
-    ReactDOM.render(<NewProfile name={name}/>, document.getElementById('desktopHeader'));
-});
+        // if(res)
+        var SCList = objToList(res.studentCourses);
+        var TCList = objToList(res.teacherCourses);
+        var name = res.firstName + " " + res.lastName;
+        ReactDOM.render(<DynamicMenu tList={TCList} sList={SCList} uid={userID}/>, document.getElementById("desktopNavigation"));
+        ReactDOM.render(<NewProfile name={name}/>, document.getElementById('desktopHeader'));
+    });
+}
+
+RenderMenu(1);
