@@ -41,6 +41,11 @@ public class FeedbackController {
     @Autowired
     private RestTemplate requestSender;
 
+    /**
+     * Get the feedback from the datalayer
+     * @param model model with the params needed for getting the feedback
+     * @return grade, feedback, teachername and timestamp in a hashmap
+     */
     @CrossOrigin
     @RequestMapping(value = "get", method = RequestMethod.GET)
     public HashMap handleFeedbackRequestFromStudent(@Valid FeedbackModel model) {
@@ -60,6 +65,11 @@ public class FeedbackController {
                     .toUri();
     }
 
+    /**
+     * Get the feedback video
+     * @param model model with the params needed for getting the feedback video
+     * @return the feedback video
+     */
     @CrossOrigin
     @RequestMapping(value = "video", method = RequestMethod.GET)
     public ResponseEntity<byte[]> video(@Valid FeedbackModel model) {
