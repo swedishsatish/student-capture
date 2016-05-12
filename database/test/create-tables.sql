@@ -10,9 +10,6 @@ CREATE TABLE IF NOT EXISTS Users (
 CREATE TABLE IF NOT EXISTS Course (
     CourseId    VARCHAR(10)    PRIMARY KEY,
     Year        INT            NOT NULL,
-    Term        CHAR(4)        NOT NULL,
-    CourseCode  CHAR(6)        NOT NULL,
-    CourseName  VARCHAR(64)
     Term        VARCHAR(8)     NOT NULL,
     CourseCode  VARCHAR(8)     NOT NULL,
     CourseName  VARCHAR(64),
@@ -49,5 +46,5 @@ CREATE TABLE IF NOT EXISTS Config (
     UserId              INT         references Users(UserId),
     Language            VARCHAR(64) NOT NULL,
     Email               VARCHAR(100),
-    TextSize            INT         NOT NULL,
+    TextSize            INT         NOT NULL
     );
