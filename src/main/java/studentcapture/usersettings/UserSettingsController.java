@@ -18,14 +18,14 @@ public class UserSettingsController {
     private RestTemplate requestSender;
 
     /**
-     * Will send a video and information to DataLayerCommunicator.
+     * Takes user settings from client and sends them to the database.
      *
      * @return Status 200 if success. Status 400 on bad request. Status 500 on error.
      */
     @CrossOrigin()
     @RequestMapping(value = "/settings",
             method = RequestMethod.POST)
-    public ResponseEntity<String> uploadVideo(
+    public ResponseEntity<String> saveSettings(
             @RequestParam("userID") String userID,
             @RequestParam("language") String language,
             @RequestParam("emailAddress") String emailAddress,
