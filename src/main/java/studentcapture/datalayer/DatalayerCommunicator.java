@@ -1,6 +1,7 @@
 package studentcapture.datalayer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -13,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.*;
 import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
-import studentcapture.datalayer.database.UserDAO.CourseAssignmentHierarchy;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
@@ -44,6 +44,8 @@ public class DatalayerCommunicator {
     private UserDAO userDAO;
     @Autowired
     private ParticipantDAO participantDAO;
+    @Autowired
+    private HierarchyDAO hierarchyDAO;
 
     //@Autowired
     FilesystemInterface fsi;
@@ -445,10 +447,10 @@ public class DatalayerCommunicator {
     method = RequestMethod.GET,
     value = "/getHierarchy")
     @ResponseBody
-    public CourseAssignmentHierarchy getHierarchy(
+    public Hierarchy getHierarchy(
     		@RequestParam(value="userID") String userID) {
-    	Optional<CourseAssignmentHierarchy> hierarchy = 
-    			userDAO.getCourseAssignmentHierarchy(userID);
+    	Optional<Hierarchy> hierarchy = 
+    			hierarchyDAO.getCourseAssignmentHierarchy(userID);
     	if(hierarchy.isPresent()) 
     		return hierarchy.get();
     	return null;
