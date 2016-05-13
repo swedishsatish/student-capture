@@ -1,19 +1,37 @@
 var NewAssignment = React.createClass({
+
+    formDataBuilder: function (blob, fileName) {
+        var fd = new FormData();
+        fd.append("videoName", fileName);
+        fd.append("video", blob);
+        return fd;
+    },
+
     render : function() {
       return <div>
-            <form id="form" action="assignment" method="post">
-                <h1>CREATE NEW ASSIGNMENT FOR COURSE (course code, course id)</h1>
+                <form id="form" action="assignment" method="post">
                 <input className="inputField" id="title" type="text" placeholder="title" /><br/>
-                <textarea className="inputField" id="description" type="text" placeholder="description" /><br/>
-                <p>VIDEO RECORDING COMPONENT GOES HERE</p>
-                <textarea className="inputField" id="questionInformation" type="text" placeholder="question" /><br />
+                <input className="inputField" id="info" type="text" placeholder="description" /><br/>
+
+                <Recorder playCallback={this.playVideo}
+                          postURL="/video/textTest" formDataBuilder={this.formDataBuilder}
+                          recButtonID="record-question" stopButtonID="stop-question" fileName="testVid.webm" replay="true"
+                          postButtonID="post-question"
+                />
+                <div className="four columns u-pull-left">
+                    <button id="record-question" className="recControls">Record</button>
+                    <button id="stop-question" className="recControls" disabled>Stop</button>
+                </div>
+
                 <input id="startDate" type="datetime-local" /><br/>
                 <input id="endDate" type="datetime-local" /><br/>
                 <input id="minTimeSeconds" type="text" placeholder="minTimeSeconds" /><br/>
                 <input id="maxTimeSeconds" type="text" placeholder="maxTimeSeconds" /><br/>
                 <input id="isPublished" type="checkbox" value="Car"/>Publish Assignment<br/>
-                <div className="button primary-button SCButton" onClick = {handleCancel}> CANCEL </div>
-                <div className="button primary-button SCButton" onClick = {submitAssignment}> SUBMIT </div>
+                <div className="button primary-button" onClick = {handleCancel}> CANCEL </div>
+
+                <div className="button primary-button" id="post-question" onClick = {submitAssignment}> SUBMIT </div>
+
             </form>
         </div>
     }
@@ -26,8 +44,7 @@ function handleCancel() {
 function submitAssignment() {
     var reqBody = {}
     reqBody["title"] = $("#title").val();
-    reqBody["info"] = $("#description").val();
-    reqBody["question"] = $("#questionInformation").val();
+    reqBody["info"] = $("#info").val();
     reqBody["minTimeSeconds"] = $("#minTimeSeconds").val();
     reqBody["maxTimeSeconds"] = $("#maxTimeSeconds").val();
     reqBody["startDate"] = $("#startDate").val();
@@ -80,4 +97,6 @@ window.CourseContent = React.createClass({
         );
     }
 });
+
+//ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
 window.NewAssignment = NewAssignment;

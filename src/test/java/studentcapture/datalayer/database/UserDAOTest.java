@@ -67,7 +67,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         User user = new User("userPelle","Pelle","Jönsson","pelle@gmail.com",
                             "mypassword123");
 
-        userDAO.addUser(user);
+       boolean res = userDAO.addUser(user);
 
         //Getting values from table user
         String sql = "SELECT * FROM users WHERE username = 'userPelle'";
@@ -78,6 +78,8 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         assertEquals("Jönsson",dbUser.getlName());
         assertEquals("pelle@gmail.com",dbUser.getEmail());
         assertEquals("mypassword123",dbUser.getPswd());
+
+        assertTrue(res);
     }
 
     @Test
