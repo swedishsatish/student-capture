@@ -255,7 +255,7 @@ public class FilesystemInterface {
 	}
 
 	/**
-	 * Stores assignment description in the filesystem as a text file
+	 * Stores assignment description or recap depending on the filename parameter
 	 * @param courseCode courses 6 character identifier
 	 * @param courseId a unique database id
 	 * @param assignmentId a unique database id

@@ -1,6 +1,7 @@
 package studentcapture.datalayer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -13,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.*;
 import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
-import studentcapture.datalayer.database.UserDAO.CourseAssignmentHierarchy;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
@@ -44,6 +44,8 @@ public class DatalayerCommunicator {
     private UserDAO userDAO;
     @Autowired
     private ParticipantDAO participantDAO;
+    @Autowired
+    private HierarchyDAO hierarchyDAO;
 
     //@Autowired
     FilesystemInterface fsi;
@@ -222,19 +224,6 @@ public class DatalayerCommunicator {
 
 
     /**
-     * Check if given user name and password exist in database.
-     * @param username a unique user name.
-     * @param pswd password for the unique username
-     * @return true  if correct user password and username is given otherwise false
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public boolean login(@RequestParam(value = "username") String username,
-                         @RequestParam(value = "pswd") String pswd) {
-        return   userDAO.userExist(username,pswd);
-    }
-
-    /**
      * @param userName
      * @return
      */
@@ -250,7 +239,7 @@ public class DatalayerCommunicator {
      * @return true if email exist else false
      */
     @CrossOrigin
-    @RequestMapping(value = "/usrEmailExist", method = RequestMethod.GET)
+    @RequestMapping(value = "/userEmailExist", method = RequestMethod.GET)
     public boolean userEmailExist(@RequestParam(value = "email") String email) {
         return userDAO.emailExist(email);
     }
@@ -262,7 +251,7 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public  void addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
+    public void addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
         ObjectMapper mapper = new ObjectMapper();
         User user = null;
         try {
@@ -272,6 +261,17 @@ public class DatalayerCommunicator {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Get hashed password for a given username.
+     * @param username username for a user
+     * @return hashed password else null.
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/getHpswd", method = RequestMethod.POST)
+    public String getUserPswd(@RequestParam(value = "username") String username) {
+        return userDAO.getPswd(username);
     }
     
     /**
@@ -471,10 +471,10 @@ public class DatalayerCommunicator {
     method = RequestMethod.GET,
     value = "/getHierarchy")
     @ResponseBody
-    public CourseAssignmentHierarchy getHierarchy(
+    public Hierarchy getHierarchy(
     		@RequestParam(value="userID") String userID) {
-    	Optional<CourseAssignmentHierarchy> hierarchy = 
-    			userDAO.getCourseAssignmentHierarchy(userID);
+    	Optional<Hierarchy> hierarchy = 
+    			hierarchyDAO.getCourseAssignmentHierarchy(userID);
     	if(hierarchy.isPresent()) 
     		return hierarchy.get();
     	return null;

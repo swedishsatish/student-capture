@@ -279,41 +279,15 @@ public class SubmissionDAO {
         return Optional.of(submissions);
     }
     
-	public Optional<SubmissionWrapper> getSubmissionWithWrapper(int assignmentId,
-			int studentId) {
-		SubmissionWrapper result = new SubmissionWrapper();
-
-		String getStudentSubmissionStatement =
+    public Optional<Submission> getSubmission(int assignmentId, int userId) {
+    	Submission result = null;
+    	String getStudentSubmissionStatement =
 				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
-
 		try {
-	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-	    			getStudentSubmissionStatement, assignmentId, studentId);
-
-	    	for (Map<String, Object> row : rows) {
-	    		result.assignmentId = (int) row.get("AssignmentId");
-	    		result.studentId = (int) row.get("StudentId");
-
-	    		try {
-	    			result.teacherId = (int) row.get("TeacherId");
-	    		} catch (NullPointerException e) {
-	    			result.teacherId = null;
-	    		}
-	    		try {
-	    			result.grade = (String) row.get("Grade");
-	    		} catch (NullPointerException e) {
-	    			result.grade = null;
-	    		}
-	    		try {
-	    			result.submissionDate = row.get("SubmissionDate").toString();
-	    		} catch (NullPointerException e) {
-	    			result.submissionDate = null;
-	    		}
-
-				// TODO: This break statements negates the for loop (it ends on its first iteration)
-	    		break;
-	    	}
-
+	    	Map<String, Object> map = jdbcTemplate.queryForMap(
+	    			getStudentSubmissionStatement, assignmentId, userId);
+	    	
+	    	 result = new Submission(map);
 	    } catch (IncorrectResultSizeDataAccessException e){
 			//TODO
 		    return Optional.empty();

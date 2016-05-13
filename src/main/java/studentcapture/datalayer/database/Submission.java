@@ -1,22 +1,51 @@
 package studentcapture.datalayer.database;
 
+import java.sql.Timestamp;
+import java.util.Map;
 /**
  * Created by c13arm on 2016-05-11.
  */
+
 public class Submission {
-    private int studentID;
-    private int assignmentID;
-    private boolean studentPublishConsent = false;
+	private Integer assignmentID;
+    private Integer studentID;
+    private Boolean studentPublishConsent = false;
+    private Timestamp submissionDate;
     private Grade grade;
+    private Integer teacherID;
+    private Boolean publishStudentSubmission = false;
     private String courseID;
 
+    public Submission() {
+    }
+    
     public Submission (int studentID, int assignmentID) {
         this.studentID = studentID;
         this.assignmentID = assignmentID;
     }
 
+    public Submission(Map<String, Object> map) {
+    	assignmentID = (Integer) map.get("AssignmentId");
+		studentID = (Integer) map.get("StudentId");
+		try {
+			studentPublishConsent = (Boolean) map.get("StudentPublishConsent");
+		} catch (NullPointerException e) {
+		}
+		submissionDate = (Timestamp) map.get("SubmissionDate");
+		//grade = ;
+		try {
+			teacherID = (Integer) map.get("TeacherId");
+		} catch (NullPointerException e) {
+			teacherID = null;
+		}
+		try {
+			publishStudentSubmission = (Boolean) map.get("PublishStudentSubmission");
+		} catch (NullPointerException e) {
+		}
+	}
+
     public String getCourseID() {
-        return courseID;
+		return courseID;
     }
 
     public void setCourseID(String courseID) {

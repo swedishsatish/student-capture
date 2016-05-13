@@ -13,6 +13,10 @@ public class User {
     private String email;
     private String pswd;
 
+
+    //Needed because of json
+    public User() {}
+
     public User(String userName, String fName, String lName,
                 String email,String pswd) {
 
