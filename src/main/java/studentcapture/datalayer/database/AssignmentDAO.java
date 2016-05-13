@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -219,8 +220,8 @@ public class AssignmentDAO {
         Assignment assignment = new Assignment();
         assignment.setCourseID(returnValues.get(0));
         assignment.setTitle(returnValues.get(1));
-        assignment.setStartDate(Date.from(Instant.parse(returnValues.get(2))));
-        assignment.setEndDate(Date.from(Instant.parse(returnValues.get(3))));
+        assignment.setStartDate(new Timestamp(System.currentTimeMillis()));
+        assignment.setEndDate(new Timestamp(System.currentTimeMillis()));
         assignment.setMinTime(Integer.parseInt(returnValues.get(4)));
         assignment.setMaxTime(Integer.parseInt(returnValues.get(5)));
 
@@ -237,24 +238,22 @@ public class AssignmentDAO {
         return jdbcTemplate.queryForObject(sql, new Object[]{assignmentID},String.class);
     }
 
-	public Optional<AssignmentWrapper> getAssignmentWithWrapper(
-			int assignmentId) {
+    /**
+     * Returns a sought assignment from the database.
+     * 
+     * @param assignmentId		assignments identifier
+     * @return					sought assignment
+     * 
+     * @author tfy12hsm
+     */
+	public Optional<Assignment> getAssignment(int assignmentId) {
 		try {
             String getAssignmentStatement = "SELECT * FROM "
                     + "Assignment WHERE AssignmentId=?";
 
 			Map<String, Object> map = jdbcTemplate.queryForMap(
 	    			getAssignmentStatement, assignmentId);
-			AssignmentWrapper result = new AssignmentWrapper();
-	    	result.assignmentId = (int) map.get("AssignmentId");
-	    	result.courseId = (String) map.get("CourseId");
-	    	
-	    	result.title = (String) map.get("Title");
-	    	result.StartDate = map.get("StartDate").toString();
-	    	result.EndDate = map.get("EndDate").toString();
-	    	result.minTime = (int) map.get("MinTime");
-	    	result.maxTime = (int) map.get("MaxTime");
-	    	result.published = (boolean) map.get("Published");
+			Assignment result = new Assignment(map);
 	    	
 	    	return Optional.of(result);
 		} catch (IncorrectResultSizeDataAccessException e){
@@ -274,16 +273,5 @@ public class AssignmentDAO {
 
     public boolean removeAssignment(String assignmentID){
         throw new UnsupportedOperationException();
-    }
-
-    public static class AssignmentWrapper {
-    	public int assignmentId;
-    	public String courseId;
-    	public String title;
-    	public String StartDate;
-    	public String EndDate;
-    	public int minTime;
-    	public int maxTime;
-    	public boolean published;
     }
 }

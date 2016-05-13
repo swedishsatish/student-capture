@@ -1,31 +1,59 @@
 package studentcapture.datalayer.database;
 
+import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by c13elt on 2016-05-12.
  */
 public class Assignment {
 
-    private int assignmentID;
+    private Integer assignmentID;
+    private String courseID;
+    private String title;
+    private Timestamp startDate;
+    private Timestamp endDate;
+    private Integer minTime;
+    private Integer maxTime;
+    private Timestamp published;
+    private String gradeScale;
+    private String description;
+    
+    public Assignment() {
+	}
+    
+    /**
+     * Constructor that parses map of database elements.
+     * 
+     * @param map	map of database elements
+     * 
+     * @author tfy12hsm
+     */
+    public Assignment(Map<String, Object> map) {
+		assignmentID = (Integer) map.get("AssignmentId");
+		courseID = (String) map.get("CourseId");
+		title = (String) map.get("Title");
+		startDate = (Timestamp) map.get("StartDate");
+		endDate = (Timestamp) map.get("EndDate");
+		minTime = (Integer) map.get("MinTime");
+		maxTime = (Integer) map.get("MaxTime");
+		try {
+			published = (Timestamp) map.get("Published");
+		} catch (NullPointerException e) {
+			published = null;
+		}
+		gradeScale = (String) map.get("GradeScale");
+		description = (String) map.get("Description");
+	}
 
-    public void setCourseID(String courseID) {
+	public void setCourseID(String courseID) {
         this.courseID = courseID;
     }
 
     public void setAssignmentID(int assignmentID) {
         this.assignmentID = assignmentID;
     }
-
-    private String courseID;
-    private String title;
-    private Date startDate;
-    private Date endDate;
-    private int minTime;
-    private int maxTime;
-    private Date published;
-    private String gradeScale;
-    private String description;
 
     public String getDescription() {
         return description;
@@ -55,7 +83,7 @@ public class Assignment {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Timestamp startDate) {
         this.startDate = startDate;
     }
 
@@ -63,7 +91,7 @@ public class Assignment {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
     }
 
@@ -87,7 +115,7 @@ public class Assignment {
         return published;
     }
 
-    public void setPublished(Date published) {
+    public void setPublished(Timestamp published) {
         this.published = published;
     }
 

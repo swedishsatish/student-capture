@@ -1,6 +1,7 @@
 package studentcapture.datalayer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -12,21 +13,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.*;
-import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
-import studentcapture.datalayer.database.UserDAO.CourseAssignmentHierarchy;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
 
 import javax.validation.Valid;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
 /**
  * Created by c12osn on 2016-04-22.
- * Edited by c13arm, ens13ahr
+ * Edited by c13arm, ens13ahr, tfy12hsm
  */
 @RestController
 @RequestMapping(value = "/DB")
@@ -44,6 +42,8 @@ public class DatalayerCommunicator {
     private UserDAO userDAO;
     @Autowired
     private ParticipantDAO participantDAO;
+    @Autowired
+    private HierarchyDAO hierarchyDAO;
 
     //@Autowired
     FilesystemInterface fsi;
@@ -94,6 +94,8 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
     public boolean setGrade(@RequestParam(value = "Submission") Submission submission,
                             @RequestParam(value = "Grade") Grade grade) throws IllegalFormatException {
+        String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID() + "");
+        submission.setCourseID(courseID);
         return submissionDAO.setGrade(submission, grade);
     }
 
@@ -196,19 +198,6 @@ public class DatalayerCommunicator {
 
 
     /**
-     * Check if given user name and password exist in database.
-     * @param username a unique user name.
-     * @param pswd password for the unique username
-     * @return true  if correct user password and username is given otherwise false
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public boolean login(@RequestParam(value = "username") String username,
-                         @RequestParam(value = "pswd") String pswd) {
-        return   userDAO.userExist(username,pswd);
-    }
-
-    /**
      * @param userName
      * @return
      */
@@ -224,28 +213,43 @@ public class DatalayerCommunicator {
      * @return true if email exist else false
      */
     @CrossOrigin
-    @RequestMapping(value = "/usrEmailExist", method = RequestMethod.GET)
+    @RequestMapping(value = "/userEmailExist", method = RequestMethod.GET)
     public boolean userEmailExist(@RequestParam(value = "email") String email) {
         return userDAO.emailExist(email);
     }
 
     /**
      * Register user by given information.
-     *
      * @return true if registration was successfull else false
      */
     @CrossOrigin
-    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public  void addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE,
+                    method = RequestMethod.GET,
+                    value = "/addUser")
+    public boolean addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
         ObjectMapper mapper = new ObjectMapper();
         User user = null;
         try {
             user = mapper.readValue(jsonStringUser,User.class);
-            userDAO.addUser(user);
+            return userDAO.addUser(user);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        return false;
+    }
+
+    /**
+     * Get hashed password for a given username.
+     * @param username username for a user
+     * @return hashed password else null.
+     */
+    @CrossOrigin
+    @RequestMapping( produces = MediaType.APPLICATION_JSON_VALUE,
+                     method = RequestMethod.GET,
+                     value = "/getHpswd")
+    public String getUserPswd(@RequestParam(value = "username") String username) {
+        return userDAO.getPswd(username);
     }
     
     /**
@@ -389,7 +393,7 @@ public class DatalayerCommunicator {
     method = RequestMethod.GET,
     value = "/getAllSubmissions")
     @ResponseBody
-    public List<SubmissionWrapper> getAllSubmissions(
+    public List<Submission> getAllSubmissions(
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submissionDAO.getAllSubmissions(assignmentID).get();
     }
@@ -407,7 +411,7 @@ public class DatalayerCommunicator {
     method = RequestMethod.GET,
     value = "/getAllUngradedSubmissions")
     @ResponseBody
-    public List<SubmissionWrapper> getAllUngradedSubmissions(
+    public List<Submission> getAllUngradedSubmissions(
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submissionDAO.getAllUngraded(assignmentID).get();
     }
@@ -426,7 +430,7 @@ public class DatalayerCommunicator {
     method = RequestMethod.GET,
     value = "/getAllSubmissionsWithStudents")
     @ResponseBody
-    public List<SubmissionWrapper> getAllSubmissionsWithStudents(
+    public List<Submission> getAllSubmissionsWithStudents(
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submissionDAO.getAllSubmissionsWithStudents(assignmentID).get();
     }
@@ -445,10 +449,10 @@ public class DatalayerCommunicator {
     method = RequestMethod.GET,
     value = "/getHierarchy")
     @ResponseBody
-    public CourseAssignmentHierarchy getHierarchy(
+    public Hierarchy getHierarchy(
     		@RequestParam(value="userID") String userID) {
-    	Optional<CourseAssignmentHierarchy> hierarchy = 
-    			userDAO.getCourseAssignmentHierarchy(userID);
+    	Optional<Hierarchy> hierarchy = 
+    			hierarchyDAO.getCourseAssignmentHierarchy(userID);
     	if(hierarchy.isPresent()) 
     		return hierarchy.get();
     	return null;
