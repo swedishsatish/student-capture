@@ -1,6 +1,7 @@
 package studentcapture.datalayer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -12,21 +13,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.*;
-import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
-import studentcapture.datalayer.database.UserDAO.CourseAssignmentHierarchy;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
 
 import javax.validation.Valid;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
 /**
  * Created by c12osn on 2016-04-22.
- * Edited by c13arm, ens13ahr
+ * Edited by c13arm, ens13ahr, tfy12hsm
  */
 @RestController
 @RequestMapping(value = "/DB")
@@ -44,6 +42,8 @@ public class DatalayerCommunicator {
     private UserDAO userDAO;
     @Autowired
     private ParticipantDAO participantDAO;
+    @Autowired
+    private HierarchyDAO hierarchyDAO;
 
     //@Autowired
     FilesystemInterface fsi;
@@ -393,7 +393,7 @@ public class DatalayerCommunicator {
     method = RequestMethod.GET,
     value = "/getAllSubmissions")
     @ResponseBody
-    public List<SubmissionWrapper> getAllSubmissions(
+    public List<Submission> getAllSubmissions(
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submissionDAO.getAllSubmissions(assignmentID).get();
     }
@@ -411,7 +411,7 @@ public class DatalayerCommunicator {
     method = RequestMethod.GET,
     value = "/getAllUngradedSubmissions")
     @ResponseBody
-    public List<SubmissionWrapper> getAllUngradedSubmissions(
+    public List<Submission> getAllUngradedSubmissions(
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submissionDAO.getAllUngraded(assignmentID).get();
     }
@@ -430,7 +430,7 @@ public class DatalayerCommunicator {
     method = RequestMethod.GET,
     value = "/getAllSubmissionsWithStudents")
     @ResponseBody
-    public List<SubmissionWrapper> getAllSubmissionsWithStudents(
+    public List<Submission> getAllSubmissionsWithStudents(
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submissionDAO.getAllSubmissionsWithStudents(assignmentID).get();
     }
@@ -449,10 +449,10 @@ public class DatalayerCommunicator {
     method = RequestMethod.GET,
     value = "/getHierarchy")
     @ResponseBody
-    public CourseAssignmentHierarchy getHierarchy(
+    public Hierarchy getHierarchy(
     		@RequestParam(value="userID") String userID) {
-    	Optional<CourseAssignmentHierarchy> hierarchy = 
-    			userDAO.getCourseAssignmentHierarchy(userID);
+    	Optional<Hierarchy> hierarchy = 
+    			hierarchyDAO.getCourseAssignmentHierarchy(userID);
     	if(hierarchy.isPresent()) 
     		return hierarchy.get();
     	return null;
