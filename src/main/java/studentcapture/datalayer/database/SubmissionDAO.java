@@ -114,10 +114,10 @@ public class SubmissionDAO {
 	/**
 	 * Get information about the grade of a submission
 	 *
-	 * @param model Unique identifier for the assignment submission grade bra
+	 * @param submission Unique identifier for the assignment submission grade bra
 	 * @return A list containing the grade, date, and grader
 	 */
-	public Map<String, Object> getGrade(FeedbackModel model) {
+	public Map<String, Object> getGrade(Submission submission) {
 		String queryForGrade = "SELECT grade, submissiondate as time, " +
 				"teacherid FROM submission " +
 				"WHERE (studentid = ? AND assignmentid = ?)";
@@ -126,7 +126,7 @@ public class SubmissionDAO {
 		Map<String, Object> response;
 		try {
 			response = databaseConnection.queryForMap(queryForGrade,
-					new Object[]{model.getStudentID(), model.getAssignmentID()});
+					new Object[]{submission.getStudentID(), submission.getAssignmentID()});
 			if (response.get("teacherid") != null) {
 				String teacherName = databaseConnection.queryForObject(queryForTeacher,
 						new Object[]{response.get("teacherid")}, String.class);

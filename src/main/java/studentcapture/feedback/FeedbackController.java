@@ -7,6 +7,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import studentcapture.assignment.AssignmentModel;
+import studentcapture.datalayer.database.Submission;
 import studentcapture.lti.LTICommunicator;
 import studentcapture.lti.LTIInvalidGradeException;
 import studentcapture.lti.LTINullPointerException;
@@ -43,43 +44,42 @@ public class FeedbackController {
 
     /**
      * Get the feedback from the datalayer
-     * @param model model with the params needed for getting the feedback
+     * @param submission model with the params needed for getting the feedback
      * @return grade, feedback, teachername and timestamp in a hashmap
      */
     @CrossOrigin
     @RequestMapping(value = "get", method = RequestMethod.GET)
-    public HashMap handleFeedbackRequestFromStudent(@Valid FeedbackModel model) {
+    public HashMap handleFeedbackRequestFromStudent(@Valid Submission submission) {
         //TODO Unsafe data needs to be cleaned
-        URI targetURI = constructURI(model, dataLayerHostURI + dataLayerGetGrade);
+        URI targetURI = constructURI(submission, dataLayerHostURI + dataLayerGetGrade);
 
         return getExternalResponse(targetURI);
     }
 
-    private URI constructURI(@Valid FeedbackModel model, String baseURI) {
+    private URI constructURI(Submission submission, String baseURI) {
         return UriComponentsBuilder.fromUriString(baseURI)
-                    .queryParam("studentID", model.getStudentID())
-                    .queryParam("assignmentID", model.getAssignmentID())
-                    .queryParam("courseID", model.getCourseID())
-                    .queryParam("courseCode", model.getCourseCode())
+                    .queryParam("studentID", submission.getStudentID())
+                    .queryParam("assignmentID", submission.getAssignmentID())
+                    .queryParam("courseID", submission.getCourseID())
                     .build()
                     .toUri();
     }
 
     /**
      * Get the feedback video
-     * @param model model with the params needed for getting the feedback video
+     * @param submission model with the params needed for getting the feedback video
      * @return the feedback video
      */
     @CrossOrigin
     @RequestMapping(value = "video", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> video(@Valid FeedbackModel model) {
+    public ResponseEntity<byte[]> video(@Valid Submission submission) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.ALL));
         HttpEntity<String> entity = new HttpEntity(headers);
         ResponseEntity<byte[]> response = null;
 
-        URI targetUrl = constructURI(model, dataLayerHostURI + dataLayerGetFeedbackVideo);
+        URI targetUrl = constructURI(submission, dataLayerHostURI + dataLayerGetFeedbackVideo);
 
         try {
             response = requestSender.exchange(targetUrl, HttpMethod.GET, entity, byte[].class);

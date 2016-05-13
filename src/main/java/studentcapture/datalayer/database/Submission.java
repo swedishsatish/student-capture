@@ -15,6 +15,7 @@ public class Submission {
     private Integer teacherID;
     private Boolean publishStudentSubmission = false;
     private String courseID;
+    private String courseCode;
 
     public Submission() {
     }
@@ -91,5 +92,13 @@ public class Submission {
 
     public void setStudentPublishConsent(boolean studentPublishConsent) {
         this.studentPublishConsent = studentPublishConsent;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
     }
 }

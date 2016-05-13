@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+import studentcapture.datalayer.database.Submission;
 import studentcapture.feedback.FeedbackModel;
 
 import java.io.*;
@@ -60,12 +61,12 @@ public class FilesystemInterface {
 		return path;
 	}
 
-	public static String generatePathFromModel(FeedbackModel model){
+	public static String generatePathFromModel(Submission submission){
 		String path = generatePath(
-				model.getCourseCode(),
-				model.getCourseID(),
-				""+model.getAssignmentID(),
-				""+model.getStudentID());
+				submission.getCourseCode(),
+				submission.getCourseID(),
+				""+submission.getAssignmentID(),
+				""+submission.getStudentID());
 
 		return path;
 	}
@@ -219,7 +220,7 @@ public class FilesystemInterface {
 	 * @param userId from database
 	 * @return true if video was stored successfully
 	 */
-	public static boolean storeFeedbackText(FeedbackModel model, MultipartFile source) {
+	public static boolean storeFeedbackText(Submission model, MultipartFile source) {
 		return storeFeedbackText(
 				model.getCourseCode(),
 				model.getCourseID(),
@@ -287,11 +288,11 @@ public class FilesystemInterface {
 
     /**
      * Reads a feedback text file from a teacher from the moose hard drive and returns it.
-     * @param model the feedback model containing params to generate the path to the file.
+     * @param submission the submission model containing params to generate the path to the file.
      * @return the teacher's written feedback as a string.
      */
-	public static String getFeedbackText(FeedbackModel model) {
-		String path = generatePathFromModel(model)+FilesystemConstants.FEEDBACK_TEXT_FILENAME;
+	public static String getFeedbackText(Submission submission) {
+		String path = generatePathFromModel(submission)+FilesystemConstants.FEEDBACK_TEXT_FILENAME;
 		String feedbackText = "";
 		try {
 			String line;

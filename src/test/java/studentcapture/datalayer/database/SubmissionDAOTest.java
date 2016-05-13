@@ -187,7 +187,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      */
     @Test
     public void getGradeShouldReturnNullOnGradeAndTeacher() {
-        FeedbackModel model = createFeedbackModel(1,1);
+        Submission model = createSubmissionModel(1,1);
         Map result = submissionDAO.getGrade(model);
         assertEquals(null, result.get("grade"));
         assertEquals(null, result.get("teacher"));
@@ -201,8 +201,8 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      */
     @Test
     public void getGradeShouldReturnAllValues() {
-        FeedbackModel model = createFeedbackModel(1,3);
-        Map result = submissionDAO.getGrade(model);
+        Submission submission = createSubmissionModel(1,3);
+        Map result = submissionDAO.getGrade(submission);
         assertEquals("MVG", result.get("grade"));
         assertEquals("abcd defg", result.get("teacher"));
         assertEquals("2016-05-13 11:00:00.0", result.get("time"));
@@ -215,8 +215,8 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      */
     @Test
     public void getGradeShouldHandleNonExistingIds() {
-        FeedbackModel model = createFeedbackModel(3546,124);
-        Map result = submissionDAO.getGrade(model);
+        Submission submission = createSubmissionModel(3546,124);
+        Map result = submissionDAO.getGrade(submission);
         assertEquals(null, result.get("grade"));
         assertEquals(null, result.get("teacher"));
         assertEquals(null, result.get("time"));
@@ -224,11 +224,11 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
                 result.get("error"));
     }
 
-    private FeedbackModel createFeedbackModel(int assignmentID, int studentID) {
-        FeedbackModel model = new FeedbackModel();
-        model.setAssignmentID(assignmentID);
-        model.setStudentID(studentID);
-        return model;
+    private Submission createSubmissionModel(int assignmentID, int studentID) {
+        Submission submission = new Submission();
+        submission.setAssignmentID(assignmentID);
+        submission.setStudentID(studentID);
+        return submission;
     }
 
     /**

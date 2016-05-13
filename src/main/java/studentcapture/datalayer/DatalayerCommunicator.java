@@ -52,14 +52,15 @@ public class DatalayerCommunicator {
      * Gets the feedback, the actual grade, the grader and the time for a graded submission from the
      * database and the file system.
      *
-     * @param model
+     * @param submission
      * @return
      */
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
-    public Map<String, Object> getGrade(@Valid FeedbackModel model) {
-        Map result = submissionDAO.getGrade(model);
-        result.put("feedback", fsi.getFeedbackText(model));
+    public Map<String, Object> getGrade(@Valid Submission submission) {
+        Map result = submissionDAO.getGrade(submission);
+        submission.setCourseCode(courseDAO.getCourseCodeFromId(submission.getCourseID()));
+        result.put("feedback", fsi.getFeedbackText(submission));
         return result;
     }
 
