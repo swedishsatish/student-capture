@@ -75,12 +75,12 @@ var AssignmentStart = React.createClass({
                                : <div />;
         var recordContent = this.state.startRecording
                             ? <div>
-                                <StudentRecordVideo /><br />
-                                <BlankBox />
+                                <StudentRecordVideo />
+                               
                               </div>
                             : <div>
-                                <StudentRecordVideo /><br />
-                                <BlankBox />
+                                <StudentRecordVideo />
+
                               </div>;
         return (
             <div id="assignment-modal">

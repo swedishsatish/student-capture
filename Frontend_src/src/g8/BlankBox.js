@@ -62,10 +62,9 @@ window.BlankBox = React.createClass({
             );
         } else { // the button to render
             return (
-                <div>
-                    <button class="btn btn-default" data-dismiss="modal" onClick={this.handleClick}>Withdraw</button>
 
-                </div>
+                    <button onClick={this.handleClick}>Withdraw</button>
+
             );
         }
     }

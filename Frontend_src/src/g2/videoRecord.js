@@ -284,7 +284,7 @@ var Recorder = React.createClass({
         return (
             <div>
                 <div id="prev-container">
-                    <video id={id} muted height="100%" width="100%" ></video>
+                    <video id={id} muted ></video>
                 </div>
                 <p id={pId}></p>
             </div>
