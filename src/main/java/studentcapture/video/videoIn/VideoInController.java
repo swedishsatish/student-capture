@@ -30,6 +30,7 @@ public class VideoInController {
      * Will send a video and information to DataLayerCommunicator.
      *
      * @return Status 200 if success. Status 400 on bad request. Status 500 on error.
+     * @author c13ljn (modified to support assignment videos)
      */
     @CrossOrigin()
     @RequestMapping(value = "/uploadVideo/{id}",
@@ -62,8 +63,14 @@ public class VideoInController {
         }
 
         // Generate path that will be used by the DataLayerCommunicator.
-        final String uri = "https://localhost:8443/DB/addSubmission/" +
-                courseCode+"/"+courseID+"/"+assignmentID+"/"+userID;
+        final String uri;
+        if (videoType.equals("assignment")) {
+            uri = "https://localhost:8443/DB/createAssignmentVideo/" +
+                    courseCode + "/" + courseID + "/" + assignmentID;
+        } else {
+            uri = "https://localhost:8443/DB/addSubmission/" +
+                    courseCode + "/" + courseID + "/" + assignmentID + "/" + userID;
+        }
 
         try {
             // Get the bytes from the video
@@ -82,7 +89,7 @@ public class VideoInController {
             MultiValueMap<String, Object> requestParts = new LinkedMultiValueMap<>();
             requestParts.add("video", videoResource);
 
-            // Send the submission video as a POST request to DataLayerCommunicator at /DB/addSubmission
+            // Send the submission video as a POST request to DataLayerCommunicator at the generated uri
             String response = requestSender.postForObject(uri, requestParts, String.class);
 
             if(response == null) {
