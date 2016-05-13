@@ -27,10 +27,24 @@ public class UserSettingsController {
             @RequestParam("userID") String userID,
             @RequestParam("language") String language,
             @RequestParam("emailAddress") String emailAddress,
-            @RequestParam("textSize") String textSize,
-            @RequestParam("newUser") boolean newUser) {
+            @RequestParam("textSize") String textSize) {
 
         //TODO: Implement communication with DatalayerCommunicator.
+
+
+
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    @CrossOrigin()
+    @RequestMapping(value = "/settings",
+            method = RequestMethod.GET)
+    public ResponseEntity<String> receiveSettings(
+            @RequestParam("userID") String userID) {
+
+        //TODO: Implement communication with DatalayerCommunicator.
+
+
 
         return new ResponseEntity<String>(HttpStatus.OK);
     }

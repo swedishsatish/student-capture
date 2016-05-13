@@ -45,6 +45,9 @@ var CourseList = React.createClass({
     studentRecordVideo : function() {
         ReactDOM.render(<StudentRecordVideo />, document.getElementById('courseContent'));
     },
+    settings : function() {
+        ReactDOM.render(<Settings userID="1"/>, document.getElementById('courseContent'));
+    },
 	render : function() {
 		var listComponents = [];
         listComponents.push(<div className="menuItem" key={1} onClick={this.printVideo} ><div><h6 className="navigationText">Video Playback</h6></div></div>);
@@ -53,7 +56,8 @@ var CourseList = React.createClass({
         listComponents.push(<div className="menuItem" key={4} onClick={this.newAssignment}><div><h6 className="navigationText">Teacher new assignment</h6></div></div>);
         listComponents.push(<div className="menuItem" key={5} onClick={this.teacherRecordVideo}><div><h6 className="navigationText">Teacher Record Video</h6></div></div>);
         listComponents.push(<div className="menuItem" key={6} onClick={this.studentRecordVideo}><div><h6 className="navigationText">Student Record Video</h6></div></div>);
-		return <div>{listComponents}</div>;
+        listComponents.push(<div className="menuItem" key={7} onClick={this.settings}><div><h6 className="navigationText">Settings</h6></div></div>);
+        return <div>{listComponents}</div>;
 	}
 });
 ReactDOM.render(<CourseList />, document.getElementById('desktopNavigation'));
