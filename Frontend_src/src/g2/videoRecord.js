@@ -224,6 +224,10 @@ var Recorder = React.createClass({
 
 
             });
+            var hasModal = document.getElementById("assignment-modal");
+            if (hasModal !== null) {
+                hasModal.style.display = 'none';
+            }
         };
 
         function xhr(url, data, callback) {

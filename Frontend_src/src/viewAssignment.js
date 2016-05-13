@@ -84,6 +84,7 @@ var AssignmentStart = React.createClass({
                               </div>;
         return (
             <div id="assignment-modal">
+            <div class="modal-dialog">
                 <div id="assignment-content" className="modal-content">
                     <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
                     <div id="question-div">
@@ -96,6 +97,8 @@ var AssignmentStart = React.createClass({
                     <div id="answer-div">
                         {recordContent}
                     </div>
+
+            </div>
                 </div>
             </div>
         )

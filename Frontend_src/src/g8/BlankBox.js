@@ -9,6 +9,7 @@ window.BlankBox = React.createClass({
     result: false, // result from submission post
 
     handleClick: function () {
+        document.getElementById("assignment-modal").style.display = 'none';
         if (confirm("You will leave a blank for this question")) { // if user really wants to leave blank
         // send an http ajax post
             $.ajax({
@@ -62,7 +63,8 @@ window.BlankBox = React.createClass({
         } else { // the button to render
             return (
                 <div>
-                    <button onClick={this.handleClick}>Withdraw</button>
+                    <button class="btn btn-default" data-dismiss="modal" onClick={this.handleClick}>Withdraw</button>
+
                 </div>
             );
         }
