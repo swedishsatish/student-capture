@@ -51,7 +51,7 @@ var HardwareTest = React.createClass({
             <div>
                 <h3>Equipment testing</h3>
                 <div className="row" id="">
-                    <div className="six columns" id="rec-test-container"><h5>Recording you</h5>
+                    <div className="six columns" id="rec-test-container"><h5 color="black">Recording you</h5>
                         <Recorder playCallback={this.playVideo} calc={this.calcSpeed}
                                   postURL="/video/textTest" formDataBuilder={this.formDataBuilder}
                                   recButtonID="record-test" stopButtonID="stop-test" fileName="testVid.webm"
@@ -70,7 +70,7 @@ var HardwareTest = React.createClass({
                         <button id="record-test" className="recControls">Record</button>
 
                         <button id="stop-test" className="recControls" disabled>Stop</button>
-
+                        
                     </div>
                     <div className="two columns u-pull-right">
                         <button className="md-close">Close</button>

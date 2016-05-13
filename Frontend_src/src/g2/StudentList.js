@@ -21,7 +21,9 @@ var StudentList = React.createClass ({
             date:event.currentTarget.childNodes[1].innerText,
             grade: event.currentTarget.childNodes[2].innerText,
         }*/
-        console.log(user.studentName + "_" + user.submitionDate + "_" + user.grade + "_" + user.assignmentID);
+        console.log(user.studentName + "_" + user.submissionDate + "_" + user.grade + "_" + user.assignmentID);
+        console.log("jebjeb");
+        document.getElementById("answerContainer").innerHTML = ""; //TODO: find better solution.
         ReactDOM.render(<RenderHandle />,document.getElementById("answerContainer"));
         //TODO: render other user story.
     },
@@ -33,7 +35,7 @@ var StudentList = React.createClass ({
            // console.log(tmp);
             return <tr onClick={tmp.clickhandle.bind(tmp,user)}>
                 <td>{user.studentName}</td>
-                <td>{user.submitionDate}</td>
+                <td>{user.submissionDate}</td>
                 <td>{user.grade}</td>
 
             </tr>
