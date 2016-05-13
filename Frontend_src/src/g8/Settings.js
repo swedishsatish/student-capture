@@ -5,27 +5,17 @@
  */
 
 window.Settings = React.createClass({
-
+    
     /*
-     These attributes are currently not used.
+    Function that is automatically called after the component is rendered.
+    It fills the settings panel with the users current settings.
      */
-    textSize: 12,
-    emailAddress: "",
-    language: "",
-
     componentDidMount: function () {
         var settingsArray = this.GETSettings();
-
-        settingsArray.userID = "1";
-        settingsArray.emailAddress = "benjamin@calleinc.se";
-        settingsArray.language = "Swedish";
-        settingsArray.textSize = "16";
-        
         document.getElementById("emailAddressInput").value = settingsArray.emailAddress;
         document.getElementById("ts" + settingsArray.textSize).selected = true;
         document.getElementById("lang" + settingsArray.language).selected = true;
-
-        //TODO: something
+        document.getElementById("emailCheckbox").checked = settingsArray.receiveEmails;
     },
 
     /*
@@ -49,24 +39,30 @@ window.Settings = React.createClass({
                 "userID": this.props.userID + "",
                 "language": document.getElementById("languageSelect").value + "",
                 "emailAddress": document.getElementById("emailAddressInput").value + "",
-                "textSize": document.getElementById("textSizeSelect").value + ""
+                "textSize": document.getElementById("textSizeSelect").value + "",
+                "receiveEmails": document.getElementById("emailCheckbox").checked
             },
             function () {
                 console.log("Saved");
             }
         );
-
     },
 
+    /*
+    Gets the saved settings for the current user. This is in order to show what the
+    current settings are, for the user.
+     */
     GETSettings: function () {
 
+        // Array to fill with actual values, from the database, and return
         var settingsArray = {
             userID: "",
             language: "",
             emailAddress: "",
-            textSize: ""
+            textSize: "",
+            receiveEmails: true
         };
-        console.log("GETSettings: userID: " + this.props.userID);
+        
         $.ajax({
             url: window.globalURL + "/settings",
             type: "GET",
@@ -75,13 +71,16 @@ window.Settings = React.createClass({
                 "userID": this.props.userID + ""
             },
             success: function (data, status) {
-                console.log("Success GET");
+                settingsArray.userID = data.userID;
+                settingsArray.emailAddress = data.emailAddress;
+                settingsArray.textSize = data.textSize;
+                settingsArray.language = data.language;
+                settingsArray.receiveEmails = data.receiveEmails;
             }.bind(this),
             error: function (xhr, status, err) {
-                console.log("Error GET");
+                console.log("Settings.js: Error: GETSettings");
             }.bind(this)
     });
-
         return settingsArray
     },
 
@@ -100,6 +99,8 @@ window.Settings = React.createClass({
                         <input id="emailAddressInput" type="text" name="emailaddress" disabled/>
                         <input type="submit" value="Edit email" onClick={this.changeEmailInputState}/>
                     </div>
+                    I want to receive email notifications:<br />
+                    <input type="checkbox" id="emailCheckbox"/><br />
 
                     Text size:<br />
                     <select id="textSizeSelect" selected="">

@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+
 /**
- * Created by andreassavva on 2016-05-12.
+ * Created by Andreas Savva, Squad 8
  */
 @RestController
 public class UserSettingsController {
@@ -27,25 +29,38 @@ public class UserSettingsController {
             @RequestParam("userID") String userID,
             @RequestParam("language") String language,
             @RequestParam("emailAddress") String emailAddress,
-            @RequestParam("textSize") String textSize) {
+            @RequestParam("textSize") String textSize,
+            @RequestParam("receiveEmails") boolean receiveEmails){
 
         //TODO: Implement communication with DatalayerCommunicator.
-
-
 
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
+    /**
+     * Returns user settings from the database.
+     *
+     * @param userID The user ID of requested user
+     * @return A JSON object containing user setting information
+     */
     @CrossOrigin()
     @RequestMapping(value = "/settings",
             method = RequestMethod.GET)
-    public ResponseEntity<String> receiveSettings(
+    public HashMap<String, String> receiveSettings(
             @RequestParam("userID") String userID) {
+
+        HashMap<String, String> hashMap = new HashMap<>();
 
         //TODO: Implement communication with DatalayerCommunicator.
 
+        // Hard coded values for testing.
+        hashMap.put("userID", "1");
+        hashMap.put("emailAddress", "benjamin@calleinc.se");
+        hashMap.put("textSize", "16");
+        hashMap.put("language","Swedish");
+        hashMap.put("receiveEmails","true");
 
-
-        return new ResponseEntity<String>(HttpStatus.OK);
+        // hashMap as JSON
+        return hashMap;
     }
 }
