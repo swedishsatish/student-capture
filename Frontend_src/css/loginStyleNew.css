@@ -22,14 +22,14 @@ body {
 	width:94%;
 }
 
-#loginPage {
+#loginDiv {
 	height:100%;
 }
 
 #registerButton {
 	position:fixed;
-	top:10px;
-	right:120px;
+	top:60px;
+	right:10px;
 }
 
 #loginButton {
@@ -45,7 +45,7 @@ body {
 }
 
 .nameField {
-	width:44%;
+	width:43%;
 }
 
 #firstName {
@@ -76,11 +76,11 @@ body {
 }
 
 #cnclBtn {
-	margin-right:2%;
+	margin-right:0%;
 }
 
 #regBtn {
-	margin-left:2%; 
+	margin-left:4%; 
 }
 
 #regText {
@@ -95,21 +95,40 @@ body {
     position: absolute;
     top:101%;
     left: center;
-    color:white; 
+    color:#FFFFFF; 
     margin:5px; 
  
 }
 
+#registerPage {
+    display:none;
+}
+
 input:invalid{
-color:red;
+color:#EC7E15;
 }
 
 /*------------------------------------modal-----------------------------------*/
 
 #modalBtn {
-	position:fixed;
-	top:10px;
-	right:10px;
+	position: absolute;
+	top:0;
+	background-color: #424242;
+	height:50px;
+	text-align: center;
+	overflow-y:auto;
+	cursor: pointer;
+}
+
+#sysReqs {
+	color: #fafafa;
+	margin: auto;
+	cursor: pointer;
+}
+
+#readMore {
+	color: #EC7E15;
+	cursor: pointer;
 }
 
 /* The Modal (background) */
@@ -122,7 +141,7 @@ color:red;
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
+    overflow-y: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
@@ -143,6 +162,7 @@ color:red;
     float: right;
     font-size: 28px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .close:hover, {
