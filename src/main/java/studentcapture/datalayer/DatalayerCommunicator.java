@@ -1,7 +1,6 @@
 package studentcapture.datalayer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.*;
 import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
@@ -19,10 +17,10 @@ import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
 
 import javax.validation.Valid;
-
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -88,22 +86,22 @@ public class DatalayerCommunicator {
     /**
      * Save grade for a submission
      *
-     * @param submission Object containing assignmentID, studentID
-     * @param grade Object containing grade, teacherID, date, publish
+     * @param submission An object representing a submission
+     * @param grade An object representing a grade
      * @return True if the grade was successfully saved to the database, else false
      */
     @CrossOrigin
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
     public boolean setGrade(@RequestParam(value = "Submission") Submission submission,
-                            @RequestParam(value = "Grade") Grade grade) throws IllegalFormatException {
-        String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID() + "");
+                            @RequestParam(value = "Grade") Grade grade) {
+        String courseID = assignment.getCourseIDForAssignment(String.valueOf(submission.getAssignmentID()));
         submission.setCourseID(courseID);
         return submissionDAO.setGrade(submission, grade);
     }
 
     /**
      * Set feedback for a submission, video and text cannot be null
-     * @param submission Object containing assignmentID, studentID
+     * @param submission An object representing a submission
      * @param feedbackVideo Video feedback
      * @param feedbackText Text feedback
      * @return True if feedback was successfully saved to the database, else false
@@ -113,19 +111,34 @@ public class DatalayerCommunicator {
     public boolean setFeedback(@RequestParam(value = "Submission") Submission submission,
                                @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
                                @RequestParam(value = "feedbackText") MultipartFile feedbackText) {
-        String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID() + "");
+        String courseID = assignment.getCourseIDForAssignment(String.valueOf(submission.getAssignmentID()));
         String courseCode = courseDAO.getCourseCodeFromId(courseID);
         int feedback = 0;
     	if(feedbackVideo != null) {
-            fsi.storeFeedbackVideo(courseCode, courseID, submission.getAssignmentID() + "", submission.getStudentID() + "", feedbackVideo); // submission.getstudentID() should be int/String?
+            fsi.storeFeedbackVideo(courseCode, courseID, String.valueOf(submission.getAssignmentID()), String.valueOf(submission.getStudentID()), feedbackVideo);
             feedback++;
         }
         if(feedbackText != null) {
-            fsi.storeFeedbackText(courseCode, courseID, submission.getAssignmentID() + "", submission.getStudentID() + "", feedbackText); // submission.getstudentID() should be int/String?
+            fsi.storeFeedbackText(courseCode, courseID, String.valueOf(submission.getAssignmentID()), String.valueOf(submission.getStudentID()), feedbackText);
             feedback++;
         }
 
         return feedback != 0;
+    }
+
+    /**
+     * Publish feedback to the student
+     * @param submission An object representing a submission
+     * @param publish A boolean, true represent publish and false unpublish
+     * @return True if feedback could be published/unpublished, else false
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/publishFeedback", method = RequestMethod.POST)
+    public boolean publishFeedback(@RequestParam(value = "Submission") Submission submission,
+                               @RequestParam(value = "Publish") boolean publish) {
+        String courseID = assignment.getCourseIDForAssignment(String.valueOf(submission.getAssignmentID()));
+        submission.setCourseID(courseID);
+        return submissionDAO.publishFeedback(submission, publish);
     }
 
     /**
@@ -438,7 +451,7 @@ public class DatalayerCommunicator {
      * including students that are part of the course but has not yet made a
      * submissionDAO.
      *
-     * @param assignmentID		assignment identifier
+     * @param userID		assignment identifier
      * @return					list of submissions
      */
     @CrossOrigin

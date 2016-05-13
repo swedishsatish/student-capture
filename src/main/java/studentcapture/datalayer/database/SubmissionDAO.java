@@ -42,9 +42,9 @@ public class SubmissionDAO {
     public boolean publishFeedback(Submission submission, boolean publish) {
         /* Publishing feedback without a grade is not possible, returns false */
         Grade grade = submission.getGrade();
-        System.out.println("GRADE: " + grade);
         if (grade == null)
             return false;
+
         /* If a person that is not a teacher tries to set a grade, return false */
         String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
         int rows = jdbcTemplate.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
