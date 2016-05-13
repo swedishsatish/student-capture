@@ -1,8 +1,8 @@
 /**
- * Created by c13lbm on 4/26/16.
+ * A table with all the students who have grades or should be graded
+ * @author c13lbm
+ * @revision dv13tes
  */
-
-
 
 var StudentList = React.createClass ({
 
@@ -18,6 +18,11 @@ var StudentList = React.createClass ({
 
     },
 
+    /**
+     * Starts the submit feedback when a user is clicked
+     * @param user the user who gets feedback
+     * @param event
+     */
     clickhandle: function (user,event) {
         console.log(event);
         console.log(user);

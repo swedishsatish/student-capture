@@ -54,7 +54,7 @@ window.CreateCourse = React.createClass({
 
 
         }
-
+        
         request.open('POST', window.globalURL + "/DB/addCourseWithTeacher",true);
 
         request.send(fd);
