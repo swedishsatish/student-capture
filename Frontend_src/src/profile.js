@@ -38,13 +38,11 @@ window.NewProfile = React.createClass({
     clickFaqHandler: function () {
         ReactDOM.render(<FAQInfo />, document.getElementById('modal-container'));
         reloadScripts();
-
     },
 
 	clickSettingsHandler: function () {
-		ReactDOM.render(<Settings />, document.getElementById('modal-container'));
+		ReactDOM.render(<Settings userID={this.props.userID}/>, document.getElementById('modal-container'));
 		reloadScripts();
-
 	},
 	render : function() {
 		/*return <div className="three columns offset-by-nine" id="profile">
