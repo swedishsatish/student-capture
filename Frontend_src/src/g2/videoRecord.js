@@ -112,6 +112,12 @@ var Recorder = React.createClass({
             }
             stop.disabled = false;
             recordAudio.startRecording();
+            if(typeof props.calc !== "undefined") {
+                document.getElementById("test-rec-text").innerHTML = "Recording..";
+            }
+            else {
+                document.getElementById("rec-text").innerHTML = "Recording..";
+            }
         };
 
         // Start stream from webcam and start record if autoRecording is true,
@@ -207,6 +213,16 @@ var Recorder = React.createClass({
                         }
                     }
                 }
+                localStream.stop();
+                localStream = null;
+                if(typeof props.calc !== "undefined") {
+                    document.getElementById("test-rec-text").innerHTML = "";
+                }
+                else {
+                    document.getElementById("rec-text").innerHTML = "";
+                }
+
+
             });
         };
 
@@ -251,11 +267,14 @@ var Recorder = React.createClass({
     },
     render: function() {
         var id;
+        var pId;
         if(typeof this.props.calc !== "undefined") {
             id="prev-test";
+            pId="test-rec-text"
         }
         else {
             id="preview";
+            pId="rec-text"
         }
 
         return (
@@ -263,6 +282,7 @@ var Recorder = React.createClass({
                 <div id="prev-container">
                     <video id={id} muted height="100%" width="100%" ></video>
                 </div>
+                <p id={pId}></p>
             </div>
         );
     }

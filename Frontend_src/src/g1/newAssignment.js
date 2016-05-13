@@ -1,17 +1,19 @@
 var NewAssignment = React.createClass({
     render : function() {
       return <div>
-                <form id="form" action="assignment" method="post">
+            <form id="form" action="assignment" method="post">
+                <h1>CREATE NEW ASSIGNMENT FOR COURSE (course code, course id)</h1>
                 <input className="inputField" id="title" type="text" placeholder="title" /><br/>
-                <input className="inputField" id="info" type="text" placeholder="description" /><br/>
+                <textarea className="inputField" id="description" type="text" placeholder="description" /><br/>
                 <p>VIDEO RECORDING COMPONENT GOES HERE</p>
+                <textarea className="inputField" id="questionInformation" type="text" placeholder="question" /><br />
                 <input id="startDate" type="datetime-local" /><br/>
                 <input id="endDate" type="datetime-local" /><br/>
                 <input id="minTimeSeconds" type="text" placeholder="minTimeSeconds" /><br/>
                 <input id="maxTimeSeconds" type="text" placeholder="maxTimeSeconds" /><br/>
                 <input id="isPublished" type="checkbox" value="Car"/>Publish Assignment<br/>
-                <div className="button primary-button" onClick = {handleCancel}> CANCEL </div>
-                <div className="button primary-button" onClick = {submitAssignment}> SUBMIT </div>
+                <div className="button primary-button SCButton" onClick = {handleCancel}> CANCEL </div>
+                <div className="button primary-button SCButton" onClick = {submitAssignment}> SUBMIT </div>
             </form>
         </div>
     }
@@ -24,7 +26,8 @@ function handleCancel() {
 function submitAssignment() {
     var reqBody = {}
     reqBody["title"] = $("#title").val();
-    reqBody["info"] = $("#info").val();
+    reqBody["info"] = $("#description").val();
+    reqBody["question"] = $("#questionInformation").val();
     reqBody["minTimeSeconds"] = $("#minTimeSeconds").val();
     reqBody["maxTimeSeconds"] = $("#maxTimeSeconds").val();
     reqBody["startDate"] = $("#startDate").val();
@@ -77,6 +80,4 @@ window.CourseContent = React.createClass({
         );
     }
 });
-
-//ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
 window.NewAssignment = NewAssignment;
