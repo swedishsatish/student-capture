@@ -45,7 +45,7 @@ var StudentList = React.createClass ({
     render: function (){
         
         var tmp = this;
-        var userList = this.props.students.map(function (user) {
+        var userList = window.users.map(function (user) {
            // console.log(tmp);
             return <tr onClick={tmp.clickhandle.bind(tmp,user)}>
                 <td>{user.studentName}</td>
