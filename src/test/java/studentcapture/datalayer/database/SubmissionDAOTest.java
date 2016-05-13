@@ -40,6 +40,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         String sql4 = "INSERT INTO Course VALUES ('PVT',2016, 'VT', '1234', 'ABC', null, true);";
         String sql5 = "INSERT INTO Assignment VALUES (1, 'PVT', 'OU1', '2016-05-13 10:00:00', '2016-05-13 12:00:00', 60, 180, null, 'XYZ');";
         String sql6 = "INSERT INTO Submission VALUES (1, 1, null, '2016-05-13 11:00:00', null, null, null);";
+        String sql7 = "INSERT INTO Participant VALUES (3, 'PVT', 'Teacher');";
 
         jdbcMock.update(sql1);
         jdbcMock.update(sql2);
@@ -47,6 +48,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         jdbcMock.update(sql4);
         jdbcMock.update(sql5);
         jdbcMock.update(sql6);
+        jdbcMock.update(sql7);
     }
 
     /**
@@ -58,7 +60,9 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         String sql2 = "DELETE FROM Course;";
         String sql3 = "DELETE FROM Assignment;";
         String sql4 = "DELETE FROM Submission;";
+        String sql5 = "DELETE FROM Participant;";
 
+        jdbcMock.update(sql5);
         jdbcMock.update(sql4);
         jdbcMock.update(sql3);
         jdbcMock.update(sql2);
@@ -70,7 +74,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      */
     @Test
     public void databaseSetUpTest() {
-        String sql = "SELECT * FROM Submission WHERE assignmentID = 1";
+        String sql = "SELECT * FROM Submission WHERE assignmentID = 1 AND studentID = 1";
 
         //Getting values from table Submission
         HashMap<String,String> info = (HashMap<String,String>)
@@ -89,10 +93,10 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     public void setGradeValues() {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 3);
-
+        submission.setCourseID("PVT");
         submissionDAO.setGrade(submission, grade);
 
-        String sql = "SELECT * FROM Submission WHERE assignmentID = 1";
+        String sql = "SELECT * FROM Submission WHERE assignmentID = 1 AND studentID = 1";
 
         //Getting values from table Submission
         HashMap<String,String> info = (HashMap<String,String>)
@@ -109,9 +113,10 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      * Checks the returnvalue from an insertion with correct values
      */
     @Test
-    public void setGradeReturnTrue() {
+    public void gradeExistingAssignment() {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 3);
+        submission.setCourseID("PVT");
 
         boolean returnValue = submissionDAO.setGrade(submission, grade);
 
@@ -122,15 +127,29 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      * Checks the returnvalue from an insertion with incorrect values
      */
     @Test
-    public void setGradeReturnFalse() {
+    public void gradeNonExistingAssignment() {
         Submission submission = new Submission(2,1);
         Grade grade = new Grade("vg", 3);
+        submission.setCourseID("PVT");
 
         boolean returnValue = submissionDAO.setGrade(submission, grade);
 
         assertFalse(returnValue);
     }
 
+    /**
+     * Checks if the teacher trying to set a grade exists in the table, in this test the teacher does not exist and the test should return false
+     */
+    @Test
+    public void nonExistingTeacherSetsGrade() {
+        Submission submission = new Submission(1,1);
+        Grade grade = new Grade("vg", 2);
+        submission.setCourseID("PVT");
+
+        boolean returnValue = submissionDAO.setGrade(submission, grade);
+
+        assertFalse(returnValue);
+    }
 
     /**
      *  Used to collect user information, and return a hashmap.
