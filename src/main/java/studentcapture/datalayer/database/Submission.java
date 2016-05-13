@@ -8,12 +8,20 @@ public class Submission {
     private int assignmentID;
     private boolean studentPublishConsent = false;
     private Grade grade;
+    private String courseID;
 
     public Submission (int studentID, int assignmentID) {
         this.studentID = studentID;
         this.assignmentID = assignmentID;
     }
 
+    public String getCourseID() {
+        return courseID;
+    }
+
+    public void setCourseID(String courseID) {
+        this.courseID = courseID;
+    }
     public void setGrade(Grade grade) {
         this.grade = grade;
     }
