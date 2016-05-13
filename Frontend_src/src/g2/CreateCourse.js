@@ -7,7 +7,7 @@ var generateCourseID = function () {
 }
 
 var callback = function (res,uid) {
-    
+
     if(res){
         alert("Course Added");
         RenderMenu(uid);
@@ -31,6 +31,7 @@ window.CreateCourse = React.createClass({
         fd.append("courseName",$("#course-name").val());
         fd.append("courseDescription",tinymce.get('course-description').getContent());
         fd.append("active",$("#course-active").val());
+        fd.append("userID",uid);
 
         var request = new XMLHttpRequest();
         request.onreadystatechange = function () {
@@ -54,7 +55,7 @@ window.CreateCourse = React.createClass({
 
         }
 
-        request.open('POST', window.globalURL + "/DB/addCourse",true);
+        request.open('POST', window.globalURL + "/DB/addCourseWithTeacher",true);
 
         request.send(fd);
 
