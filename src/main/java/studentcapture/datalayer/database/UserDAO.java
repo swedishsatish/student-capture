@@ -39,7 +39,7 @@ public class UserDAO {
      * Add a new user to the User-table in the database.
      * @param user  instance that contains information of the user to be added.
      */
-    public void addUser(User user) {
+    public boolean addUser(User user) {
 
         String sql = "INSERT INTO users"
                 + " (username, firstname, lastname, email, pswd)"
@@ -54,7 +54,10 @@ public class UserDAO {
         try {
             jdbcTemplate.update(sql, args,types);
         } catch (DataIntegrityViolationException e) {
+			return false;
 		}
+
+		return true;
     }
 
 
