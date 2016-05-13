@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Repository
@@ -43,6 +42,12 @@ public class SubmissionDAO {
 	 * @return True if a row was changed, otherwise false
 	 */
 	public boolean setGrade(Submission submission, Grade grade) {
+        /* If a person that is not a teacher tries to set a grade, return false */
+        String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
+        int rows = jdbcTemplate.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
+        if(rows != 1)
+            return false;
+
 		String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, SubmissionDate = ?, PublishStudentSubmission = ? WHERE (AssignmentID = ?) AND (StudentID = ?);";
 		int updatedRows = jdbcTemplate.update(setGrade, grade.getGrade(), grade.getTeacherID(), grade.getDate(), grade.getPublishStudentSubmission(), submission.getAssignmentID(), submission.getStudentID());
 
@@ -111,7 +116,7 @@ public class SubmissionDAO {
     /**
      * Get all ungraded submissions for an assignment
      *
-     * @param assID The assignment to get submissions for
+     * @param assId The assignment to get submissions for
      * @return A list of ungraded submissions for the assignment
      */
     public Optional<List<SubmissionWrapper>> getAllUngraded(String assId) {
