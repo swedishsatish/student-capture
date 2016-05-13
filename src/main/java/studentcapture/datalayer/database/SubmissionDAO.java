@@ -5,6 +5,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import studentcapture.feedback.FeedbackModel;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -117,7 +118,7 @@ public class SubmissionDAO {
 	 * @param studentID    Unique identifier for the student associated with the submission
 	 * @return A list containing the grade, date, and grader
 	 */
-	public Map<String, Object> getGrade(int studentID, int assignmentID) {
+	public Map<String, Object> getGrade(FeedbackModel model) {
 		String queryForGrade = "SELECT grade, submissiondate as time, " +
 				"concat(firstname,' ', lastname) as teacher FROM " +
 				"submission FULL OUTER JOIN users ON (teacherid = userid)" +
@@ -125,7 +126,7 @@ public class SubmissionDAO {
 		Map<String, Object> response;
 		try {
 			response = databaseConnection.queryForMap(queryForGrade,
-					new Object[]{studentID, assignmentID});
+					new Object[]{model.getStudentID(), model.getAssignmentID()});
 		response.put("time", response.get("time").toString());
 		if (response.get("teacher").equals(" "))
 			response.put("teacher", null);
