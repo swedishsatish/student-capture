@@ -61,12 +61,15 @@ var Assignments = React.createClass({
         var assList = assignments.map(function (ass) {
             return <Assignment key={ass.assignment.assignmentId} courseId={course.course.courseId} assignment={ass} role={role}/>
         });
-        assList.push(<li className="active course menuItem navigationText">
-                        <div onClick={this.handleClick.bind(this,course.course)}>
-                            + New Assignent
-                        </div>
-                    </li>
-        );
+        if(role=="teacher"){
+            assList.push(<li className="active course menuItem navigationText">
+                    <div onClick={this.handleClick.bind(this,course.course)}>
+                        + New Assignent
+                    </div>
+                </li>
+            );
+        }
+
         console.log(assList);
         return <ul>{assList}</ul>;
     }
@@ -156,8 +159,8 @@ window.RenderMenu = function (userID) {
         var TCList = objToList(res.teacherCourses);
         var name = res.firstName + " " + res.lastName;
         ReactDOM.render(<DynamicMenu tList={TCList} sList={SCList} uid={userID}/>, document.getElementById("desktopNavigation"));
-        ReactDOM.render(<NewProfile name={name}/>, document.getElementById('desktopHeader'));
+        ReactDOM.render(<NewProfile name={name} userID={userID}/>, document.getElementById('desktopHeader'));
     });
 }
 
-RenderMenu(1);
+RenderMenu(3);

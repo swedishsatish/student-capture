@@ -1,19 +1,22 @@
 /**
- * Created by Jonas on 2016-05-12.
+ * Displays a FAQ pop-up, used in profile.js and uses CSS defined in hwTest.css
+ *
+ * File    :   FAQInfo.js
+ * Version :   1.0
+ * Date    :   2016-05-13
+ * Author  :   Jonas Nyman, c13jnn
+ *             Victor From, c13vfm
+ *
+ * TODO Enter Questions and Answere
  */
-
-
-
 
 var FAQInfo = React.createClass({
     render: function () {
-
         return (
             <div >
                 <div id="FAQ-header">
                     <h1>FAQ</h1>
                 </div>
-
                 <div className="row" id="faq-className">
                     <div className="twelve columns" id="faq-text">
                     <h5>Vad är detta?</h5>
@@ -26,24 +29,22 @@ var FAQInfo = React.createClass({
                            mer relevant information
                         </p>
                         <h5>Hur svara man på frågan?</h5>
-                        <p>Samma sak som ovanstående, men inom en paragraf istället...</p>
+                            <p>Samma sak som ovanstående, men inom en paragraf istället..</p>
                         <h5>Question 3</h5>
-                        <p>Hejsan</p>
+                            <p>Hejsan</p>
                         <h5>Question 4</h5>
-                        <p>Hejsan</p>
+                            <p>Hejsan</p>
                         <h5>Question 5</h5>
-                        <p>Hejsan</p>
+                            <p>Hejsan</p>
                         <h5>Question 6</h5>
-                        <p>Hejsan</p>
+                            <p>Hejsan</p>
                         <h5>Question 7</h5>
-                        <p>Hejsan</p>
+                         <p>Hejsan</p>
                         <h5>Question 8</h5>
-                        <p>Hejsan</p>
+                            <p>Hejsan</p>
                     </div>
                 </div>
-
                 <div className="row">
-
                     <div className="two columns u-pull-right">
                         <button className="md-close">Close</button>
                     </div>
@@ -51,14 +52,6 @@ var FAQInfo = React.createClass({
             </div>
         );
     }
-
-
-
-
-
-
-
 });
-
 
 window.FAQInfo = FAQInfo;

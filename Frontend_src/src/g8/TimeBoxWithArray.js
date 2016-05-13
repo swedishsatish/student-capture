@@ -1,5 +1,6 @@
 /**
   Class that asks for the start- and end-time of a task/assignment and displays them, also time left
+  @author dv13tes, c13bbn
 */
 window.TimeBoxWithArray = React.createClass({
 
@@ -22,6 +23,9 @@ window.TimeBoxWithArray = React.createClass({
     componentWillMount: function () {
        this.getInitTime();
     },
+    /**
+     * Get
+     */
     getInitTime: function() {
         $.ajax({
             url: window.globalURL + "/assignment/returnArray", // URL to send to

@@ -63,7 +63,8 @@ window.AssignmentContent = React.createClass({
 var AssignmentStart = React.createClass({
     getInitialState: function() {
         return {startCountDown: false,
-                startRecording: false
+                startRecording: false,
+                time: 0
                 };
     },
     render: function() {
@@ -76,6 +77,8 @@ var AssignmentStart = React.createClass({
         var recordContent = this.state.startRecording
                             ? <div>
                                 <StudentRecordVideo /><br />
+                                Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
+                                Current video length: {this.state.time}<br />
                                 <BlankBox />
                               </div>
                             : <div>
@@ -100,11 +103,15 @@ var AssignmentStart = React.createClass({
             </div>
         )
     },
+    tick: function() {
+        this.setState({time: this.state.time + 1});
+    },
     count: function() {
         this.setState({startCountDown: true});
     },
     record: function() {
         this.setState({startRecording: true});
+        this.interval = setInterval(this.tick, 1000);
     }
 });
 

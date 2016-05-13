@@ -52,8 +52,8 @@
 		
 		<!-- forms -->
 		<form id="registerPage" class="forms four columns offset-by-four" th:action="@{/register}" method="POST">
-		
-                <h2 id="regText">registration</h2>
+		            <img src="images/sc-logo.png" id="loginLogo" />
+                <h6 id="regText">registration</h6>
                 
                         <input type="text" id="firstName" 
                                class="loginField nameField" 
@@ -68,23 +68,30 @@
          
                         <input type="text" pattern="^.{6,}$" class="loginField" placeholder="username" name="username" required="required"/>
     					  
-    					<p class="tooltipText">Username must be atleast six characters.</p> 
+    					           
+
+                        <div class="tooltip" id="uNameTip">
+                                <p class="tooltipText">Username must be atleast six characters.</p> 
+                                <div class="point" id="uNamePoint"></div>
+                              </div> 
     					  
                         <input type="password" id="firstPass" class="loginField nameField"
                                placeholder="password" name="password"  
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
-                               required="required"/>
-                        
-                        <p class="tooltipText">Password must contain atleast one upper case character,
-    					 one lower case character and one numeric character.</p> 
+                               required="required">
 
+                               <div class="tooltip">
+                                <p class="tooltipText">
+                                  Password must contain atleast one upper case character,
+                                   one lower case character and one numeric character.
+                                </p>
+                                <div class="point"></div>
+                              </div> 
+                        </input>
                         <input type="password" id="secondPass" class="loginField nameField"
                                placeholder="repeat password" name="confirmpassword" 
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
                                required="required" />
-                               
-                               <p class="tooltipText">Password must contain atleast one upper case character,
-    					 one lower case character and one numeric character.</p> 
 
                 
                 <button type="button" id="cnclBtn" class="SCButton loginField nameField">

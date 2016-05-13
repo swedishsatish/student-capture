@@ -12,6 +12,7 @@ var CourseList = React.createClass({
          });
         var users = [{
             assignmentID: 1000,
+            courseID:36,
             studentID: 21,
             studentName: "Anton Andersson",
             submissionDate: "2010-06-23",
@@ -21,13 +22,14 @@ var CourseList = React.createClass({
             {
                 assignmentID: 1000,
                 studentID: 21,
+                courseID: 23,
                 studentName: "Lukas Lundberg",
                 submissionDate: "2010-06-23",
                 grade: "K",
                 teacherID: 12
             }];
         ReactDOM.render(<StudentList students={users}/>, document.getElementById('courseContent'));
-        var tf1 = setFilterGrid("students-table");
+
     },
 
     printFeedback : function() {
