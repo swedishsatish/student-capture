@@ -21,6 +21,8 @@ public class SubmissionDAO {
 	 * @param assignmentID Unique identifier for the assignment we're submitting to
 	 * @param studentID    Unique identifier for the student submitting
 	 * @return True if everything went well, otherwise false
+     * 
+     * @author tfy12hsm
 	 */
 	public boolean addSubmission(String assignmentID, String studentID, Boolean studentConsent) {
 		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentConsent) VALUES  (?,?,?,?)";
@@ -76,8 +78,7 @@ public class SubmissionDAO {
 		return updatedRows == 1;
 	}
 
-	private static final String removeSubmissionStatement = "DELETE FROM "
-			+ "Submission WHERE (AssignmentId=? AND StudentId=?)";
+	
 
 	/**
 	 * Remove a submission
@@ -85,8 +86,12 @@ public class SubmissionDAO {
 	 * @param assID     Unique identifier for the assignment with the submission being removed
 	 * @param studentID Unique identifier for the student whose submission is removed
 	 * @return True if everything went well, otherwise false
+     * 
+     * @author tfy12hsm
 	 */
 	public boolean removeSubmission(String assID, String studentID) {
+		String removeSubmissionStatement = "DELETE FROM "
+				+ "Submission WHERE (AssignmentId=? AND StudentId=?)";
 		boolean result;
 		int assignmentId = Integer.parseInt(assID);
 		int studentId = Integer.parseInt(studentID);
