@@ -5,10 +5,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import studentcapture.feedback.FeedbackModel;
-import studentcapture.model.Grade;
-import studentcapture.model.Submission;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -48,9 +45,9 @@ public class SubmissionDAO {
     public boolean publishFeedback(Submission submission, boolean publish) {
         /* Publishing feedback without a grade is not possible, returns false */
         Grade grade = submission.getGrade();
+        System.out.println("GRADE: " + grade);
         if (grade == null)
             return false;
-
         /* If a person that is not a teacher tries to set a grade, return false */
         String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
         int rows = databaseConnection.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
