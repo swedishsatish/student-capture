@@ -31,7 +31,7 @@ window.Settings = React.createClass({
         $.post(
             window.globalURL + "/settings",
             {
-                userID: this.props.profile.name,
+                userID: this.props.userID,
                 language: document.getElementById("languageSelect").value,
                 emailAddress: document.getElementById("emailAddressInput").value,
                 textSize: document.getElementById("textSizeSelect").value
