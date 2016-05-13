@@ -20,6 +20,11 @@ import org.springframework.web.context.WebApplicationContext;
 
 import studentcapture.config.StudentCaptureApplicationTests;
 
+/**
+ * Login controller tests
+ * @author Oskar Suikki
+ *
+ */
 public class LoginDBControllerTest extends StudentCaptureApplicationTests {
 	
     @Autowired
@@ -97,7 +102,7 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
     		fail("Password is correct but fails");
     	}
     }
-    
+    /*
     @Test
     public void passwordEquals() throws Exception {
     	String password1 = "someThing";
@@ -117,7 +122,7 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
     		fail("Password equals");
     	}
     }
-    
+    */
     @Test
     public void userLengthIncorrect() throws Exception {
     	String username = "1234";

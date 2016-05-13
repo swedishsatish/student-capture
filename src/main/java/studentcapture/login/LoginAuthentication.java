@@ -66,12 +66,10 @@ public class LoginAuthentication implements AuthenticationProvider {
 	}
 
 	/**
-	 * Sends username and password to the database, 
-	 *     and checks if they are valid.
-	 * 
-	 * @param username
-	 * @param password
-	 * @return true if username and password match in the database, else false
+	 * Checks if user is registered in the database.
+	 * @param username User name
+	 * @param password User input password
+	 * @return true if user name and password match in the database, else false
 	 */
 	public boolean checkUser(String username, String password) {
 	    
