@@ -3,8 +3,8 @@ package studentcapture.lti;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import studentcapture.datalayer.database.Grade;
-import studentcapture.datalayer.database.Submission;
+import studentcapture.model.Grade;
+import studentcapture.model.Submission;
 
 /**
  * Will test the LTICommunicator

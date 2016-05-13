@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.config.StudentCaptureApplication;
-import studentcapture.datalayer.database.Submission;
+import studentcapture.model.Submission;
 
 import java.io.*;
 

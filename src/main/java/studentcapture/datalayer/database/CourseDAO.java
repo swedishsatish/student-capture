@@ -6,6 +6,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.model.Course;
+
 import java.util.Map;
 
 /**
@@ -86,6 +88,37 @@ public class CourseDAO {
 		return result;
 	}
 
+	/**
+	 * 
+	 * 
+	 * @param courseID
+	 * @param description
+	 * @return
+	 */
+	public Boolean changeDescriptionOnCourse(String courseID, 
+			String description) {
+		String changeDescriptionOnCourseStatement = "UPDATE Course SET "
+				+ "CourseDescription=? WHERE CourseId=?";
+		Boolean result = null;
+		
+		try {
+            int rowsAffected = jdbcTemplate.update(
+            		changeDescriptionOnCourseStatement, description, 
+            		courseID);
+            if (rowsAffected == 1) {
+            	result = true;
+            } else {
+            	result = false;
+            }
+        } catch (IncorrectResultSizeDataAccessException e){
+            result = false;
+        } catch (DataAccessException e1){
+            result = false;
+        }
+
+        return result;
+	}
+	
     /**
      * Attempts to remove a course from the database.
      *

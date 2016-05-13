@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.model;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
@@ -20,20 +20,32 @@ public class Submission {
     private String courseID;
     private String courseCode;
     private String feedback;
+    private Status subStatus;
 
-    public Submission() {
+
+    //A submission must have one of these statuses
+    public enum Status {
+        ANSWER("Answer"),
+        NOANSWER("NoAnswer"),
+        BLANK("Blank");
+
+        Status(String status) {
+        }
     }
-    
+
     public Submission (int studentID, int assignmentID) {
         this.studentID = studentID;
         this.assignmentID = assignmentID;
     }
 
+    public Submission() {
+    }
+
     /**
      * Constructor that parses map of database elements.
-     * 
+     *
      * @param map		map retrieved from database
-     * 
+     *
      * @author tfy12hsm
      */
     public Submission(Map<String, Object> map) {
@@ -112,5 +124,13 @@ public class Submission {
 
     public void setFeedback(String feedback) {
         this.feedback = feedback;
+    }
+
+    public Status getSubStatus() {
+        return subStatus;
+    }
+
+    public void setSubStatus(Status subStatus) {
+        this.subStatus = subStatus;
     }
 }

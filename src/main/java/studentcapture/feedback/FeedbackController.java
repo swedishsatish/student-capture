@@ -7,11 +7,11 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import studentcapture.assignment.AssignmentModel;
-import studentcapture.datalayer.database.Submission;
 import studentcapture.lti.LTICommunicator;
 import studentcapture.lti.LTIInvalidGradeException;
 import studentcapture.lti.LTINullPointerException;
 import studentcapture.lti.LTISignatureException;
+import studentcapture.model.Submission;
 
 import javax.validation.Valid;
 import java.net.URI;

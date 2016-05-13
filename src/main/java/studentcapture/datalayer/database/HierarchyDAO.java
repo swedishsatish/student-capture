@@ -7,8 +7,10 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import studentcapture.datalayer.database.Hierarchy.AssignmentPackage;
-import studentcapture.datalayer.database.Hierarchy.CoursePackage;
+import studentcapture.model.Hierarchy;
+import studentcapture.model.Submission;
+import studentcapture.model.Hierarchy.AssignmentPackage;
+import studentcapture.model.Hierarchy.CoursePackage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
