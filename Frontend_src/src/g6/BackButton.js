@@ -19,7 +19,7 @@ var BackButton = React.createClass({
     render: function() {
 
         return(
-            <button id="backButton" onClick={this.onClick}>Back</button>
+            <button id="backbutton" onClick={this.onClick}>Back</button>
 
         );
     }

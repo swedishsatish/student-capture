@@ -99,6 +99,17 @@ body {
    	border-radius: 6px;
 }
 
+#uNameTip {
+	bottom:100px;
+}
+
+#uNamePoint {
+	top:6px;
+	border-top: 20px solid transparent;
+   	border-left: 40px solid #EC7E15;
+   	border-bottom: 20px solid transparent;
+}
+
 .tooltipText {
 	color:#FAFAFA;
 	line-height: 20px;
@@ -106,7 +117,7 @@ body {
 	margin-left: 6px;
 }
 
-#point {
+.point {
 	content:"";
    	position: absolute;
    	left: 100%;
