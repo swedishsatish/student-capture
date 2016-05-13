@@ -10,7 +10,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by c13bll on 2016-04-26.
  */
-public class UserDataTest {
+public class UserDAODataTest {
     UserData ud;
 
     @Before

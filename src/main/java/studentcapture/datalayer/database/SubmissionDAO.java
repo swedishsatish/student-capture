@@ -43,7 +43,7 @@ public class SubmissionDAO {
 	 * @return True if a row was changed, otherwise false
 	 */
 	public boolean setGrade(Submission submission, Grade grade) {
-		String setGrade = "UPDATE Submission (Grade, TeacherID, Date, teacherConsent) = (?, ?, ?, ?) WHERE (AssignmentID = ?) AND (StudentID = ?)";
+		String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, SubmissionDate = ?, PublishStudentSubmission = ? WHERE (AssignmentID = ?) AND (StudentID = ?);";
 		int updatedRows = jdbcTemplate.update(setGrade, grade.getGrade(), grade.getTeacherID(), grade.getDate(), grade.getPublishStudentSubmission(), submission.getAssignmentID(), submission.getStudentID());
 
 		return updatedRows == 1;

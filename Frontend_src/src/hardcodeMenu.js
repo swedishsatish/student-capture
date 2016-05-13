@@ -10,23 +10,30 @@ var CourseList = React.createClass({
              //console.log(users);
              ReactDOM.render(<StudentList students={res}/>, document.getElementById('courseContent'));
          });
-        /*var users = [{
+        var users = [{
             assignmentID: 1000,
+            courseID:36,
             studentID: 21,
             studentName: "Anton Andersson",
-            submitionDate: "2010-06-23",
+            submissionDate: "2010-06-23",
             grade: "G",
             teacherID: 12
         },
             {
                 assignmentID: 1000,
                 studentID: 21,
+                courseID: 23,
                 studentName: "Lukas Lundberg",
-                submitionDate: "2010-06-23",
-                grade: "VG",
+                submissionDate: "2010-06-23",
+                grade: "K",
                 teacherID: 12
-            }];*/
-        //ReactDOM.render(<StudentList students={users}/>, document.getElementById('courseContent'));
+            }];
+        ReactDOM.render(<StudentList students={users}/>, document.getElementById('courseContent'));
+        var table11_Props = {
+            filters_row_index: 1,
+            remember_grid_values: true
+        };
+        setFilterGrid( "students-table",table11_Props )
     },
 
     printFeedback : function() {

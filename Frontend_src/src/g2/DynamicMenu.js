@@ -4,10 +4,16 @@
 
 
 var objToList = function (obj) {
-    var res = Object.keys(obj).map(function(key){
-        return obj[key];
-    });
-    return res;
+    if(typeof obj !== "undefined"){
+        var res = Object.keys(obj).map(function(key){
+            return obj[key];
+        });
+        return res;
+    }
+    else {
+        return [];
+    }
+
 }
 
 
@@ -45,6 +51,9 @@ var Assignment = React.createClass({
     }
 });
 var Assignments = React.createClass({
+    handleClick: function (course, event) {
+        ReactDOM.render(<NewAssignment courseID={course.courseId} courseCode={course.courseCode} />,document.getElementById("courseContent"))
+    },
     render: function() {
         var course = this.props.course;
         var role = this.props.role;
@@ -52,7 +61,12 @@ var Assignments = React.createClass({
         var assList = assignments.map(function (ass) {
             return <Assignment key={ass.assignment.assignmentId} courseId={course.course.courseId} assignment={ass} role={role}/>
         });
-
+        assList.push(<li className="active course menuItem navigationText">
+                        <div onClick={this.handleClick.bind(this,course.course)}>
+                            + New Assignent
+                        </div>
+                    </li>
+        );
         console.log(assList);
         return <ul>{assList}</ul>;
     }
@@ -84,7 +98,9 @@ var Course = React.createClass({
 
 
 var DynamicMenu = React.createClass({
-
+    handleClick: function (userID,event) {
+        ReactDOM.render(<CreateCourse uid={userID}/>,document.getElementById("courseContent"));
+    },
 
     render: function () {
 
@@ -119,16 +135,29 @@ var DynamicMenu = React.createClass({
             <div>
                 {teach}
                 {stud}
+                <br/>
+                <ul>
+                    <li className="active course menuItem navigationText">
+                        <div onClick={this.handleClick.bind(this,this.props.uid)}>
+                            + New Course
+                        </div>
+                    </li>
+                </ul>
             </div>
         );
     }
 });
 
-$.get(window.globalURL + "/DB/getHierarchy", {userID: 1}, function (res) {
-    console.log(res.studentCourses);
+window.RenderMenu = function (userID) {
+    $.get(window.globalURL + "/DB/getHierarchy", {userID}, function (res) {
 
-    var SCList = objToList(res.studentCourses);
-    var TCList = objToList(res.teacherCourses);
+        // if(res)
+        var SCList = objToList(res.studentCourses);
+        var TCList = objToList(res.teacherCourses);
+        var name = res.firstName + " " + res.lastName;
+        ReactDOM.render(<DynamicMenu tList={TCList} sList={SCList} uid={userID}/>, document.getElementById("desktopNavigation"));
+        ReactDOM.render(<NewProfile name={name}/>, document.getElementById('desktopHeader'));
+    });
+}
 
-    ReactDOM.render(<DynamicMenu tList={TCList} sList={SCList}/>, document.getElementById("desktopNavigation"))
-});
+RenderMenu(1);

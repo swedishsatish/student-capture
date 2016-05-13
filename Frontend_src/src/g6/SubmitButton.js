@@ -3,7 +3,7 @@
  */
 
 
-var CloseButton = React.createClass({
+var PopUpCancelButton = React.createClass({
     onclick: function () {
         close();
     },
@@ -14,15 +14,49 @@ var CloseButton = React.createClass({
     }
 
 });
-var OkButton = React.createClass({
+var PopUpConfirmButton = React.createClass({
     onclick: function () {
         sendData();
         close();
     },
     render: function () {
         return(
-            <button id="okButton" onClick={this.onclick}>ok </button>
+            <button id="confirmationButton" onClick={this.onclick}>ok </button>
         )
+    }
+});
+var PopUpPassBox = React.createClass({
+    render: function () {
+        if(document.getElementById('ifStudentPass').checked){
+            return(
+                <h2 id="popUpPass">PASS</h2>
+            )
+        }else{
+            return(
+                <h2 id="popUpFail">NOT PASSED</h2>
+            )
+        }
+    }
+
+
+});
+var PopUpGrade = React.createClass({
+
+    render: function () {
+        return(
+            <h2 id="popUpGrade">{document.getElementById('dropDownMenu').value}</h2>
+        )
+
+
+    }
+});
+var PopUpStudentName = React.createClass({
+    render: function () {
+
+        return(
+            <h2 id="popUpStudentName">{this.props.student}</h2>
+        )
+
     }
 });
 
@@ -30,8 +64,14 @@ var PopUpRender = React.createClass({
     render: function () {
         return(
             <div class="row">
-                <CloseButton/>
-                <OkButton/>
+                <h1 id="smallText">You are about to give</h1> <PopUpStudentName student={this.props.student}/> <h1 id="smallLetter">a</h1> <PopUpPassBox/> <h1 id="smallText2">with grade</h1> <PopUpGrade/>
+                <PopUpStudentName student={this.props.student}/> <h3 id="smallText3">will be notified</h3>
+                <div id="popUpButtonContainer">
+                    <PopUpCancelButton/>
+                    <PopUpConfirmButton/>
+
+                </div>
+
             </div>
         )
     }
@@ -47,9 +87,11 @@ function submitForm() {
     reqBody["TeacherComments"] = document.getElementById('teachercomments').value;
     reqBody["DropDown"] = document.getElementById('dropDownMenu').value;
     reqBody["StudentPass"] = document.getElementById('ifStudentPass').checked;
-    reqBody["AssignmentID"] = 1;
-    reqBody["CourseID"] = 2;
-    reqBody["TeacherID"] = 3;
+    reqBody["AssignmentID"] = window.assignmentID;
+    reqBody["CourseID"] = window.courseID;
+    reqBody["TeacherID"] = window.teacherID;
+    //console.log(window.assignmentID+" "+ window.courseID+ " "+ window.teacherID);
+
     $.ajax({
         type: "POST",
         contentType: "application/json",
@@ -75,7 +117,6 @@ function sendData () {
     } else {
         passedStatus = 'No pass'
     }
-    alert(passedStatus);
     submitForm();
 
 }
@@ -109,7 +150,7 @@ var SubmitButton = React.createClass({
 
     },
     popUpRender: function () {
-        ReactDOM.render(<PopUpRender/>,document.getElementById('popUpDiv'));
+        ReactDOM.render(<PopUpRender student={this.props.student}/>,document.getElementById('popUpDiv'));
     }, blanket_size: function(popUpDivVar) {
         var popUpDiv_height;
         var viewportheight;

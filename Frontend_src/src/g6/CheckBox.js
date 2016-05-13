@@ -7,7 +7,7 @@
  * Checkbox that is used to determine if a student passed an assignment or not.
  * @type {number} current state of passed
  */
-var TestCheckBox = React.createClass({
+var CheckBox = React.createClass({
     //Sets initial state for the checkbox to false.
     getInitialState: function() {
         return {
@@ -42,4 +42,4 @@ var TestCheckBox = React.createClass({
     }
 });
 
-window.TestCheckBox=TestCheckBox;
+window.CheckBox=CheckBox;

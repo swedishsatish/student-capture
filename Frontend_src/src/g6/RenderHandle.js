@@ -11,10 +11,8 @@
     render: function () {
         return(
             <div class="row">
-                <div id="recorder">
-                    <Recorder />
-
-                </div>
+                <div id="blanket" style={{"display":"none"}}></div>
+                <div id="popUpDiv" style={{"display":"none"}}></div>
                 <div id="feedBackContainer">
                     <div id="submissioncontainer">
                         <div id="commentbox">
@@ -34,7 +32,7 @@
                             <BackButton />
                         </div>
                         <div id="submitButton">
-                            <SubmitButton />
+                            <SubmitButton student={this.props.student} />
                         </div>
 
                     </div>
