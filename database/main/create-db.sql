@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS Users (
     UserId       SERIAL         PRIMARY KEY,
-    salt         VARCHAR(128),
+    UserSalt     VARCHAR(128),
     UserName     VARCHAR(64)    UNIQUE,
     FirstName    VARCHAR(64)    NOT NULL,
     LastName     VARCHAR(64)    NOT NULL,

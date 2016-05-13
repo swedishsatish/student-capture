@@ -228,6 +228,37 @@ public class FilesystemInterface {
 		return true;
 	}
 
+	/**
+	 * Stores assignment description in the filesystem as a text file
+	 * @param courseCode courses 6 character identifier
+	 * @param courseId a unique database id
+	 * @param assignmentId a unique database id
+	 * @param contents The contents in the file
+	 * @param fileName the name of the file, (i.e. FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME or
+	 *                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME)
+     * @throws IOException
+     */
+	public static void storeAssignmentText(String courseCode,
+										   String courseId,
+										   String assignmentId,
+										   String contents,
+										   String fileName) throws IOException {
+
+		String dirPath = generatePath(courseCode, courseId, assignmentId);
+		File dir = new File(dirPath);
+		File file;
+		FileWriter fileWriter;
+
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
+		file = new File(dirPath + fileName);
+		fileWriter = new FileWriter(file);
+		fileWriter.write(contents);
+		fileWriter.close();
+	}
+
     /**
      * Reads a feedback text file from a teacher from the moose hard drive and returns it.
      * @param model the feedback model containing params to generate the path to the file.
@@ -284,6 +315,4 @@ public class FilesystemInterface {
 	    File f = new File(path);
 	    return (int)f.length();
 	}
-
-
 }
