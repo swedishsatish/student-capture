@@ -70,7 +70,7 @@ public class DatalayerCommunicator {
 
         assignmentID = assignment.createAssignment(assignmentModel.getCourseID(), assignmentModel.getTitle(),
                 assignmentModel.getStartDate(), assignmentModel.getEndDate(), assignmentModel.getMinTimeSeconds(),
-                assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished());
+                assignmentModel.getMaxTimeSeconds(), assignmentModel.getPublished(), "U_O_K_G");
 
         courseCode = courseDAO.getCourseCodeFromId(assignmentModel.getCourseID());
         FilesystemInterface.storeAssignmentText(courseCode, assignmentModel.getCourseID(),
