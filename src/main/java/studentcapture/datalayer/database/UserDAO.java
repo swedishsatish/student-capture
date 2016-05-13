@@ -61,6 +61,57 @@ public class UserDAO {
     }
 
 
+
+    /**
+     * Return password for a user
+     * @param userName
+     * @return
+     */
+    public String getPswd(String userName) {
+        String sql = "SELECT pswd FROM users WHERE username = ?";
+
+        Object[] args = {userName};
+        int[] types = {Types.VARCHAR};
+        try {
+            return jdbcTemplate.queryForObject(sql,args,types,String.class);
+        } catch(Exception e) {
+            return null;
+        }
+    }
+
+
+    /**
+     * Remove a user from the User-table in the database.
+     *
+     * @param username     unique identifier for a person
+     * @return          true if the remove succeed, else false.
+     */
+    public String getUserID(String username){
+        String sql = "SELECT userID from users WHERE username = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{username},String.class);
+    }
+
+
+
+
+    /**
+     * Returns a list with info of a user.
+     *
+     * @param userID     unique identifier for a person
+     * @return          The list with info of a person.
+     */
+    public User getUserByID(String userID) {
+        String sql = "SELECT  * FROM users WHERE userid = ?";
+
+
+        Object[] arg = new Object[]{Integer.parseInt(userID)};
+        User user = (User) jdbcTemplate.queryForObject(sql, arg,
+                new UserWrapper());
+
+        return user;
+    }
+
+
     /**
      * @param userName user name for user.
      * @return true if it exists else false
@@ -92,22 +143,16 @@ public class UserDAO {
                                             Boolean.class);
     }
 
-    /**
-     * Remove a user from the User-table in the database.
-     *
-     * @param username     unique identifier for a person
-     * @return          true if the remove succeed, else false.
-     */
-    public String getUserID(String username){
-    	String sql = "SELECT userID from users WHERE username = ?";
-    	return jdbcTemplate.queryForObject(sql, new Object[]{username},String.class);
-    }
+
+
 
     public boolean removeUser(String casID) {
         String sql = "";
 
         throw new UnsupportedOperationException();
     }
+
+
 
 
     /**
@@ -126,36 +171,8 @@ public class UserDAO {
 		throw new UnsupportedOperationException();
     }
 
-    /**
-     * Returns a list with info of a user.
-     *
-     * @param userID     unique identifier for a person
-     * @return          The list with info of a person.
-     */
-    public User getUserByID(String userID) {
-        String sql = "SELECT  * FROM users WHERE userid = ?";
 
 
-        Object[] arg = new Object[]{Integer.parseInt(userID)};
-        User user = (User) jdbcTemplate.queryForObject(sql, arg,
-                    new UserWrapper());
-
-        return user;
-    }
-
-
-    /**
-     * Check if a user exist by the name and password.
-     * @return true if user exist, otherwise false.
-     */
-    public boolean userExist(String userName,String pswd) {
-        String sql = "SELECT EXISTS (SELECT 1 FROM users "
-                + "WHERE  username = ? AND pswd = ?)";
-
-        return jdbcTemplate.queryForObject(sql,
-				new Object[] {userName,pswd},
-				Boolean.class);
-    }
 
     /**
      * Returns an hierarchy of data, retrieved from the database, related to
