@@ -7,10 +7,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import studentcapture.datalayer.database.AssignmentDAO.AssignmentWrapper;
 import studentcapture.datalayer.database.Hierarchy.AssignmentPackage;
 import studentcapture.datalayer.database.Hierarchy.CoursePackage;
-import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +20,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 @Repository
+
+/**
+ * Aware of code smell.
+ * 
+ * @author tfy12hsm
+ *
+ */
 public class HierarchyDAO {
 
     // This template should be used to send queries to the database
@@ -44,6 +49,8 @@ public class HierarchyDAO {
      *
      * @param userID	users identifier
      * @return			hierarchy of course, assignment and submission data
+     * 
+     * @author tfy12hsm
      */
     public Optional<Hierarchy> getCourseAssignmentHierarchy(
     		String userID) {
@@ -71,6 +78,8 @@ public class HierarchyDAO {
 	 *
 	 * @param hierarchy		hierarchy added to
 	 * @param userId		student identifier
+	 * 
+     * @author tfy12hsm
 	 */
     private void addUserToHierarchy(Hierarchy hierarchy,
     		int userId) {
@@ -90,6 +99,8 @@ public class HierarchyDAO {
 	 *
 	 * @param hierarchy		hierarchy added to
 	 * @param userId		teacher identifier
+     * 
+     * @author tfy12hsm
 	 */
 	private void addTeacherHierarchy(Hierarchy hierarchy, int
 			userId) {
@@ -150,7 +161,7 @@ public class HierarchyDAO {
     						throw new NullPointerException();
 					} catch (NullPointerException e) {
     					currentSubmission = submissionDAO.getSubmission(
-    							assignmentId,userId).get();
+    							assignmentId,studentId).get();
     					currentAssignment.getSubmissions().put(studentId,
     							currentSubmission);
     				}
@@ -167,6 +178,8 @@ public class HierarchyDAO {
 	 *
 	 * @param hierarchy		hierarchy added to
 	 * @param userId		student identifier
+     * 
+     * @author tfy12hsm
 	 */
 	private void addStudentHierarchy(Hierarchy hierarchy,
 			int userId) {

@@ -24,6 +24,8 @@ public class CourseDAO {
      * @param year		the year the course takes place
      * @param term		the term the course takes palce (ex. VT)
      * @return			true if successful, else false
+     * 
+     * @author tfy12hsm
      */
     public boolean addCourse(String courseID, String courseCode, String year,
     		String term, String courseName, String courseDescription, 
@@ -63,13 +65,9 @@ public class CourseDAO {
      * Attempts to retrieve all data regarding a course from the database.
      *
      * @param courseID	target courses database identification
-     * @return			list of course data in order:<ul>
-     * 					<li>the courses database identification</li>
-     * 					<li>the courses 6 character identification</li>
-     * 					<li>the year the course takes place</li>
-     * 					<li>the term the course takes place</li>
-     * 					<li>the courses name</li></ul>
-     * 					If unsuccessful, an empty list is returned.
+     * @return			sought after course
+     * 
+     * @author tfy12hsm
      */
 	public Course getCourse(String courseID) {
 		Course result = new Course();
@@ -93,6 +91,8 @@ public class CourseDAO {
      *
      * @param courseID	courses database identification
      * @return			true if successful, else false
+     * 
+     * @author tfy12hsm
      */
     public boolean removeCourse(String courseID) {
     	boolean result;
