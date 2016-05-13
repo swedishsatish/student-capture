@@ -162,9 +162,9 @@ public class FilesystemInterface {
 	 * Store the assignment video for an assignment at a course.
 	 *
 	 * @param courseCode the code for the course.
-	 * @param courseID course id from the database
-	 * @param assignmentID from database
-	 * @return true if video was stored successfully
+	 * @param courseID course id from the database.
+	 * @param assignmentID from database.
+	 * @return true if video was stored successfully, false otherwise.
 	 * @author c13ljn
 	 */
 	public static boolean storeAssignmentVideo(String courseCode, String courseID,
@@ -173,7 +173,7 @@ public class FilesystemInterface {
 		String path = FilesystemInterface.generatePath(courseCode, courseID,
 				assignmentID);
 
-		try {
+        try {
 			storeFile(source, path, FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME);
 		} catch (IOException e) {
 			e.printStackTrace();

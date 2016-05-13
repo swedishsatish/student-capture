@@ -30,7 +30,7 @@ public class VideoInController {
      * Will send a video and information to DataLayerCommunicator.
      *
      * @return Status 200 if success. Status 400 on bad request. Status 500 on error.
-     * @author c13ljn (modified to support assignment videos)
+     * @author c13ljn (Modified to support assignment videos)
      */
     @CrossOrigin()
     @RequestMapping(value = "/uploadVideo/{id}",
