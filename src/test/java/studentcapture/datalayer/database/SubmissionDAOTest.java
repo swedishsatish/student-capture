@@ -74,7 +74,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      */
     @Test
     public void databaseSetUpTest() {
-        String sql = "SELECT * FROM Submission WHERE assignmentID = 1";
+        String sql = "SELECT * FROM Submission WHERE assignmentID = 1 AND studentID = 1";
 
         //Getting values from table Submission
         HashMap<String,String> info = (HashMap<String,String>)
@@ -96,7 +96,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         submission.setCourseID("PVT");
         submissionDAO.setGrade(submission, grade);
 
-        String sql = "SELECT * FROM Submission WHERE assignmentID = 1";
+        String sql = "SELECT * FROM Submission WHERE assignmentID = 1 AND studentID = 1";
 
         //Getting values from table Submission
         HashMap<String,String> info = (HashMap<String,String>)
