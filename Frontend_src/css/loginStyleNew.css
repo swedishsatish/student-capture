@@ -88,16 +88,38 @@ body {
 	text-align: center;
 }
 
-.tooltipText{display: none;}
+.tooltip{
+	width:300px;
+	display: none;
+	position: absolute;
+	right:104%;
+	bottom:20px;
+	background-color: #107D91;
+   	border: 6px solid #EC7E15;
+   	border-radius: 6px;
+}
 
-.forms input:focus + .tooltipText{
+.tooltipText {
+	color:#FAFAFA;
+	line-height: 20px;
+	margin-top: 10px;
+	margin-left: 6px;
+}
+
+#point {
+	content:"";
+   	position: absolute;
+   	left: 100%;
+   	top: 14px;
+   	width: 0;
+   	height: 0;
+   	border-top: 26px solid transparent;
+   	border-left: 40px solid #EC7E15;
+   	border-bottom: 26px solid transparent;
+}
+
+input:focus + .tooltip{
     display: block;
-    position: absolute;
-    top:101%;
-    left: center;
-    color:#FFFFFF; 
-    margin:5px; 
- 
 }
 
 #registerPage {
@@ -105,7 +127,7 @@ body {
 }
 
 input:invalid{
-color:#EC7E15;
+	color:#EC7E15;
 }
 
 /*------------------------------------modal-----------------------------------*/
