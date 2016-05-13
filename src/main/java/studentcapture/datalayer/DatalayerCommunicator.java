@@ -47,13 +47,20 @@ public class DatalayerCommunicator {
 
     //@Autowired
     FilesystemInterface fsi;
+
+    /**
+     * Gets the feedback, the actuall grade, the grader and the time for a graded submission from the
+     * database and the file system.
+     *
+     * @param model
+     * @return
+     */
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
     public Map<String, Object> getGrade(@Valid FeedbackModel model) {
-        Map result = submissionDAO.getGrade(model.getStudentID(), model.getAssignmentID());
+        Map result = submissionDAO.getGrade(model);
         result.put("feedback", fsi.getFeedbackText(model));
         return result;
-        //return submissionDAO.getGrade(model.getStudentID(), model.getAssignmentID());
     }
 
 
