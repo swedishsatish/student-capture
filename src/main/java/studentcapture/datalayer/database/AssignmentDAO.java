@@ -214,6 +214,14 @@ public class AssignmentDAO {
         return jdbcTemplate.queryForObject(sql, new Object[]{assignmentID},String.class);
     }
 
+    /**
+     * Returns a sought assignment from the database.
+     * 
+     * @param assignmentId		assignments identifier
+     * @return					sought assignment
+     * 
+     * @author tfy12hsm
+     */
 	public Optional<Assignment> getAssignment(int assignmentId) {
 		try {
             String getAssignmentStatement = "SELECT * FROM "
@@ -241,16 +249,5 @@ public class AssignmentDAO {
 
     public boolean removeAssignment(String assignmentID){
         throw new UnsupportedOperationException();
-    }
-
-    public static class AssignmentWrapper {
-    	public int assignmentId;
-    	public String courseId;
-    	public String title;
-    	public String StartDate;
-    	public String EndDate;
-    	public int minTime;
-    	public int maxTime;
-    	public boolean published;
     }
 }

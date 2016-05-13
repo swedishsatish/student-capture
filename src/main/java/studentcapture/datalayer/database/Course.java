@@ -2,6 +2,11 @@ package studentcapture.datalayer.database;
 
 import java.util.Map;
 
+/**
+ * 
+ * @author tfy12hsm
+ *
+ */
 public class Course {
 	private String courseId;
 	private Integer year;
@@ -19,6 +24,13 @@ public class Course {
 		parseMap(map);
 	}
 	
+	/**
+	 * Constructor that parses a map of database elements.
+	 * 
+	 * @param map		map of database elements
+     * 
+     * @author tfy12hsm
+	 */
 	public void parseMap(Map<String, Object> map) {
 		courseId = (String) map.get("CourseId");
 		year = (Integer) map.get("Year");

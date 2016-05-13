@@ -23,6 +23,13 @@ public class Assignment {
     public Assignment() {
 	}
     
+    /**
+     * Constructor that parses map of database elements.
+     * 
+     * @param map	map of database elements
+     * 
+     * @author tfy12hsm
+     */
     public Assignment(Map<String, Object> map) {
 		assignmentID = (Integer) map.get("AssignmentId");
 		courseID = (String) map.get("CourseId");
