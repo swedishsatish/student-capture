@@ -157,7 +157,7 @@ iframe {
     margin-left:0px;
 }
 #desktopNavigation li {
-    color: gray;
+    color: #f59b46;
 }
 #desktopNavigation li.active {
     color: white;

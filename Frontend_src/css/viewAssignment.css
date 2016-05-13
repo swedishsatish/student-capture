@@ -1,5 +1,10 @@
-/* SHOW ASSIGNMENT VIDEO */
+/*
+ * viewAssignment.css
+ * Authors: Zacharias Berggren
+ *          Joakim Sandman
+ */
 
+/* Style of assignment front page */
 #assignment-div
 {
 	width: 70%;
@@ -7,38 +12,14 @@
 	text-align: center;
 }
 
-#countdown-div
+/* Style of data on front page */
+#descriptor
 {
-    float: left;
-	font-size: 100px;
+    display: inline;
+    margin-left: 2rem;
 }
 
-#question-div
-{
-    float: left;
-    margin: 8%;
-}
-
-#answer-div
-{
-    float: right;
-    margin: 8%;
-}
-
-#assignment-content
-{
-	position: fixed;
-	top: 50%;
- 	left: 50%;
-	width: 80%;
-	height: 80%;
-	transform: translate(-50%, -50%);
-	z-index: 999;
-	color: black !important;
-	background-color: snow;
-	font-size: 20px;
-}
-
+/* Style of assignment modal */
 #assignment-modal
 {
 	width: 100%;
@@ -50,18 +31,51 @@
 	background-color: rgba(0, 0, 0, 0.8);
 }
 
+/* Style of assignment content */
+#assignment-content
+{
+	position: fixed;
+	top: 50%;
+ 	left: 50%;
+	width: 80%;
+	height: 80%;
+	transform: translate(-50%, -50%);
+	z-index: 999;
+	color: black !important;
+	background-color: #dddddd;
+	font-size: 20px;
+}
+
+/* Style of assignment video, progress bar and question summary */
+#question-div
+{
+    float: left;
+    margin: 8%;
+}
+
+/* Style of assignment video */
+#videoPlayer
+{
+    width: 100%;
+}
+
+/* Style of progress bar */
 #progress-bar
 {
     width: 90%;
 }
 
-#descriptor
+/* Style of countdown numbers */
+#countdown-div
 {
-    display: inline-block;
+    float: left;
+	font-size: 100px;
 }
 
-#videoPlayer
+/* Style of student recording, buttons and time limits */
+#answer-div
 {
-    width: 100%;
+    float: right;
+    margin: 8%;
 }
 
