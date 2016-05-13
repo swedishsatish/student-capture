@@ -235,17 +235,18 @@ public class DatalayerCommunicator {
      * @return true if registration was successfull else false
      */
     @CrossOrigin
-    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public  void addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
+    @RequestMapping(value = "/addUser", method = RequestMethod.GET)
+    public boolean addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
         ObjectMapper mapper = new ObjectMapper();
         User user = null;
         try {
             user = mapper.readValue(jsonStringUser,User.class);
+            System.out.println(user.getfName());
             userDAO.addUser(user);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return true;
     }
     
     /**

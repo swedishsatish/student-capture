@@ -20,7 +20,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import studentcapture.datalayer.*;
+import studentcapture.datalayer.database.User;
 
 
 /**
@@ -55,7 +59,7 @@ public class LoginDBController {
 		
 	    ModelAndView mav = new ModelAndView(); 
 	    mav.setViewName("redirect:login?error=default");
-	/*    COMMENTED UNTIL DB IS FINIHSED
+
 	    if(!checkUsernameLength(username)) {
 	    	mav.setViewName("redirect:login?error=usernamelength");
 	    	return mav;
@@ -85,14 +89,18 @@ public class LoginDBController {
 	    	mav.setViewName("redirect:login?error=userexists");
 	    	return mav;
 	    }
-*/
+	    User user = new User(username, firstName, lastName, email, encryptPassword(password));
+	    ObjectMapper mapper = new ObjectMapper();
+	    String jsonInString = "";
+	    try {
+			jsonInString = mapper.writeValueAsString(user);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	    URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
-	    		.path("DB/register")
-	    		.queryParam("userName", username)
-	    		.queryParam("fName", firstName)
-	    		.queryParam("lName", lastName)
-	    		.queryParam("pNr", "123")
-	    		.queryParam("pwd", password)
+	    		.path("DB/addUser")
+	    		.queryParam("jsonStringUser", jsonInString)
 	    		.build()
 	    		.toUri();
 	    boolean response = requestSender.getForObject(targetUrl, Boolean.class);
@@ -142,7 +150,7 @@ public class LoginDBController {
 	protected boolean checkUserExists(String username) {
 	    URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
                 .path("DB/userNameExist")
-                .queryParam("username", username)
+                .queryParam("userName", username)
                 .build()
                 .toUri();
 	    //Send request to DB and get the boolean answer
@@ -155,7 +163,7 @@ public class LoginDBController {
 	
 	protected boolean checkEmailExists(String email) {
 	    URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
-                .path("DB/emailExist")
+                .path("DB/usrEmailExist")
                 .queryParam("email", email)
                 .build()
                 .toUri();
