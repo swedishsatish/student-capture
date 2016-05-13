@@ -7,11 +7,9 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import studentcapture.datalayer.database.Assignment.AssignmentWrapper;
-import studentcapture.datalayer.database.Course;
+import studentcapture.datalayer.database.AssignmentDAO.AssignmentWrapper;
 import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 
-import javax.jws.soap.SOAPBinding;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -31,7 +29,7 @@ public class UserDAO {
     @Autowired
     private CourseDAO course;
     @Autowired
-    private Assignment assignment;
+    private AssignmentDAO assignment;
     @Autowired
     private SubmissionDAO submissionDAO;
 
