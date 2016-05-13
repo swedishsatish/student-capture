@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.model;
 
 import java.sql.Timestamp;
 import java.util.Date;

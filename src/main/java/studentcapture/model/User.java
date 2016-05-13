@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.model;
 
 /**
  * Created by c12ton on 5/12/16.

@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.model;
 
 import java.util.Map;
 
