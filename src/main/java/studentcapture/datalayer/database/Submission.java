@@ -19,6 +19,7 @@ public class Submission {
     private Boolean publishStudentSubmission = false;
     private String courseID;
     private String courseCode;
+    private String feedback;
 
     public Submission() {
     }
@@ -103,5 +104,13 @@ public class Submission {
 
     public void setCourseCode(String courseCode) {
         this.courseCode = courseCode;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
 }
