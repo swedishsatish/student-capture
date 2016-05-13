@@ -220,21 +220,23 @@ public class DatalayerCommunicator {
 
     /**
      * Register user by given information.
-     *
      * @return true if registration was successfull else false
      */
     @CrossOrigin
-    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public void addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE,
+                    method = RequestMethod.GET,
+                    value = "/addUser")
+    public boolean addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
         ObjectMapper mapper = new ObjectMapper();
         User user = null;
         try {
             user = mapper.readValue(jsonStringUser,User.class);
-            userDAO.addUser(user);
+            return userDAO.addUser(user);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        return false;
     }
 
     /**
@@ -243,7 +245,9 @@ public class DatalayerCommunicator {
      * @return hashed password else null.
      */
     @CrossOrigin
-    @RequestMapping(value = "/getHpswd", method = RequestMethod.POST)
+    @RequestMapping( produces = MediaType.APPLICATION_JSON_VALUE,
+                     method = RequestMethod.GET,
+                     value = "/getHpswd")
     public String getUserPswd(@RequestParam(value = "username") String username) {
         return userDAO.getPswd(username);
     }
