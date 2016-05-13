@@ -13,7 +13,7 @@ public class SubmissionDAO {
 
 	// This template should be used to send queries to the database
 	@Autowired
-	protected JdbcTemplate jdbcTemplate;
+	protected JdbcTemplate databaseConnection;
 
 	/**
 	 * Add a new submission for an assignment
@@ -30,7 +30,7 @@ public class SubmissionDAO {
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		timestamp.setNanos(0);
 
-		int rowsAffected = jdbcTemplate.update(sql, Integer.parseInt(assignmentID), Integer.parseInt(studentID), timestamp, studentConsent);
+		int rowsAffected = databaseConnection.update(sql, Integer.parseInt(assignmentID), Integer.parseInt(studentID), timestamp, studentConsent);
 
 		return rowsAffected == 1;
 	}
@@ -48,12 +48,12 @@ public class SubmissionDAO {
             return false;
         /* If a person that is not a teacher tries to set a grade, return false */
         String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
-        int rows = jdbcTemplate.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
+        int rows = databaseConnection.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
         if(rows != 1)
             return false;
 
         String publishFeedback  = "UPDATE Submission SET publishFeedback = ? WHERE (AssignmentID = ?) AND (StudentID = ?);";
-        int updatedRows = jdbcTemplate.update(publishFeedback, publish, submission.getAssignmentID(), submission.getStudentID());
+        int updatedRows = databaseConnection.update(publishFeedback, publish, submission.getAssignmentID(), submission.getStudentID());
 
         return updatedRows == 1;
     }
@@ -68,12 +68,12 @@ public class SubmissionDAO {
 	public boolean setGrade(Submission submission, Grade grade) {
         /* If a person that is not a teacher tries to set a grade, return false */
         String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
-        int rows = jdbcTemplate.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
+        int rows = databaseConnection.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
         if(rows != 1)
             return false;
 
 		String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, SubmissionDate = ?, PublishStudentSubmission = ? WHERE (AssignmentID = ?) AND (StudentID = ?);";
-		int updatedRows = jdbcTemplate.update(setGrade, grade.getGrade(), grade.getTeacherID(), grade.getDate(), grade.getPublishStudentSubmission(), submission.getAssignmentID(), submission.getStudentID());
+		int updatedRows = databaseConnection.update(setGrade, grade.getGrade(), grade.getTeacherID(), grade.getDate(), grade.getPublishStudentSubmission(), submission.getAssignmentID(), submission.getStudentID());
 
 		return updatedRows == 1;
 	}
@@ -97,7 +97,7 @@ public class SubmissionDAO {
 		int studentId = Integer.parseInt(studentID);
 
 		try {
-			int rowsAffected = jdbcTemplate.update(removeSubmissionStatement,
+			int rowsAffected = databaseConnection.update(removeSubmissionStatement,
 					assignmentId, studentId);
 			result = rowsAffected == 1;
 		} catch (IncorrectResultSizeDataAccessException e) {
@@ -123,7 +123,7 @@ public class SubmissionDAO {
 				" WHERE (studentid = ? AND assignmentid = ?)";
 		Map<String, Object> response;
 		try {
-			response = jdbcTemplate.queryForMap(queryForGrade,
+			response = databaseConnection.queryForMap(queryForGrade,
 					new Object[]{studentID, assignmentID});
 		response.put("time", response.get("time").toString());
 		if (response.get("teacher").equals(" "))
@@ -161,7 +161,7 @@ public class SubmissionDAO {
     	List<Submission> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
     	try {
-	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+	    	List<Map<String, Object>> rows = databaseConnection.queryForList(
 	    			getAllUngradedStatement, assignmentId);
 	    	for (Map<String, Object> row : rows) {
 	    		Submission submission = new Submission(row);
@@ -198,7 +198,7 @@ public class SubmissionDAO {
 				+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
 
     	try {
-	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+	    	List<Map<String, Object>> rows = databaseConnection.queryForList(
 	    			getAllSubmissionsStatement, assignmentId);
 	    	for (Map<String, Object> row : rows) {
 	    		Submission submission = new Submission(row);
@@ -241,7 +241,7 @@ public class SubmissionDAO {
 						+ "(par.function='Student') AND (ass.AssignmentId=?)";
 
     	try {
-	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+	    	List<Map<String, Object>> rows = databaseConnection.queryForList(
 	    			getAllSubmissionsWithStudentsStatement, assignmentId);
 	    	for (Map<String, Object> row : rows) {
 	    		Submission submission = new Submission(row);
@@ -272,8 +272,9 @@ public class SubmissionDAO {
     	Submission result = null;
     	String getStudentSubmissionStatement =
 				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
+
 		try {
-	    	Map<String, Object> map = jdbcTemplate.queryForMap(
+	    	Map<String, Object> map = databaseConnection.queryForMap(
 	    			getStudentSubmissionStatement, assignmentId, userId);
 	    	
 	    	 result = new Submission(map);
@@ -287,4 +288,14 @@ public class SubmissionDAO {
 
         return Optional.of(result);
 	}
+
+    public static class SubmissionWrapper {
+    	public int assignmentId;
+    	public int studentId;
+    	public String studentName;
+    	public String submissionDate;
+    	public String grade;
+    	public Integer teacherId;
+    }
 }
+

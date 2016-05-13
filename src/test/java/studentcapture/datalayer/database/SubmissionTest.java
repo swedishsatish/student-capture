@@ -26,7 +26,7 @@ public class SubmissionTest  extends StudentCaptureApplicationTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    //jdbcTemplate.queryForObject(s[1], new Object[]{studIDInt, assIDInt}, String.class);
+    //databaseConnection.queryForObject(s[1], new Object[]{studIDInt, assIDInt}, String.class);
 
     @Autowired
     SubmissionDAO sub;
