@@ -188,12 +188,14 @@ button{
  * Shown in green color to make it easier to read, green is passed, red is not passed.
   */
 #popUpPass {
+    font-size: 300%;
     color: greenyellow !important;
     text-align: center;
 }
 /* Same as above, except this represents the text NOT PASSED, is shown in red due to failure.
  */
 #popUpFail {
+    font-size: 300%;
     text-align: center;
     color: red !important;
 }
@@ -201,6 +203,7 @@ button{
  * grade was given.
  */
 #popUpGrade {
+    font-size: 300%;
     text-align: center;
     color: greenyellow !important;
 }

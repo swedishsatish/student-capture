@@ -28,7 +28,7 @@ var PopUpConfirmButton = React.createClass({
     },
     render: function () {
         return(
-            <button id="confirmationButton" onClick={this.onclick}>Confirm</button>
+            <button id="confirmationButton" onClick={this.onclick}>Save</button>
         )
     }
 });
@@ -88,8 +88,7 @@ var PopUpRender = React.createClass({
                 <p id="smallLetter">You are about to give</p>
                 <PopUpStudentName student={this.props.student}/> <p id="smallLetter">a</p>
                 <PopUpPassBox/> <p id="smallLetter">with grade</p> <PopUpGrade/>
-                <PopUpStudentName student={this.props.student}/>
-                <p id="smallLetter">will be notified</p> <br />
+                 <br />
                 <div id="popUpButtonContainer">
                     <PopUpCancelButton/>
                     <PopUpConfirmButton/>
@@ -121,11 +120,13 @@ function submitForm() {
     reqBody["CourseID"] = window.courseID;
     reqBody["TeacherID"] = window.teacherID;
 
+    console.log(reqBody);
+
     $.ajax({
         type: "POST",
         contentType: "application/json",
-        url: "feedback",
-        data: JSON.stringify(reqBody),
+        url: "feedback/set",
+        data: reqBody,//JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
