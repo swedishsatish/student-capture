@@ -10,6 +10,12 @@ var StudentList = React.createClass ({
         var newTableObject = document.getElementById("students-table");
         console.log(1);
         sorttable.makeSortable(newTableObject);
+        var table11_Props = {
+            filters_row_index: 1,
+            remember_grid_values: true
+        };
+        setFilterGrid( "students-table",table11_Props )
+
     },
 
     clickhandle: function (user,event) {
