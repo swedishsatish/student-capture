@@ -175,11 +175,10 @@ button{
     height: 150px;
 }
 #popUpPass {
-    font-size: 50%;
-    color: greenyellow;
+    color: greenyellow !important;
 }
 #popUpFail {
-    color: red;
+    color: red !important;
 }
 #popUpGrade {
     color: greenyellow;
