@@ -13,20 +13,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.*;
-import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.feedback.FeedbackModel;
 
 import javax.validation.Valid;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
 /**
  * Created by c12osn on 2016-04-22.
- * Edited by c13arm, ens13ahr
+ * Edited by c13arm, ens13ahr, tfy12hsm
  */
 @RestController
 @RequestMapping(value = "/DB")
@@ -391,7 +389,7 @@ public class DatalayerCommunicator {
     method = RequestMethod.GET,
     value = "/getAllSubmissions")
     @ResponseBody
-    public List<SubmissionWrapper> getAllSubmissions(
+    public List<Submission> getAllSubmissions(
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submissionDAO.getAllSubmissions(assignmentID).get();
     }
@@ -409,7 +407,7 @@ public class DatalayerCommunicator {
     method = RequestMethod.GET,
     value = "/getAllUngradedSubmissions")
     @ResponseBody
-    public List<SubmissionWrapper> getAllUngradedSubmissions(
+    public List<Submission> getAllUngradedSubmissions(
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submissionDAO.getAllUngraded(assignmentID).get();
     }
@@ -428,7 +426,7 @@ public class DatalayerCommunicator {
     method = RequestMethod.GET,
     value = "/getAllSubmissionsWithStudents")
     @ResponseBody
-    public List<SubmissionWrapper> getAllSubmissionsWithStudents(
+    public List<Submission> getAllSubmissionsWithStudents(
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submissionDAO.getAllSubmissionsWithStudents(assignmentID).get();
     }

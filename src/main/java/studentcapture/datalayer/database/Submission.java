@@ -24,6 +24,13 @@ public class Submission {
         this.assignmentID = assignmentID;
     }
 
+    /**
+     * Constructor that parses map of database elements.
+     * 
+     * @param map		map retrieved from database
+     * 
+     * @author tfy12hsm
+     */
     public Submission(Map<String, Object> map) {
     	assignmentID = (Integer) map.get("AssignmentId");
 		studentID = (Integer) map.get("StudentId");

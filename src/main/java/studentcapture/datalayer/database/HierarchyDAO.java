@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import studentcapture.datalayer.database.AssignmentDAO.AssignmentWrapper;
 import studentcapture.datalayer.database.Hierarchy.AssignmentPackage;
 import studentcapture.datalayer.database.Hierarchy.CoursePackage;
-import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

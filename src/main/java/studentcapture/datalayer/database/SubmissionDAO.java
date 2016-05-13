@@ -118,36 +118,26 @@ public class SubmissionDAO {
      *
      * @param assId The assignment to get submissions for
      * @return A list of ungraded submissions for the assignment
+     * 
+     * @author tfy12hsm
      */
-    public Optional<List<SubmissionWrapper>> getAllUngraded(String assId) {
+    public Optional<List<Submission>> getAllUngraded(String assId) {
 
 		String getAllUngradedStatement = "SELECT "
 				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
-				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
-				+ "Submission AS sub LEFT JOIN Users AS stu ON "
+				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId,"
+				+ "sub.StudentPublishConsent,sub.PublishStudentSubmission FROM"
+				+ " Submission AS sub LEFT JOIN Users AS stu ON "
 				+ "sub.studentId=stu.userId WHERE (AssignmentId=?) AND "
 				+ "(Grade IS NULL)";
 
-    	List<SubmissionWrapper> submissions = new ArrayList<>();
+    	List<Submission> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
     	try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
 	    			getAllUngradedStatement, assignmentId);
 	    	for (Map<String, Object> row : rows) {
-	    		SubmissionWrapper submission = new SubmissionWrapper();
-	    		submission.assignmentId = (int) row.get("AssignmentId");
-	    		submission.studentId = (int) row.get("StudentId");
-	    		//submission.teacherId = (int) row.get("TeacherId");
-	    		//submission.grade = (String) row.get("Grade");
-	    		submission.submissionDate = row.get("SubmissionDate").toString();
-	    		try {
-	    			String firstName = (String) row.get("FirstName");
-		    		String lastName = (String) row.get("LastName");
-		    		submission.studentName = firstName + " " + lastName;
-	    		} catch (NullPointerException e) {
-	    			submission.studentName = null;
-	    		}
-	    		
+	    		Submission submission = new Submission(row);
 	    		submissions.add(submission);
 	    	}
 
@@ -166,44 +156,25 @@ public class SubmissionDAO {
 	 * Get all submissions for an assignment
 	 * @param assId The assignment to get submissions for
 	 * @return A list of submissions for the assignment
+     * 
+     * @author tfy12hsm
 	 */
-    public Optional<List<SubmissionWrapper>> getAllSubmissions(String assId) {
-    	List<SubmissionWrapper> submissions = new ArrayList<>();
+    public Optional<List<Submission>> getAllSubmissions(String assId) {
+    	List<Submission> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
 
 		String getAllSubmissionsStatement = "SELECT "
 				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
-				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
-				+ "Submission AS sub LEFT JOIN Users AS stu ON "
+				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId,"
+				+ "sub.StudentPublishConsent,sub.PublishStudentSubmission FROM"
+				+ " Submission AS sub LEFT JOIN Users AS stu ON "
 				+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
 
     	try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
 	    			getAllSubmissionsStatement, assignmentId);
 	    	for (Map<String, Object> row : rows) {
-	    		SubmissionWrapper submission = new SubmissionWrapper();
-	    		submission.assignmentId = (int) row.get("AssignmentId");
-	    		submission.studentId = (int) row.get("StudentId");
-	    		try {
-	    			submission.teacherId = (int) row.get("TeacherId");
-	    		} catch (NullPointerException e) {
-	    			submission.teacherId = null;
-	    		}
-	    		try {
-	    			submission.grade = (String) row.get("Grade");
-	    		} catch (NullPointerException e) {
-	    			submission.grade = null;
-	    		}
-	    		submission.submissionDate = ((Timestamp)
-	    				row.get("SubmissionDate")).toString();
-	    		try {
-	    			String firstName = (String) row.get("FirstName");
-		    		String lastName = (String) row.get("LastName");
-		    		submission.studentName = firstName + " " + lastName;
-	    		} catch (NullPointerException e) {
-	    			submission.studentName = null;
-	    		}
-
+	    		Submission submission = new Submission(row);
 	    		submissions.add(submission);
 	    	}
 
@@ -225,15 +196,19 @@ public class SubmissionDAO {
 	 *
 	 * @param assId The assignment to get submissions for
 	 * @return A list of submissions for the assignment
+     * 
+     * @author tfy12hsm
 	 */
-    public Optional<List<SubmissionWrapper>> getAllSubmissionsWithStudents
+    public Optional<List<Submission>> getAllSubmissionsWithStudents
     		(String assId) {
-    	List<SubmissionWrapper> submissions = new ArrayList<>();
+    	List<Submission> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
 
 		String getAllSubmissionsWithStudentsStatement =
 				"SELECT ass.AssignmentId,par.UserId AS StudentId,sub.SubmissionDate"
-						+ ",sub.Grade,sub.TeacherId FROM Assignment AS ass RIGHT JOIN "
+						+ ",sub.Grade,sub.TeacherId,sub.StudentPublishConsent"
+						+ ",sub.PublishStudentSubmission FROM Assignment"
+						+ " AS ass RIGHT JOIN "
 						+ "Participant AS par ON ass.CourseId=par.CourseId LEFT JOIN "
 						+ "Submission AS sub ON par.userId=sub.studentId WHERE "
 						+ "(par.function='Student') AND (ass.AssignmentId=?)";
@@ -242,29 +217,7 @@ public class SubmissionDAO {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
 	    			getAllSubmissionsWithStudentsStatement, assignmentId);
 	    	for (Map<String, Object> row : rows) {
-	    		SubmissionWrapper submission = new SubmissionWrapper();
-	    		submission.assignmentId = (int) row.get("AssignmentId");
-	    		submission.studentId = (int) row.get("StudentId");
-
-	    		try {
-	    			submission.teacherId = (int) row.get("TeacherId");
-	    		} catch (NullPointerException e) {
-	    			submission.teacherId = null;
-	    		}
-
-	    		try {
-	    			submission.grade = (String) row.get("Grade");
-	    		} catch (NullPointerException e) {
-	    			submission.grade = null;
-	    		}
-
-	    		try {
-	    			submission.submissionDate = ((Timestamp)
-		    				row.get("SubmissionDate")).toString();
-	    		} catch (NullPointerException e) {
-	    			submission.submissionDate = null;
-	    		}
-
+	    		Submission submission = new Submission(row);
 	    		submissions.add(submission);
 	    	}
 
@@ -279,6 +232,15 @@ public class SubmissionDAO {
         return Optional.of(submissions);
     }
     
+    /**
+     * Returns a sought submission from the database.
+     * 
+     * @param assignmentId	assignment identifier
+     * @param userId		user identifier
+     * @return				sought submission
+     * 
+     * @author tfy12hsm
+     */
     public Optional<Submission> getSubmission(int assignmentId, int userId) {
     	Submission result = null;
     	String getStudentSubmissionStatement =
@@ -298,14 +260,5 @@ public class SubmissionDAO {
 
         return Optional.of(result);
 	}
-
-    public static class SubmissionWrapper {
-    	public int assignmentId;
-    	public int studentId;
-    	public String studentName;
-    	public String submissionDate;
-    	public String grade;
-    	public Integer teacherId;
-    }
 }
 
