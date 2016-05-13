@@ -44,9 +44,10 @@ var Assignment = React.createClass({
     render: function (){
         var assignment = this.props.assignment;
         var classname = "assignment menuItem navigationText";
-
-        classname += " active";
-
+        var now = Date.now();
+        if(now > assignment.assignment.startDate && now < assignment.assignment.endDate)
+            classname += " active";
+        
         return <li className={classname}><div onClick={this.handleClick.bind(this,assignment)}>{assignment.assignment.title}</div></li>;
     }
 });
@@ -70,7 +71,7 @@ var Assignments = React.createClass({
             );
         }
 
-        console.log(assList);
+
         return <ul>{assList}</ul>;
     }
 });
@@ -91,8 +92,10 @@ var Course = React.createClass({
         if(this.state.showChildren){
             assignments = <Assignments course={course} role={this.props.role}/>;
         }
+        if(course.course.active){
+            classname += " active";
+        }
 
-        classname += " active";
 
         return <li className={classname}><div onClick={this.handleClick.bind(this,course)}>{course.course.courseName}</div>{assignments}</li>
     }
