@@ -22,10 +22,7 @@ import studentcapture.datalayer.database.User;
 
 /**
  * Controller for handling HTTP requests related to the login page.
- * 
- * 2016-05-13
  * @author dv11osi, c13hbd
- *
  */
 @RestController
 public class LoginDBController {
@@ -37,21 +34,20 @@ public class LoginDBController {
     
     /**
      * Registers a new user.
-     * @param firstName 		First name of the user
-     * @param lastName 			Last name of the user 
-     * @param email 			Email for the user
-     * @param username 			User name for the user
-     * @param password 			Password the user uses to log in.
-     * @param confirmpassword 	The repeated password the user has to input to register
+     * @param firstName
+     * @param lastName
+     * @param email
+     * @param username
+     * @param password
      */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ModelAndView registerUser(
-							 @RequestParam(value="firstname", required = true) 			String firstName,
-							 @RequestParam(value="lastname", required = true)  			String lastName,
-							 @RequestParam(value="email", required = true)     			String email,
-							 @RequestParam(value="username", required = true)  			String username,
-							 @RequestParam(value="password", required = true)  			String password,
-							 @RequestParam(value="confirmpassword", required = true)	String confirmpassword) {
+			@RequestParam(value="firstname", required = true)			String firstName,
+			@RequestParam(value="lastname", required = true)  			String lastName,
+			@RequestParam(value="email", required = true)     			String email,
+			@RequestParam(value="username", required = true)  			String username,
+			@RequestParam(value="password", required = true)  			String password,
+			@RequestParam(value="confirmpassword", required = true) 	String confirmpassword) {
 		
 	    ModelAndView mav = new ModelAndView(); 
 	    mav.setViewName("redirect:login?error=default");
@@ -86,6 +82,7 @@ public class LoginDBController {
 	    	return mav;
 	    }
 	    
+	    
 	    User user = new User(username, firstName, lastName, email, encryptPassword(password));
 	    ObjectMapper mapper = new ObjectMapper();
 	    String jsonInString = "";
@@ -94,7 +91,6 @@ public class LoginDBController {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-	    
 	    URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
 	    		.path("DB/addUser")
 	    		.queryParam("jsonStringUser", jsonInString)
@@ -103,41 +99,50 @@ public class LoginDBController {
 	    boolean response = requestSender.getForObject(targetUrl, Boolean.class);
 	    
 	    if(response) {
+	    	//registration successful
+	    	System.out.println("Registration Success");
 	    	mav.setViewName("redirect:login");
 	    	return mav;
+	    } else {
+	    	//registration failed
+	    	System.out.println("Registration failed");
 	    }
-	    mav.setViewName("redirect:login?registrationfail");
 	    return mav;
 	}
 
 	/**
 	 * Checks if password follows the required format
-	 * The format consists of at least one small character, at least one big character and at least one number.
-	 * The password has to be at least 6 characters long
-	 * @param password The password
+	 * The format consists of atleast one small letter, at least one big letter and at least one number.
+	 * @param password
 	 * @return Returns true if correct format
 	 */
 	protected boolean checkPasswordFormat(String password) {
 		Pattern p = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{6,}$");
 		Matcher m = p.matcher(password);
-		return m.find();
+		if(m.find()) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**
-	 * Checks if the email follows the required format
+	 * Checks if email is in correct format
 	 * @param email The email
-	 * @return True if correct format
+	 * @return True if in correct format
 	 */
 	protected boolean checkEmailFormat(String email) {
 		Pattern p = Pattern.compile("^\\S+@(([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6})$");
 		Matcher m = p.matcher(email);
-		return m.find();
+		if(m.find()) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**
-	 * Checks if a user name exists in the database
+	 * Checks if user exists in database
 	 * @param username The user name
-	 * @return True if user name exists in the database
+	 * @return True if user is in database
 	 */
 	protected boolean checkUserExists(String username) {
 	    URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
@@ -146,28 +151,28 @@ public class LoginDBController {
                 .build()
                 .toUri();
 	    //Send request to DB and get the boolean answer
-	    return requestSender.getForObject(targetUrl, Boolean.class);
+	    return !requestSender.getForObject(targetUrl, Boolean.class);
 	}
 	
 	/**
-	 * Checks if the email exists in the database
+	 * Checks if email exists in database
 	 * @param email The email
-	 * @return True if the email exists in the database
+	 * @return True if email exists in database
 	 */
 	protected boolean checkEmailExists(String email) {
 	    URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
-                .path("DB/usrEmailExist")
+                .path("DB/userEmailExist")
                 .queryParam("email", email)
                 .build()
                 .toUri();
 	    //Send request to DB and get the boolean answer
-	    return requestSender.getForObject(targetUrl, Boolean.class);
+	    return !requestSender.getForObject(targetUrl, Boolean.class);
 	}
 	
 	/**
-	 * Checks if the user name passes the required length.
-	 * @param username The user name
-	 * @return True if it passes
+	 * Checks if the user name is required length 
+	 * @param username The username
+	 * @return True if requirements are met
 	 */
 	protected boolean checkUsernameLength(String username) {
 		if(username.length() > 5) {
@@ -177,8 +182,8 @@ public class LoginDBController {
 	}  
 	
 	/**
-	 * Encrypts a password
-	 * @param password The password to be encrypted
+	 * Encrypts password
+	 * @param password The input password
 	 * @return Encrypted password
 	 */
 	protected String encryptPassword(String password) {

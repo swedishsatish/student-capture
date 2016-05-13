@@ -22,7 +22,7 @@ import studentcapture.config.StudentCaptureApplicationTests;
 
 /**
  * Login controller tests
- * @author Oskar Suikki
+ * @author dv11osi
  *
  */
 public class LoginDBControllerTest extends StudentCaptureApplicationTests {
@@ -102,27 +102,7 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
     		fail("Password is correct but fails");
     	}
     }
-    /*
-    @Test
-    public void passwordEquals() throws Exception {
-    	String password1 = "someThing";
-    	String password2 = "someThing";
-    	LoginDBController c = new LoginDBController();
-    	if(!c.checkPasswordMatches(password1, password2)) {
-    		fail("Password is not equal");
-    	}
-    }
-    
-    @Test
-    public void passwordNotEquals() throws Exception {
-    	String password1 = "sometHing";
-    	String password2 = "someThing";
-    	LoginDBController c = new LoginDBController();
-    	if(c.checkPasswordMatches(password1, password2)) {
-    		fail("Password equals");
-    	}
-    }
-    */
+
     @Test
     public void userLengthIncorrect() throws Exception {
     	String username = "1234";
