@@ -34,6 +34,29 @@ public class SubmissionDAO {
 		return rowsAffected == 1;
 	}
 
+    /**
+     * Make the feedback visible for the student
+     * @param submission
+     * @return
+     */
+    public boolean publishFeedback(Submission submission, boolean publish) {
+        /* Publishing feedback without a grade is not possible, returns false */
+        Grade grade = submission.getGrade();
+        System.out.println("GRADE: " + grade);
+        if (grade == null)
+            return false;
+        /* If a person that is not a teacher tries to set a grade, return false */
+        String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
+        int rows = jdbcTemplate.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
+        if(rows != 1)
+            return false;
+
+        String publishFeedback  = "UPDATE Submission SET publishFeedback = ? WHERE (AssignmentID = ?) AND (StudentID = ?);";
+        int updatedRows = jdbcTemplate.update(publishFeedback, publish, submission.getAssignmentID(), submission.getStudentID());
+
+        return updatedRows == 1;
+    }
+
 	/**
 	 * Add a grade for a subsmission
 	 *
@@ -331,7 +354,5 @@ public class SubmissionDAO {
     	public String studentName;
     	public String submissionDate;
     	public String grade;
-    	public Integer teacherId;
-    }
+    	public Integer teacherId;   }
 }
-

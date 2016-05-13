@@ -22,6 +22,7 @@ public class Submission {
     public void setCourseID(String courseID) {
         this.courseID = courseID;
     }
+
     public void setGrade(Grade grade) {
         this.grade = grade;
     }
