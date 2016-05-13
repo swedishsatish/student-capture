@@ -13,6 +13,9 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -42,84 +45,40 @@ public class AssignmentDAO {
      * @param maxTime         maximum time for the assignment, in seconds
      * @param published       true if the assignment should be published
      * @return the generated AssignmentID
-     * @throws ParseException fails if startDate or endDate is not in the
-     *                        right format
+     * @throws IllegalArgumentException fails if startDate or endDate is not
+     *                        in the right format
      */
     public int createAssignment(String courseID, String assignmentTitle,
                                 String startDate, String endDate,
-                                int minTime, int maxTime, String published)
+                                int minTime, int maxTime, String published, String gradeScale)
     throws IllegalArgumentException {
+        LocalDateTime startDateTime, endDateTime, publishedDate;
 
-        // Check dates
-        try {
-            if (!isValidDateFormat("yyyy-MM-dd HH:mm:ss", startDate)) {
-                throw new IllegalArgumentException("startDate is not in " +
-                        "format YYYY-MM-DD HH:MI:SS");
-            }
-            if (!isValidDateFormat("yyyy-MM-dd HH:mm:ss", endDate)) {
-                throw new IllegalArgumentException("endDate is not in " +
-                        "format YYYY-MM-DD HH:MI:SS");
-            }
-            if (!isValidDateFormat("yyyy-MM-dd HH:mm:ss", published)) {
-                if(published != null) {
-                    throw new IllegalArgumentException("published is not in " +
-                            "format YYYY-MM-DD HH:MI:SS");
-                }
-            }
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Date formatting failed");
+        //Check dates
+        startDateTime = convertStringToLDTFormat(startDate, "startDate is not in format" +
+                " YYYY-MM-DD HH:MI:SS");
+
+        endDateTime = convertStringToLDTFormat(endDate, "endDate is not in " +
+                "format YYYY-MM-DD HH:MI:SS");
+
+        checkIfTime1IsBeforeTime2(startDateTime, endDateTime, "Start date" +
+                " must be before the end date");
+
+        if (published != null) {
+            LocalDateTime currentDate = LocalDateTime.now();
+
+            publishedDate = convertStringToLDTFormat(published, "published is" +
+                    " not in format YYYY-MM-DD HH:MI:SS");
+
+            checkIfTime1IsBeforeTime2(currentDate, publishedDate, "Published" +
+                    " date must be after the current date");
         }
 
         // Check time
-        if (minTime >= maxTime) {
-            throw new IllegalArgumentException("minTime must be less than " +
-                    "maxTime");
-        }
-        if (minTime < 0) {
-            throw new IllegalArgumentException("minTime must be greater or " +
-                    "equal to 0");
-        }
-        if (maxTime <= 0) {
-            throw new IllegalArgumentException("maxTime must be greater " +
-                    "than 0");
-        }
-        if(published != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:MI:SS");
-            Date date = new Date();
-            Date publishedDate = null;
-            Date currentDate = null;
-            try {
-                publishedDate = sdf.parse(published);
-                currentDate = sdf.parse(sdf.format(date));
-            } catch (Exception e) {
-                System.err.println("Date conversion error");
-            }
+        validateMinMaxTime(minTime, maxTime);
 
-            if (publishedDate.before(currentDate)) {
-                throw new IllegalArgumentException("Published date must be after the current date");
-            }
-
-
-        }
-
-
-        // Construct query
-        String insertQueryString;
-        if(published == null) {
-            insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
-                    "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
-                    "Published) VALUES (DEFAULT ,?,?, " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?,?);";
-        } else {
-            insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
-                    "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
-                    "Published) VALUES (DEFAULT ,?,?, " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?," +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'));";
-        }
-
+        // Construct query, depends on if assignment has publishdate or not.
+        String insertQueryString = getQueryString(published);
 
         // Execute query and fetch generated AssignmentID
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -135,13 +94,78 @@ public class AssignmentDAO {
                     ps.setInt(5, minTime);
                     ps.setInt(6, maxTime);
                     ps.setString(7, published);
+                    ps.setString(8, gradeScale);
                     return ps;
                 },
                 keyHolder);
 
         // Return generated AssignmentID
-        return (int) keyHolder.getKeys().get("assignmentid");
-        //return 1;
+        return keyHolder.getKey().intValue();
+    }
+
+    private LocalDateTime convertStringToLDTFormat(String timeDateString,
+                                              String errorMessage)
+            throws IllegalArgumentException {
+        LocalDateTime dateTime;
+
+        try {
+            dateTime = checkIfCorrectDateTimeFormat(timeDateString);
+        } catch (DateTimeParseException e){
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        return dateTime;
+    }
+
+    private LocalDateTime checkIfCorrectDateTimeFormat(String dateTime)
+            throws DateTimeParseException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+                "yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(dateTime, formatter);
+    }
+
+    private void checkIfTime1IsBeforeTime2(LocalDateTime t1, LocalDateTime t2,
+                                     String errorMessage)
+            throws IllegalArgumentException {
+        if (t2.isBefore(t1)){
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
+    private String getQueryString(String published){
+        String insertQueryString;
+
+        if(published == null) {
+            insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
+                    "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
+                    "Published, GradeScale) VALUES (DEFAULT ,?,?, " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?,?,?);";
+        } else {
+            insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
+                    "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
+                    "Published, GradeScale) VALUES (DEFAULT ,?,?, " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?," +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?);";
+        }
+        return insertQueryString;
+    }
+
+    private void validateMinMaxTime(int minTime, int maxTime)
+            throws IllegalArgumentException{
+        if (minTime >= maxTime) {
+            throw new IllegalArgumentException("minTime must be less than " +
+                    "maxTime");
+        }
+        if (minTime < 0) {
+            throw new IllegalArgumentException("minTime must be greater or " +
+                    "equal to 0");
+        }
+        if (maxTime <= 0) {
+            throw new IllegalArgumentException("maxTime must be greater " +
+                    "than 0");
+        }
     }
 
     /**
@@ -151,14 +175,14 @@ public class AssignmentDAO {
      * @param value The date to check.
      * @return True if the date follows the format, false if not.
      */
-    private static boolean isValidDateFormat(String format, String value)
+    /*private static boolean isValidDateFormat(String format, String value)
             throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         Date date = sdf.parse(value);
 
         return value.equals(sdf.format(date));
     }
-
+*/
     /**
      * Fetches info about an assignment from the database.
      * @param assignmentID Unique identifier for an assignment.
