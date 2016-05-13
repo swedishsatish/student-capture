@@ -21,7 +21,7 @@ var PopUpConfirmButton = React.createClass({
     },
     render: function () {
         return(
-            <button id="confirmationButton" onClick={this.onclick}>ok </button>
+            <button id="confirmationButton" onClick={this.onclick}>Confirm</button>
         )
     }
 });

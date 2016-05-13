@@ -9,8 +9,8 @@
 
 #smallText{
     text-align: center;
-    font-size: 200%;
-    color: black;
+    font-size: 150%;
+    color: green;
     display: inline;
 }
 #smallText2 {
@@ -18,24 +18,13 @@
     font-size: 80%;
     color: black;
 }
-#smallText3 {
+#smallLetter {
     text-align: center;
-    font-size: 200%;
+    font-size: 150%;
     color: black;
     display: inline;
 }
-h4 {
-    text-align: center;
-    font-size: 250%;
-    color: green;
-    display: inline;
-}
-h5 {
-    color: black;
-}
-h6 {
-    text-align: center;
-}
+
 
 
 #recorder{
@@ -140,8 +129,6 @@ button{
 * course content
 */
 
-
-
 /*
 *Checkbox style
 */
@@ -149,8 +136,6 @@ button{
     position: relative;
     color: #F5EE9E;
 }
-
-
 /*
 *Popout box
 */
