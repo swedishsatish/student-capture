@@ -6,8 +6,8 @@
 /**
  * Renders all the different built components for the GUI in prioritizing order.
  * For example: First it renders Recorder, then CommentBox and so on.
-*/
- var RenderHandle = React.createClass({
+ */
+var RenderHandle = React.createClass({
     /**
      * Rendering all components for teacher feedback.
      * @returns {XML} components.
@@ -15,9 +15,16 @@
     render: function () {
         return(
             <div class="row">
+
                 <div id="blanket" style={{"display":"none"}}></div>
                 <div id="popUpDiv" style={{"display":"none"}}></div>
+
+
+
                 <div id="feedBackContainer">
+
+                    <TeacherRecordVideo />
+
                     <div id="submissioncontainer">
                         <div id="commentbox">
                             <CommentBox />
