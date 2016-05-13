@@ -68,7 +68,12 @@
          
                         <input type="text" pattern="^.{6,}$" class="loginField" placeholder="username" name="username" required="required"/>
     					  
-    					<p class="tooltipText">Username must be atleast six characters.</p> 
+    					           
+
+                        <div class="tooltip" id="uNameTip">
+                                <p class="tooltipText">Username must be atleast six characters.</p> 
+                                <div class="point" id="uNamePoint"></div>
+                              </div> 
     					  
                         <input type="password" id="firstPass" class="loginField nameField"
                                placeholder="password" name="password"  
@@ -80,7 +85,7 @@
                                   Password must contain atleast one upper case character,
                                    one lower case character and one numeric character.
                                 </p>
-                                <div id="point"></div>
+                                <div class="point"></div>
                               </div> 
                         </input>
                         <input type="password" id="secondPass" class="loginField nameField"
