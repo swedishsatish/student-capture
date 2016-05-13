@@ -28,7 +28,6 @@ window.Settings = React.createClass({
     send a HTTP POST request to save the settings in the database.
      */
     sendPOST: function () {
-        NotificationManager.success('YAY', 'this is awesome');
         $.post(
             window.globalURL + "/settings",
             {
