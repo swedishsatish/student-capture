@@ -7,9 +7,9 @@ env:
   - secure: tt4JBwzWomKsDPo+UfO2OAMyt6nNM7Ryq4OTN/jYzw6nk8QmNXI1d/Rlrg24eFBInrV5Ror+o9roxV/Zl7W9IG4vy6E+sODzZvw4YTL7LjefVZqME8R4qlNE/eel5ZgpOqx965tQDju+gnwpATRuBi5qa08D5pg+rjpM38K/LL7Zoy3WLlh0frjEy5MOQzeD6qWNErEwrwDubHccmZ8qbHQ7hSswtxyruOPOz52Dw/0VmIWpEnfnupOOvAEvERW11GGsBJVV1DJ9evA8wBoOADchZuhFVpjzAzh+2FxB8jXjKMCaJ8j8gy9UoliaSP6hKjGcSJJyBp6KogdBIaLQEg8cu6gnmgdy3WU/W9UYySSUt1LHngmMxdEYfvOzF2ewQM1trttWbRNc4zv85kJ/uuXETxtfJ0MFcJH21wd7VHPBResDJEPJ9qDRCx45IV1/3J6/Mp0sBc2h5BujacWeucro98jKLFh8E4lphNye9S78hJej4ObGGjmK+AkGq0ubRVgOKa8tWDmE+BML7Xq00QUArvqQBXV+DbYjPar/5DWgyZrk2kjJoc/gTpiHhyJUrZ5q5A+y8kqaRs+eMD9FKiJS4M8Ed0jQFwGBScuRTJ1qf+1M3EK7pQkyVYdJldTbtj+t5OhJ0BldvQDqa8z2HbVvzCSULqvhfGXjEXy6VCw=
 
 addons:
-    apt:
-        package:
-            - sshpass
+  apt:
+    package:
+      - sshpass
 
 branches:
   only:
