@@ -1,6 +1,8 @@
 /**
- * Created by sejiaw on 2016-05-10.
+ * Back button for teacher feedback
+ * @author: dv13trm, c14gls, group 6
  */
+
 
 /**
  * Creates the back button used by the GUI.
