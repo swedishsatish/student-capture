@@ -1,5 +1,6 @@
 /**
   This class is a button that is used to leave a blank answer for a question.
+  @author dv13tes, c13bbd
 */
 window.BlankBox = React.createClass({
 
@@ -7,7 +8,9 @@ window.BlankBox = React.createClass({
     error: null, // for error message after http-request
     stat: null, // for error message after http-request
     result: false, // result from submission post
-
+    /**
+     * Sends a http-post with a blank answer when button is clicked
+     */
     handleClick: function () {
         if (confirm("You will leave a blank for this question")) { // if user really wants to leave blank
         // send an http ajax post
@@ -37,6 +40,10 @@ window.BlankBox = React.createClass({
             this.forceUpdate();
         }
     },
+    /**
+     * Renderfunction for studentlist, renders the list on a div
+     * @returns {XML}
+     */
     render: function () {
 
         if (this.withdrew == 1) { // if the withdrawal went ok
