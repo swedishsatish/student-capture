@@ -1,12 +1,25 @@
 var NewAssignment = React.createClass({
+    formDataBuilder: function (blob, fileName) {
+        var fd = new FormData();
+        fd.append("videoName", fileName);
+        fd.append("video", blob);
+        return fd;
+    },
     render : function() {
       return <div>
                 <form id="form" action="assignment" method="post">
                 <input className="inputField" id="title" type="text" defaultValue="title" /><br/>
                 <input className="inputField" id="info" type="text" defaultValue="description" /><br/>
-                    <input className="inputField" id="recap" type="text" defaultValue="recap" /><br/>
-                    
-                <p>VIDEO RECORDING COMPONENT GOES HERE</p>
+                <input className="inputField" id="recap" type="text" defaultValue="recap" /><br/>
+                <Recorder playCallback={this.playVideo}
+                          postURL="/video/textTest" formDataBuilder={this.formDataBuilder}
+                          recButtonID="record-question" stopButtonID="stop-question" fileName="testVid.webm" replay="true"
+                          postButtonID="post-question"
+                />
+                <div className="four columns u-pull-left">
+                    <button id="record-question" className="recControls">Record</button>
+                    <button id="stop-question" className="recControls" disabled>Stop</button>
+                </div>
                 <input id="startDate" type="button" value="yyyy-mm-dd 00:00"/>Start Date<br/>
                 <input id="endDate" type="button" value="yyyy-mm-dd 00:00"/>End Date<br/>
                 <input id="minTimeSeconds" type="number" defaultValue="minTimeSeconds" /><br/>
@@ -18,7 +31,7 @@ var NewAssignment = React.createClass({
                         <option value="U_O_K_G">U,O,K,G</option>
                     </select>Grade scale<br/>
                 <div className="button primary-button" onClick = {handleCancel}> CANCEL </div>
-                <div className="button primary-button" onClick = {submitAssignment}> SUBMIT </div>
+                <div className="button primary-button" id="post-question" onClick = {submitAssignment}> SUBMIT </div>
             </form>
         </div>
     },
@@ -87,7 +100,7 @@ function submitAssignment() {
         timeout : 100000,
         success : function(responseIn) {
             console.log("SUCCESS: ", responseIn);
-            ReactDOM.render(<ReturnMessage message="Success: assignment ID is" response={responseIn}/>, document.getElementById('courseContent'));
+            ReactDOM.render(<VideoComponent assignmentID={responseIn}/>, document.getElementById('courseContent'));
         }, error : function(jqxhr) {
             console.log("ERROR: ", jqxhr);
             ReactDOM.render(<ReturnMessage message="ERROR" reponse=""/>, document.getElementById('courseContent'));
@@ -96,6 +109,24 @@ function submitAssignment() {
         }
     });
 }
+
+var VideoComponent = React.createClass ({
+    render: function() {
+        return (
+            <div>
+                <Recorder playCallback={this.playVideo}
+                                 postURL="/uploadVideo/" formDataBuilder={this.formDataBuilder}
+                                 recButtonID="record-question" stopButtonID="stop-question" fileName="testVid.webm" replay="true"
+                                 postButtonID="post-question"
+                />
+                <div className="four columns u-pull-left">
+                    <button id="record-question" className="recControls">Record</button>
+                    <button id="stop-question" className="recControls" disabled>Stop</button>
+                </div>
+            </div>
+        )
+    }
+});
 
 window.CourseContent = React.createClass({
     render: function() {

@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import studentcapture.config.StudentCaptureApplicationTests;
+import studentcapture.feedback.FeedbackModel;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -39,8 +41,9 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         String sql3 = "INSERT INTO Users VALUES (3, null, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword');";
         String sql4 = "INSERT INTO Course VALUES ('PVT',2016, 'VT', '1234', 'ABC', null, true);";
         String sql5 = "INSERT INTO Assignment VALUES (1, 'PVT', 'OU1', '2016-05-13 10:00:00', '2016-05-13 12:00:00', 60, 180, null, 'XYZ');";
-        String sql6 = "INSERT INTO Submission VALUES (1, 1, null, '2016-05-13 11:00:00', null, null, null);";
-        String sql7 = "INSERT INTO Participant VALUES (3, 'PVT', 'Teacher');";
+        String sql6 = "INSERT INTO Submission VALUES (1, 1, null, '2016-05-13 11:00:00', null, null, null, null);";
+        String sql7 = "INSERT INTO Submission VALUES (1, 3, null, '2016-05-13 11:00:00', 'MVG', 2, null, null);";
+        String sql8 = "INSERT INTO Participant VALUES (3, 'PVT', 'Teacher');";
 
         jdbcMock.update(sql1);
         jdbcMock.update(sql2);
@@ -49,6 +52,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         jdbcMock.update(sql5);
         jdbcMock.update(sql6);
         jdbcMock.update(sql7);
+        jdbcMock.update(sql8);
     }
 
     /**
@@ -74,7 +78,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      */
     @Test
     public void databaseSetUpTest() {
-        String sql = "SELECT * FROM Submission WHERE assignmentID = 1";
+        String sql = "SELECT * FROM Submission WHERE assignmentID = 1 AND studentID = 1";
 
         //Getting values from table Submission
         HashMap<String,String> info = (HashMap<String,String>)
@@ -96,7 +100,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         submission.setCourseID("PVT");
         submissionDAO.setGrade(submission, grade);
 
-        String sql = "SELECT * FROM Submission WHERE assignmentID = 1";
+        String sql = "SELECT * FROM Submission WHERE assignmentID = 1 AND studentID = 1";
 
         //Getting values from table Submission
         HashMap<String,String> info = (HashMap<String,String>)
@@ -149,6 +153,82 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         boolean returnValue = submissionDAO.setGrade(submission, grade);
 
         assertFalse(returnValue);
+    }
+
+    /**
+     * Teacher cannot publish non-graded feedback
+     */
+    @Test
+    public void publishNonGradedFeedback() {
+        Submission submission = new Submission(1,1);
+        submission.setCourseID("PVT");
+        boolean returnValue = submissionDAO.publishFeedback(submission, true);
+
+        assertFalse(returnValue);
+    }
+
+    /**
+     * Teacher publishes feedback
+     */
+    @Test
+    public void publishFeedback() {
+        Submission submission = new Submission(1,1);
+        Grade grade = new Grade("vg", 3);
+        submission.setCourseID("PVT");
+        submission.setGrade(grade);
+
+        boolean returnValue = submissionDAO.publishFeedback(submission, true);
+
+        assertTrue(returnValue);
+    }
+
+    /**
+     * Retrieving ungraded grade, only time should be returned
+     */
+    @Test
+    public void getGradeShouldReturnNullOnGradeAndTeacher() {
+        FeedbackModel model = createFeedbackModel(1,1);
+        Map result = submissionDAO.getGrade(model);
+        assertEquals(null, result.get("grade"));
+        assertEquals(null, result.get("teacher"));
+        assertEquals("2016-05-13 11:00:00.0", result.get("time"));
+        assertEquals(null, result.get("error"));
+    }
+
+    /**
+     * Retrieve graded grade, everything should be returned
+     * (not error message)
+     */
+    @Test
+    public void getGradeShouldReturnAllValues() {
+        FeedbackModel model = createFeedbackModel(1,3);
+        Map result = submissionDAO.getGrade(model);
+        assertEquals("MVG", result.get("grade"));
+        assertEquals("abcd defg", result.get("teacher"));
+        assertEquals("2016-05-13 11:00:00.0", result.get("time"));
+        assertEquals(null, result.get("error"));
+    }
+
+    /**
+     * No rows in the tables has the values sent into getGrade,
+     * error message returned
+     */
+    @Test
+    public void getGradeShouldHandleNonExistingIds() {
+        FeedbackModel model = createFeedbackModel(3546,124);
+        Map result = submissionDAO.getGrade(model);
+        assertEquals(null, result.get("grade"));
+        assertEquals(null, result.get("teacher"));
+        assertEquals(null, result.get("time"));
+        assertEquals("The given parameters does not have an entry in the database",
+                result.get("error"));
+    }
+
+    private FeedbackModel createFeedbackModel(int assignmentID, int studentID) {
+        FeedbackModel model = new FeedbackModel();
+        model.setAssignmentID(assignmentID);
+        model.setStudentID(studentID);
+        return model;
     }
 
     /**

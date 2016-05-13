@@ -5,6 +5,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import studentcapture.feedback.FeedbackModel;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -14,7 +15,7 @@ public class SubmissionDAO {
 
 	// This template should be used to send queries to the database
 	@Autowired
-	protected JdbcTemplate jdbcTemplate;
+	protected JdbcTemplate databaseConnection;
 
 	/**
 	 * Add a new submission for an assignment
@@ -22,6 +23,8 @@ public class SubmissionDAO {
 	 * @param assignmentID Unique identifier for the assignment we're submitting to
 	 * @param studentID    Unique identifier for the student submitting
 	 * @return True if everything went well, otherwise false
+     * 
+     * @author tfy12hsm
 	 */
 	public boolean addSubmission(String assignmentID, String studentID, Boolean studentConsent) {
 		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentConsent) VALUES  (?,?,?,?)";
@@ -29,10 +32,33 @@ public class SubmissionDAO {
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		timestamp.setNanos(0);
 
-		int rowsAffected = jdbcTemplate.update(sql, Integer.parseInt(assignmentID), Integer.parseInt(studentID), timestamp, studentConsent);
+		int rowsAffected = databaseConnection.update(sql, Integer.parseInt(assignmentID), Integer.parseInt(studentID), timestamp, studentConsent);
 
 		return rowsAffected == 1;
 	}
+
+    /**
+     * Make the feedback visible for the student
+     * @param submission
+     * @return
+     */
+    public boolean publishFeedback(Submission submission, boolean publish) {
+        /* Publishing feedback without a grade is not possible, returns false */
+        Grade grade = submission.getGrade();
+        if (grade == null)
+            return false;
+
+        /* If a person that is not a teacher tries to set a grade, return false */
+        String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
+        int rows = databaseConnection.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
+        if(rows != 1)
+            return false;
+
+        String publishFeedback  = "UPDATE Submission SET publishFeedback = ? WHERE (AssignmentID = ?) AND (StudentID = ?);";
+        int updatedRows = databaseConnection.update(publishFeedback, publish, submission.getAssignmentID(), submission.getStudentID());
+
+        return updatedRows == 1;
+    }
 
 	/**
 	 * Add a grade for a subsmission
@@ -44,18 +70,17 @@ public class SubmissionDAO {
 	public boolean setGrade(Submission submission, Grade grade) {
         /* If a person that is not a teacher tries to set a grade, return false */
         String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
-        int rows = jdbcTemplate.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
+        int rows = databaseConnection.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
         if(rows != 1)
             return false;
 
 		String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, SubmissionDate = ?, PublishStudentSubmission = ? WHERE (AssignmentID = ?) AND (StudentID = ?);";
-		int updatedRows = jdbcTemplate.update(setGrade, grade.getGrade(), grade.getTeacherID(), grade.getDate(), grade.getPublishStudentSubmission(), submission.getAssignmentID(), submission.getStudentID());
+		int updatedRows = databaseConnection.update(setGrade, grade.getGrade(), grade.getTeacherID(), grade.getDate(), grade.getPublishStudentSubmission(), submission.getAssignmentID(), submission.getStudentID());
 
 		return updatedRows == 1;
 	}
 
-	private static final String removeSubmissionStatement = "DELETE FROM "
-			+ "Submission WHERE (AssignmentId=? AND StudentId=?)";
+	
 
 	/**
 	 * Remove a submission
@@ -63,14 +88,18 @@ public class SubmissionDAO {
 	 * @param assID     Unique identifier for the assignment with the submission being removed
 	 * @param studentID Unique identifier for the student whose submission is removed
 	 * @return True if everything went well, otherwise false
+     * 
+     * @author tfy12hsm
 	 */
 	public boolean removeSubmission(String assID, String studentID) {
+		String removeSubmissionStatement = "DELETE FROM "
+				+ "Submission WHERE (AssignmentId=? AND StudentId=?)";
 		boolean result;
 		int assignmentId = Integer.parseInt(assID);
 		int studentId = Integer.parseInt(studentID);
 
 		try {
-			int rowsAffected = jdbcTemplate.update(removeSubmissionStatement,
+			int rowsAffected = databaseConnection.update(removeSubmissionStatement,
 					assignmentId, studentId);
 			result = rowsAffected == 1;
 		} catch (IncorrectResultSizeDataAccessException e) {
@@ -85,22 +114,25 @@ public class SubmissionDAO {
 	/**
 	 * Get information about the grade of a submission
 	 *
-	 * @param assignmentID Unique identifier for the assignment submission grade bra
-	 * @param studentID    Unique identifier for the student associated with the submission
+	 * @param model Unique identifier for the assignment submission grade bra
 	 * @return A list containing the grade, date, and grader
 	 */
-	public Map<String, Object> getGrade(int studentID, int assignmentID) {
+	public Map<String, Object> getGrade(FeedbackModel model) {
 		String queryForGrade = "SELECT grade, submissiondate as time, " +
-				"concat(firstname,' ', lastname) as teacher FROM " +
-				"submission FULL OUTER JOIN users ON (teacherid = userid)" +
-				" WHERE (studentid = ? AND assignmentid = ?)";
+				"teacherid FROM submission " +
+				"WHERE (studentid = ? AND assignmentid = ?)";
+		String queryForTeacher = "SELECT concat(firstname,' ', lastname)" +
+				" as teacher FROM users WHERE (userid = ?)";
 		Map<String, Object> response;
 		try {
-			response = jdbcTemplate.queryForMap(queryForGrade,
-					new Object[]{studentID, assignmentID});
-		response.put("time", response.get("time").toString());
-		if (response.get("teacher").equals(" "))
-			response.put("teacher", null);
+			response = databaseConnection.queryForMap(queryForGrade,
+					new Object[]{model.getStudentID(), model.getAssignmentID()});
+			if (response.get("teacherid") != null) {
+				String teacherName = databaseConnection.queryForObject(queryForTeacher,
+						new Object[]{response.get("teacherid")}, String.class);
+				response.put("teacher", teacherName);
+			}
+			response.put("time", response.get("time").toString());
 		} catch(IncorrectResultSizeDataAccessException e) {
 			response = new HashMap<>();
 			response.put("error", "The given parameters does not have an" +
@@ -118,36 +150,26 @@ public class SubmissionDAO {
      *
      * @param assId The assignment to get submissions for
      * @return A list of ungraded submissions for the assignment
+     * 
+     * @author tfy12hsm
      */
-    public Optional<List<SubmissionWrapper>> getAllUngraded(String assId) {
+    public Optional<List<Submission>> getAllUngraded(String assId) {
 
 		String getAllUngradedStatement = "SELECT "
 				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
-				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
-				+ "Submission AS sub LEFT JOIN Users AS stu ON "
+				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId,"
+				+ "sub.StudentPublishConsent,sub.PublishStudentSubmission FROM"
+				+ " Submission AS sub LEFT JOIN Users AS stu ON "
 				+ "sub.studentId=stu.userId WHERE (AssignmentId=?) AND "
 				+ "(Grade IS NULL)";
 
-    	List<SubmissionWrapper> submissions = new ArrayList<>();
+    	List<Submission> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
     	try {
-	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+	    	List<Map<String, Object>> rows = databaseConnection.queryForList(
 	    			getAllUngradedStatement, assignmentId);
 	    	for (Map<String, Object> row : rows) {
-	    		SubmissionWrapper submission = new SubmissionWrapper();
-	    		submission.assignmentId = (int) row.get("AssignmentId");
-	    		submission.studentId = (int) row.get("StudentId");
-	    		//submission.teacherId = (int) row.get("TeacherId");
-	    		//submission.grade = (String) row.get("Grade");
-	    		submission.submissionDate = row.get("SubmissionDate").toString();
-	    		try {
-	    			String firstName = (String) row.get("FirstName");
-		    		String lastName = (String) row.get("LastName");
-		    		submission.studentName = firstName + " " + lastName;
-	    		} catch (NullPointerException e) {
-	    			submission.studentName = null;
-	    		}
-	    		
+	    		Submission submission = new Submission(row);
 	    		submissions.add(submission);
 	    	}
 
@@ -166,44 +188,25 @@ public class SubmissionDAO {
 	 * Get all submissions for an assignment
 	 * @param assId The assignment to get submissions for
 	 * @return A list of submissions for the assignment
+     * 
+     * @author tfy12hsm
 	 */
-    public Optional<List<SubmissionWrapper>> getAllSubmissions(String assId) {
-    	List<SubmissionWrapper> submissions = new ArrayList<>();
+    public Optional<List<Submission>> getAllSubmissions(String assId) {
+    	List<Submission> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
 
 		String getAllSubmissionsStatement = "SELECT "
 				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
-				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId FROM "
-				+ "Submission AS sub LEFT JOIN Users AS stu ON "
+				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId,"
+				+ "sub.StudentPublishConsent,sub.PublishStudentSubmission FROM"
+				+ " Submission AS sub LEFT JOIN Users AS stu ON "
 				+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
 
     	try {
-	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+	    	List<Map<String, Object>> rows = databaseConnection.queryForList(
 	    			getAllSubmissionsStatement, assignmentId);
 	    	for (Map<String, Object> row : rows) {
-	    		SubmissionWrapper submission = new SubmissionWrapper();
-	    		submission.assignmentId = (int) row.get("AssignmentId");
-	    		submission.studentId = (int) row.get("StudentId");
-	    		try {
-	    			submission.teacherId = (int) row.get("TeacherId");
-	    		} catch (NullPointerException e) {
-	    			submission.teacherId = null;
-	    		}
-	    		try {
-	    			submission.grade = (String) row.get("Grade");
-	    		} catch (NullPointerException e) {
-	    			submission.grade = null;
-	    		}
-	    		submission.submissionDate = ((Timestamp)
-	    				row.get("SubmissionDate")).toString();
-	    		try {
-	    			String firstName = (String) row.get("FirstName");
-		    		String lastName = (String) row.get("LastName");
-		    		submission.studentName = firstName + " " + lastName;
-	    		} catch (NullPointerException e) {
-	    			submission.studentName = null;
-	    		}
-
+	    		Submission submission = new Submission(row);
 	    		submissions.add(submission);
 	    	}
 
@@ -225,46 +228,28 @@ public class SubmissionDAO {
 	 *
 	 * @param assId The assignment to get submissions for
 	 * @return A list of submissions for the assignment
+     * 
+     * @author tfy12hsm
 	 */
-    public Optional<List<SubmissionWrapper>> getAllSubmissionsWithStudents
+    public Optional<List<Submission>> getAllSubmissionsWithStudents
     		(String assId) {
-    	List<SubmissionWrapper> submissions = new ArrayList<>();
+    	List<Submission> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
 
 		String getAllSubmissionsWithStudentsStatement =
 				"SELECT ass.AssignmentId,par.UserId AS StudentId,sub.SubmissionDate"
-						+ ",sub.Grade,sub.TeacherId FROM Assignment AS ass RIGHT JOIN "
+						+ ",sub.Grade,sub.TeacherId,sub.StudentPublishConsent"
+						+ ",sub.PublishStudentSubmission FROM Assignment"
+						+ " AS ass RIGHT JOIN "
 						+ "Participant AS par ON ass.CourseId=par.CourseId LEFT JOIN "
 						+ "Submission AS sub ON par.userId=sub.studentId WHERE "
 						+ "(par.function='Student') AND (ass.AssignmentId=?)";
 
     	try {
-	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+	    	List<Map<String, Object>> rows = databaseConnection.queryForList(
 	    			getAllSubmissionsWithStudentsStatement, assignmentId);
 	    	for (Map<String, Object> row : rows) {
-	    		SubmissionWrapper submission = new SubmissionWrapper();
-	    		submission.assignmentId = (int) row.get("AssignmentId");
-	    		submission.studentId = (int) row.get("StudentId");
-
-	    		try {
-	    			submission.teacherId = (int) row.get("TeacherId");
-	    		} catch (NullPointerException e) {
-	    			submission.teacherId = null;
-	    		}
-
-	    		try {
-	    			submission.grade = (String) row.get("Grade");
-	    		} catch (NullPointerException e) {
-	    			submission.grade = null;
-	    		}
-
-	    		try {
-	    			submission.submissionDate = ((Timestamp)
-		    				row.get("SubmissionDate")).toString();
-	    		} catch (NullPointerException e) {
-	    			submission.submissionDate = null;
-	    		}
-
+	    		Submission submission = new Submission(row);
 	    		submissions.add(submission);
 	    	}
 
@@ -279,41 +264,25 @@ public class SubmissionDAO {
         return Optional.of(submissions);
     }
     
-	public Optional<SubmissionWrapper> getSubmissionWithWrapper(int assignmentId,
-			int studentId) {
-		SubmissionWrapper result = new SubmissionWrapper();
-
-		String getStudentSubmissionStatement =
+    /**
+     * Returns a sought submission from the database.
+     * 
+     * @param assignmentId	assignment identifier
+     * @param userId		user identifier
+     * @return				sought submission
+     * 
+     * @author tfy12hsm
+     */
+    public Optional<Submission> getSubmission(int assignmentId, int userId) {
+    	Submission result = null;
+    	String getStudentSubmissionStatement =
 				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
 
 		try {
-	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-	    			getStudentSubmissionStatement, assignmentId, studentId);
-
-	    	for (Map<String, Object> row : rows) {
-	    		result.assignmentId = (int) row.get("AssignmentId");
-	    		result.studentId = (int) row.get("StudentId");
-
-	    		try {
-	    			result.teacherId = (int) row.get("TeacherId");
-	    		} catch (NullPointerException e) {
-	    			result.teacherId = null;
-	    		}
-	    		try {
-	    			result.grade = (String) row.get("Grade");
-	    		} catch (NullPointerException e) {
-	    			result.grade = null;
-	    		}
-	    		try {
-	    			result.submissionDate = row.get("SubmissionDate").toString();
-	    		} catch (NullPointerException e) {
-	    			result.submissionDate = null;
-	    		}
-
-				// TODO: This break statements negates the for loop (it ends on its first iteration)
-	    		break;
-	    	}
-
+	    	Map<String, Object> map = databaseConnection.queryForMap(
+	    			getStudentSubmissionStatement, assignmentId, userId);
+	    	
+	    	 result = new Submission(map);
 	    } catch (IncorrectResultSizeDataAccessException e){
 			//TODO
 		    return Optional.empty();

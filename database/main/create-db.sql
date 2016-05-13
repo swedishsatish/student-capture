@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS Submission (
     Grade               VARCHAR (3),
     TeacherId           INT          references Users(UserId),
     PublishStudentSubmission    Boolean ,
+    PublishFeedback             Boolean ,
     PRIMARY KEY (AssignmentId, StudentId)
     );
 CREATE TABLE IF NOT EXISTS Config (
