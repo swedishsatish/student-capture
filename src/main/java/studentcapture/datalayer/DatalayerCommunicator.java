@@ -243,7 +243,7 @@ public class DatalayerCommunicator {
      * @return hashed password else null.
      */
     @CrossOrigin
-    @RequestMapping(value = "/getHpwsd", method = RequestMethod.POST)
+    @RequestMapping(value = "/getHpswd", method = RequestMethod.POST)
     public String getUserPswd(@RequestParam(value = "username") String username) {
         return userDAO.getPswd(username);
     }
