@@ -14,18 +14,17 @@
     text-align: center;
     font-size: 100%;
     color: green;
-    display: inline;
 }
 #smallText2 {
     text-align: center;
     font-size: 100%;
     color: black;
+    display: inline;
 }
 #smallLetter {
     text-align: center;
-    font-size: 100%;
+    font-size: 200%;
     color: black;
-    display: inline;
 }
 
 #recorder{
@@ -152,6 +151,7 @@ button{
 }
 /* The popup that is shown when a teacher has to confirm the feedback that is about to be given.
  */
+
 #popUpDiv {
     position:relative;
     background-size: 100%;
@@ -165,13 +165,11 @@ button{
  */
 #confirmationButton {
     float: right;
-    margin-right: 15%;
 }
 /* The cancel button, which can be used if the teacher wants to go close the opened popup window.
  */
 #cancelButton {
     float: left;
-    margin-left: 15%;
 }
 /* A container that holds the two different buttons inside the popup, cancel and confirmation buttons.
  */
@@ -191,15 +189,18 @@ button{
   */
 #popUpPass {
     color: greenyellow !important;
+    text-align: center;
 }
 /* Same as above, except this represents the text NOT PASSED, is shown in red due to failure.
  */
 #popUpFail {
+    text-align: center;
     color: red !important;
 }
 /* Defines the color of the given grade to the student, all grades to have the same color, doesn't matter what
  * grade was given.
  */
 #popUpGrade {
-    color: greenyellow;
+    text-align: center;
+    color: greenyellow !important;
 }

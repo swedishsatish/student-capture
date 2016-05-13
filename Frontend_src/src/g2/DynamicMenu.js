@@ -159,7 +159,7 @@ window.RenderMenu = function (userID) {
         var TCList = objToList(res.teacherCourses);
         var name = res.firstName + " " + res.lastName;
         ReactDOM.render(<DynamicMenu tList={TCList} sList={SCList} uid={userID}/>, document.getElementById("desktopNavigation"));
-        ReactDOM.render(<NewProfile name={name}/>, document.getElementById('desktopHeader'));
+        ReactDOM.render(<NewProfile name={name} userID={userID}/>, document.getElementById('desktopHeader'));
     });
 }
 
