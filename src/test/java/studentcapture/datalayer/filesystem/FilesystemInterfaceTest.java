@@ -185,6 +185,20 @@ public class FilesystemInterfaceTest {
 
     }
 
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionAssignment(){
+        FilesystemInterface.storeAssignmentVideo("test","5DV151","1337",null);
+    }
+    @Test
+    public void shouldStoreFileToNewPathAssignment(){
+        createMockFile();
+        FilesystemInterface.storeAssignmentVideo(courseCode,courseID,assignmentID,testFile);
+
+        File storedFile = new File(StudentCaptureApplication.ROOT + "/moose/" +
+                courseCode + "/" + courseID + "/" + assignmentID + "/assignment.webm");
+        assertTrue(storedFile.exists());
+    }
+
     private FeedbackModel createFeedbackModel() {
         FeedbackModel model = new FeedbackModel();
         model.setCourseID(courseID);
