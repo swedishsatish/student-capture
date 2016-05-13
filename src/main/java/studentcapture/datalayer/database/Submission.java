@@ -2,6 +2,9 @@ package studentcapture.datalayer.database;
 
 import java.sql.Timestamp;
 import java.util.Map;
+/**
+ * Created by c13arm on 2016-05-11.
+ */
 
 public class Submission {
 	private Integer assignmentID;
@@ -11,6 +14,7 @@ public class Submission {
     private Grade grade;
     private Integer teacherID;
     private Boolean publishStudentSubmission = false;
+    private String courseID;
 
     public Submission() {
     }
@@ -40,7 +44,14 @@ public class Submission {
 		}
 	}
 
-	public void setGrade(Grade grade) {
+    public String getCourseID() {
+		return courseID;
+    }
+
+    public void setCourseID(String courseID) {
+        this.courseID = courseID;
+    }
+    public void setGrade(Grade grade) {
         this.grade = grade;
     }
 

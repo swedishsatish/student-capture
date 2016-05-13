@@ -96,6 +96,8 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
     public boolean setGrade(@RequestParam(value = "Submission") Submission submission,
                             @RequestParam(value = "Grade") Grade grade) throws IllegalFormatException {
+        String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID() + "");
+        submission.setCourseID(courseID);
         return submissionDAO.setGrade(submission, grade);
     }
 
@@ -198,19 +200,6 @@ public class DatalayerCommunicator {
 
 
     /**
-     * Check if given user name and password exist in database.
-     * @param username a unique user name.
-     * @param pswd password for the unique username
-     * @return true  if correct user password and username is given otherwise false
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public boolean login(@RequestParam(value = "username") String username,
-                         @RequestParam(value = "pswd") String pswd) {
-        return   userDAO.userExist(username,pswd);
-    }
-
-    /**
      * @param userName
      * @return
      */
@@ -226,7 +215,7 @@ public class DatalayerCommunicator {
      * @return true if email exist else false
      */
     @CrossOrigin
-    @RequestMapping(value = "/usrEmailExist", method = RequestMethod.GET)
+    @RequestMapping(value = "/userEmailExist", method = RequestMethod.GET)
     public boolean userEmailExist(@RequestParam(value = "email") String email) {
         return userDAO.emailExist(email);
     }
@@ -238,7 +227,7 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public  void addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
+    public void addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
         ObjectMapper mapper = new ObjectMapper();
         User user = null;
         try {
@@ -248,6 +237,17 @@ public class DatalayerCommunicator {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Get hashed password for a given username.
+     * @param username username for a user
+     * @return hashed password else null.
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/getHpswd", method = RequestMethod.POST)
+    public String getUserPswd(@RequestParam(value = "username") String username) {
+        return userDAO.getPswd(username);
     }
     
     /**

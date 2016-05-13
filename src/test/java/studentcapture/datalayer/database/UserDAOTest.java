@@ -1,8 +1,6 @@
 package studentcapture.datalayer.database;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
@@ -26,29 +24,42 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
 
     @Autowired
     UserDAO userDAO;
-    private static boolean setupHasRun = false;
 
     @Autowired
-    private JdbcTemplate jdbcMock;
+    private  JdbcTemplate jdbcMock;
 
     @Before
     public void setup() {
-        if(setupHasRun) return; // if setup has run before, dont run setup.
-
         String sql = "INSERT INTO users"
                 +" (username, firstname, lastname, email, pswd)"
                 +" VALUES (?, ?, ?, ?, ?)";
 
         Object[] args = new Object[] {"testUser", "testFName", "testLName",
-                                      "testEmail@example.com", "Testtest123"};
+                                      "testEmail@example.com", "testPassword123"};
 
         int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
                 Types.VARCHAR,Types.VARCHAR};
 
         jdbcMock.update(sql,args,types);
 
-        setupHasRun = true;
     }
+
+    /**
+     * Remove all content from the database
+     */
+    @After
+    public void tearDown() {
+        String sql1 = "DELETE FROM Users;";
+        String sql2 = "DELETE FROM Course;";
+        String sql3 = "DELETE FROM Assignment;";
+        String sql4 = "DELETE FROM Submission;";
+
+        jdbcMock.update(sql4);
+        jdbcMock.update(sql3);
+        jdbcMock.update(sql2);
+        jdbcMock.update(sql1);
+    }
+
 
     @Test
     public void testAddUser() {
@@ -70,6 +81,16 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     }
 
     @Test
+    public void testGetPswd() {
+        assertEquals("testPassword123",userDAO.getPswd("testUser"));
+    }
+
+    @Test
+    public void testGetPswdForNonExistingUser() {
+        assertEquals(null,userDAO.getPswd("testUser1"));
+    }
+
+    @Test
     public void testEmailExist() {
         assertTrue(userDAO.emailExist("testEmail@example.com"));
     }
@@ -88,6 +109,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     public void testUserDoesNotExist() {
         assertFalse(userDAO.userNameExist("test321321321321User"));
     }
+
 
     /*
     @Test
@@ -138,10 +160,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
 	*/
 
 
-    @After
-    public void tearDown() {
 
-    }
 
     /**
      *  Used to collect user information, and return a hashmap.

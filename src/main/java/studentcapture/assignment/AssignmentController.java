@@ -19,23 +19,16 @@ import java.net.URL;
 public class AssignmentController {
 
     @RequestMapping(value = "/assignment", method = RequestMethod.POST)
-    public String postAssignment(@RequestBody AssignmentModel assignment) {
+    public String postAssignment(@RequestBody AssignmentModel assignment) throws MalformedURLException {
         RestTemplate rt = new RestTemplate();
         AssignmentErrorHandler assignmentErrorHandler = new AssignmentErrorHandler();
         String res;
 
         rt.setErrorHandler(assignmentErrorHandler);
 
-        try {
-            URL url = new URL("https://localhost:8443/DB/createAssignment");
-            res = rt.postForObject(url.toString(), assignment, String.class);
+        URL url = new URL("https://localhost:8443/DB/createAssignment");
+        res = rt.postForObject(url.toString(), assignment, String.class);
 
-            return res;
-
-        } catch (MalformedURLException e) {
-            System.err.println("Malformed URL in AssignmentController.assignment");
-            System.err.println(e.getMessage());
-            return e.getMessage();
-        }
+        return res;
     }
 }
