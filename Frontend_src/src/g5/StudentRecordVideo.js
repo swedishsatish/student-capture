@@ -20,22 +20,21 @@ var StudentRecordVideo = React.createClass({
     },
     render: function () {
         return (
-            <div>
+<p>
                 <h3>Student Recording Video</h3>
-                <div className="row" id="">
-                    <div className="six columns"><h5 id="isRecording"></h5>
+
+                    <h5 id="isRecording"></h5>
                         <Recorder playCallback={this.playVideo}
                                   postURL="/uploadVideo/" formDataBuilder={this.formDataBuilder}
                                   stopButtonID="studentSubmit" siteView="submission" fileName="submission.webm"
                         />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="four columns u-pull-left">
-                        <button id="studentSubmit" className="recControls" disabled>Submit answer</button>
-                    </div>
-                </div>
-            </div>
+
+
+                     <button id="studentSubmit" className="recControls" disabled>Submit answer</button>
+                     <BlankBox/>
+
+</p>
+
         );
     }
 });

@@ -224,6 +224,10 @@ var Recorder = React.createClass({
 
 
             });
+            var hasModal = document.getElementById("assignment-modal");
+            if (hasModal !== null) {
+                hasModal.style.display = 'none';
+            }
         };
 
         function xhr(url, data, callback) {
@@ -280,7 +284,7 @@ var Recorder = React.createClass({
         return (
             <div>
                 <div id="prev-container">
-                    <video id={id} muted height="100%" width="100%" ></video>
+                    <video id={id} muted ></video>
                 </div>
                 <p id={pId}></p>
             </div>
