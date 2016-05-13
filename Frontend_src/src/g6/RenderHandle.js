@@ -1,13 +1,17 @@
 /**
- * Created by sejiaw on 2016-05-10.
+ * Handles rendering for teacher feedback components.
+ * @author: dv13trm, c14gls, group 6
  */
-
 
 /**
  * Renders all the different built components for the GUI in prioritizing order.
  * For example: First it renders Recorder, then CommentBox and so on.
 */
  var RenderHandle = React.createClass({
+    /**
+     * Rendering all components for teacher feedback.
+     * @returns {XML} components.
+     */
     render: function () {
         return(
             <div class="row">
@@ -42,5 +46,4 @@
     }
 
 });
-
 window.RenderHandle = RenderHandle;

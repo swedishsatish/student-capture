@@ -1,8 +1,12 @@
 /**
- * Created by sejiaw on 2016-05-10.
+ * Submit button for teacher feedback, will ask for
+ * confirmation from teacher then send data to database.
+ * @author: dv13trm, c14gls, group 6
+*/
+
+/**
+ * Cancel button for popup window, closes popup.
  */
-
-
 var PopUpCancelButton = React.createClass({
     onclick: function () {
         close();
@@ -14,6 +18,9 @@ var PopUpCancelButton = React.createClass({
     }
 
 });
+/**
+ * Confirmation button for popup, will send data to database then close window.
+ */
 var PopUpConfirmButton = React.createClass({
     onclick: function () {
         sendData();
@@ -25,47 +32,64 @@ var PopUpConfirmButton = React.createClass({
         )
     }
 });
+/**
+ * Pass text for popup window, will get status from
+ * checkbox then either put PASS or NOT PASSED in text.
+ */
 var PopUpPassBox = React.createClass({
     render: function () {
         if(document.getElementById('ifStudentPass').checked){
             return(
-                <h2 id="popUpPass">PASS</h2>
+                <p id="popUpPass">PASS</p>
             )
         }else{
             return(
-                <h2 id="popUpFail">NOT PASSED</h2>
+                <p id="popUpFail">NOT PASSED</p>
             )
         }
     }
 
 
 });
+/**
+ * Grade for popup window, will get grade teacher selected
+ * from previous window and put that into confirmation text.
+ */
 var PopUpGrade = React.createClass({
 
     render: function () {
         return(
-            <h2 id="popUpGrade">{document.getElementById('dropDownMenu').value}</h2>
+            <p id="popUpGrade">{document.getElementById('dropDownMenu').value}</p>
         )
 
 
     }
 });
+/**
+ * Student name for popup window, will get student
+ * selected for grading then put it into confirmation text.
+ */
 var PopUpStudentName = React.createClass({
     render: function () {
 
         return(
-            <h2 id="popUpStudentName">{this.props.student}</h2>
+            <p id="smallLetter">{this.props.student}</p>
         )
 
     }
 });
-
+/**
+ * Render text for popup window, this object do only create text for window.
+ */
 var PopUpRender = React.createClass({
     render: function () {
         return(
             <div class="row">
-                <h1 id="smallText">You are about to give</h1> <PopUpStudentName student={this.props.student}/> <h1 id="smallLetter">a</h1> <PopUpPassBox/> <h1 id="smallText2">with grade</h1> <PopUpGrade/>
-                <PopUpStudentName student={this.props.student}/> <h3 id="smallText3">will be notified</h3>
+                <p id="smallLetter">You are about to give</p>
+                <PopUpStudentName student={this.props.student}/> <p id="smallLetter">a</p>
+                <PopUpPassBox/> <p id="smallLetter">with grade</p> <PopUpGrade/>
+                <PopUpStudentName student={this.props.student}/>
+                <p id="smallLetter">will be notified</p>
                 <div id="popUpButtonContainer">
                     <PopUpCancelButton/>
                     <PopUpConfirmButton/>
@@ -76,12 +100,18 @@ var PopUpRender = React.createClass({
         )
     }
 });
+/**
+ * Hides popup window.
+ */
 function close(){
     var popUpElement = document.getElementById('popUpDiv');
     var blanketElement = document.getElementById('blanket');
     blanketElement.style.display='none';
     popUpElement.style.display='none';
 }
+/**
+ * Submits data that will sent later, data in reqBody will be sent.
+ */
 function submitForm() {
     var reqBody = {};
     reqBody["TeacherComments"] = document.getElementById('teachercomments').value;
@@ -90,7 +120,6 @@ function submitForm() {
     reqBody["AssignmentID"] = window.assignmentID;
     reqBody["CourseID"] = window.courseID;
     reqBody["TeacherID"] = window.teacherID;
-    //console.log(window.assignmentID+" "+ window.courseID+ " "+ window.teacherID);
 
     $.ajax({
         type: "POST",
@@ -108,6 +137,9 @@ function submitForm() {
         }
     });
 }
+/**
+ * Sending data to database.
+ */
 function sendData () {
     // answer contains true if Ok is pressed., false if cancel is pressed.
     var passedStatus = 'No pass';
@@ -124,14 +156,13 @@ function sendData () {
 
 /**
  * Creates the submit button used by the GUI.
- * See TODO: on top of page.
- * Upon clicking on the button it sends the feedback information to the student.(Not yet implemented)
+ * Upon clicking on the button it sends the feedback information to the student.
  */
-
-
 var SubmitButton = React.createClass({
-    // Upon clicking on the button a popup confirming window is shown,
-
+    /**
+     * Used to toggle on divs, make them visable.
+     * @param div_id div that will be toggled.
+     */
     toggle: function(div_id) {
         var element = document.getElementById(div_id);
         if ( element.style.display == 'none' ) {
@@ -140,7 +171,12 @@ var SubmitButton = React.createClass({
         else {
             element.style.display = 'none';
         }
-    },popUpConfirmation: function (div_id) {
+    },
+    /**
+     * Crates popup on selected div.
+     * @param div_id div that will generate popup.
+     */
+    popUpConfirmation: function (div_id) {
         this.blanket_size(div_id);
         this.window_pos(div_id);
         this.toggle("blanket");
@@ -149,22 +185,31 @@ var SubmitButton = React.createClass({
 
 
     },
+    /**
+     * Rendering popup window in react class.
+     */
     popUpRender: function () {
         ReactDOM.render(<PopUpRender student={this.props.student}/>,document.getElementById('popUpDiv'));
-    }, blanket_size: function(popUpDivVar) {
+    },
+    /**
+     * Set size for popup blanket.
+     * @param popUpDivVar Div that blanket will be generated on.
+     */
+    blanket_size: function(popUpDivVar) {
         var popUpDiv_height;
         var viewportheight;
         var blanket_height;
-
         if (typeof window.innerWidth != 'undefined') {
             viewportheight = window.innerHeight;
         } else {
             viewportheight = document.documentElement.clientHeight;
         }
-        if ((viewportheight > document.body.parentNode.scrollHeight) && (viewportheight > document.body.parentNode.clientHeight)) {
+        if ((viewportheight > document.body.parentNode.scrollHeight) &&
+            (viewportheight > document.body.parentNode.clientHeight)) {
             blanket_height = viewportheight;
         } else {
-            if (document.body.parentNode.clientHeight > document.body.parentNode.scrollHeight) {
+            if (document.body.parentNode.clientHeight >
+                document.body.parentNode.scrollHeight) {
                 blanket_height = document.body.parentNode.clientHeight;
             } else {
                 blanket_height = document.body.parentNode.scrollHeight;
@@ -175,7 +220,12 @@ var SubmitButton = React.createClass({
         var popUpDiv = document.getElementById(popUpDivVar);
         popUpDiv_height=blanket_height/2-200;//200 is half popup's height
         popUpDiv.style.top = popUpDiv_height + 'px';
-    },window_pos: function(popUpDivVar) {
+    },
+    /**
+     * Calculates window position based on window size.
+     * @param popUpDivVar div that will be used for window.
+     */
+    window_pos: function(popUpDivVar) {
         var viewportwidth;
         var window_width;
         if (typeof window.innerWidth != 'undefined') {
@@ -183,7 +233,8 @@ var SubmitButton = React.createClass({
         } else {
             viewportwidth = document.documentElement.clientHeight;
         }
-        if ((viewportwidth > document.body.parentNode.scrollWidth) && (viewportwidth > document.body.parentNode.clientWidth)) {
+        if ((viewportwidth > document.body.parentNode.scrollWidth) &&
+            (viewportwidth > document.body.parentNode.clientWidth)) {
             window_width = viewportwidth;
         } else {
             if (document.body.parentNode.clientWidth > document.body.parentNode.scrollWidth) {
@@ -196,7 +247,11 @@ var SubmitButton = React.createClass({
         window_width=window_width/2-200;//200 is half popup's width
         popUpDiv.style.left = window_width + 'px';
     },
-
+    /**
+     * onclick function for submit button.
+     * Will check if textarea is empty then ask for confirmation
+     * from user if they want to leave it empty. If yes popup window will be generated.
+     */
     onClick: function() {
         if(document.getElementById('teachercomments').value===''){
             var saftyCheck = confirm("Are you sure you want to leave comment box empty?");
@@ -210,15 +265,9 @@ var SubmitButton = React.createClass({
         }
     },
     /**
-     *     <div id="blanket" style="display:none;"></div>
-     <div id="popUpDiv" style="display:none;">
-     <button id="okButton">Ok</button>
-     <button id="closeButton">Cancel</button>
-     </div>
-     * TODO: Send information to the database.
-     * TODO: Information is defined as grade, feedback comments and so on.
+     * Render function for submitbutton.
+     * @returns {XML} A button.
      */
-    // Render function for SubmitButton
     render: function () {
         return (
             <button id="submitbutton" onClick={this.onClick}>Submit</button>

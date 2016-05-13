@@ -30,7 +30,7 @@ window.CreateCourse = React.createClass({
         fd.append("term",$("#course-term").val());
         fd.append("courseName",$("#course-name").val());
         fd.append("courseDescription",tinymce.get('course-description').getContent());
-        fd.append("active",$("#course-active").val());
+        fd.append("active",$("#course-active").is(":checked"));
         fd.append("userID",uid);
 
         var request = new XMLHttpRequest();
@@ -54,7 +54,7 @@ window.CreateCourse = React.createClass({
 
 
         }
-
+        
         request.open('POST', window.globalURL + "/DB/addCourseWithTeacher",true);
 
         request.send(fd);
