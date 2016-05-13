@@ -24,7 +24,7 @@ import java.util.HashMap;
  *
  * @author Group4, Group6
  * @see AssignmentModel
- * @see FeedbackModel
+ * @see Submission
  * @version 0.3 05/02/16 Ongoing - Fixed db-request on set.
  * @since 0.2, 04/29/16 Fixed model.
  * @since 0.1, 04/28/16 Added "set"-mapping method.
@@ -90,20 +90,20 @@ public class FeedbackController {
     }
 
     /**
-     * Will set the given grade for the Feedback.
-     * @param fm The given feedback that will be inserted/updated.
+     * Will set the given grade for the Submission.
+     * @param submission The given feedback that will be inserted/updated.
      * @see LTICommunicator
-     * @see FeedbackModel
+     * @see Submission
      */
     @RequestMapping(value = "set", method = RequestMethod.POST)
-    public HashMap<String, String> setFeedback(@RequestBody FeedbackModel fm) {
+    public HashMap<String, String> setFeedback(@RequestBody Submission submission) {
 
         URI targetUrl = UriComponentsBuilder.fromUriString(dataLayerHostURI)
                 .path(dataLayerSetGrade)
-                .queryParam("assID", String.valueOf(fm.getAssignmentID()))
-                .queryParam("teacherID", fm.getTeacherID())
-                .queryParam("studentID", String.valueOf(fm.getStudentID()))
-                .queryParam("grade", fm.getGrade())
+                .queryParam("assID", String.valueOf(submission.getAssignmentID()))
+                .queryParam("teacherID", submission.getGrade().getTeacherID())
+                .queryParam("studentID", String.valueOf(submission.getStudentID()))
+                .queryParam("grade", submission.getGrade().getGrade())
                 .build()
                 .toUri();
         HashMap<String, String> addToDB = getExternalResponse(targetUrl);
@@ -114,7 +114,7 @@ public class FeedbackController {
 
         //TODO: Set grade in LTI.
         try {
-            LTICommunicator.setGrade(fm);
+            LTICommunicator.setGrade(submission);
         }
         catch (LTIInvalidGradeException e) {
             //TODO: Will need to notify the client.

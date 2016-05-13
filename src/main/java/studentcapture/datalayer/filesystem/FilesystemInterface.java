@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.datalayer.database.Submission;
-import studentcapture.feedback.FeedbackModel;
 
 import java.io.*;
 

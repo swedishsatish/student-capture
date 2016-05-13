@@ -14,7 +14,6 @@ import studentcapture.datalayer.database.*;
 import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
-import studentcapture.feedback.FeedbackModel;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -197,18 +196,18 @@ public class DatalayerCommunicator {
 
     /**
      * Sends the feedback video file.
-     * @param model    Model containing the information needed to get the correct video.
+     * @param submission    Model containing the information needed to get the correct video.
      * @return         The video file vie http.
      */
     @CrossOrigin
     @RequestMapping(value = "/getFeedbackVideo",
             method = RequestMethod.GET, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> getAssignmentVideo(@Valid FeedbackModel model) {
+    public ResponseEntity<InputStreamResource> getAssignmentVideo(@Valid Submission submission) {
         String path = FilesystemInterface.generatePath(
-                                            model.getCourseCode(),
-                                            model.getCourseID(),
-                                            Integer.toString(model.getAssignmentID()),
-                                            Integer.toString(model.getStudentID()));
+                                            submission.getCourseCode(),
+                                            submission.getCourseID(),
+                                            Integer.toString(submission.getAssignmentID()),
+                                            Integer.toString(submission.getStudentID()));
 
         return FilesystemInterface.getVideo(path + FilesystemConstants.FEEDBACK_VIDEO_FILENAME);
    }

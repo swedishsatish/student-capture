@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import studentcapture.config.StudentCaptureApplicationTests;
-import studentcapture.feedback.FeedbackModel;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
