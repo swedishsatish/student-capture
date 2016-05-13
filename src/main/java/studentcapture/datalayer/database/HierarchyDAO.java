@@ -161,7 +161,7 @@ public class HierarchyDAO {
     						throw new NullPointerException();
 					} catch (NullPointerException e) {
     					currentSubmission = submissionDAO.getSubmission(
-    							assignmentId,userId).get();
+    							assignmentId,studentId).get();
     					currentAssignment.getSubmissions().put(studentId,
     							currentSubmission);
     				}

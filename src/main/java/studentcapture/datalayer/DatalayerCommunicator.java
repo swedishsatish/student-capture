@@ -261,6 +261,8 @@ public class DatalayerCommunicator {
      * @return						true i successful, else false
      * 
      * @see Course
+     * 
+     * @author tfy12hsm
      */
     @CrossOrigin
     @RequestMapping(
@@ -280,6 +282,22 @@ public class DatalayerCommunicator {
     			courseDescription, active);
     }
     
+    /**
+     * Adds a course with a to the database.
+     * 
+     * @param courseID
+     * @param courseCode
+     * @param year
+     * @param term
+     * @param courseName
+     * @param courseDescription		
+     * @param active				
+     * @return						true i successful, else false
+     * 
+     * @see Course
+     * 
+     * @author tfy12hsm
+     */
     @Transactional(rollbackFor=Exception.class)
     @CrossOrigin
     @RequestMapping(
@@ -310,6 +328,8 @@ public class DatalayerCommunicator {
      *
      * @param courseID		    course identifier
      * @return					found course
+     * 
+     * @author tfy12hsm
      */
     @CrossOrigin
     @RequestMapping(
@@ -321,6 +341,16 @@ public class DatalayerCommunicator {
     	return courseDAO.getCourse(courseID);
     }
 
+    /**
+     * Adds participant to course in database.
+     * 
+     * @param userID		users identifier
+     * @param courseID		courses identifier
+     * @param function		users function/role in the course
+     * @return				true if successful, else false
+     * 
+     * @author tfy12hsm
+     */
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -334,6 +364,15 @@ public class DatalayerCommunicator {
     	return participantDAO.addParticipant(userID, courseID, function);
     }
     
+    /**
+     * Returns function/role of a participant in a course.
+     * 
+     * @param userID		users identifier
+     * @param courseID		courses identifier
+     * @return				function/role as string, null if no function,role found
+     * 
+     * @author tfy12hsm
+     */
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -349,6 +388,14 @@ public class DatalayerCommunicator {
     	return null;
     }
     
+    /**
+     * 
+     * 
+     * @param userID
+     * @return
+     * 
+     * @author tfy12hsm
+     */
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -382,6 +429,8 @@ public class DatalayerCommunicator {
      *
      * @param assignmentID		assignment identifier
      * @return					list of submissions
+     * 
+     * @author tfy12hsm
      */
     @CrossOrigin
     @RequestMapping(
@@ -400,6 +449,8 @@ public class DatalayerCommunicator {
      *
      * @param assignmentID		assignment identifier
      * @return					list of submissions
+     * 
+     * @author tfy12hsm
      */
     @CrossOrigin
     @RequestMapping(
@@ -419,6 +470,8 @@ public class DatalayerCommunicator {
      *
      * @param assignmentID		assignment identifier
      * @return					list of submissions
+     * 
+     * @author tfy12hsm
      */
     @CrossOrigin
     @RequestMapping(
@@ -438,6 +491,8 @@ public class DatalayerCommunicator {
      *
      * @param assignmentID		assignment identifier
      * @return					list of submissions
+     * 
+     * @author tfy12hsm
      */
     @CrossOrigin
     @RequestMapping(

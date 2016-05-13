@@ -7,7 +7,8 @@ import java.util.Map;
 
 /**
  * Used to collect all relevant data in a users course-assignment
- * hierarchy.
+ * hierarchy. A course-assignment hierarchy is a container of all 
+ * information required to display the main page.
  *
  * @author tfy12hsm
  */

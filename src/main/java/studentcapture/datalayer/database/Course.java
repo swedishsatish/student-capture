@@ -25,7 +25,7 @@ public class Course {
 	}
 	
 	/**
-	 * Constructor that parses a map of database elements.
+	 * Parses a map of database elements and adds them to the 
 	 * 
 	 * @param map		map of database elements
      * 
@@ -36,8 +36,16 @@ public class Course {
 		year = (Integer) map.get("Year");
 		term = (String) map.get("Term");
 		courseCode = (String) map.get("CourseCode");
-		courseName = (String) map.get("CourseName");
-		courseDescription = (String) map.get("CourseDescription");
+		try {
+			courseName = (String) map.get("CourseName");
+		} catch (NullPointerException e) {
+			courseName = null;
+		}
+		try {
+			courseDescription = (String) map.get("CourseDescription");
+		} catch (NullPointerException e) {
+			courseDescription = null;
+		}
 		active = (Boolean) map.get("Active");
 	}
 	
