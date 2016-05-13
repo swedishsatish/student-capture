@@ -1,5 +1,6 @@
 package studentcapture.datalayer.database;
 
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Map;
 /**
@@ -7,7 +8,9 @@ import java.util.Map;
  */
 
 public class Submission {
+    @NotNull
 	private Integer assignmentID;
+    @NotNull
     private Integer studentID;
     private Boolean studentPublishConsent = false;
     private Timestamp submissionDate;
