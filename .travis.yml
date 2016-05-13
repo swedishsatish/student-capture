@@ -26,6 +26,6 @@ script: "./tests.sh"
 after_success:
   - mkdir build
   - mv * build
-  - tar -czf package.tar build
+  - tar -czf package.tgz build
   - export SSHPASS=$DEPLOY_PASS
   - sshpass -e scp -o stricthostkeychecking=no package.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
