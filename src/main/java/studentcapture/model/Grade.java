@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.model;
 
 import java.util.Date;
 
@@ -10,12 +10,18 @@ public class Grade {
     private int teacherID;
     private Date date;
     private boolean publishStudentSubmission = false;
+    private boolean publishFeedback = false;
 
     public Grade(String grade, int teacherID) {
         this.grade = grade;
         this.teacherID = teacherID;
         this.date = new Date();
     }
+
+    public boolean getPublishFeedback() { return publishFeedback; }
+
+    public void setPublishFeedback(boolean publishFeedback) { this.publishFeedback = publishFeedback; }
+
     public boolean getPublishStudentSubmission() {
         return publishStudentSubmission;
     }

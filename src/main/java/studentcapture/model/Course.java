@@ -1,7 +1,12 @@
-package studentcapture.datalayer.database;
+package studentcapture.model;
 
 import java.util.Map;
 
+/**
+ * 
+ * @author tfy12hsm
+ *
+ */
 public class Course {
 	private String courseId;
 	private Integer year;
@@ -19,13 +24,28 @@ public class Course {
 		parseMap(map);
 	}
 	
+	/**
+	 * Parses a map of database elements and adds them to the 
+	 * 
+	 * @param map		map of database elements
+     * 
+     * @author tfy12hsm
+	 */
 	public void parseMap(Map<String, Object> map) {
 		courseId = (String) map.get("CourseId");
 		year = (Integer) map.get("Year");
 		term = (String) map.get("Term");
 		courseCode = (String) map.get("CourseCode");
-		courseName = (String) map.get("CourseName");
-		courseDescription = (String) map.get("CourseDescription");
+		try {
+			courseName = (String) map.get("CourseName");
+		} catch (NullPointerException e) {
+			courseName = null;
+		}
+		try {
+			courseDescription = (String) map.get("CourseDescription");
+		} catch (NullPointerException e) {
+			courseDescription = null;
+		}
 		active = (Boolean) map.get("Active");
 	}
 	

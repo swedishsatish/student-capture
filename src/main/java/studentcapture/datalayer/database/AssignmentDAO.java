@@ -8,10 +8,17 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.model.Assignment;
+
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -21,7 +28,7 @@ import java.util.Optional;
  * Created by E&S on 4/26/16.
  */
 @Repository
-public class Assignment {
+public class AssignmentDAO {
 
     // This template should be used to send queries to the database
     @Autowired
@@ -41,84 +48,40 @@ public class Assignment {
      * @param maxTime         maximum time for the assignment, in seconds
      * @param published       true if the assignment should be published
      * @return the generated AssignmentID
-     * @throws ParseException fails if startDate or endDate is not in the
-     *                        right format
+     * @throws IllegalArgumentException fails if startDate or endDate is not
+     *                        in the right format
      */
     public int createAssignment(String courseID, String assignmentTitle,
                                 String startDate, String endDate,
-                                int minTime, int maxTime, String published)
+                                int minTime, int maxTime, String published, String gradeScale)
     throws IllegalArgumentException {
+        LocalDateTime startDateTime, endDateTime, publishedDate;
 
-        // Check dates
-        try {
-            if (!isValidDateFormat("yyyy-MM-dd HH:mm:ss", startDate)) {
-                throw new IllegalArgumentException("startDate is not in " +
-                        "format YYYY-MM-DD HH:MI:SS");
-            }
-            if (!isValidDateFormat("yyyy-MM-dd HH:mm:ss", endDate)) {
-                throw new IllegalArgumentException("endDate is not in " +
-                        "format YYYY-MM-DD HH:MI:SS");
-            }
-            if (!isValidDateFormat("yyyy-MM-dd HH:mm:ss", published)) {
-                if(published != null) {
-                    throw new IllegalArgumentException("published is not in " +
-                            "format YYYY-MM-DD HH:MI:SS");
-                }
-            }
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Date formatting failed");
+        //Check dates
+        startDateTime = convertStringToLDTFormat(startDate, "startDate is not in format" +
+                " YYYY-MM-DD HH:MI:SS");
+
+        endDateTime = convertStringToLDTFormat(endDate, "endDate is not in " +
+                "format YYYY-MM-DD HH:MI:SS");
+
+        checkIfTime1IsBeforeTime2(startDateTime, endDateTime, "Start date" +
+                " must be before the end date");
+
+        if (published != null) {
+            LocalDateTime currentDate = LocalDateTime.now();
+
+            publishedDate = convertStringToLDTFormat(published, "published is" +
+                    " not in format YYYY-MM-DD HH:MI:SS");
+
+            checkIfTime1IsBeforeTime2(currentDate, publishedDate, "Published" +
+                    " date must be after the current date");
         }
 
         // Check time
-        if (minTime >= maxTime) {
-            throw new IllegalArgumentException("minTime must be less than " +
-                    "maxTime");
-        }
-        if (minTime < 0) {
-            throw new IllegalArgumentException("minTime must be greater or " +
-                    "equal to 0");
-        }
-        if (maxTime <= 0) {
-            throw new IllegalArgumentException("maxTime must be greater " +
-                    "than 0");
-        }
-        if(published != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:MI:SS");
-            Date date = new Date();
-            Date publishedDate = null;
-            Date currentDate = null;
-            try {
-                publishedDate = sdf.parse(published);
-                currentDate = sdf.parse(sdf.format(date));
-            } catch (Exception e) {
-                System.err.println("Date conversion error");
-            }
+        validateMinMaxTime(minTime, maxTime);
 
-            if (publishedDate.before(currentDate)) {
-                throw new IllegalArgumentException("Published date must be after the current date");
-            }
-
-
-        }
-
-
-        // Construct query
-        String insertQueryString;
-        if(published == null) {
-            insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
-                    "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
-                    "Published) VALUES (DEFAULT ,?,?, " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?,?);";
-        } else {
-            insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
-                    "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
-                    "Published) VALUES (DEFAULT ,?,?, " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?," +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'));";
-        }
-
+        // Construct query, depends on if assignment has publishdate or not.
+        String insertQueryString = getQueryString(published);
 
         // Execute query and fetch generated AssignmentID
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -134,13 +97,78 @@ public class Assignment {
                     ps.setInt(5, minTime);
                     ps.setInt(6, maxTime);
                     ps.setString(7, published);
+                    ps.setString(8, gradeScale);
                     return ps;
                 },
                 keyHolder);
 
         // Return generated AssignmentID
-        return (int) keyHolder.getKeys().get("assignmentid");
-        //return 1;
+        return keyHolder.getKey().intValue();
+    }
+
+    private LocalDateTime convertStringToLDTFormat(String timeDateString,
+                                              String errorMessage)
+            throws IllegalArgumentException {
+        LocalDateTime dateTime;
+
+        try {
+            dateTime = checkIfCorrectDateTimeFormat(timeDateString);
+        } catch (DateTimeParseException e){
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        return dateTime;
+    }
+
+    private LocalDateTime checkIfCorrectDateTimeFormat(String dateTime)
+            throws DateTimeParseException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+                "yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(dateTime, formatter);
+    }
+
+    private void checkIfTime1IsBeforeTime2(LocalDateTime t1, LocalDateTime t2,
+                                     String errorMessage)
+            throws IllegalArgumentException {
+        if (t2.isBefore(t1)){
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
+    private String getQueryString(String published){
+        String insertQueryString;
+
+        if(published == null) {
+            insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
+                    "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
+                    "Published, GradeScale) VALUES (DEFAULT ,?,?, " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?,?,?);";
+        } else {
+            insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
+                    "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
+                    "Published, GradeScale) VALUES (DEFAULT ,?,?, " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?," +
+                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?);";
+        }
+        return insertQueryString;
+    }
+
+    private void validateMinMaxTime(int minTime, int maxTime)
+            throws IllegalArgumentException{
+        if (minTime >= maxTime) {
+            throw new IllegalArgumentException("minTime must be less than " +
+                    "maxTime");
+        }
+        if (minTime < 0) {
+            throw new IllegalArgumentException("minTime must be greater or " +
+                    "equal to 0");
+        }
+        if (maxTime <= 0) {
+            throw new IllegalArgumentException("maxTime must be greater " +
+                    "than 0");
+        }
     }
 
     /**
@@ -150,21 +178,21 @@ public class Assignment {
      * @param value The date to check.
      * @return True if the date follows the format, false if not.
      */
-    private static boolean isValidDateFormat(String format, String value)
+    /*private static boolean isValidDateFormat(String format, String value)
             throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         Date date = sdf.parse(value);
 
         return value.equals(sdf.format(date));
     }
-
+*/
     /**
      * Fetches info about an assignment from the database.
      * @param assignmentID Unique identifier for an assignment.
      * @return A list containing information about the assignment.
      *      The list is on the form [course ID, assignment title, opening datetime, closing datetime, minimum video time, maximum video time]
      */
-    public ArrayList<String> getAssignmentInfo(int assignmentID){
+    public Assignment getAssignmentInfo(int assignmentID){
         ArrayList<String> returnValues = new ArrayList<>();
 
         // Construct query
@@ -190,10 +218,16 @@ public class Assignment {
         } catch (DataAccessException down) {
             throw down;
         }
-
         // Format results
+        Assignment assignment = new Assignment();
+        assignment.setCourseID(returnValues.get(0));
+        assignment.setTitle(returnValues.get(1));
+        assignment.setStartDate(new Timestamp(System.currentTimeMillis()));
+        assignment.setEndDate(new Timestamp(System.currentTimeMillis()));
+        assignment.setMinTime(Integer.parseInt(returnValues.get(4)));
+        assignment.setMaxTime(Integer.parseInt(returnValues.get(5)));
 
-        return returnValues;
+        return assignment;
     }
 
 	public String getAssignmentID(String courseID,String assignmentTitle){
@@ -206,24 +240,22 @@ public class Assignment {
         return jdbcTemplate.queryForObject(sql, new Object[]{assignmentID},String.class);
     }
 
-	public Optional<AssignmentWrapper> getAssignmentWithWrapper(
-			int assignmentId) {
+    /**
+     * Returns a sought assignment from the database.
+     * 
+     * @param assignmentId		assignments identifier
+     * @return					sought assignment
+     * 
+     * @author tfy12hsm
+     */
+	public Optional<Assignment> getAssignment(int assignmentId) {
 		try {
             String getAssignmentStatement = "SELECT * FROM "
                     + "Assignment WHERE AssignmentId=?";
 
 			Map<String, Object> map = jdbcTemplate.queryForMap(
 	    			getAssignmentStatement, assignmentId);
-			AssignmentWrapper result = new AssignmentWrapper();
-	    	result.assignmentId = (int) map.get("AssignmentId");
-	    	result.courseId = (String) map.get("CourseId");
-	    	
-	    	result.title = (String) map.get("Title");
-	    	result.StartDate = map.get("StartDate").toString();
-	    	result.EndDate = map.get("EndDate").toString();
-	    	result.minTime = (int) map.get("MinTime");
-	    	result.maxTime = (int) map.get("MaxTime");
-	    	result.published = (boolean) map.get("Published");
+			Assignment result = new Assignment(map);
 	    	
 	    	return Optional.of(result);
 		} catch (IncorrectResultSizeDataAccessException e){
@@ -243,16 +275,5 @@ public class Assignment {
 
     public boolean removeAssignment(String assignmentID){
         throw new UnsupportedOperationException();
-    }
-
-    public static class AssignmentWrapper {
-    	public int assignmentId;
-    	public String courseId;
-    	public String title;
-    	public String StartDate;
-    	public String EndDate;
-    	public int minTime;
-    	public int maxTime;
-    	public boolean published;
     }
 }

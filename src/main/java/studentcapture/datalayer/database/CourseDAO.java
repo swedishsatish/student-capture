@@ -6,6 +6,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.model.Course;
+
 import java.util.Map;
 
 /**
@@ -24,6 +26,8 @@ public class CourseDAO {
      * @param year		the year the course takes place
      * @param term		the term the course takes palce (ex. VT)
      * @return			true if successful, else false
+     * 
+     * @author tfy12hsm
      */
     public boolean addCourse(String courseID, String courseCode, String year,
     		String term, String courseName, String courseDescription, 
@@ -63,13 +67,9 @@ public class CourseDAO {
      * Attempts to retrieve all data regarding a course from the database.
      *
      * @param courseID	target courses database identification
-     * @return			list of course data in order:<ul>
-     * 					<li>the courses database identification</li>
-     * 					<li>the courses 6 character identification</li>
-     * 					<li>the year the course takes place</li>
-     * 					<li>the term the course takes place</li>
-     * 					<li>the courses name</li></ul>
-     * 					If unsuccessful, an empty list is returned.
+     * @return			sought after course
+     * 
+     * @author tfy12hsm
      */
 	public Course getCourse(String courseID) {
 		Course result = new Course();
@@ -88,11 +88,44 @@ public class CourseDAO {
 		return result;
 	}
 
+	/**
+	 * 
+	 * 
+	 * @param courseID
+	 * @param description
+	 * @return
+	 */
+	public Boolean changeDescriptionOnCourse(String courseID, 
+			String description) {
+		String changeDescriptionOnCourseStatement = "UPDATE Course SET "
+				+ "CourseDescription=? WHERE CourseId=?";
+		Boolean result = null;
+		
+		try {
+            int rowsAffected = jdbcTemplate.update(
+            		changeDescriptionOnCourseStatement, description, 
+            		courseID);
+            if (rowsAffected == 1) {
+            	result = true;
+            } else {
+            	result = false;
+            }
+        } catch (IncorrectResultSizeDataAccessException e){
+            result = false;
+        } catch (DataAccessException e1){
+            result = false;
+        }
+
+        return result;
+	}
+	
     /**
      * Attempts to remove a course from the database.
      *
      * @param courseID	courses database identification
      * @return			true if successful, else false
+     * 
+     * @author tfy12hsm
      */
     public boolean removeCourse(String courseID) {
     	boolean result;

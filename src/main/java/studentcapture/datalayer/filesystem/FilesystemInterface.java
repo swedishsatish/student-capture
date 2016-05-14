@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
-import studentcapture.feedback.FeedbackModel;
+import studentcapture.model.Submission;
 
 import java.io.*;
 
@@ -60,12 +60,12 @@ public class FilesystemInterface {
 		return path;
 	}
 
-	public static String generatePathFromModel(FeedbackModel model){
+	public static String generatePathFromModel(Submission submission){
 		String path = generatePath(
-				model.getCourseCode(),
-				model.getCourseID(),
-				""+model.getAssignmentID(),
-				""+model.getStudentID());
+				submission.getCourseCode(),
+				submission.getCourseID(),
+				""+submission.getAssignmentID(),
+				""+submission.getStudentID());
 
 		return path;
 	}
@@ -159,6 +159,32 @@ public class FilesystemInterface {
 	}
 
 	/**
+	 * Store the assignment video for an assignment at a course.
+	 *
+	 * @param courseCode the code for the course.
+	 * @param courseID course id from the database.
+	 * @param assignmentID from database.
+	 * @return true if video was stored successfully, false otherwise.
+	 * @author c13ljn
+	 */
+	public static boolean storeAssignmentVideo(String courseCode, String courseID,
+											String assignmentID, MultipartFile source) {
+
+		String path = FilesystemInterface.generatePath(courseCode, courseID,
+				assignmentID);
+
+        try {
+			storeFile(source, path, FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
+
+	/**
 	 * Store the teacher's feedback video to a student submission.
 	 *
 	 * @param courseCode the code for the course.
@@ -193,7 +219,7 @@ public class FilesystemInterface {
 	 * @param userId from database
 	 * @return true if video was stored successfully
 	 */
-	public static boolean storeFeedbackText(FeedbackModel model, MultipartFile source) {
+	public static boolean storeFeedbackText(Submission model, MultipartFile source) {
 		return storeFeedbackText(
 				model.getCourseCode(),
 				model.getCourseID(),
@@ -229,7 +255,7 @@ public class FilesystemInterface {
 	}
 
 	/**
-	 * Stores assignment description in the filesystem as a text file
+	 * Stores assignment description or recap depending on the filename parameter
 	 * @param courseCode courses 6 character identifier
 	 * @param courseId a unique database id
 	 * @param assignmentId a unique database id
@@ -261,11 +287,11 @@ public class FilesystemInterface {
 
     /**
      * Reads a feedback text file from a teacher from the moose hard drive and returns it.
-     * @param model the feedback model containing params to generate the path to the file.
+     * @param submission the submission model containing params to generate the path to the file.
      * @return the teacher's written feedback as a string.
      */
-	public static String getFeedbackText(FeedbackModel model) {
-		String path = generatePathFromModel(model)+FilesystemConstants.FEEDBACK_TEXT_FILENAME;
+	public static String getFeedbackText(Submission submission) {
+		String path = generatePathFromModel(submission)+FilesystemConstants.FEEDBACK_TEXT_FILENAME;
 		String feedbackText = "";
 		try {
 			String line;

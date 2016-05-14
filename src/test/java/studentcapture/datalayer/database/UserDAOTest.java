@@ -1,7 +1,6 @@
 package studentcapture.datalayer.database;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
@@ -9,12 +8,14 @@ import org.springframework.web.context.WebApplicationContext;
 import studentcapture.config.StudentCaptureApplicationTests;
 // import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 
+
+import studentcapture.model.User;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.sql.Types;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by tfy12hsm.
@@ -28,20 +29,48 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     UserDAO userDAO;
 
     @Autowired
-    private JdbcTemplate jdbcMock;
+    private  JdbcTemplate jdbcMock;
 
     @Before
     public void setup() {
+        String sql = "INSERT INTO users"
+                +" (username, firstname, lastname, email, pswd)"
+                +" VALUES (?, ?, ?, ?, ?)";
+
+        Object[] args = new Object[] {"testUser", "testFName", "testLName",
+                                      "testEmail@example.com", "testPassword123"};
+
+        int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
+                Types.VARCHAR,Types.VARCHAR};
+
+        jdbcMock.update(sql,args,types);
 
     }
+
+    /**
+     * Remove all content from the database
+     */
+    @After
+    public void tearDown() {
+        String sql1 = "DELETE FROM Users;";
+        String sql2 = "DELETE FROM Course;";
+        String sql3 = "DELETE FROM Assignment;";
+        String sql4 = "DELETE FROM Submission;";
+
+        jdbcMock.update(sql4);
+        jdbcMock.update(sql3);
+        jdbcMock.update(sql2);
+        jdbcMock.update(sql1);
+    }
+
 
     @Test
     public void testAddUser() {
 
         User user = new User("userPelle","Pelle","Jönsson","pelle@gmail.com",
-                            "saltad0f991238","mypassword123");
+                            "mypassword123");
 
-        userDAO.addUser(user);
+       boolean res = userDAO.addUser(user);
 
         //Getting values from table user
         String sql = "SELECT * FROM users WHERE username = 'userPelle'";
@@ -52,33 +81,40 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         assertEquals("Jönsson",dbUser.getlName());
         assertEquals("pelle@gmail.com",dbUser.getEmail());
         assertEquals("mypassword123",dbUser.getPswd());
+
+        assertTrue(res);
+    }
+
+    @Test
+    public void testGetPswd() {
+        assertEquals("testPassword123",userDAO.getPswd("testUser"));
+    }
+
+    @Test
+    public void testGetPswdForNonExistingUser() {
+        assertEquals(null,userDAO.getPswd("testUser1"));
     }
 
     @Test
     public void testEmailExist() {
-
-//        User userFirst = new User("userPelle_1","Pelle","Jönsson","pelle_1@gmail.com",
-//                "saltad0f991238","mypassword123");
-//
-//        User userSec = new User("userPelle_2","Pelle","Jönsson","pelle_2@gmail.com",
-//                "saltad0f991238","mypassword123");
-//
-//
-//        userDAO.addUser("user1","förnamn","efternamn","user1@gmail.com",
-//                     "saltet","mittlösen");
-
-
-
-//        String res = user.addUser("user2","förnamn","efternamn","user1@gmail.com",
-//                "saltet","mittlösen");
-//
-//        assertEquals("EMAIL EXIST",res);
+        assertTrue(userDAO.emailExist("testEmail@example.com"));
     }
 
     @Test
-    public void testUserNameIsUniqueAddUser() {
-
+    public void testEmailDoesNotExist() {
+        assertFalse(userDAO.emailExist("testEmail2@example.com"));
     }
+
+    @Test
+    public void testUserExist() {
+        assertTrue(userDAO.userNameExist("testUser"));
+    }
+
+    @Test
+    public void testUserDoesNotExist() {
+        assertFalse(userDAO.userNameExist("test321321321321User"));
+    }
+
 
     /*
     @Test
@@ -128,6 +164,9 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     }
 	*/
 
+
+
+
     /**
      *  Used to collect user information, and return a hashmap.
      */
@@ -137,7 +176,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         public Object mapRow(ResultSet rs, int i) throws SQLException {
             User user = new User(rs.getString("username"),rs.getString("firstname"),
                     rs.getString("lastname"),rs.getString("email"),
-                    rs.getString("salt"),rs.getString("pswd"));
+                    rs.getString("pswd"));
             return user;
         }
     }

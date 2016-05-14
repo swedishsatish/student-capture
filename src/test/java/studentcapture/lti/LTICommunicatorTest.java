@@ -3,7 +3,8 @@ package studentcapture.lti;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import studentcapture.feedback.FeedbackModel;
+import studentcapture.model.Grade;
+import studentcapture.model.Submission;
 
 /**
  * Will test the LTICommunicator
@@ -11,20 +12,20 @@ import studentcapture.feedback.FeedbackModel;
  */
 public class LTICommunicatorTest {
 
-    FeedbackModel fm;
+    Submission submission;
     @Before
     public void setUp() throws Exception {
-        fm = new FeedbackModel();
-        fm.setGrade("0.1");
-        fm.setFeedbackText("Dåligt");
-        fm.setAssignmentID(100);
-        fm.setCourseID("2000");
-        fm.setStudentID(12);
+        submission = new Submission();
+        submission.setGrade(new Grade("VG", 1));
+        submission.setFeedback("Dåligt");
+        submission.setAssignmentID(100);
+        submission.setCourseID("2000");
+        submission.setStudentID(12);
     }
 
     @After
     public void tearDown() throws Exception {
-        fm = null;
+        submission = null;
     }
 
     @Test

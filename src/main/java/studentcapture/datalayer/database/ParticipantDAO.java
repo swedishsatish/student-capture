@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import studentcapture.model.Participant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +16,12 @@ import java.util.Optional;
 /**
  * Created by c13gan on 2016-04-26.
  */
-public class Participant {
+@Repository
+public class ParticipantDAO {
 
     // This template should be used to send queries to the database
-    @Autowired
+	@Autowired
     protected JdbcTemplate jdbcTemplate;
-
-    private static final String addParticipantStatement = "INSERT INTO Participant VALUES (?,?,?)";
 
     /**
      * Add a new participant to a course by connecting the tables "User" and "Course" in the database.
@@ -28,8 +30,11 @@ public class Participant {
      * @param courseId      unique identifier, registration code
      * @param function      student, teacher, ....
      * @return              true if insertion worked, else false
+     * 
+     * @author tfy12hsm
      */
     public boolean addParticipant(String userID, String courseId, String function) {
+    	String addParticipantStatement = "INSERT INTO Participant VALUES (?,?,?)";
         boolean result;
         int userId = Integer.parseInt(userID);
 
@@ -53,6 +58,8 @@ public class Participant {
      * @param userID        unique identifier for a person
      * @param courseId      unique identifier, registration code
      * @return              role of a person
+     * 
+     * @author tfy12hsm
      */
     public Optional<String> getFunctionForParticipant(String userID, String courseId) {
     	String result = null;
@@ -81,9 +88,11 @@ public class Participant {
      *
      * @param courseId      unique identifier, registration code
      * @return              List of tuples: CAS_ID - function
+     * 
+     * @author tfy12hsm
      */
-    public Optional<List<ParticipantWrapper>> getAllParticipantsFromCourse(String courseId){
-    	List<ParticipantWrapper> participants = new ArrayList<>();
+    public Optional<List<Participant>> getAllParticipantsFromCourse(String courseId){
+    	List<Participant> participants = new ArrayList<>();
 
         String getAllParticipantFromCourseStatement =
                 "SELECT * FROM Participant WHERE (CourseId=?)";
@@ -92,10 +101,7 @@ public class Participant {
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(
 					getAllParticipantFromCourseStatement, courseId);
 			for (Map<String, Object> row : rows) {
-				ParticipantWrapper participant = new ParticipantWrapper();
-				participant.userId = (int) row.get("UserId");
-				participant.courseId = (String) row.get("CourseId");
-				participant.function = (String) row.get("Function");
+				Participant participant = new Participant(row);
 				participants.add(participant);
 			}
 
@@ -115,21 +121,21 @@ public class Participant {
      *
      * @param userID        unique identifier for a person
      * @return              List of tuples: CourseID - function
+     * 
+     * @author tfy12hsm
      */
-    public Optional<List<ParticipantWrapper>> getAllCoursesForParticipant(String userID) {
-    	List<ParticipantWrapper> participants = new ArrayList<>();
+    public Optional<List<Participant>> getAllCoursesIDsForParticipant(String userID) {
+    	List<Participant> participants = new ArrayList<>();
     	int userId = Integer.parseInt(userID);
 
         String getAllCoursesForParticipantStatement =
-                "SELECT CourseId,Function FROM Participant WHERE (UserId=?)";
+                "SELECT * FROM Participant WHERE (UserId=?)";
 
     	try {
 	    	List<Map<String, Object>> rows = jdbcTemplate.queryForList(
 	    			getAllCoursesForParticipantStatement, userId);
 	    	for (Map<String, Object> row : rows) {
-	    		ParticipantWrapper participant = new ParticipantWrapper();
-	    		participant.courseId = (String) row.get("CourseId");
-	    		participant.function = (String) row.get("Function");
+	    		Participant participant = new Participant(row);
 	    		participants.add(participant);
 	    	}
 
@@ -151,6 +157,8 @@ public class Participant {
      * @param userID        unique identifier for a person
      * @param courseId      unique identifier, registration code
      * @return              true if removal worked, else false
+     * 
+     * @author tfy12hsm
      */
     public boolean removeParticipant(String userID, String courseId){
     	boolean result;
@@ -169,11 +177,5 @@ public class Participant {
             result = false;
         }
         return result;
-    }
-
-    public class ParticipantWrapper {
-    	public int userId;
-    	public String courseId;
-    	public String function;
     }
 }

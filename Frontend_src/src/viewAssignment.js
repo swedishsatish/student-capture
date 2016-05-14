@@ -66,6 +66,8 @@ window.AssignmentContent = React.createClass({
                 </div>
             </div>
         )
+    },
+    componentDidMount: function() {
     }
 });
 
