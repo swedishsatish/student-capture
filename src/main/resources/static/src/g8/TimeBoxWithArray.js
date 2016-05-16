@@ -1,6 +1,7 @@
 /**
-  Class that asks for the start- and end-time of a task/assignment and displays them, also time left
-*/
+ Class that asks for the start- and end-time of a task/assignment and displays them, also time left
+ @author dv13tes, c13bbn
+ */
 window.TimeBoxWithArray = React.createClass({
 
     startTime: null,
@@ -20,8 +21,11 @@ window.TimeBoxWithArray = React.createClass({
     },
     /* This function will automatically run before the class has been rendered*/
     componentWillMount: function () {
-       this.getInitTime();
+        this.getInitTime();
     },
+    /**
+     * Get
+     */
     getInitTime: function() {
         $.ajax({
             url: window.globalURL + "/assignment/returnArray", // URL to send to
@@ -81,7 +85,7 @@ window.TimeBoxWithArray = React.createClass({
                 </div>
             );
 
-        // If the time for the exam has passed
+            // If the time for the exam has passed
         } else if (currentTime>=this.endTime) {
             clearInterval(this.intervalId);
             return (
