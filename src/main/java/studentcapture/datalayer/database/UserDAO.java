@@ -7,6 +7,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.model.User;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -32,6 +34,8 @@ public class UserDAO {
 
     /**
      * Add a new user to the User-table in the database.
+     * @author Timmy Olsson
+     *
      * @param user  instance that contains information of the user to be added.
      */
     public boolean addUser(User user) {
@@ -59,6 +63,8 @@ public class UserDAO {
 
     /**
      * Return password for a user
+     * @author Timmy Olsson
+     *
      * @param userName
      * @return
      */
@@ -77,6 +83,7 @@ public class UserDAO {
 
     /**
      * Remove a user from the User-table in the database.
+     * @author Timmy Olsson
      *
      * @param username     unique identifier for a person
      * @return          true if the remove succeed, else false.
@@ -108,6 +115,9 @@ public class UserDAO {
 
 
     /**
+     * Checks if given username already exists.
+     * @author Timmy Olsson
+     *
      * @param userName user name for user.
      * @return true if it exists else false
      */
@@ -122,6 +132,8 @@ public class UserDAO {
     }
 
     /**
+     * Checks if given email already exists.
+     * @author Timmy Olsson.
      *
      * @param email
      * @return true if email exist else false
@@ -171,6 +183,7 @@ public class UserDAO {
 
 	/**
      *  Used to collect user information, and return a hashmap.
+     *  @author Timmy Olsson
      */
     protected class UserWrapper implements org.springframework.jdbc.core.RowMapper {
 

@@ -8,6 +8,9 @@ import org.springframework.web.context.WebApplicationContext;
 import studentcapture.config.StudentCaptureApplicationTests;
 // import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 
+
+import studentcapture.model.User;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;

@@ -25,7 +25,6 @@ cnclBtn.onclick = function() {
     regForm.style.display = "none";
     regForm.reset();
 }
-
 //------------------------------------modal-------------------------------------
 
 var modal = document.getElementById('myModal');
@@ -51,4 +50,57 @@ window.onclick = function(event) {
     if (event.target == modal) {
         modal.style.display = "none";
     }
+}
+
+
+//window.RegisterForm = RegisterForm;
+
+//--------------------------------error handling--------------------------------
+var urlVars = window.location.search.toLowerCase().substr(1).split("&");
+var err = false, type = "";
+for(var i=0; i<urlVars.length; i++) {
+    var varSplit = urlVars[i].split("=");
+    if(varSplit[0]==="error"){
+        console.log(varSplit);
+        if(varSplit.length>1){
+            for(var j=1; j<varSplit.length; j++) {
+                type += varSplit[j];
+            }
+        }
+        err = true;
+        break;
+    }
+}
+/*
+error=invalidEmail
+error=invallidPassword
+error=duplicateUsername
+error=duplicateEmail
+*/
+if(err){
+    var msg;
+    switch(type){
+        case "login":
+            msg = "Login failed";
+            break;
+        case "register":
+            msg = "Registration failed";
+            break;
+        case "invalidEmail":
+            msg = "Invalid Email";
+            break;
+        case "invalidPassword":
+            msg = "Invalid Email";
+            break;
+        case "duplicateUsername":
+            msg = "Username already taken";
+            break;
+        case "duplicateEmail":
+            msg = "Email already associated with an account";
+            break;
+        default:
+            msg = "Unknown Error";
+            break;
+    }
+    alert("TERRIBLE ERROR \n"+msg);
 }

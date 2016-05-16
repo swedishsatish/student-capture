@@ -6,11 +6,15 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
+
 import studentcapture.config.StudentCaptureApplicationTests;
+import studentcapture.model.Grade;
+import studentcapture.model.Submission;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -40,7 +44,8 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         String sql4 = "INSERT INTO Course VALUES ('PVT',2016, 'VT', '1234', 'ABC', null, true);";
         String sql5 = "INSERT INTO Assignment VALUES (1, 'PVT', 'OU1', '2016-05-13 10:00:00', '2016-05-13 12:00:00', 60, 180, null, 'XYZ');";
         String sql6 = "INSERT INTO Submission VALUES (1, 1, null, '2016-05-13 11:00:00', null, null, null, null);";
-        String sql7 = "INSERT INTO Participant VALUES (3, 'PVT', 'Teacher');";
+        String sql7 = "INSERT INTO Submission VALUES (1, 3, null, '2016-05-13 11:00:00', 'MVG', 2, null, null);";
+        String sql8 = "INSERT INTO Participant VALUES (3, 'PVT', 'Teacher');";
 
         jdbcMock.update(sql1);
         jdbcMock.update(sql2);
@@ -49,6 +54,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         jdbcMock.update(sql5);
         jdbcMock.update(sql6);
         jdbcMock.update(sql7);
+        jdbcMock.update(sql8);
     }
 
     /**
@@ -176,6 +182,55 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         boolean returnValue = submissionDAO.publishFeedback(submission, true);
 
         assertTrue(returnValue);
+    }
+
+    /**
+     * Retrieving ungraded grade, only time should be returned
+     */
+    @Test
+    public void getGradeShouldReturnNullOnGradeAndTeacher() {
+        Submission model = createSubmissionModel(1,1);
+        Map result = submissionDAO.getGrade(model);
+        assertEquals(null, result.get("grade"));
+        assertEquals(null, result.get("teacher"));
+        assertEquals("2016-05-13 11:00:00.0", result.get("time"));
+        assertEquals(null, result.get("error"));
+    }
+
+    /**
+     * Retrieve graded grade, everything should be returned
+     * (not error message)
+     */
+    @Test
+    public void getGradeShouldReturnAllValues() {
+        Submission submission = createSubmissionModel(1,3);
+        Map result = submissionDAO.getGrade(submission);
+        assertEquals("MVG", result.get("grade"));
+        assertEquals("abcd defg", result.get("teacher"));
+        assertEquals("2016-05-13 11:00:00.0", result.get("time"));
+        assertEquals(null, result.get("error"));
+    }
+
+    /**
+     * No rows in the tables has the values sent into getGrade,
+     * error message returned
+     */
+    @Test
+    public void getGradeShouldHandleNonExistingIds() {
+        Submission submission = createSubmissionModel(3546,124);
+        Map result = submissionDAO.getGrade(submission);
+        assertEquals(null, result.get("grade"));
+        assertEquals(null, result.get("teacher"));
+        assertEquals(null, result.get("time"));
+        assertEquals("The given parameters does not have an entry in the database",
+                result.get("error"));
+    }
+
+    private Submission createSubmissionModel(int assignmentID, int studentID) {
+        Submission submission = new Submission();
+        submission.setAssignmentID(assignmentID);
+        submission.setStudentID(studentID);
+        return submission;
     }
 
     /**

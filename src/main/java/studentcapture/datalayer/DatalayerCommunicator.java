@@ -13,14 +13,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.*;
+import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
-import studentcapture.feedback.FeedbackModel;
+import studentcapture.model.Assignment;
+import studentcapture.model.Course;
+import studentcapture.model.Grade;
+import studentcapture.model.Hierarchy;
+import studentcapture.model.Participant;
+import studentcapture.model.Submission;
+import studentcapture.model.User;
 
 import javax.validation.Valid;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by c12osn on 2016-04-22.
@@ -49,17 +58,18 @@ public class DatalayerCommunicator {
     FilesystemInterface fsi;
 
     /**
-     * Gets the feedback, the actuall grade, the grader and the time for a graded submission from the
+     * Gets the feedback, the actual grade, the grader and the time for a graded submission from the
      * database and the file system.
      *
-     * @param model
+     * @param submission
      * @return
      */
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
-    public Map<String, Object> getGrade(@Valid FeedbackModel model) {
-        Map result = submissionDAO.getGrade(model);
-        result.put("feedback", fsi.getFeedbackText(model));
+    public Map<String, Object> getGrade(@Valid Submission submission) {
+        Map result = submissionDAO.getGrade(submission);
+        submission.setCourseCode(courseDAO.getCourseCodeFromId(submission.getCourseID()));
+        result.put("feedback", fsi.getFeedbackText(submission));
         return result;
     }
 
@@ -117,22 +127,22 @@ public class DatalayerCommunicator {
     /**
      * Save grade for a submission
      *
-     * @param submission Object containing assignmentID, studentID
-     * @param grade Object containing grade, teacherID, date, publish
+     * @param submission An object representing a submission
+     * @param grade An object representing a grade
      * @return True if the grade was successfully saved to the database, else false
      */
     @CrossOrigin
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
     public boolean setGrade(@RequestParam(value = "Submission") Submission submission,
-                            @RequestParam(value = "Grade") Grade grade) throws IllegalFormatException {
-        String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID() + "");
+                            @RequestParam(value = "Grade") Grade grade) {
+        String courseID = assignment.getCourseIDForAssignment(String.valueOf(submission.getAssignmentID()));
         submission.setCourseID(courseID);
         return submissionDAO.setGrade(submission, grade);
     }
 
     /**
      * Set feedback for a submission, video and text cannot be null
-     * @param submission Object containing assignmentID, studentID
+     * @param submission An object representing a submission
      * @param feedbackVideo Video feedback
      * @param feedbackText Text feedback
      * @return True if feedback was successfully saved to the database, else false
@@ -142,19 +152,34 @@ public class DatalayerCommunicator {
     public boolean setFeedback(@RequestParam(value = "Submission") Submission submission,
                                @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
                                @RequestParam(value = "feedbackText") MultipartFile feedbackText) {
-        String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID() + "");
+        String courseID = assignment.getCourseIDForAssignment(String.valueOf(submission.getAssignmentID()));
         String courseCode = courseDAO.getCourseCodeFromId(courseID);
         int feedback = 0;
     	if(feedbackVideo != null) {
-            fsi.storeFeedbackVideo(courseCode, courseID, submission.getAssignmentID() + "", submission.getStudentID() + "", feedbackVideo); // submission.getstudentID() should be int/String?
+            fsi.storeFeedbackVideo(courseCode, courseID, String.valueOf(submission.getAssignmentID()), String.valueOf(submission.getStudentID()), feedbackVideo);
             feedback++;
         }
         if(feedbackText != null) {
-            fsi.storeFeedbackText(courseCode, courseID, submission.getAssignmentID() + "", submission.getStudentID() + "", feedbackText); // submission.getstudentID() should be int/String?
+            fsi.storeFeedbackText(courseCode, courseID, String.valueOf(submission.getAssignmentID()), String.valueOf(submission.getStudentID()), feedbackText);
             feedback++;
         }
 
         return feedback != 0;
+    }
+
+    /**
+     * Publish feedback to the student
+     * @param submission An object representing a submission
+     * @param publish A boolean, true represent publish and false unpublish
+     * @return True if feedback could be published/unpublished, else false
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/publishFeedback", method = RequestMethod.POST)
+    public boolean publishFeedback(@RequestParam(value = "Submission") Submission submission,
+                               @RequestParam(value = "Publish") boolean publish) {
+        String courseID = assignment.getCourseIDForAssignment(String.valueOf(submission.getAssignmentID()));
+        submission.setCourseID(courseID);
+        return submissionDAO.publishFeedback(submission, publish);
     }
 
     /**
@@ -181,18 +206,18 @@ public class DatalayerCommunicator {
 
     /**
      * Sends the feedback video file.
-     * @param model    Model containing the information needed to get the correct video.
+     * @param submission    Model containing the information needed to get the correct video.
      * @return         The video file vie http.
      */
     @CrossOrigin
     @RequestMapping(value = "/getFeedbackVideo",
             method = RequestMethod.GET, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> getAssignmentVideo(@Valid FeedbackModel model) {
+    public ResponseEntity<InputStreamResource> getAssignmentVideo(@Valid Submission submission) {
         String path = FilesystemInterface.generatePath(
-                                            model.getCourseCode(),
-                                            model.getCourseID(),
-                                            Integer.toString(model.getAssignmentID()),
-                                            Integer.toString(model.getStudentID()));
+                                            submission.getCourseCode(),
+                                            submission.getCourseID(),
+                                            Integer.toString(submission.getAssignmentID()),
+                                            Integer.toString(submission.getStudentID()));
 
         return FilesystemInterface.getVideo(path + FilesystemConstants.FEEDBACK_VIDEO_FILENAME);
    }
@@ -296,6 +321,8 @@ public class DatalayerCommunicator {
      * @return						true i successful, else false
      * 
      * @see Course
+     *
+     * @author tfy12hsm
      */
     @CrossOrigin
     @RequestMapping(
@@ -315,6 +342,22 @@ public class DatalayerCommunicator {
     			courseDescription, active);
     }
     
+    /**
+     * Adds a course with a to the database.
+     *
+     * @param courseID
+     * @param courseCode
+     * @param year
+     * @param term
+     * @param courseName
+     * @param courseDescription
+     * @param active
+     * @return						true i successful, else false
+     *
+     * @see Course
+     *
+     * @author tfy12hsm
+     */
     @Transactional(rollbackFor=Exception.class)
     @CrossOrigin
     @RequestMapping(
@@ -345,6 +388,8 @@ public class DatalayerCommunicator {
      *
      * @param courseID		    course identifier
      * @return					found course
+     *
+     * @author tfy12hsm
      */
     @CrossOrigin
     @RequestMapping(
@@ -356,6 +401,16 @@ public class DatalayerCommunicator {
     	return courseDAO.getCourse(courseID);
     }
 
+    /**
+     * Adds participant to course in database.
+     *
+     * @param userID		users identifier
+     * @param courseID		courses identifier
+     * @param function		users function/role in the course
+     * @return				true if successful, else false
+     *
+     * @author tfy12hsm
+     */
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -369,6 +424,15 @@ public class DatalayerCommunicator {
     	return participantDAO.addParticipant(userID, courseID, function);
     }
     
+    /**
+     * Returns function/role of a participant in a course.
+     *
+     * @param userID		users identifier
+     * @param courseID		courses identifier
+     * @return				function/role as string, null if no function,role found
+     *
+     * @author tfy12hsm
+     */
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -384,6 +448,14 @@ public class DatalayerCommunicator {
     	return null;
     }
     
+    /**
+     *
+     *
+     * @param userID
+     * @return
+     *
+     * @author tfy12hsm
+     */
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -417,6 +489,8 @@ public class DatalayerCommunicator {
      *
      * @param assignmentID		assignment identifier
      * @return					list of submissions
+     *
+     * @author tfy12hsm
      */
     @CrossOrigin
     @RequestMapping(
@@ -435,6 +509,8 @@ public class DatalayerCommunicator {
      *
      * @param assignmentID		assignment identifier
      * @return					list of submissions
+     *
+     * @author tfy12hsm
      */
     @CrossOrigin
     @RequestMapping(
@@ -454,6 +530,8 @@ public class DatalayerCommunicator {
      *
      * @param assignmentID		assignment identifier
      * @return					list of submissions
+     *
+     * @author tfy12hsm
      */
     @CrossOrigin
     @RequestMapping(
@@ -471,8 +549,10 @@ public class DatalayerCommunicator {
      * including students that are part of the course but has not yet made a
      * submissionDAO.
      *
-     * @param assignmentID		assignment identifier
+     * @param userID		assignment identifier
      * @return					list of submissions
+     *
+     * @author tfy12hsm
      */
     @CrossOrigin
     @RequestMapping(

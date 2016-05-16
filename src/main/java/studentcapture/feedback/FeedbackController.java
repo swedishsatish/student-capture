@@ -11,6 +11,7 @@ import studentcapture.lti.LTICommunicator;
 import studentcapture.lti.LTIInvalidGradeException;
 import studentcapture.lti.LTINullPointerException;
 import studentcapture.lti.LTISignatureException;
+import studentcapture.model.Submission;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -23,7 +24,7 @@ import java.util.HashMap;
  *
  * @author Group4, Group6
  * @see AssignmentModel
- * @see FeedbackModel
+ * @see Submission
  * @version 0.3 05/02/16 Ongoing - Fixed db-request on set.
  * @since 0.2, 04/29/16 Fixed model.
  * @since 0.1, 04/28/16 Added "set"-mapping method.
@@ -43,43 +44,42 @@ public class FeedbackController {
 
     /**
      * Get the feedback from the datalayer
-     * @param model model with the params needed for getting the feedback
+     * @param submission model with the params needed for getting the feedback
      * @return grade, feedback, teachername and timestamp in a hashmap
      */
     @CrossOrigin
     @RequestMapping(value = "get", method = RequestMethod.GET)
-    public HashMap handleFeedbackRequestFromStudent(@Valid FeedbackModel model) {
+    public HashMap handleFeedbackRequestFromStudent(@Valid Submission submission) {
         //TODO Unsafe data needs to be cleaned
-        URI targetURI = constructURI(model, dataLayerHostURI + dataLayerGetGrade);
+        URI targetURI = constructURI(submission, dataLayerHostURI + dataLayerGetGrade);
 
         return getExternalResponse(targetURI);
     }
 
-    private URI constructURI(@Valid FeedbackModel model, String baseURI) {
+    private URI constructURI(Submission submission, String baseURI) {
         return UriComponentsBuilder.fromUriString(baseURI)
-                    .queryParam("studentID", model.getStudentID())
-                    .queryParam("assignmentID", model.getAssignmentID())
-                    .queryParam("courseID", model.getCourseID())
-                    .queryParam("courseCode", model.getCourseCode())
+                    .queryParam("studentID", submission.getStudentID())
+                    .queryParam("assignmentID", submission.getAssignmentID())
+                    .queryParam("courseID", submission.getCourseID())
                     .build()
                     .toUri();
     }
 
     /**
      * Get the feedback video
-     * @param model model with the params needed for getting the feedback video
+     * @param submission model with the params needed for getting the feedback video
      * @return the feedback video
      */
     @CrossOrigin
     @RequestMapping(value = "video", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> video(@Valid FeedbackModel model) {
+    public ResponseEntity<byte[]> video(@Valid Submission submission) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.ALL));
         HttpEntity<String> entity = new HttpEntity(headers);
         ResponseEntity<byte[]> response = null;
 
-        URI targetUrl = constructURI(model, dataLayerHostURI + dataLayerGetFeedbackVideo);
+        URI targetUrl = constructURI(submission, dataLayerHostURI + dataLayerGetFeedbackVideo);
 
         try {
             response = requestSender.exchange(targetUrl, HttpMethod.GET, entity, byte[].class);
@@ -90,20 +90,20 @@ public class FeedbackController {
     }
 
     /**
-     * Will set the given grade for the Feedback.
-     * @param fm The given feedback that will be inserted/updated.
+     * Will set the given grade for the Submission.
+     * @param submission The given feedback that will be inserted/updated.
      * @see LTICommunicator
-     * @see FeedbackModel
+     * @see Submission
      */
     @RequestMapping(value = "set", method = RequestMethod.POST)
-    public HashMap<String, String> setFeedback(@RequestBody FeedbackModel fm) {
+    public HashMap<String, String> setFeedback(@RequestBody Submission submission) {
 
         URI targetUrl = UriComponentsBuilder.fromUriString(dataLayerHostURI)
                 .path(dataLayerSetGrade)
-                .queryParam("assID", String.valueOf(fm.getAssignmentID()))
-                .queryParam("teacherID", fm.getTeacherID())
-                .queryParam("studentID", String.valueOf(fm.getStudentID()))
-                .queryParam("grade", fm.getGrade())
+                .queryParam("assID", String.valueOf(submission.getAssignmentID()))
+                .queryParam("teacherID", submission.getGrade().getTeacherID())
+                .queryParam("studentID", String.valueOf(submission.getStudentID()))
+                .queryParam("grade", submission.getGrade().getGrade())
                 .build()
                 .toUri();
         HashMap<String, String> addToDB = getExternalResponse(targetUrl);
@@ -114,7 +114,7 @@ public class FeedbackController {
 
         //TODO: Set grade in LTI.
         try {
-            LTICommunicator.setGrade(fm);
+            LTICommunicator.setGrade(submission);
         }
         catch (LTIInvalidGradeException e) {
             //TODO: Will need to notify the client.

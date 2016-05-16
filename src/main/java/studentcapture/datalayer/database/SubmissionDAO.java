@@ -5,7 +5,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import studentcapture.feedback.FeedbackModel;
+import studentcapture.model.Grade;
+import studentcapture.model.Submission;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -114,22 +115,25 @@ public class SubmissionDAO {
 	/**
 	 * Get information about the grade of a submission
 	 *
-	 * @param assignmentID Unique identifier for the assignment submission grade bra
-	 * @param studentID    Unique identifier for the student associated with the submission
+	 * @param submission Unique identifier for the assignment submission grade bra
 	 * @return A list containing the grade, date, and grader
 	 */
-	public Map<String, Object> getGrade(FeedbackModel model) {
+	public Map<String, Object> getGrade(Submission submission) {
 		String queryForGrade = "SELECT grade, submissiondate as time, " +
-				"concat(firstname,' ', lastname) as teacher FROM " +
-				"submission FULL OUTER JOIN users ON (teacherid = userid)" +
-				" WHERE (studentid = ? AND assignmentid = ?)";
+				"teacherid FROM submission " +
+				"WHERE (studentid = ? AND assignmentid = ?)";
+		String queryForTeacher = "SELECT concat(firstname,' ', lastname)" +
+				" as teacher FROM users WHERE (userid = ?)";
 		Map<String, Object> response;
 		try {
 			response = databaseConnection.queryForMap(queryForGrade,
-					new Object[]{model.getStudentID(), model.getAssignmentID()});
-		response.put("time", response.get("time").toString());
-		if (response.get("teacher").equals(" "))
-			response.put("teacher", null);
+					new Object[]{submission.getStudentID(), submission.getAssignmentID()});
+			if (response.get("teacherid") != null) {
+				String teacherName = databaseConnection.queryForObject(queryForTeacher,
+						new Object[]{response.get("teacherid")}, String.class);
+				response.put("teacher", teacherName);
+			}
+			response.put("time", response.get("time").toString());
 		} catch(IncorrectResultSizeDataAccessException e) {
 			response = new HashMap<>();
 			response.put("error", "The given parameters does not have an" +

@@ -3,7 +3,6 @@
 html, body {
 	margin:0;
 	width:100%;
-	height:100%;
 	max-height:100vh;
 }
 
@@ -17,29 +16,20 @@ body {
 	background-repeat: no-repeat;
 }
 
-button{	
-	height:40px;
-    line-height:40px;
-    border-radius: 10px;
-    background-color: #EC7E15 ;
-    border: 2px solid #FAFAFA ;
-    color:#FAFAFA ;
-}
-
 #loginLogo {
 	margin-left:3%;
 	margin-right:3%;
 	width:94%;
 }
 
-#loginDiv{
+#loginDiv {
 	height:100%;
 }
 
 #registerButton {
 	position:fixed;
-	top:10px;
-	right:120px;
+	top:60px;
+	right:10px;
 }
 
 #loginButton {
@@ -54,8 +44,25 @@ button{
 	width:92%;
 }
 
+.nameField {
+	width:43%;
+}
 
+#firstName {
+	margin-right:2%;
+}
 
+#lastName {
+	margin-left:2%; 
+}
+
+#firstPass {
+	margin-right:2%;
+}
+
+#secondPass {
+	margin-left:2%; 
+}
 
 .forms {
 	border-radius: 20px;
@@ -64,20 +71,22 @@ button{
 	background-color: #107D91;
 }
 
+#regPage {
+	top: calc(50% - 167px)
+}
+
+#cnclBtn {
+	margin-right:0%;
+}
+
+#regBtn {
+	margin-left:4%; 
+}
 
 #regText {
 	text-transform: uppercase;
 	text-align: center;
 }
-
-
-
-
-
-#registerPage {
-    display:none;
-}
-
 
 .tooltipText{display: none;}
 
@@ -86,26 +95,40 @@ button{
     position: absolute;
     top:101%;
     left: center;
-    color:white; 
+    color:#FFFFFF; 
     margin:5px; 
  
 }
 
-input{
-	
-	border-radius:20px;
+#registerPage {
+    display:none;
 }
 
 input:invalid{
-color:red;
+color:#EC7E15;
 }
 
 /*------------------------------------modal-----------------------------------*/
 
 #modalBtn {
-	position:fixed;
-	top:10px;
-	right:10px;
+	position: absolute;
+	top:0;
+	background-color: #424242;
+	height:50px;
+	text-align: center;
+	overflow-y:auto;
+	cursor: pointer;
+}
+
+#sysReqs {
+	color: #fafafa;
+	margin: auto;
+	cursor: pointer;
+}
+
+#readMore {
+	color: #EC7E15;
+	cursor: pointer;
 }
 
 /* The Modal (background) */
@@ -118,7 +141,7 @@ color:red;
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
+    overflow-y: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
@@ -139,6 +162,7 @@ color:red;
     float: right;
     font-size: 28px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .close:hover, {
