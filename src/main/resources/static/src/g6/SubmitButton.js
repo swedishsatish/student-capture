@@ -25,10 +25,11 @@ var PopUpConfirmButton = React.createClass({
     onclick: function () {
         sendData();
         close();
+        ReactDOM.render(<StudentList />, document.getElementById('courseContent'));
     },
     render: function () {
         return(
-            <button id="confirmationButton" onClick={this.onclick}>Confirm</button>
+            <button id="confirmationButton" onClick={this.onclick}>Save</button>
         )
     }
 });
@@ -44,7 +45,7 @@ var PopUpPassBox = React.createClass({
             )
         }else{
             return(
-                <p id="popUpFail">NOT PASSED</p>
+                <p id="popUpFail">NON PASS</p>
             )
         }
     }
@@ -85,11 +86,12 @@ var PopUpRender = React.createClass({
     render: function () {
         return(
             <div class="row">
+
                 <p id="smallLetter">You are about to give</p>
                 <PopUpStudentName student={this.props.student}/> <p id="smallLetter">a</p>
-                <PopUpPassBox/> <p id="smallLetter">with grade</p> <PopUpGrade/>
+                 <PopUpPassBox/> <p id="smallLetter">with grade</p> <PopUpGrade/>
                 <PopUpStudentName student={this.props.student}/>
-                <p id="smallLetter">will be notified</p>
+                <br />
                 <div id="popUpButtonContainer">
                     <PopUpCancelButton/>
                     <PopUpConfirmButton/>
