@@ -12,6 +12,7 @@ var NewAssignment = React.createClass({
                 <form id="form" action="assignment" method="post">
                 <input className="inputField" id="title" type="text" placeholder="title" /><br/>
                 <input className="inputField" id="info" type="text" placeholder="description" /><br/>
+                    <input className="inputField" id="recap" type="text" placeholder="recap" /><br/>
 
                 <Recorder playCallback={this.playVideo}
                           postURL="/video/textTest" formDataBuilder={this.formDataBuilder}
@@ -23,19 +24,59 @@ var NewAssignment = React.createClass({
                     <button id="stop-question" className="recControls" disabled>Stop</button>
                 </div>
 
-                <input id="startDate" type="datetime-local" /><br/>
-                <input id="endDate" type="datetime-local" /><br/>
+                    <input id="startDate" type="button" value="yyyy-mm-dd 00:00"/>Start Date<br/>
+                    <input id="endDate" type="button" value="yyyy-mm-dd 00:00"/>End Date<br/>
                 <input id="minTimeSeconds" type="text" placeholder="minTimeSeconds" /><br/>
                 <input id="maxTimeSeconds" type="text" placeholder="maxTimeSeconds" /><br/>
-                <input id="isPublished" type="checkbox" value="Car"/>Publish Assignment<br/>
+                    <input id="publish" type="button" value="yyyy-mm-dd 00:00"/>Publish Date<br/>
+                    <select id="scale">
+                        <option value="NUMBER_SCALE">1,2,3,4,5</option>
+                        <option value="U_G_VG_MVG">U,G,VG,MVG</option>
+                        <option value="U_O_K_G">U,O,K,G</option>
+                    </select>Grade scale<br/>
                 <div className="button primary-button" onClick = {handleCancel}> CANCEL </div>
 
                 <div className="button primary-button" id="post-question" onClick = {submitAssignment}> SUBMIT </div>
 
             </form>
         </div>
-    }
+    },
+
+    componentDidMount: function () {
+    $("#startDate").datetimepicker(
+        {
+            dateFormat: "yy-mm-dd",
+            /*
+             minDate
+             jQuery datepicker option
+             which set today date as minimum date
+             */
+            minDate: 0
+        });
+    $("#endDate").datetimepicker(
+        {
+            dateFormat: "yy-mm-dd",
+            /*
+             minDate
+             jQuery datepicker option
+             which set today date as minimum date
+             */
+            minDate: 0
+        });
+    $("#publish").datetimepicker(
+        {
+            dateFormat: "yy-mm-dd",
+            /*
+             minDate
+             jQuery datepicker option
+             which set today date as minimum date
+             */
+            minDate: 0
+        });
+}
 });
+
+
 
 function handleCancel() {
 
@@ -49,7 +90,9 @@ function submitAssignment() {
     reqBody["maxTimeSeconds"] = $("#maxTimeSeconds").val();
     reqBody["startDate"] = $("#startDate").val();
     reqBody["endDate"] = $("#endDate").val();
-    reqBody["isPublished"] = $("#isPublished").is(':checked');
+    reqBody["published"] = $("#publish").val();
+    reqBody["recap"] = $("#recap").val();
+    reqBody["scale"] = $("#scale").val();
     $.ajax({
         type : "POST",
         contentType : "application/json",
@@ -64,7 +107,7 @@ function submitAssignment() {
         }, done : function(e) {
             console.log("DONE");
         }
-    });    
+    });
 }
 
 window.CourseContent = React.createClass({
