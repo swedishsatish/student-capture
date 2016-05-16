@@ -6,6 +6,21 @@
 
 var StudentList = React.createClass ({
 
+    getInitialState: function () {
+        $.get(
+            window.globalURL + "/DB/getAllSubmissions",
+            {assignmentID: 1200},
+            function (res) {
+                console.log(res[0]);
+                console.log(res[0].studentID);
+                ReactDOM.render(<StudentList students={res}/>, document.getElementById('courseContent'));
+                //var users = JSON.parse(res);
+                //console.log(users);
+            });
+        return null;
+
+    },
+
     componentDidMount: function() {
         var newTableObject = document.getElementById("students-table");
         console.log(1);

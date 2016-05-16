@@ -76,7 +76,7 @@ var PopUpStudentName = React.createClass({
     render: function () {
 
         return(
-            <p id="smallLetter">{this.props.student}</p>
+            <p id="smallLetter">{window.studentName}</p>
         )
 
     }
