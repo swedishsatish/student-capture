@@ -3,7 +3,6 @@
  * @author: dv13trm, c14gls, group 6
  */
 
-
 /**
  * Renders all the different built components for the GUI in prioritizing order.
  * For example: First it renders Recorder, then CommentBox and so on.
@@ -49,5 +48,4 @@
     }
 
 });
-
 window.RenderHandle = RenderHandle;

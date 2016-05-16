@@ -152,7 +152,7 @@ public class CourseDAO {
      * @return course code
      */
     public String getCourseCodeFromId(String courseId){
-        String query = "SELECT coursecode FROM Course WHERE courseid = '?';";
+        String query = "SELECT coursecode FROM Course WHERE courseid = ?;";
         String courseCode;
 
         try {

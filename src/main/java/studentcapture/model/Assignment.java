@@ -51,6 +51,14 @@ public class Assignment {
 		}
 		gradeScale = (String) map.get("GradeScale");
 		description = (String) map.get("Description");
+		try {
+			scale = (GradeScale) map.get("Scale");
+			if(scale == null) {
+				throw new NullPointerException();
+			}
+		} catch (Exception e) {
+			scale = GradeScale.NUMBER_SCALE;
+		}
 	}
 
 	public void setCourseID(String courseID) {

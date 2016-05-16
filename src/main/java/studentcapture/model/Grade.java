@@ -18,6 +18,8 @@ public class Grade {
         this.date = new Date();
     }
 
+    public Grade() {}
+
     public boolean getPublishFeedback() { return publishFeedback; }
 
     public void setPublishFeedback(boolean publishFeedback) { this.publishFeedback = publishFeedback; }

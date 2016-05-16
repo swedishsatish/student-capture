@@ -65,23 +65,27 @@ public class SubmissionDAO {
 	 * Add a grade for a subsmission
 	 *
 	 * @param submission Object containing assignmentID, studentID
-	 * @param grade      Object containing grade, teacherID, date, publish
 	 * @return True if a row was changed, otherwise false
 	 */
-	public boolean setGrade(Submission submission, Grade grade) {
+	public boolean setGrade(Submission submission) {
+		Grade grade = submission.getGrade();
         /* If a person that is not a teacher tries to set a grade, return false */
-        String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
+        String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE" +
+				" (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
         int rows = databaseConnection.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
         if(rows != 1)
             return false;
 
-		String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, SubmissionDate = ?, PublishStudentSubmission = ? WHERE (AssignmentID = ?) AND (StudentID = ?);";
-		int updatedRows = databaseConnection.update(setGrade, grade.getGrade(), grade.getTeacherID(), grade.getDate(), grade.getPublishStudentSubmission(), submission.getAssignmentID(), submission.getStudentID());
+		String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, PublishStudentSubmission = ?" +
+				" WHERE (AssignmentID = ?) AND (StudentID = ?);";
+		int updatedRows = databaseConnection.update(setGrade, grade.getGrade(),
+																grade.getTeacherID(),
+																grade.getPublishStudentSubmission(),
+																submission.getAssignmentID(),
+																submission.getStudentID());
 
 		return updatedRows == 1;
 	}
-
-	
 
 	/**
 	 * Remove a submission

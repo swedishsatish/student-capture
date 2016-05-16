@@ -10,10 +10,9 @@
 /* smallText smallText2 and smallLetter are tags used to configure the text inside the popup that is shown
  * for a teacher to confirm the given feedback.
  */
-#smallText{
+#largeText{
     text-align: center;
-    font-size: 100%;
-    color: green;
+    font-size: 200%;
 }
 #smallText2 {
     text-align: center;
@@ -23,7 +22,7 @@
 }
 #smallLetter {
     text-align: center;
-    font-size: 200%;
+    font-size: 100%;
     color: black;
 }
 
@@ -205,4 +204,9 @@ button{
     text-align: center;
     font-size: 250%;
     color: greenyellow !important;
+}
+
+#tmpDiv {
+
+    height: 20%;
 }

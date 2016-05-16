@@ -89,35 +89,25 @@ public class FeedbackController {
         return response;
     }
 
-    /*@RequestMapping(value = "set", method = RequestMethod.POST)
-    public HashMap<String, String> publishFeedback(@RequestBody Submission submission) {
-        URI targetUrl = UriComponentsBuilder.fromUriString(dataLayerHostURI)
-                .path(dataLayerPublishFeedback)
-                .queryParam("Submission", submission)
-                .queryParam()
-    }*/
-
     /**
      * Will set the given grade for the Submission.
-     * @param submission The given feedback that will be inserted/updated.
+     * @param submission The given grade that will be inserted/updated.
      * @see LTICommunicator
      * @see Submission
      */
     @RequestMapping(value = "set", method = RequestMethod.POST)
-    public HashMap<String, String> setFeedback(@RequestBody Submission submission) {
+    public HashMap<String, String> setGrade(@RequestBody Submission submission) {
         URI targetUrl = UriComponentsBuilder.fromUriString(dataLayerHostURI)
-                .path(dataLayerSetGrade)
-                .queryParam("assID", String.valueOf(submission.getAssignmentID()))
-                .queryParam("teacherID", submission.getGrade().getTeacherID())
-                .queryParam("studentID", String.valueOf(submission.getStudentID()))
-                .queryParam("grade", submission.getGrade().getGrade())
-                .build()
-                .toUri();
-        HashMap<String, String> addToDB = getExternalResponse(targetUrl);
-        if (addToDB.containsKey("error")) {
-            return addToDB;
-        }
+                                            .path(dataLayerSetGrade)
+                                            .build()
+                                            .toUri();
+        HashMap<String, String> response = new HashMap<>();
 
+        try {
+            response.put("status", requestSender.postForObject(targetUrl, submission, String.class));
+        } catch (RestClientException e) {
+            response.put("status", "false");
+        }
 
         //TODO: Set grade in LTI.
         try {
@@ -134,8 +124,18 @@ public class FeedbackController {
             e.printStackTrace();
         }
 
-        return addToDB;
+        URI targetUrl2 = UriComponentsBuilder.fromUriString(dataLayerHostURI)
+                .path(dataLayerPublishFeedback)
+                .build()
+                .toUri();
 
+        try {
+            response.put("status", requestSender.postForObject(targetUrl2, submission, String.class));
+        } catch (RestClientException e) {
+            response.put("status", "false");
+        }
+
+        return response;
     }
 
 
