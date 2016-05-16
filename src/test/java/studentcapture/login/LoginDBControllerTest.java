@@ -46,14 +46,20 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
     }
     
     @Test
-    public void getDatabaseLoginPage() throws Exception{
-        mockMvc.perform(get("/DB/login"))
+    public void getDatabaseUsernamePage() throws Exception{
+        mockMvc.perform(get("/DB/userNameExist"))
+                .andExpect(status().isBadRequest()); //Expect error status 400
+    }
+    
+    @Test
+    public void getDatabasePasswordPage() throws Exception{
+        mockMvc.perform(get("/DB/getHpswd"))
                 .andExpect(status().isBadRequest()); //Expect error status 400
     }
     
     @Test
     public void getDatabaseRegisterPage() throws Exception{
-        mockMvc.perform(get("/DB/register"))
+        mockMvc.perform(get("/DB/addUser"))
                 .andExpect(status().isBadRequest()); //Expect error status 400
     }
     
