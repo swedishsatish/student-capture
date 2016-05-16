@@ -46,8 +46,11 @@ var StudentList = React.createClass ({
 
         var tmp = this;
         var userList = window.users.map(function (user) {
-            // console.log(tmp);
+            console.log(user.videoURL);
+
+
             return <tr onClick={tmp.clickhandle.bind(tmp,user)}>
+                <video width="96" height="54" class="clip-thumbnail"> <source src={user.videoURL} type="video/mp4"/> </video>
                 <td>{user.studentName}</td>
                 <td>{user.submissionDate}</td>
                 <td>{user.grade}</td>

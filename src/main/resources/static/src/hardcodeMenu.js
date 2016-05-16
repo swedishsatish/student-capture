@@ -11,24 +11,39 @@ var CourseList = React.createClass({
              ReactDOM.render(<StudentList students={res}/>, document.getElementById('courseContent'));
          });
         var users = [{
+            videoURL:"http://www.w3schools.com/html/mov_bbb.mp4",
             assignmentID: 1000,
             studentID: 21,
             studentName: "Anton Andersson",
             submissionDate: "2010-06-23",
+            withdraw: false,
             grade: "G",
             teacherID: 12
         },
             {
+                videoURL:"http://techslides.com/demos/sample-videos/small.mp4",
                 assignmentID: 1000,
                 studentID: 21,
                 studentName: "Lukas Lundberg",
                 submissionDate: "2010-06-23",
                 grade: "K",
-                teacherID: 12
-            }];
+                teacherID: 12,
+                withdraw: false
+            },
+            {
+                videoURL:"http://easyhtml5video.com/assets/video/new/Penguins_of_Madagascar.mp4",
+                assignmentID:213,
+                studentID:2,
+                studentName: "Daniel Eliasson",
+                submissionDate: "2012-05-23",
+                grade: "U",
+                teacherID: 221,
+                withdraw:true
+            }
+        ];
         window.users=users;
         console.log("jebjeb")
-        ReactDOM.render(<StudentList students={users}/>, document.getElementById('courseContent'));
+        ReactDOM.render(<TeacherViewSubmission students={users}/>, document.getElementById('courseContent'));
     },
 
     printFeedback : function() {
