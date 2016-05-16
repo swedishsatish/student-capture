@@ -32,6 +32,8 @@ var TeacherViewSubmission=React.createClass({
         this.calculateSubmissions();
         return (
             <div class="row">
+                <div className="four columns offset-by-one">
+
                 <div id="studentContainer">
                     <StudentList/>
                     <div id="textList">
@@ -42,7 +44,7 @@ var TeacherViewSubmission=React.createClass({
                 </div>
 
 
-
+</div>
             </div>
         )
     }
