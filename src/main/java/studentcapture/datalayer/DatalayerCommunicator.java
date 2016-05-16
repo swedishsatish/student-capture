@@ -271,6 +271,17 @@ public class DatalayerCommunicator {
     }
 
     /**
+     * @param email
+     * @return true if email exist else false
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/userEmailExistWithUserName", method = RequestMethod.GET)
+    public boolean userEmailExistWithUserName(@RequestParam(value = "email") String email,
+                                              @RequestParam(value = "username") String userName) {
+        return userDAO.userNameExistWithEmail(userName,email);
+    }
+
+    /**
      * Register user by given information.
      * @return true if registration was successfull else false
      */

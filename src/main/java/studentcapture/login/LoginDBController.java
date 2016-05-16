@@ -38,7 +38,10 @@ public class LoginDBController {
             @RequestParam(value="email", required = true)               String email,
             @RequestParam(value="username", required = true)            String username
             ){
-        
+        if(checkEmailExistsWithUserName(email,username))
+            System.out.println("success!");
+        else
+            System.out.println("fail...");
         //Validate credentials
         //Must check if email and username match
         
@@ -195,7 +198,24 @@ public class LoginDBController {
 	    //Send request to DB and get the boolean answer
 	    return !requestSender.getForObject(targetUrl, Boolean.class);
 	}
-	
+
+    /**
+     * Checks if email and user exist in the same user.
+     * @param email Email address to check
+     * @param userName Username to check
+     * @return True if Email and Username belong to the same user.
+     */
+	protected boolean checkEmailExistsWithUserName(String email, String userName) {
+        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
+                .path("DB/userEmailExistWithUserName")
+                .queryParam("email", email)
+                .queryParam("username", userName)
+                .build()
+                .toUri();
+        //Send request to DB and get the boolean answer
+        return !requestSender.getForObject(targetUrl, Boolean.class);
+	}
+
 	/**
 	 * Checks if the user name is required length 
 	 * @param username The username
