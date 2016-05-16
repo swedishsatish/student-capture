@@ -18,7 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import studentcapture.datalayer.database.User;
+import studentcapture.model.User;
 
 
 /**
