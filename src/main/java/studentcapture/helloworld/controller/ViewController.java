@@ -17,7 +17,7 @@ public class ViewController {
      */
     @RequestMapping(value = "/")
     public String defaultIndexView() {
-        return "index";
+        return "templates/index.html";
     }
     
     @RequestMapping(value = "/index")

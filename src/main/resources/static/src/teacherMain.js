@@ -9,11 +9,13 @@ recordButton.onclick = function() {
 
 
 postButton.onclick = function () {
-<<<<<<< HEAD
-    postToServer(blob,"user","5DV151","1337")
-=======
-    postToServer(blob,"user","5DV121","1337");
->>>>>>> refs/remotes/origin/Front-end
+
+    var length = recordedVideo.length;
+    if(length == null && length === 0){
+        alert("Video length is 0 or non existing");
+    }
+    postToServer(blob,"user","5DV151","1337",length);
+    postToServer(blob,"user","5DV121","1337",length);
     document.getElementById("post").disabled = true;
 
 
