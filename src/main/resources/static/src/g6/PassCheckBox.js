@@ -7,7 +7,7 @@
  * Checkbox that is used to determine if a student passed an assignment or not.
  * @type {number} current state of passed
  */
-var CheckBox = React.createClass({
+var PassCheckBox = React.createClass({
     //Sets initial state for the checkbox to false.
     getInitialState: function() {
         return {
@@ -20,8 +20,8 @@ var CheckBox = React.createClass({
     render: function() {
         return (
 
-            <div id="checklabel">
-                <label for="checklabel">
+            <div id="passchecklabel">
+                <label for="passchecklabel">
                     <input id="ifStudentPass" type="checkbox"
                            checkBox={this.state.checkBox}
                            onClick={this.handleClick}/>
@@ -42,4 +42,4 @@ var CheckBox = React.createClass({
     }
 });
 
-window.CheckBox=CheckBox;
+window.PassCheckBox=PassCheckBox;
