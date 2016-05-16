@@ -10,10 +10,9 @@
 /* smallText smallText2 and smallLetter are tags used to configure the text inside the popup that is shown
  * for a teacher to confirm the given feedback.
  */
-#smallText{
+#largeText{
     text-align: center;
-    font-size: 100%;
-    color: green;
+    font-size: 200%;
 }
 #smallText2 {
     text-align: center;
@@ -23,7 +22,7 @@
 }
 #smallLetter {
     text-align: center;
-    font-size: 200%;
+    font-size: 100%;
     color: black;
 }
 
@@ -189,12 +188,14 @@ button{
   */
 #popUpPass {
     color: greenyellow !important;
+    font-size: 250%;
     text-align: center;
 }
 /* Same as above, except this represents the text NOT PASSED, is shown in red due to failure.
  */
 #popUpFail {
     text-align: center;
+    font-size: 250%;
     color: red !important;
 }
 /* Defines the color of the given grade to the student, all grades to have the same color, doesn't matter what
@@ -202,5 +203,11 @@ button{
  */
 #popUpGrade {
     text-align: center;
+    font-size: 250%;
     color: greenyellow !important;
+}
+
+#tmpDiv {
+
+    height: 20%;
 }
