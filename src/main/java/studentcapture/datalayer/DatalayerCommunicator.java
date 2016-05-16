@@ -132,9 +132,7 @@ public class DatalayerCommunicator {
      */
     @CrossOrigin
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
-    public boolean setGrade(@RequestParam(value = "Submission") Submission submission) {
-        String courseID = assignment.getCourseIDForAssignment(String.valueOf(submission.getAssignmentID()));
-        submission.setCourseID(courseID);
+    public boolean setGrade(@RequestBody Submission submission) {
         return submissionDAO.setGrade(submission);
     }
 
