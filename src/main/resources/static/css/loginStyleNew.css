@@ -75,17 +75,21 @@ body {
 	top: calc(50% - 167px)
 }
 
-#cnclBtn {
+#cnclBtn, #cnclBtn2 {
 	margin-right:0%;
 }
 
-#regBtn {
+#regBtn, #recoverBtn {
 	margin-left:4%; 
 }
 
 #regText {
 	text-transform: uppercase;
 	text-align: center;
+}
+
+#lostLink{
+    margin-left:4%;
 }
 
 .tooltipText{display: none;}
@@ -101,6 +105,10 @@ body {
 }
 
 #registerPage {
+    display:none;
+}
+
+#lostPasswordPage {
     display:none;
 }
 
