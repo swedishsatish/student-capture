@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import studentcapture.config.StudentCaptureApplicationTests;
-import studentcapture.feedback.FeedbackModel;
 import studentcapture.model.Grade;
 import studentcapture.model.Submission;
 
