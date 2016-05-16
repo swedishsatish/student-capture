@@ -89,13 +89,13 @@ public class FeedbackController {
         return response;
     }
 
-    @RequestMapping(value = "set", method = RequestMethod.POST)
+    /*@RequestMapping(value = "set", method = RequestMethod.POST)
     public HashMap<String, String> publishFeedback(@RequestBody Submission submission) {
         URI targetUrl = UriComponentsBuilder.fromUriString(dataLayerHostURI)
                 .path(dataLayerPublishFeedback)
                 .build()
 
-    }
+    }*/
 
     /**
      * Will set the given grade for the Submission.
