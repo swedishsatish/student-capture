@@ -1,30 +1,144 @@
+<!-- created by:
+     Simon Lundmark c13slk
 
+     revision by:
+     Filip Golles id12fgn
+     
+     Last update:
+     2016-05-04
+-->
 
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
+	    <!-- text in the tab -->
 		<title>
 			Login page
 		</title>
-		<meta content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" charset="UTF-8"></meta>
-		<!--/*<meta name="_csrf_token" th:content="${_csrf.token}"/>
-		<meta name="_csrf_parameter" th:content="${_csrf.parameterName}"/>
-		<meta name="_csrf_header" th:content="${_csrf.headerName}"/> */-->
-		<link rel="stylesheet" type="text/css" href="css/normalize.css"></link>
-		<link rel="stylesheet" type="text/css" href="css/skeleton.css"></link>
-		<link rel="stylesheet" type="text/css" href="css/loginStyleBlue.css"></link>
-	
-
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-		<script src="build/react.js"></script>
-    	<script src="build/react-dom.js"></script>
-    	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
-    	<script type="text/babel" src="src/loginScript.js"></script>
-	</head>
-	<body class="container">
-	
+		<meta content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" charset="UTF-8">
 		
-		    <form id="loginPage" class="eight columns offset-by-two" th:action="@{/login}" method="POST">
-        	</form>
+		<!-- css stylesheets -->
+		<link rel="stylesheet" type="text/css" href="../static//normalize.css">
+		<link rel="stylesheet" type="text/css" href="../static/css/skeleton.css">
+		<link rel="stylesheet" type="text/css" href="../static/css/loginStyleNew.css">
+		<link rel="stylesheet" type="text/css" href="../static/css/custom.css">
+		<!-- javascript files -->
+    	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    	<script type="text/babel" src="../static/src/loginScript.js"></script>
+	</head>
+	
+	<!-- body container that contains the form 
+	that the login nad registration is shown -->
+	<body>
+		
+		<!-- forms -->
+		<div id="loginDiv">
+		<form id="loginPage" class="forms four columns offset-by-four" th:action="@{/login}" method="POST">
+		
+		    <!-- div containing all the inputs.-->
+            
+                <img src="../static/images/sc-logo.png" id="loginLogo" />
+                <input type="text" class="loginField" placeholder="username" name="username"/>
+            
+                <input type="password" class="loginField" placeholder="password" name="password"/>
+
+                <button type="submit" class="SCButton" id="loginButton">
+                    Login
+                </button>
+                
+                <button type="button" class="SCButton" id="registerButton">
+                    Register
+                </button>
+		</form>
+		
+		<!-- forms -->
+		<form id="registerPage" class="forms four columns offset-by-four" th:action="@{/register}" method="POST">
+		
+                <h2 id="regText">registration</h2>
+                
+                        <input type="text" id="firstName" 
+                               class="loginField nameField" 
+                               placeholder="first name" 
+                               name="firstname" 
+                               required="required"/>
+                    
+                        <input type="text" id="lastName" class="loginField nameField" placeholder="last name" name="lastname" required="required"/>
+
+                        <input type="email" class="loginField" placeholder="example@mail.com" required="required" name="email" 
+                        pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" />
+         
+                        <input type="text" pattern="^.{6,}$" class="loginField" placeholder="username" name="username" required="required"/>
+    					  
+    					<p class="tooltipText">Username must be atleast six characters.</p> 
+    					  
+                        <input type="password" id="firstPass" class="loginField nameField"
+                               placeholder="password" name="password"  
+                               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
+                               required="required"/>
+                        
+                        <p class="tooltipText">Password must contain atleast one upper case character,
+    					 one lower case character and one numeric character.</p> 
+
+                        <input type="password" id="secondPass" class="loginField nameField"
+                               placeholder="repeat password" name="confirmpassword" 
+                               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$" 
+                               required="required" />
+                               
+                               <p class="tooltipText">Password must contain atleast one upper case character,
+    					 one lower case character and one numeric character.</p> 
+
+                
+                <button type="button" id="cnclBtn" class="SCButton loginField nameField">
+                    Cancel
+                </button>
+                <button type="submit" id="regBtn" class="SCButton loginField nameField">
+                    Register
+                </button>
+                
+
+
+		</form>
+		</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	    <!-- Trigger/Open The Modal -->
+        <div id="modalBtn" class="twelve columns">
+        	<p id="sysReqs">This service requires {SMALL OVERVIEW OF SYSTEM REQUIREMENTS LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM}. &nbsp;<span id="readMore">Read more.</span></p>
+        </div>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+          <!-- Modal content -->
+          <div class="modal-content">
+            <div class="modal-header">
+              <span class="close">×</span>
+              <h2>System requirements</h2>
+            </div>
+            <div class="modal-body">
+              <p>Info....</p>
+              <p>More info....</p>
+            </div>
+          </div>
+        </div>
 	</body>
+
 </html>
 

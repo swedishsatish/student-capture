@@ -1,0 +1,143 @@
+/**
+  * CSS file for teacher submission feedback feedback.
+  * Used to style teacher feedback on index.html.
+**/
+
+/*
+* Video recorder
+*/
+
+#recorder{
+    width: 50%;
+    margin-left: auto ;
+    margin-right: auto ;
+}
+/*
+* Container for all data.
+*/
+
+/*
+* Container for feedback data
+*/
+#feedBackContainer {
+    width: 50%;
+    margin-left: auto ;
+    margin-right: auto ;
+}
+/*
+* Container for textfield, grade and passedstatus------------------------------------------------------
+*/
+#submissioncontainer{
+    display: flex;
+    width: auto;
+}
+/*
+*Textarea style
+*/
+#teachercomments{
+    display: inline-block;
+    position:relative;
+    resize: none;
+    vertical-align:middle;
+    width: 400px;
+    height: 200px;
+}
+#commentbox{
+    width: 400px;
+}
+/*
+* Pass checkbox.
+*/
+#passbox{
+    height: 50px;
+    width: 70px;
+}
+/*
+* Grade drop down menu
+*/
+#dropDown{
+    height: 50px;
+    width: 70px;
+}
+/*
+*Dropdown menu style
+*/
+#dropdown {
+    position: relative;
+    color: #AB3428;
+}
+/*
+* Container for grade and pass status-------------------------------------------------------------------
+*/
+#gradeAndPassContainer{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+/*
+* Container for submit and back button -----------------------------------------------------------------
+*/
+#buttonContainer {
+    display:flex;
+}
+/*
+*Button styles------------------------------------------------------------------------------------------
+*/
+button{
+    background-color: #F49E4C;
+}
+/*
+* Back button
+*/
+#backbutton{
+    top: 85%;
+    position: relative;
+    width: 135px;
+    height: 50px;
+    margin-right: 130px;
+}
+/*
+* Submit button
+*/
+#submitbutton {
+    top: 85%;
+    position: relative;
+    width: 135px;
+    height: 50px;
+}
+/*
+* course content
+*/
+
+
+
+/*
+*Checkbox style
+*/
+#checklabel{
+    position: relative;
+    color: #F5EE9E;
+}
+
+
+
+#blanket {
+    background-color:#111;
+    opacity: 0.65;
+    *background:none;
+    position:absolute;
+    z-index: 9001;
+    width:100%;
+    height:100%;
+}
+#popUpDiv {
+    position:absolute;
+    background-size: 100%;
+    width:25%;
+    height:38%;
+    border:5px solid #000;
+    top:20px;
+    left:20px;
+    z-index: 9002;
+
+}
