@@ -25,10 +25,13 @@ var PopUpConfirmButton = React.createClass({
     onclick: function () {
         sendData();
         close();
+        ReactDOM.render(<StudentList/>,document.getElementById('courseContent'));
+
     },
     render: function () {
         return(
-            <button id="confirmationButton" onClick={this.onclick}>Confirm</button>
+            <button id="confirmationButton" onClick={this.onclick}>Save</button>
+            
         )
     }
 });
