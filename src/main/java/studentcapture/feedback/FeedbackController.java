@@ -89,17 +89,31 @@ public class FeedbackController {
         return response;
     }
 
-    /*@RequestMapping(value = "set", method = RequestMethod.POST)
+    /**
+     * Returns feedback about a submission to a student
+     * @param submission
+     * @return
+     */
+    @RequestMapping(value = "set", method = RequestMethod.POST)
     public HashMap<String, String> publishFeedback(@RequestBody Submission submission) {
         URI targetUrl = UriComponentsBuilder.fromUriString(dataLayerHostURI)
                 .path(dataLayerPublishFeedback)
                 .build()
+                .toUri();
+        HashMap<String, String> response = new HashMap<>();
 
-    }*/
+        try {
+            response.put("status", requestSender.postForObject(targetUrl, submission, String.class));
+        } catch (RestClientException e) {
+            response.put("status", "false");
+        }
+
+        return response;
+    }
 
     /**
      * Will set the given grade for the Submission.
-     * @param submission The given feedback that will be inserted/updated.
+     * @param submission The given grade that will be inserted/updated.
      * @see LTICommunicator
      * @see Submission
      */
