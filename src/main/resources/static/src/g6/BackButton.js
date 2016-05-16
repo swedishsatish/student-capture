@@ -3,7 +3,6 @@
  * @author: dv13trm, c14gls, group 6
  */
 
-
 /**
  * Creates the back button used by the GUI.
  * Makes it possible for the teacher to go back to the previous page.
@@ -15,9 +14,8 @@ var BackButton = React.createClass({
      * Rerender the studentList
      */
     onClick: function() {
-
         ReactDOM.render(<StudentList/>,document.getElementById('courseContent'));
-
+        
     },
     // Render function for BackButton
     render: function() {

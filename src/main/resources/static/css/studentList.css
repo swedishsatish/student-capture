@@ -1,0 +1,8 @@
+
+#studentContainer{
+    display: flex;
+    margin-left: auto;
+}
+#textList{
+    margin-left: 20px;
+}

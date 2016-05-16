@@ -132,9 +132,8 @@ button{
 /*
 *Checkbox style
 */
-#checklabel{
+#passchecklabel{
     position: relative;
-    color: #F5EE9E;
 }
 /*
  * The blanket that is shown around the popup. Needs to be resized to a smaller size, due to the popup having problems
@@ -189,12 +188,14 @@ button{
   */
 #popUpPass {
     color: greenyellow !important;
+    font-size: 250%;
     text-align: center;
 }
 /* Same as above, except this represents the text NOT PASSED, is shown in red due to failure.
  */
 #popUpFail {
     text-align: center;
+    font-size: 250%;
     color: red !important;
 }
 /* Defines the color of the given grade to the student, all grades to have the same color, doesn't matter what
@@ -202,5 +203,6 @@ button{
  */
 #popUpGrade {
     text-align: center;
+    font-size: 250%;
     color: greenyellow !important;
 }

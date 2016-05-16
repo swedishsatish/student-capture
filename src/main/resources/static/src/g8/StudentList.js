@@ -6,6 +6,21 @@
 
 var StudentList = React.createClass ({
 
+    getInitialState: function () {
+        $.get(
+            window.globalURL + "/DB/getAllSubmissions",
+            {assignmentID: 1200},
+            function (res) {
+                console.log(res[0]);
+                console.log(res[0].studentID);
+                ReactDOM.render(<StudentList students={res}/>, document.getElementById('courseContent'));
+                //var users = JSON.parse(res);
+                //console.log(users);
+            });
+        return null;
+
+    },
+
     componentDidMount: function() {
         var newTableObject = document.getElementById("students-table");
         console.log(1);
@@ -48,6 +63,7 @@ var StudentList = React.createClass ({
         var userList = window.users.map(function (user) {
             // console.log(tmp);
             return <tr onClick={tmp.clickhandle.bind(tmp,user)}>
+                <video width="96" height="54" class="clip-thumbnail"> <source src={user.videoURL} type="video/mp4"/> </video>
                 <td>{user.studentName}</td>
                 <td>{user.submissionDate}</td>
                 <td>{user.grade}</td>

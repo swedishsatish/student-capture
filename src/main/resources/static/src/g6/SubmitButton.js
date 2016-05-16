@@ -1,8 +1,6 @@
 /**
- * Submit button for teacher feedback, will ask for
- * confirmation from teacher then send data to database.
- * @author: dv13trm, c14gls, group 6
-*/
+ * Created by sejiaw on 2016-05-10.
+ */
 
 /**
  * Cancel button for popup window, closes popup.
@@ -118,11 +116,14 @@ function close(){
 function submitForm() {
     var reqBody = {};
     reqBody["TeacherComments"] = document.getElementById('teachercomments').value;
-    reqBody["DropDown"] = document.getElementById('dropDownMenu').value;
+    reqBody["Grade"] = document.getElementById('dropDownMenu').value;
     reqBody["StudentPass"] = document.getElementById('ifStudentPass').checked;
+    reqBody["ShareData"] = document.getElementById('PermissionFromStudent').checked;
     reqBody["AssignmentID"] = window.assignmentID;
     reqBody["CourseID"] = window.courseID;
     reqBody["TeacherID"] = window.teacherID;
+    reqBody["value"] = "set";
+
 
     $.ajax({
         type: "POST",
@@ -132,7 +133,9 @@ function submitForm() {
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
-            ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
+            // TODO: check response with if/else, if respons is fail give error message
+
+          //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);
         }, done: function (e) {
