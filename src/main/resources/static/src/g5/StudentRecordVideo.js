@@ -20,7 +20,7 @@ var StudentRecordVideo = React.createClass({
     },
     render: function () {
         return (
-<p>
+<div>
                 <h3>Student Recording Video</h3>
 
                     <h5 id="isRecording"></h5>
@@ -33,7 +33,7 @@ var StudentRecordVideo = React.createClass({
                      <button id="studentSubmit" className="recControls" disabled>Submit answer</button>
                      <BlankBox/>
 
-</p>
+</div>
 
         );
     }
