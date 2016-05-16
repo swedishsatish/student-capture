@@ -134,6 +134,25 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         assertFalse(res);
     }
 
+
+    @Test
+    public void testUserNameExistsWithEmail() {
+
+        boolean res = userDAO.userNameExistWithEmail("testUser",
+                "testEmail@example.com");
+
+        assertTrue(res);
+    }
+    @Test
+    public void testUserNameDoesNotExistsWithEmail() {
+
+        boolean res = userDAO.userNameExistWithEmail("testUser",
+                "NonExistingMail@example.com");
+
+        assertFalse(res);
+    }
+
+
     /*
     @Test
     public void getCourseAssignmentHierarchyUserInformationTest() {
