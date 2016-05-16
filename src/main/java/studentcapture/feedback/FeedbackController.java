@@ -37,7 +37,7 @@ public class FeedbackController {
     private static final String dataLayerSetGrade = "DB/setGrade";
     private static final String dataLayerGetGrade = "DB/getGrade";
     private static final String dataLayerGetFeedbackVideo = "DB/getFeedbackVideo";
-
+    private static final String dataLayerPublishFeedback = "DB/publishFeedback";
 
     @Autowired
     private RestTemplate requestSender;
@@ -89,6 +89,14 @@ public class FeedbackController {
         return response;
     }
 
+    /*@RequestMapping(value = "set", method = RequestMethod.POST)
+    public HashMap<String, String> publishFeedback(@RequestBody Submission submission) {
+        URI targetUrl = UriComponentsBuilder.fromUriString(dataLayerHostURI)
+                .path(dataLayerPublishFeedback)
+                .queryParam("Submission", submission)
+                .queryParam()
+    }*/
+
     /**
      * Will set the given grade for the Submission.
      * @param submission The given feedback that will be inserted/updated.
@@ -97,7 +105,6 @@ public class FeedbackController {
      */
     @RequestMapping(value = "set", method = RequestMethod.POST)
     public HashMap<String, String> setFeedback(@RequestBody Submission submission) {
-
         URI targetUrl = UriComponentsBuilder.fromUriString(dataLayerHostURI)
                 .path(dataLayerSetGrade)
                 .queryParam("assID", String.valueOf(submission.getAssignmentID()))
