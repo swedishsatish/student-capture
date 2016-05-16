@@ -31,7 +31,7 @@ var PopUpConfirmButton = React.createClass({
     render: function () {
         return(
             <button id="confirmationButton" onClick={this.onclick}>Save</button>
-            
+
         )
     }
 });
@@ -118,11 +118,13 @@ function close(){
 function submitForm() {
     var reqBody = {};
     reqBody["TeacherComments"] = document.getElementById('teachercomments').value;
-    reqBody["DropDown"] = document.getElementById('dropDownMenu').value;
+    reqBody["Grade"] = document.getElementById('dropDownMenu').value;
     reqBody["StudentPass"] = document.getElementById('ifStudentPass').checked;
     reqBody["AssignmentID"] = window.assignmentID;
     reqBody["CourseID"] = window.courseID;
     reqBody["TeacherID"] = window.teacherID;
+    reqBody["value"] = "set";
+
 
     $.ajax({
         type: "POST",
