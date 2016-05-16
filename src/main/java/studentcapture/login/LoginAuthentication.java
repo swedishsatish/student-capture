@@ -73,28 +73,51 @@ public class LoginAuthentication implements AuthenticationProvider {
 	 */
 	public boolean checkUser(String username, String password) {
 	    
-	    System.out.println("checkUser() in Authenticator");
-	    System.out.println("Checking user data in DB with user: " + username + " and password: " + password);
+	    //System.out.println("checkUser() in Authenticator");
+	    //System.out.println("Checking user data in DB with user: " + username);
 	    
-	    URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
-                .path("DB/login")
+	    //Check username in DB
+        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
+                .path("DB/userNameExist")
+                .queryParam("userName", username)
+                //.queryParam("pswd", password)
+                .build()
+                .toUri();
+        
+        Boolean userExist = requestSender.getForObject(targetUrl, Boolean.class);
+        
+        if(!userExist){
+            System.out.println("ERROR: Incorrect username");
+            return false;
+        }
+        System.out.println("User \"" + username + "\" found!");
+	    
+	    //Get the password from DB
+	    targetUrl = UriComponentsBuilder.fromUriString(dbURI)
+                .path("DB/getHpswd")
                 .queryParam("username", username)
-                .queryParam("pswd", password)
+                //.queryParam("pswd", password)
                 .build()
                 .toUri();
 	    
-	    System.out.println(targetUrl.toString());
+	    //System.out.println(targetUrl.toString());
 	    
-	    //Send request to DB and get the boolean answer
-	    Boolean response = requestSender.getForObject(targetUrl, Boolean.class);
+	    //Send request to DB and get the string answer
+	    String hashedPswd = requestSender.getForObject(targetUrl, String.class);
 	    
-	    System.out.println("Boolean response received: Checkuser = " + response.toString());
+	    System.out.println("Boolean response received: Checkuser = " + hashedPswd.toString());
 	    
-		return response;
+	    if(comparePassword(password, hashedPswd)){
+	        System.out.println("Passwords match!");
+	        return true;
+	    }
+	    System.out.println("ERROR: Incorrect password");
+	    
+		return false;
 	}
 	
-	public boolean comparePassword(String password) {
-		String hashed = "";
+	public boolean comparePassword(String password, String hashed) {
+		//String hashed = "";
 		return BCrypt.checkpw(password, hashed);
 	}
 }
