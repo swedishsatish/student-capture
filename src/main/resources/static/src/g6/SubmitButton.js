@@ -120,6 +120,7 @@ function submitForm() {
     reqBody["TeacherComments"] = document.getElementById('teachercomments').value;
     reqBody["Grade"] = document.getElementById('dropDownMenu').value;
     reqBody["StudentPass"] = document.getElementById('ifStudentPass').checked;
+    reqBody["ShareData"] = document.getElementById('PermissionFromStudent').checked;
     reqBody["AssignmentID"] = window.assignmentID;
     reqBody["CourseID"] = window.courseID;
     reqBody["TeacherID"] = window.teacherID;
@@ -134,7 +135,9 @@ function submitForm() {
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
-            ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
+            // TODO: check response with if/else, if respons is fail give error message
+
+          //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);
         }, done: function (e) {
