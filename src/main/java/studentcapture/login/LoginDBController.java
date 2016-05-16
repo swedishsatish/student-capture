@@ -47,7 +47,7 @@ public class LoginDBController {
         
         //Email link
         //Spring or custom mail?
-        
+        return null;
     }
     
     /**
@@ -143,24 +143,13 @@ public class LoginDBController {
 	/**
 	 * Checks if password follows the required format
 	 * The format consists of atleast one small letter, at least one big letter and at least one number.
-	 * @param password
-     */
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView registerUser(
-            @RequestParam(value="firstname", required = true)           String firstName,
-            @RequestParam(value="lastname", required = true)            String lastName,
-            @RequestParam(value="email", required = true)               String email,
-            @RequestParam(value="username", required = true)            String username,
-            @RequestParam(value="password", 
+	 * @param password The password to validate
 	 * @return Returns true if correct format
 	 */
 	protected boolean checkPasswordFormat(String password) {
 		Pattern p = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{6,}$");
 		Matcher m = p.matcher(password);
-		if(m.find()) {
-			return true;
-		}
-		return false;
+		return m.find();
 	}
 	
 	/**
