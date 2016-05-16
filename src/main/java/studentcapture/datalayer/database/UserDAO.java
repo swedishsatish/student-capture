@@ -60,6 +60,33 @@ public class UserDAO {
     }
 
 
+    /**
+     * Chnage users password
+     * @author Timmy Olsson
+     *
+     * @param username the user
+     * @param pswd new password
+     *
+     * @return true if succesfull else if user doesnt exists, then false.
+     */
+    public boolean changePswd(String username, String pswd) {
+
+        if(!userNameExist(username)) {
+            return false;
+        }
+
+        String sql = "UPDATE users SET Pswd = ? WHERE userName = ?";
+        Object[] args = {pswd,username};
+        int[] types = {Types.VARCHAR,Types.VARCHAR};
+
+        try {
+            jdbcTemplate.update(sql, args,types);
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * Return password for a user
