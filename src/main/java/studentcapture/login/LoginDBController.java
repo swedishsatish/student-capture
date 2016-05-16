@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -47,38 +48,50 @@ public class LoginDBController {
 			@RequestParam(value="email", required = true)     			String email,
 			@RequestParam(value="username", required = true)  			String username,
 			@RequestParam(value="password", required = true)  			String password,
-			@RequestParam(value="confirmpassword", required = true) 	String confirmpassword) {
+			@RequestParam(value="confirmpassword", required = true) 	String confirmpassword
+			//RedirectAttributes redirectAttributes //Not working at the moment
+			) {
 		
 	    ModelAndView mav = new ModelAndView(); 
 	    mav.setViewName("redirect:login?error=default");
 
 	    if(!checkUsernameLength(username)) {
 	    	mav.setViewName("redirect:login?error=usernamelength");
+	    	//redirectAttributes.addFlashAttribute("message", "ERROR: Incorrect username length");
 	    	return mav;
 	    }
 	    
 	    if(!checkPasswordFormat(password)) {
 	    	mav.setViewName("redirect:login?error=passwordformat");
+	        //redirectAttributes.addFlashAttribute("message", "ERROR: Incorrect password format");
 	    	return mav;
 	    }
 	    
 	    if(!password.equals(confirmpassword)) {
 	    	mav.setViewName("redirect:login?error=passwordmatch");
+	        //redirectAttributes.addFlashAttribute("message", "ERROR: Passwords does not match");
+
 	    	return mav;
 	    }
 	    
 	    if(!checkEmailFormat(email)) {
 	    	mav.setViewName("redirect:login?error=emailformat");
+	        //redirectAttributes.addFlashAttribute("message", "ERROR: Incorrect email format");
+
 	    	return mav;
 	    }
 	    
 	    if(!checkEmailExists(email)) {
 	    	mav.setViewName("redirect:login?error=emailexists");
+	        //redirectAttributes.addFlashAttribute("message", "ERROR: Email does already exist");
+
 	    	return mav;
 	    }
 	    
 	    if(!checkUserExists(username)) {
 	    	mav.setViewName("redirect:login?error=userexists");
+	        //redirectAttributes.addFlashAttribute("message", "ERROR: Username does already exist");
+
 	    	return mav;
 	    }
 	    
