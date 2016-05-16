@@ -8,6 +8,7 @@ function genScripts(){
 	script2.setAttribute("id","script2");
 	script2.setAttribute("src","../static/src/g2/modalEffects.js");
 	document.body.appendChild(script2);
+	
 }
 
 function reloadScripts() {
