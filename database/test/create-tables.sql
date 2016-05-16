@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS Submission (
     AssignmentId    INT          references Assignment(AssignmentId),
     StudentId           INT          references Users(UserId),
     StudentPublishConsent   Boolean ,
+    Status                      VARCHAR(32), --Should be 'blank', 'answer' or 'no answer'
     SubmissionDate      timestamp    NOT NULL,
     Grade               VARCHAR (3),
     TeacherId           INT          references Users(UserId),
