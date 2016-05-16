@@ -128,16 +128,14 @@ public class DatalayerCommunicator {
      * Save grade for a submission
      *
      * @param submission An object representing a submission
-     * @param grade An object representing a grade
      * @return True if the grade was successfully saved to the database, else false
      */
     @CrossOrigin
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
-    public boolean setGrade(@RequestParam(value = "Submission") Submission submission,
-                            @RequestParam(value = "Grade") Grade grade) {
+    public boolean setGrade(@RequestParam(value = "Submission") Submission submission) {
         String courseID = assignment.getCourseIDForAssignment(String.valueOf(submission.getAssignmentID()));
         submission.setCourseID(courseID);
-        return submissionDAO.setGrade(submission, grade);
+        return submissionDAO.setGrade(submission);
     }
 
     /**

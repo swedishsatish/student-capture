@@ -65,10 +65,10 @@ public class SubmissionDAO {
 	 * Add a grade for a subsmission
 	 *
 	 * @param submission Object containing assignmentID, studentID
-	 * @param grade      Object containing grade, teacherID, date, publish
 	 * @return True if a row was changed, otherwise false
 	 */
-	public boolean setGrade(Submission submission, Grade grade) {
+	public boolean setGrade(Submission submission) {
+		Grade grade = submission.getGrade();
         /* If a person that is not a teacher tries to set a grade, return false */
         String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
         int rows = databaseConnection.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
