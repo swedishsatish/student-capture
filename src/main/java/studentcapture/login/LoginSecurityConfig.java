@@ -15,16 +15,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
     
+	@Autowired
+	private LoginAuthentication loginAuth;
+	
     //Set username, password and role
     //The role can be used to allow role-specific actions
     //Current roles are "USER" and "ADMIN".
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .inMemoryAuthentication()
-                .withUser("user").password("user").roles("USER")
-                .and()
-                .withUser("admin").password("admin").roles("ADMIN"); //login with user and password
+        auth.authenticationProvider(loginAuth).eraseCredentials(false);
     }
     
     
