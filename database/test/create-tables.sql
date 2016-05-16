@@ -1,6 +1,5 @@
 CREATE TABLE IF NOT EXISTS Users (
     UserId       SERIAL         PRIMARY KEY,
-    salt         VARCHAR(128),
     UserName     VARCHAR(64)    UNIQUE,
     FirstName    VARCHAR(64)    NOT NULL,
     LastName     VARCHAR(64)    NOT NULL,
@@ -51,7 +50,7 @@ CREATE TABLE IF NOT EXISTS Submission (
 CREATE TABLE IF NOT EXISTS Config (
     UserId              INT         references Users(UserId),
     Language            VARCHAR(64) NOT NULL,
-    Email               VARCHAR(100),
+    EmailNotify               Boolean,
     TextSize            INT         NOT NULL,
     PRIMARY KEY (UserId)
     );
