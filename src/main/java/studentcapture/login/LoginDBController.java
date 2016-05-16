@@ -33,6 +33,23 @@ public class LoginDBController {
     @Autowired
     private RestTemplate requestSender;
     
+    @RequestMapping(value = "/lostPassword", method = RequestMethod.POST)
+    public ModelAndView lostPassword(
+            @RequestParam(value="email", required = true)               String email,
+            @RequestParam(value="username", required = true)            String username
+            ){
+        
+        //Validate credentials
+        //Must check if email and username match
+        
+        //Generate link
+        //Spring generate token http://www.baeldung.com/spring-security-registration-i-forgot-my-password
+        
+        //Email link
+        //Spring or custom mail?
+        
+    }
+    
     /**
      * Registers a new user.
      * @param firstName
@@ -127,6 +144,14 @@ public class LoginDBController {
 	 * Checks if password follows the required format
 	 * The format consists of atleast one small letter, at least one big letter and at least one number.
 	 * @param password
+     */
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ModelAndView registerUser(
+            @RequestParam(value="firstname", required = true)           String firstName,
+            @RequestParam(value="lastname", required = true)            String lastName,
+            @RequestParam(value="email", required = true)               String email,
+            @RequestParam(value="username", required = true)            String username,
+            @RequestParam(value="password", 
 	 * @return Returns true if correct format
 	 */
 	protected boolean checkPasswordFormat(String password) {
