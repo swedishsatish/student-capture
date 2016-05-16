@@ -29,7 +29,7 @@ window.AssignmentContent = React.createClass({
         var assignment = this.props.assignment;
         var course = this.props.course;
         if(!this.state.loaded) {
-            getJson("test/assignmentdata.json", this.jsonReady);
+            getJson("../static/test/assignmentdata.json", this.jsonReady);
         }
         return (
             <div id="assignment-div">
