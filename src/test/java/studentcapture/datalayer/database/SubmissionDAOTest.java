@@ -100,7 +100,8 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 3);
         submission.setCourseID("PVT");
-        submissionDAO.setGrade(submission, grade);
+        submission.setGrade(grade);
+        submissionDAO.setGrade(submission);
 
         String sql = "SELECT * FROM Submission WHERE assignmentID = 1 AND studentID = 1";
 
@@ -123,8 +124,9 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 3);
         submission.setCourseID("PVT");
+        submission.setGrade(grade);
 
-        boolean returnValue = submissionDAO.setGrade(submission, grade);
+        boolean returnValue = submissionDAO.setGrade(submission);
 
         assertTrue(returnValue);
     }
@@ -137,8 +139,9 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         Submission submission = new Submission(2,1);
         Grade grade = new Grade("vg", 3);
         submission.setCourseID("PVT");
+        submission.setGrade(grade);
 
-        boolean returnValue = submissionDAO.setGrade(submission, grade);
+        boolean returnValue = submissionDAO.setGrade(submission);
 
         assertFalse(returnValue);
     }
@@ -151,8 +154,9 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 2);
         submission.setCourseID("PVT");
+        submission.setGrade(grade);
 
-        boolean returnValue = submissionDAO.setGrade(submission, grade);
+        boolean returnValue = submissionDAO.setGrade(submission);
 
         assertFalse(returnValue);
     }
