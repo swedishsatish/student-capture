@@ -89,6 +89,11 @@ public class Assignment {
         return startDate.toString().replace('T', ' ') + ":00";
     }
     
+    public void setStartDate(Timestamp timestamp) {
+		this.startDate = timestamp;
+		//validateStartEndTime(this.startDate, this.endDate);
+	}
+    
     public void setStartDate(String startDate) {
         startDate = startDate.replace(' ', 'T');
         startDate = startDate.substring(0, 16);
@@ -116,8 +121,8 @@ public class Assignment {
     public int getMaxTime() {
         return maxTime;
     }
-
-    public void setMaxTimeSeconds(int maxTimeSeconds) throws InputMismatchException {
+    
+    public void setMaxTime(int maxTimeSeconds) throws InputMismatchException {
         this.maxTime = maxTimeSeconds;
         validateMinMaxTimeSeconds(minTime, maxTimeSeconds);
     }
