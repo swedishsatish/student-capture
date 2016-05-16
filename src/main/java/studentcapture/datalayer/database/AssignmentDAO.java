@@ -103,7 +103,13 @@ public class AssignmentDAO {
                 keyHolder);
 
         // Return generated AssignmentID
-        return keyHolder.getKey().intValue();
+        //This is a work around, keyHolder has several keys which it shouldn't
+        if (keyHolder.getKeys().size() > 1) {
+            return (int) keyHolder.getKeys().get("assignmentid");
+        } else {
+            //If only one key assumes it is assignmentid.
+            return keyHolder.getKey().intValue();
+        }
     }
 
     private LocalDateTime convertStringToLDTFormat(String timeDateString,
