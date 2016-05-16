@@ -26,8 +26,9 @@ var CourseList = React.createClass({
                 grade: "K",
                 teacherID: 12
             }];
+        window.users=users;
+        console.log("jebjeb")
         ReactDOM.render(<StudentList students={users}/>, document.getElementById('courseContent'));
-        var tf1 = setFilterGrid("students-table");
     },
 
     printFeedback : function() {
