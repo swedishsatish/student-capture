@@ -5,7 +5,7 @@ import java.util.InputMismatchException;
 
 /**
  * Created by David Björkstrand on 4/25/16.
- * This class is the model for a assignment. I.e. it contains all data needed for a assignment.
+ * This class is the model for a assignment. I.e. it contains all data needed for an assignment.
  * Add more fields if needed.
  */
 public class AssignmentModel {
