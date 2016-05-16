@@ -1,6 +1,9 @@
 /**
- * Created by sejiaw on 2016-05-10.
+ * Checkbox to check if student have passed a assignment or not,
+ * will be used for teacher feedback
+ * @author: dv13trm, c14gls, group 6
  */
+
 
 
 /**
@@ -11,12 +14,14 @@ var CheckBox = React.createClass({
     //Sets initial state for the checkbox to false.
     getInitialState: function() {
         return {
-
             checkBox: this.props.checkBox || false
 
         };
     },
-    // Render function for CheckBox
+    /**
+     * Render function for checkbox
+     * @returns {XML} A checkbox.
+     */
     render: function() {
         return (
 
@@ -25,21 +30,21 @@ var CheckBox = React.createClass({
                     <input id="ifStudentPass" type="checkbox"
                            checkBox={this.state.checkBox}
                            onClick={this.handleClick}/>
-
                     Passed!
                 </label>
 
             </div>
         );
     },
-    //Changes from checked to unchecked and vice-versa.
+    /**
+     * Changes state for checkbox.
+     * @param e event for change.
+     */
     handleClick: function(e) {
-
         this.setState({
             checkBox: e.target.checkBox
         });
 
     }
 });
-
 window.CheckBox=CheckBox;

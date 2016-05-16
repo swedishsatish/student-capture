@@ -1,26 +1,34 @@
 /**
- * Created by sejiaw on 2016-05-10.
+ * Drop down menu that will be used to select student grade.
+ * @author: dv13trm, c14gls, group 6
  */
 
 /**
  * Drop down menu that lets the teacher choose the grade for the student.
- * @type {string} Sting with students selected grade
+ *
  */
-// variable to keep track of grade, used in submission button
 var DropDown = React.createClass({
-
+    /**
+     * Set initialstate for drop down to U
+     * @returns {{value: string}} value U to dropdown.
+     */
     getInitialState: function() {
         return {
             value: 'U'
         }
     },
-
+    /**
+     * Set value to entered event.
+     * @param event change that happend to drop down, ex. if changed from U to G.
+     */
     change: function(event) {
         this.setState({value: event.target.value})
     },
-
+    /**
+     * Render function for dropdown menu.
+     * @returns {XML} A dropdown menu with values.
+     */
     render: function() {
-
         return(
             <div id="dropdown">
                 <label for="dropDownMenu">Grade</label>
@@ -33,7 +41,5 @@ var DropDown = React.createClass({
             </div>
         )
     }
-
-
 });
 window.DropDown=DropDown;
