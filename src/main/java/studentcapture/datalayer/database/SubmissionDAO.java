@@ -210,7 +210,8 @@ public class SubmissionDAO {
 	    	for (Map<String, Object> row : rows) {
 	    		Submission submission = new Submission(row);
 	    		submissions.add(submission);
-	    	}
+				System.out.println(submission.toString());
+			}
 
 	    } catch (IncorrectResultSizeDataAccessException e){
 			//TODO

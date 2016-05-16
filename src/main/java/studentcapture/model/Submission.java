@@ -3,24 +3,28 @@ package studentcapture.model;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Map;
+
 /**
  * Created by c13arm on 2016-05-11.
  */
 
 public class Submission {
     @NotNull
-	private Integer assignmentID;
+    private Integer assignmentID;
     @NotNull
     private Integer studentID;
     private Boolean studentPublishConsent = false;
     private Timestamp submissionDate;
     private Grade grade;
+    private String gradeSign;
     private Integer teacherID;
     private Boolean publishStudentSubmission = false;
     private String courseID;
     private String courseCode;
     private String feedback;
     private Status subStatus;
+    private String firstName;
+    private String lastName;
 
 
     //A submission must have one of these statuses
@@ -33,7 +37,7 @@ public class Submission {
         }
     }
 
-    public Submission (int studentID, int assignmentID) {
+    public Submission(int studentID, int assignmentID) {
         this.studentID = studentID;
         this.assignmentID = assignmentID;
     }
@@ -41,35 +45,46 @@ public class Submission {
     public Submission() {
     }
 
+    public String getGradeSign() {
+        return gradeSign;
+    }
+
+    public void setGradeSign(String gradeSign) {
+        this.gradeSign = gradeSign;
+    }
+
     /**
      * Constructor that parses map of database elements.
      *
-     * @param map		map retrieved from database
-     *
+     * @param map map retrieved from database
      * @author tfy12hsm
      */
     public Submission(Map<String, Object> map) {
-    	assignmentID = (Integer) map.get("AssignmentId");
-		studentID = (Integer) map.get("StudentId");
-		try {
-			studentPublishConsent = (Boolean) map.get("StudentPublishConsent");
-		} catch (NullPointerException e) {
-		}
-		submissionDate = (Timestamp) map.get("SubmissionDate");
-		//grade = ;
-		try {
-			teacherID = (Integer) map.get("TeacherId");
-		} catch (NullPointerException e) {
-			teacherID = null;
-		}
-		try {
-			publishStudentSubmission = (Boolean) map.get("PublishStudentSubmission");
-		} catch (NullPointerException e) {
-		}
-	}
+        assignmentID = (Integer) map.get("AssignmentId");
+        studentID = (Integer) map.get("StudentId");
+        firstName = (String) map.get("FirstName"); // Upper/lower-case doesn't matter
+        lastName = (String) map.get("LastName");
+        try {
+            studentPublishConsent = (Boolean) map.get("StudentPublishConsent");
+        } catch (NullPointerException e) {
+        }
+        submissionDate = (Timestamp) map.get("SubmissionDate");
+        gradeSign = (String) map.get("Grade");
+
+//        grade.setGrade((String) map.get("Grade"));
+        try {
+            teacherID = (Integer) map.get("TeacherId");
+        } catch (NullPointerException e) {
+            teacherID = null;
+        }
+        try {
+            publishStudentSubmission = (Boolean) map.get("PublishStudentSubmission");
+        } catch (NullPointerException e) {
+        }
+    }
 
     public String getCourseID() {
-		return courseID;
+        return courseID;
     }
 
     public void setCourseID(String courseID) {
@@ -88,7 +103,33 @@ public class Submission {
         this.studentPublishConsent = studentPublishConsent;
     }
 
-    public int getStudentID() { return studentID; }
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Timestamp getSubmissionDate() {
+        return submissionDate;
+    }
+
+    public void setSubmissionDate(Timestamp submissionDate) {
+        this.submissionDate = submissionDate;
+    }
+
+    public int getStudentID() {
+        return studentID;
+    }
 
     public void setStudentID(int studentID) {
         this.studentID = studentID;
@@ -132,5 +173,24 @@ public class Submission {
 
     public void setSubStatus(Status subStatus) {
         this.subStatus = subStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Submission{" +
+                "assignmentID=" + assignmentID +
+                ", studentID=" + studentID +
+                ", studentPublishConsent=" + studentPublishConsent +
+                ", submissionDate=" + submissionDate +
+                ", grade=" + grade +
+                ", teacherID=" + teacherID +
+                ", publishStudentSubmission=" + publishStudentSubmission +
+                ", courseID='" + courseID + '\'' +
+                ", courseCode='" + courseCode + '\'' +
+                ", feedback='" + feedback + '\'' +
+                ", subStatus=" + subStatus +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
     }
 }
