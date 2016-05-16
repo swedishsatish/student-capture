@@ -47,15 +47,6 @@ public class AssignmentModel {
 
     public AssignmentModel() {
         this.courseID = "1000"; //should be changed.
-        this.title = "Defualt Assignment";
-        this.info = "Defualt Info";
-        this.minTimeSeconds = 0;
-        this.maxTimeSeconds = 0;
-        this.startDate = LocalDateTime.parse("2000-10-12T10:00");
-        this.endDate = LocalDateTime.parse("2000-10-13T10:00");
-        this.publishDate = this.startDate;
-        this.scale = GradeScale.valueOf("NUMBER_SCALE");
-        this.recap = "Default Recap";
     }
 
     public String getCourseID() {

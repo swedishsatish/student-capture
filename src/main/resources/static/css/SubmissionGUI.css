@@ -1,0 +1,206 @@
+/**
+  * CSS file for teacher submission feedback feedback.
+  * Used to style teacher feedback on index.html.
+**/
+
+/*
+* Video recorder
+*/
+
+/* smallText smallText2 and smallLetter are tags used to configure the text inside the popup that is shown
+ * for a teacher to confirm the given feedback.
+ */
+#smallText{
+    text-align: center;
+    font-size: 100%;
+    color: green;
+}
+#smallText2 {
+    text-align: center;
+    font-size: 100%;
+    color: black;
+    display: inline;
+}
+#smallLetter {
+    text-align: center;
+    font-size: 200%;
+    color: black;
+}
+
+#recorder{
+    width: 50%;
+    margin-left: auto ;
+    margin-right: auto ;
+}
+/*
+* Container for all data.
+*/
+
+/*
+* Container for feedback data
+*/
+#feedBackContainer {
+    width: 50%;
+    margin-left: auto ;
+    margin-right: auto ;
+}
+/*
+* Container for textfield, grade and passedstatus------------------------------------------------------
+*/
+#submissioncontainer{
+    display: flex;
+    width: auto;
+}
+/*
+*Textarea style
+*/
+#teachercomments{
+    display: inline-block;
+    position:relative;
+    resize: none;
+    vertical-align:middle;
+    width: 400px;
+    height: 200px;
+}
+#commentbox{
+    width: 400px;
+}
+/*
+* Checkbox used for giving feedback.
+*/
+#passbox{
+    height: 50px;
+    width: 70px;
+}
+/*
+* Grade drop down menu
+*/
+#dropDown{
+    height: 50px;
+    width: 70px;
+}
+/*
+*Dropdown menu style
+*/
+#dropdown {
+    position: relative;
+    color: #AB3428;
+}
+/*
+* Container that holds the two components grade and the passed checkbox.
+*/
+#gradeAndPassContainer{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+/*
+* Container for submit and back button -----------------------------------------------------------------
+*/
+#buttonContainer {
+    display:flex;
+}
+/*
+*Button styles------------------------------------------------------------------------------------------
+*/
+button{
+    background-color: #F49E4C;
+}
+/*
+* Back button
+*/
+#backbutton{
+    top: 85%;
+    position: relative;
+    width: 135px;
+    height: 50px;
+    margin-right: 130px;
+}
+/*
+* Submit button
+*/
+#submitbutton {
+    top: 85%;
+    position: relative;
+    width: 135px;
+    height: 50px;
+}
+/*
+* course content
+*/
+
+/*
+*Checkbox style
+*/
+#checklabel{
+    position: relative;
+    color: #F5EE9E;
+}
+/*
+ * The blanket that is shown around the popup. Needs to be resized to a smaller size, due to the popup having problems
+ * to center itselfs inside the blanket. See what this means, by running demo.html.
+ */
+#blanket {
+    background-color:#111;
+    opacity: 0.65;
+    *background:none;
+    position:absolute;
+    z-index: 9001;
+    width:100%;
+    height:100%;
+}
+/* The popup that is shown when a teacher has to confirm the feedback that is about to be given.
+ */
+
+#popUpDiv {
+    position:relative;
+    background-size: 100%;
+    background-color: #2D728F;
+    width:30%;
+    height: 7%;
+    border:5px solid #000;
+    z-index: 9002;
+}
+/* The confirmation button that the teacher clicks when the teacher is done
+ */
+#confirmationButton {
+    float: right;
+}
+/* The cancel button, which can be used if the teacher wants to go close the opened popup window.
+ */
+#cancelButton {
+    float: left;
+}
+/* A container that holds the two different buttons inside the popup, cancel and confirmation buttons.
+ */
+#popUpButtonContainer {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+/* Implemented to hold the text inside the popup, but doesn't seem to work, it might not be needed in the final version.
+ */
+#textContainer {
+    word-break: break-all;
+    height: 150px;
+}
+/* An id that represents the text PASS, this is only shown if the teacher has checked the checkbox(Passed!).
+ * Shown in green color to make it easier to read, green is passed, red is not passed.
+  */
+#popUpPass {
+    color: greenyellow !important;
+    text-align: center;
+}
+/* Same as above, except this represents the text NOT PASSED, is shown in red due to failure.
+ */
+#popUpFail {
+    text-align: center;
+    color: red !important;
+}
+/* Defines the color of the given grade to the student, all grades to have the same color, doesn't matter what
+ * grade was given.
+ */
+#popUpGrade {
+    text-align: center;
+    color: greenyellow !important;
+}

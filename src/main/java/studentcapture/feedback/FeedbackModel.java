@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
  *
  * @author Group6
  * @version 0.1
- * @see studentcapture.datalayer.database.Submission
+ * @see studentcapture.model.Submission
  */
 public class FeedbackModel {
     @NotNull @Min(1)

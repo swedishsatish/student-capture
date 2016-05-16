@@ -47,5 +47,4 @@ public class AssignmentErrorHandler implements ResponseErrorHandler {
 
         return "";
     }
-
 }
