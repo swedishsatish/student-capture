@@ -16,8 +16,9 @@
  * @param {string} userID
  * @param {string} courseID
  * @param {string} examID
+ * @param {string} videoLength
  */
-function postToServer(blob, userID, courseID, assignmentID) {
+function postToServer(blob, userID, courseID, assignmentID, videoLength) {
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function () {
@@ -30,15 +31,13 @@ function postToServer(blob, userID, courseID, assignmentID) {
             var methodPOST = "POST";
 
             dataPOST.append("video", blob);
-<<<<<<< HEAD
             dataPOST.append("videoType", "submission");
-=======
             dataPOST.append("videoType", "answer");
->>>>>>> refs/remotes/origin/Front-end
             dataPOST.append("userID", userID);
             dataPOST.append("assignmentID", assignmentID);
             dataPOST.append("courseID", courseID);
             dataPOST.append("courseCode", courseID);
+            dataPOST.append("videoLength", videoLength);
 
             var xhrPOST = new XMLHttpRequest();
 

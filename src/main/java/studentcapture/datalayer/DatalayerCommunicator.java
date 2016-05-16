@@ -16,7 +16,6 @@ import studentcapture.datalayer.database.*;
 import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
-import studentcapture.feedback.FeedbackModel;
 import studentcapture.model.Assignment;
 import studentcapture.model.Course;
 import studentcapture.model.Grade;

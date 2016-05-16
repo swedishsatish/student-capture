@@ -5,7 +5,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import studentcapture.feedback.FeedbackModel;
 import studentcapture.model.Grade;
 import studentcapture.model.Submission;
 
