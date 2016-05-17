@@ -79,8 +79,12 @@ body {
 	background-color: #107D91;
 }
 
-#regPage {
-	top: calc(50% - 167px)
+#registerPage {
+	top: calc(50% - 176px)
+}
+
+#lostPasswordPage {
+	top: calc(50% - 135px)
 }
 
 .bckBtn {
@@ -139,7 +143,7 @@ body {
    	border-bottom: 26px solid transparent;
 }
 
-input:focus + .tooltip{
+input:focus:invalid + .tooltip{
     display: block;
 }
 
