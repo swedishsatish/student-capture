@@ -36,8 +36,9 @@ var StudentList = React.createClass({
         window.assignmentID = user.assignmentID;
         window.courseID = user.courseID;
         window.teacherID = user.teacherID;
-        document.getElementById("answerContainer").innerHTML = ""; //TODO: find better solution.
-        ReactDOM.render(<RenderHandle />, document.getElementById("answerContainer"));
+        //TODO: REMOVE JEBANE
+        document.getElementById("courseContent").innerHTML = ""; //TODO: find better solution.
+        ReactDOM.render(<RenderHandle />, document.getElementById("courseContent"));
         this.getData();
         //TODO: render other user story.
     },
@@ -73,7 +74,8 @@ var StudentList = React.createClass({
 
     componentWillMount: function () {
         // GET request to database to get all the submissions from the students.
-        $.ajax({
+       /* HAR FLYTTATS TILL TEACHERVIEWSUBMISSION.JS
+          $.ajax({
             url: window.globalURL + "/DB/getAllSubmissions", // URL to send to
             type: "GET", // Type of http
             async: false,
@@ -100,22 +102,39 @@ var StudentList = React.createClass({
                 // Handle the error
                 console.log("Error Participants");
             }.bind(this)
-        });
+        });*/
     },
 
     render: function () {
         var tmp = this;
+        /* KOMMENTERAR TAS BORT SENARE, ENBART HÄR FÖR HÅRDKODAT TEST
         var userList = this.submissions.map(function (user) {
             var date = new Date(user.submissionDate);
             return (
                 <tr onClick={tmp.clickhandle.bind(tmp,user)}>
                     <video width="96" height="54" class="clip-thumbnail"> <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4"/> </video>
                     <td>{user.firstName + " " + user.lastName}</td>
-                    <td>{date.getFullYear() + "-" + (date.getMonth()+1/*Months start from 0*/) + "-" + date.getDate()}</td>
+                    <td>{date.getFullYear() + "-" + (date.getMonth()+1/*Months start from 0) + "-" + date.getDate()}</td>
                     <td>{user.gradeSign}</td>
                 </tr>
             );
+
             // console.log(tmp);
+        });
+
+        */
+        //DENNA SKA TAS BORT MOT DEN UTKOMMENTERADE
+        var userList = window.users.map(function (user) {
+            console.log(user.videoURL);
+
+
+            return <tr onClick={tmp.clickhandle.bind(tmp,user)}>
+                <video width="96" height="54" class="clip-thumbnail"> <source src={user.videoURL} type="video/mp4"/> </video>
+                <td>{user.studentName}</td>
+                <td>{user.submissionDate}</td>
+                <td>{user.grade}</td>
+
+            </tr>
         });
         return (
             <div className="row">
