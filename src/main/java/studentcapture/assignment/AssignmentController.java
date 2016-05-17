@@ -1,9 +1,11 @@
 package studentcapture.assignment;
 
+import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import studentcapture.datalayer.database.AssignmentDAO;
 import studentcapture.datalayer.database.CourseDAO;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 
@@ -17,33 +19,21 @@ import java.net.URL;
  * to.
  */
 @RestController
+@RequestMapping("/assignments")
 public class AssignmentController {
 
     @Autowired
-    private CourseDAO courseDAO;
+    private AssignmentDAO assignmentDAO;
 
-    @RequestMapping(value = "/assignment", method = RequestMethod.POST)
-    public String postAssignment(@RequestBody AssignmentModel assignment) throws MalformedURLException {
-        RestTemplate rt = new RestTemplate();
-        AssignmentErrorHandler assignmentErrorHandler = new AssignmentErrorHandler();
-        String res;
-
-        rt.setErrorHandler(assignmentErrorHandler);
-
-        URL url = new URL("https://localhost:8443/DB/createAssignment");
-        res = rt.postForObject(url.toString(), assignment, String.class);
-
-        return res;
+    @RequestMapping(method = RequestMethod.POST)
+    public int createAssignment(@RequestBody AssignmentModel assignment) {
+        return assignmentDAO.createAssignment(assignment);
     }
 
-    @RequestMapping(value = "/assignmentVideo", method = RequestMethod.POST)
-    public void postAssignmentVideo(@RequestParam("video") MultipartFile video,
-                               @RequestParam("courseID") String courseID,
-                               @RequestParam("assignmentID") String assignmentID) {
-        System.out.println("Success! " + courseID + " " + assignmentID);
-        String courseCode = courseDAO.getCourseCodeFromId(courseID);
-
-        FilesystemInterface.storeAssignmentVideo(courseCode, courseID, assignmentID, video);
-
+    @RequestMapping(value = "/video", method = RequestMethod.POST)
+    public void addAssignmentVideo(@RequestParam("video") MultipartFile video,
+                                   @RequestParam("courseID") String courseID,
+                                   @RequestParam("assignmentID") String assignmentID) {
+        assignmentDAO.addAssignmentVideo(video, courseID, assignmentID);
     }
 }

@@ -43,7 +43,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
                 currentDatePlusDaysGenerator(1), // PublishDate
                 "U_O_K_G", // GradeScale
                 ""); // Recap
-
+        am.setCourseID(courseID);
         String sql = "INSERT INTO Course VALUES ('UA502', 1912, 'HT12', " +
                 "'ht1212', 'Comedy','Description' , true);";
         jdbcMock.execute(sql);
@@ -60,9 +60,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
 
     @Test
     public void shouldCreateAssignment() throws Exception {
-        int assID = assignmentDAO.createAssignment(courseID, am.getTitle(),
-                am.getStartDate(), am.getEndDate(), am.getMinTimeSeconds(),
-                am.getMaxTimeSeconds(), am.getPublished(), am.getScale());
+        int assID = assignmentDAO.createAssignment(am);
 
         assertNotNull(assID);
         assertTrue(assID > 0);
@@ -71,9 +69,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     @Test
     public void shouldBeCorrectDataInRow() throws Exception {
 
-        int assID = assignmentDAO.createAssignment(courseID, am.getTitle(),
-                am.getStartDate(), am.getEndDate(), am.getMinTimeSeconds(),
-                am.getMaxTimeSeconds(), am.getPublished(), am.getScale());
+        int assID = assignmentDAO.createAssignment(am);
 
         SqlRowSet srs = getRowSetFromAssignment(assID);
 
@@ -94,12 +90,8 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
 
     @Test
     public void shouldCreateTwoAssignments(){
-        int assID1 = assignmentDAO.createAssignment(courseID, am.getTitle(),
-                am.getStartDate(), am.getEndDate(), am.getMinTimeSeconds(),
-                am.getMaxTimeSeconds(), am.getPublished(), am.getScale());
-        int assID2 = assignmentDAO.createAssignment(courseID, am.getTitle(),
-                am.getStartDate(), am.getEndDate(), am.getMinTimeSeconds(),
-                am.getMaxTimeSeconds(), am.getPublished(), am.getScale());
+        int assID1 = assignmentDAO.createAssignment(am);
+        int assID2 = assignmentDAO.createAssignment(am);
 
         assertNotEquals(assID1, assID2);
     }
@@ -108,9 +100,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     public void shouldCreateAssignmentWithoutPublishdate(){
         am.setPublished(null);
 
-        int assID = assignmentDAO.createAssignment(courseID, am.getTitle(),
-                am.getStartDate(), am.getEndDate(), am.getMinTimeSeconds(),
-                am.getMaxTimeSeconds(), am.getPublished(), am.getScale());
+        int assID = assignmentDAO.createAssignment(am);
 
         SqlRowSet srs = getRowSetFromAssignment(assID);
 
@@ -128,64 +118,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowWhenPublishdateIsBeforeCurrentdate(){
-        //Faulty publishdate
-        LocalDateTime publishDateTime = LocalDateTime.now().minusDays(1);
-        String published = publishDateTime.format(formatter);
-        am.setPublished(published);
 
-        int assID = assignmentDAO.createAssignment(courseID, am.getTitle(),
-                am.getStartDate(), am.getEndDate(), am.getMinTimeSeconds(),
-                am.getMaxTimeSeconds(), am.getPublished(), am.getScale());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowWhenCreateWithFaultyDates() throws Exception {
-        String startDate = "20161019 111212"; // Faulty date format
-
-        int assID = assignmentDAO.createAssignment(courseID, am.getTitle(),
-                startDate, am.getEndDate(), am.getMinTimeSeconds(),
-                am.getMaxTimeSeconds(), am.getPublished(), am.getScale());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowWhenEndDateIsBeforeStartDate(){
-        String startDate = currentDatePlusDaysGenerator(3);
-        String endDate = currentDatePlusDaysGenerator(2); // enddate is one day
-                                                          // before startdate
-        int assID = assignmentDAO.createAssignment(courseID, am.getTitle(),
-                startDate, endDate, am.getMinTimeSeconds(),
-                am.getMaxTimeSeconds(), am.getPublished(), am.getScale());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowWhenCreateWithTimeMinGreaterMaxTime() throws Exception {
-        int minTime = 300; // Faulty when minTime is greater than maxTime
-        int maxTime = 210;
-
-        int assID = assignmentDAO.createAssignment(courseID, am.getTitle(),
-                am.getStartDate(), am.getEndDate(), minTime,
-                maxTime, am.getPublished(), am.getScale());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowWhenCreateWithTimeNegative() throws Exception {
-        int minTime = -1; // Faulty when time is negative
-
-        int assID = assignmentDAO.createAssignment(courseID, am.getTitle(),
-                am.getStartDate(), am.getEndDate(), minTime,
-                am.getMaxTimeSeconds(), am.getPublished(), am.getScale());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowWhenCreateWithTimeZero() throws Exception {
-        int maxTime = 0; //Faulty when time is zero
-
-        int assID = assignmentDAO.createAssignment(courseID, am.getTitle(),
-                am.getStartDate(), am.getEndDate(), am.getMinTimeSeconds(),
-                maxTime, am.getPublished(), am.getScale());
-    }
 
 
     private String currentDatePlusDaysGenerator(int days){
