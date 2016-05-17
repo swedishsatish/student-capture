@@ -1,6 +1,7 @@
 package studentcapture.model;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.sql.Timestamp;
 import java.util.Map;
 
@@ -25,7 +26,15 @@ public class Submission {
     private Status subStatus;
     private String firstName;
     private String lastName;
+    private String status;
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     //A submission must have one of these statuses
     public enum Status {
@@ -34,6 +43,7 @@ public class Submission {
         BLANK("Blank");
 
         Status(String status) {
+
         }
     }
 
@@ -60,18 +70,41 @@ public class Submission {
      * @author tfy12hsm
      */
     public Submission(Map<String, Object> map) {
+        // These three variables (assignmentID, studentID, submissionDate) cannot be null.
         assignmentID = (Integer) map.get("AssignmentId");
         studentID = (Integer) map.get("StudentId");
-        firstName = (String) map.get("FirstName"); // Upper/lower-case doesn't matter
-        lastName = (String) map.get("LastName");
+        submissionDate = (Timestamp) map.get("SubmissionDate");
+
+        try {
+            firstName = (String) map.get("FirstName"); // Upper/lower-case doesn't matter
+        } catch (NullPointerException e) {
+            firstName = null;
+        }
+
+        try {
+            lastName = (String) map.get("LastName");
+        } catch (NullPointerException e) {
+            lastName = null;
+        }
+
         try {
             studentPublishConsent = (Boolean) map.get("StudentPublishConsent");
         } catch (NullPointerException e) {
+            studentPublishConsent = null;
         }
-        submissionDate = (Timestamp) map.get("SubmissionDate");
-        gradeSign = (String) map.get("Grade");
 
+        try {
+            gradeSign = (String) map.get("Grade");
 //        grade.setGrade((String) map.get("Grade"));
+        } catch (NullPointerException e) {
+            gradeSign = null;
+        }
+
+        try {
+            status = (String) map.get("Status");
+        } catch (NullPointerException e) {
+            status = null;
+        }
         try {
             teacherID = (Integer) map.get("TeacherId");
         } catch (NullPointerException e) {
@@ -80,6 +113,7 @@ public class Submission {
         try {
             publishStudentSubmission = (Boolean) map.get("PublishStudentSubmission");
         } catch (NullPointerException e) {
+            publishStudentSubmission = null;
         }
     }
 

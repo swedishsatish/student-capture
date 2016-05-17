@@ -3,18 +3,9 @@ var CourseList = React.createClass({
         ReactDOM.render(<AssignmentContent course="kurs 3"
                                            assignment="assignment 2"/>, document.getElementById("courseContent"));
     },
-
-    studentSubmitions: function () {
-        $.get(
-            window.globalURL + "/DB/getAllSubmissions",
-            {assignmentID: 1200},
-            function (res) {
-                console.log(res[0]);
-                console.log(res[0].studentID);
-                ReactDOM.render(<StudentList students={res}/>, document.getElementById('courseContent'));
-                //var users = JSON.parse(res);
-                //console.log(users);
-            });
+    
+    studentSubmissions: function () {
+        ReactDOM.render(<StudentList />, document.getElementById('courseContent'));
 
         // var users = [{
         //     assignmentID: 1000,
@@ -60,7 +51,7 @@ var CourseList = React.createClass({
         listComponents.push(<div className="menuItem" key={2} onClick={this.printFeedback}>
             <div><h6 className="navigationText">Feedback</h6></div>
         </div>);
-        listComponents.push(<div className="menuItem" key={3} onClick={this.studentSubmitions}>
+        listComponents.push(<div className="menuItem" key={3} onClick={this.studentSubmissions}>
             <div><h6 className="navigationText">Teacher view assignment</h6></div>
         </div>);
         listComponents.push(<div className="menuItem" key={4} onClick={this.newAssignment}>
