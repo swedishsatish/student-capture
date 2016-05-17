@@ -75,11 +75,11 @@ body {
 	top: calc(50% - 167px)
 }
 
-#cnclBtn, #cnclBtn2 {
+#cnclBtn {
 	margin-right:0%;
 }
 
-#regBtn, #recoverBtn {
+#regBtn {
 	margin-left:4%; 
 }
 
@@ -88,32 +88,57 @@ body {
 	text-align: center;
 }
 
-#lostLink{
-    margin-left:4%;
+.tooltip{
+	width:300px;
+	display: none;
+	position: absolute;
+	right:104%;
+	bottom:20px;
+	background-color: #107D91;
+   	border: 6px solid #EC7E15;
+   	border-radius: 6px;
 }
 
-.tooltipText{display: none;}
+#uNameTip {
+	bottom:100px;
+}
 
-.forms input:focus + .tooltipText{
+#uNamePoint {
+	top:6px;
+	border-top: 20px solid transparent;
+   	border-left: 40px solid #EC7E15;
+   	border-bottom: 20px solid transparent;
+}
+
+.tooltipText {
+	color:#FAFAFA;
+	line-height: 20px;
+	margin-top: 10px;
+	margin-left: 6px;
+}
+
+.point {
+	content:"";
+   	position: absolute;
+   	left: 100%;
+   	top: 14px;
+   	width: 0;
+   	height: 0;
+   	border-top: 26px solid transparent;
+   	border-left: 40px solid #EC7E15;
+   	border-bottom: 26px solid transparent;
+}
+
+input:focus + .tooltip{
     display: block;
-    position: absolute;
-    top:101%;
-    left: center;
-    color:#FFFFFF; 
-    margin:5px; 
- 
 }
 
 #registerPage {
     display:none;
 }
 
-#lostPasswordPage {
-    display:none;
-}
-
 input:invalid{
-color:#EC7E15;
+	color:#EC7E15;
 }
 
 /*------------------------------------modal-----------------------------------*/

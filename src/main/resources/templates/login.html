@@ -14,16 +14,16 @@
 		<title>
 			Login page
 		</title>
-		<meta content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" charset="UTF-8">
+		<meta content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" charset="UTF-8"/>
 		
 		<!-- css stylesheets -->
-		<link rel="stylesheet" type="text/css" href="../static//normalize.css">
-		<link rel="stylesheet" type="text/css" href="../static/css/skeleton.css">
-		<link rel="stylesheet" type="text/css" href="../static/css/loginStyleNew.css">
-		<link rel="stylesheet" type="text/css" href="../static/css/custom.css">
+		<link rel="stylesheet" type="text/css" href="css/normalize.css"/>
+		<link rel="stylesheet" type="text/css" href="css/skeleton.css"/>
+		<link rel="stylesheet" type="text/css" href="css/loginStyleNew.css"/>
+		<link rel="stylesheet" type="text/css" href="css/custom.css"/>
 		<!-- javascript files -->
     	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
-    	<script type="text/babel" src="../static/src/loginScript.js"></script>
+    	<script type="text/babel" src="src/loginScript.js"></script>
 	</head>
 	
 	<!-- body container that contains the form 
@@ -36,7 +36,7 @@
 		
 		    <!-- div containing all the inputs.-->
             
-                <img src="../static/images/sc-logo.png" id="loginLogo" />
+                <img src="images/sc-logo.png" id="loginLogo" />
                 <input type="text" class="loginField" placeholder="username" name="username"/>
             
                 <input type="password" class="loginField" placeholder="password" name="password"/>
@@ -102,7 +102,7 @@
 
         <form id="lostPasswordPage" class="forms four columns offset-by-four" th:action="@{/lostPassword}" method="POST">
 
-            <h2 id="regText">Password recovery</h2>
+            <h2>Password recovery</h2>
 
             <input type="email" class="loginField" placeholder="example@mail.com" required="required" name="email"
                    pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" />
