@@ -155,5 +155,5 @@ window.CourseContent = React.createClass({
     }
 });
 
-ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
+//ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
 window.NewAssignment = NewAssignment;
