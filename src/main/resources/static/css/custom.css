@@ -19,6 +19,10 @@ input {
 	border-radius: 10px !important;
 }
 
+input[type=text]:disabled {
+	background: #dddddd;
+}
+
 #courseContent h1,
 #courseContent h2,
 #courseContent h3,
