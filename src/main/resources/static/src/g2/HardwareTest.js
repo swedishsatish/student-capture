@@ -11,6 +11,7 @@ var HardwareTest = React.createClass({
         var fd = new FormData();
         fd.append("videoName", fileName);
         fd.append("video", blob);
+        fd.append("text","dsvfdsfds");
         return fd;
     },
     playVideo: function (fName) {

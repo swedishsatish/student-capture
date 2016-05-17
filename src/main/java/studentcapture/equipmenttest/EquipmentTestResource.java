@@ -16,6 +16,48 @@ import java.util.Base64;
 @RequestMapping("/equipmenttest")
 public class EquipmentTestResource {
 
+    class TEST{
+        public String getVideoName() {
+            return videoName;
+        }
+
+        public void setVideoName(String videoName) {
+            this.videoName = videoName;
+        }
+
+        public MultipartFile getVideo() {
+            return video;
+        }
+
+        public void setVideo(MultipartFile video) {
+            this.video = video;
+        }
+
+        private String videoName;
+        private MultipartFile video;
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        private String text;
+
+
+
+    }
+
+    /**
+     * Necessary for mapping to object TEST.
+     * @return
+     */
+    @ModelAttribute("tst")
+    public TEST getTEST(){
+        return new TEST();
+    }
     /**
      * Receives a video as a MultipartFile and returns the video
      * in a responseEntity containing a encoded string in base64.
@@ -32,18 +74,22 @@ public class EquipmentTestResource {
             headers = "content-type=multipart/form-data", produces = "video/webm")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<InputStreamResource> equipmentTest(
-            @RequestParam(value="userID",required = false) String userID,
-            @RequestParam(value = "video", required = false) MultipartFile video
+            //map inparams to mathing params in TEST. Also take video name.
+            @ModelAttribute("tst") TEST test,@RequestParam("videoName") String vName
     ) {
+        System.out.println(test.getText() + " " + vName+ " " + test.getVideoName());
+
+
 
         ResponseEntity<InputStreamResource> responseEntity;
-
+        MultipartFile video = test.getVideo();
+        String videoName = test.getVideoName();
         if (!video.isEmpty()) {
             try {
                 byte[] videoArray = video.getBytes();
 
                 HttpHeaders responseHeaders = new HttpHeaders();
-                responseHeaders.add("content-disposition", "inline; filename="+userID);
+                responseHeaders.add("content-disposition", "inline; filename="+videoName);
 
                 responseEntity = new ResponseEntity(Base64.getEncoder().
                         encodeToString(videoArray), responseHeaders, HttpStatus.OK);
@@ -59,5 +105,7 @@ public class EquipmentTestResource {
 
         return responseEntity;
     }
+
+
 
 }
