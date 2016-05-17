@@ -11,7 +11,7 @@ import studentcapture.lti.LTICommunicator;
 import studentcapture.lti.LTIInvalidGradeException;
 import studentcapture.lti.LTINullPointerException;
 import studentcapture.lti.LTISignatureException;
-import studentcapture.model.Submission;
+import studentcapture.submission.Submission;
 
 import javax.validation.Valid;
 import java.net.URI;

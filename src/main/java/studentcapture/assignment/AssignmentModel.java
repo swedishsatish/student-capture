@@ -1,6 +1,7 @@
 package studentcapture.assignment;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 
 /**
@@ -20,6 +21,8 @@ public class AssignmentModel {
     private LocalDateTime publishDate;
     private GradeScale scale;
     private String recap;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(
+            "yyyy-MM-dd HH:mm:ss");
 
     public AssignmentModel(String title,
                            String info,
@@ -58,14 +61,20 @@ public class AssignmentModel {
     }
 
     public String getPublished() {
-        return publishDate.toString().replace('T', ' ') + ":00";
+        if (publishDate != null){
+            return FORMATTER.format(publishDate);
+        } else {
+            return null;
+        }
     }
 
     public void setPublished(String publishDate) {
-        publishDate = publishDate.replace(' ', 'T');
-        publishDate = publishDate.substring(0, 16);
-        this.publishDate = LocalDateTime.parse(publishDate);
-        validatePublishAndStartTime(this.startDate, this.publishDate);
+        if(publishDate != null) {
+            this.publishDate = LocalDateTime.parse(publishDate, FORMATTER);
+            validatePublishAndStartTime(this.startDate, this.publishDate);
+        } else {
+            this.publishDate = null;
+        }
     }
 
     public String getTitle() {
@@ -103,25 +112,20 @@ public class AssignmentModel {
     }
 
     public String getEndDate() {
-        return endDate.toString().replace('T', ' ') + ":00";
+        return FORMATTER.format(endDate);
     }
 
     public void setEndDate(String endDate) {
-        endDate = endDate.replace(' ', 'T');
-        endDate = endDate.substring(0, 16);
-        this.endDate = LocalDateTime.parse(endDate);
+        this.endDate = LocalDateTime.parse(endDate, FORMATTER);
         validateStartEndTime(this.startDate, this.endDate);
     }
 
     public String getStartDate() {
-        return startDate.toString().replace('T', ' ') + ":00";
+        return FORMATTER.format(startDate);
     }
 
     public void setStartDate(String startDate) {
-        startDate = startDate.replace(' ', 'T');
-        startDate = startDate.substring(0, 16);
-        this.startDate = LocalDateTime.parse(startDate);
-        //validateStartEndTime(this.startDate, this.endDate);
+        this.startDate = LocalDateTime.parse(startDate, FORMATTER);
     }
 
     public String getScale() {

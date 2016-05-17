@@ -1,22 +1,13 @@
 package studentcapture.datalayer.database;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import studentcapture.config.StudentCaptureApplicationTests;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import studentcapture.submission.SubmissionDAO;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by c12osn on 2016-05-02.

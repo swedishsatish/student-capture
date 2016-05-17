@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.submission;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -6,9 +6,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import studentcapture.model.Grade;
-import studentcapture.model.Submission;
+import studentcapture.submission.Submission;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Repository

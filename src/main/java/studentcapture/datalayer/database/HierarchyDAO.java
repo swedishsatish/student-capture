@@ -9,9 +9,10 @@ import org.springframework.stereotype.Repository;
 import studentcapture.course.Course;
 import studentcapture.course.CourseDAO;
 import studentcapture.model.Hierarchy;
-import studentcapture.model.Submission;
+import studentcapture.submission.Submission;
 import studentcapture.model.Hierarchy.AssignmentPackage;
 import studentcapture.model.Hierarchy.CoursePackage;
+import studentcapture.submission.SubmissionDAO;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
