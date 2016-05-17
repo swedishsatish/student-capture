@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import studentcapture.assignment.AssignmentDAO;
 import studentcapture.assignment.AssignmentDateIntervalls;
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.assignment.AssignmentVideoIntervall;

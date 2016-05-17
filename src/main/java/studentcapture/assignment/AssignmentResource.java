@@ -3,7 +3,6 @@ package studentcapture.assignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import studentcapture.datalayer.database.AssignmentDAO;
 
 /**
  * Created by victor on 2016-04-28.

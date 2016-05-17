@@ -2,15 +2,14 @@ package studentcapture.datalayer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.CourseDAO;
 import studentcapture.datalayer.database.*;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
@@ -26,7 +25,6 @@ import javax.validation.Valid;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**

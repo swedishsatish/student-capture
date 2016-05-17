@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.assignment;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
