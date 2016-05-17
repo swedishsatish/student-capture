@@ -19,8 +19,7 @@ var TeacherViewSubmission = React.createClass({
         this.nParticipants = 0;
 
         // GET request to database to get all the submissions from the students.
-        //SKA AVKOMMENTERAS SENARE
-      /**  $.ajax({
+       $.ajax({
             url: window.globalURL + "/DB/getAllSubmissions", // URL to send to
             type: "GET", // Type of http
             async: false,
@@ -47,10 +46,8 @@ var TeacherViewSubmission = React.createClass({
                 // Handle the error
                 console.log("Error Participants");
             }.bind(this)
-        });**/
+        });
     },
-
-    /* kommenterar ska tas bort
     calculateSubmissions: function () {
         this.nParticipants = this.participantsArray.length;
         
@@ -63,23 +60,9 @@ var TeacherViewSubmission = React.createClass({
         }
 
         this.nDone = this.nSubmissions + this.nWithdrawals;
-    },*/
-
-
-    //DENNA FUNKTION SKA TAS BORT
-    calculateSubmissions: function () {
-        var userList=window.users;
-        for(var i=0; i < userList.length;i++){
-            console.log(userList[i].studentName.value)
-            if(userList[i].withdraw){
-                this.nWithdrawals++;
-                continue;
-            }
-            this.nSubmissions++;
-        }
-        this.nDone=this.nSubmissions+this.nWithdrawals;
-        this.nParticipants=userList.length;
     },
+
+    
 
     render: function () {
         this.calculateSubmissions();
