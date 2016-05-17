@@ -44,6 +44,10 @@
                 <button type="submit" class="SCButton" id="loginButton">
                     Login
                 </button>
+
+                <a id="lostLink">
+                    Forgot password?
+                </a>
                 
                 <button type="button" class="SCButton" id="registerButton">
                     Register
@@ -93,30 +97,29 @@
                 <button type="submit" id="regBtn" class="SCButton loginField nameField">
                     Register
                 </button>
-                
-
 
 		</form>
+
+        <form id="lostPasswordPage" class="forms four columns offset-by-four" th:action="@{/lostPassword}" method="POST">
+
+            <h2 id="regText">Password recovery</h2>
+
+            <input type="email" class="loginField" placeholder="example@mail.com" required="required" name="email"
+                   pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" />
+
+            <input type="text" pattern="^.{6,}$" class="loginField" placeholder="username" name="username" required="required"/>
+
+            <button type="button" id="cnclBtn2" class="SCButton loginField nameField">
+                Cancel
+            </button>
+            <button type="submit" id="recoverBtn" class="SCButton loginField nameField">
+                Recover
+            </button>
+
+        </form>
 		</div>
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	    <!-- Trigger/Open The Modal -->
         <div id="modalBtn" class="twelve columns">

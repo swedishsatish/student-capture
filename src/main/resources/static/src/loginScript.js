@@ -6,24 +6,40 @@
 
 var loginForm = document.getElementById('loginPage');
 var regForm = document.getElementById('registerPage');
+var lostForm = document.getElementById('lostPasswordPage');
 
 // Get the button
 var btn = document.getElementById("registerButton");
 var cnclBtn = document.getElementById("cnclBtn");
+var cnclBtn2 = document.getElementById("cnclBtn2");
+var lostLink = document.getElementById("lostLink");
 
 // When the user clicks the button
 btn.onclick = function() {
     loginForm.reset();
     loginForm.style.display = "none";
     regForm.style.display = "block";
-    
 }
+
+lostLink.onclick = function() {
+    loginForm.reset();
+    loginForm.style.display = "none";
+    lostForm.style.display = "block";
+}
+
 
 // When the user clicks the button
 cnclBtn.onclick = function() {
     loginForm.style.display = "block";
     regForm.style.display = "none";
     regForm.reset();
+}
+
+// When the user clicks the button
+cnclBtn2.onclick = function() {
+    loginForm.style.display = "block";
+    lostForm.style.display = "none";
+    lostForm.reset();
 }
 //------------------------------------modal-------------------------------------
 
