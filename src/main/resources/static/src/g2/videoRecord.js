@@ -31,7 +31,7 @@ var Recorder = React.createClass({
         var sendTime;
 
         var cameraStartOnLoad = (typeof props.camOn === "undefined") ?
-                        true : props.camOn == "true";
+                        false : props.camOn == "true";
         var cameraStarted = false;
         var startRecordButtonExists = (typeof props.recButtonID !== "undefined");
         var shouldAutoRecord = (typeof props.autoRecord === "undefined") ?
@@ -63,6 +63,7 @@ var Recorder = React.createClass({
                                   navigator.msGetUserMedia);
 
         if(cameraStartOnLoad) {
+            console.log(cameraStartOnLoad)
             startCamera();
         }
 
