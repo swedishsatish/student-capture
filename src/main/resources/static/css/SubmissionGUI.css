@@ -157,14 +157,14 @@ button{
  */
 
 #popUpDiv {
-    position:absolute;
+    position:relative;
     background-size: 100%;
     background-color: #2D728F;
     width:30%;
     height: 40%;
     top: 50%;
     margin-top: -9em; /*set to a negative number 1/2 of your height*/
-    margin-left: -8em; /*set to a negative number 1/2 of your width*/
+    margin-left: -30em; /*set to a negative number 1/2 of your width*/
     border:5px solid #000;
     z-index: 9002;
 }
