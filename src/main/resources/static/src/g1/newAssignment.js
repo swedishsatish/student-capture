@@ -1,31 +1,32 @@
 var NewAssignment = React.createClass({
-
+    playVideo: function () {
+        console.log("Video success");
+    },
     formDataBuilder: function (blob, fileName) {
         var fd = new FormData();
-        fd.append("videoName", fileName);
         fd.append("video", blob);
+        fd.append("courseID", 1200);
+        fd.append("assignmentID", 3);
         return fd;
     },
-
     render : function() {
       return <div>
-                <form id="form" action="assignment" method="post">
+                <div id="form">
                 <input className="inputField" id="title" type="text" placeholder="title" /><br/>
                 <input className="inputField" id="info" type="text" placeholder="description" /><br/>
-                    <input className="inputField" id="recap" type="text" placeholder="recap" /><br/>
+                <input className="inputField" id="recap" type="text" placeholder="recap" /><br/>
 
-                <Recorder playCallback={this.playVideo}
-                          postURL="/video/textTest" formDataBuilder={this.formDataBuilder}
-                          recButtonID="record-question" stopButtonID="stop-question" fileName="testVid.webm" replay="true"
-                          postButtonID="post-question"
+                <Recorder id="recorder" playCallback={this.playVideo}
+                          postURL="/assignmentVideo" formDataBuilder={this.formDataBuilder}
+                          recButtonID="record-question" stopButtonID="stop-question" fileName="assignmentVideo.webm" replay="true"
+                          postButtonID="post-video"
                 />
-                <div className="four columns u-pull-left">
-                    <button id="record-question" className="recControls">Record</button>
-                    <button id="stop-question" className="recControls" disabled>Stop</button>
-                </div>
+                <button id="record-question" className="recControls">Record</button>
+                <button id="stop-question" className="recControls" disabled>Stop</button>
+                <button id="post-video" className="recControls">Post Video</button><br/>
 
-                    <input id="startDate" type="button" value="yyyy-mm-dd 00:00"/>Start Date<br/>
-                    <input id="endDate" type="button" value="yyyy-mm-dd 00:00"/>End Date<br/>
+                <input id="startDate" type="button" value="yyyy-mm-dd 00:00"/>Start Date<br/>
+                <input id="endDate" type="button" value="yyyy-mm-dd 00:00"/>End Date<br/>
                 <input id="minTimeSeconds" type="text" placeholder="minTimeSeconds" /><br/>
                 <input id="maxTimeSeconds" type="text" placeholder="maxTimeSeconds" /><br/>
                     <input id="publish" type="button" value="yyyy-mm-dd 00:00"/>Publish Date<br/>
@@ -38,10 +39,9 @@ var NewAssignment = React.createClass({
 
                 <div className="button primary-button" id="post-question" onClick = {submitAssignment}> SUBMIT </div>
 
-            </form>
+            </div>
         </div>
     },
-
     componentDidMount: function () {
     $("#startDate").datetimepicker(
         {
@@ -141,5 +141,5 @@ window.CourseContent = React.createClass({
     }
 });
 
-//ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
+ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
 window.NewAssignment = NewAssignment;

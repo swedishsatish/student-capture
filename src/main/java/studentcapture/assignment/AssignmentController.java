@@ -1,10 +1,11 @@
 package studentcapture.assignment;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+import studentcapture.datalayer.database.CourseDAO;
+import studentcapture.datalayer.filesystem.FilesystemInterface;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -18,6 +19,9 @@ import java.net.URL;
 @RestController
 public class AssignmentController {
 
+    @Autowired
+    private CourseDAO courseDAO;
+
     @RequestMapping(value = "/assignment", method = RequestMethod.POST)
     public String postAssignment(@RequestBody AssignmentModel assignment) throws MalformedURLException {
         RestTemplate rt = new RestTemplate();
@@ -30,5 +34,16 @@ public class AssignmentController {
         res = rt.postForObject(url.toString(), assignment, String.class);
 
         return res;
+    }
+
+    @RequestMapping(value = "/assignmentVideo", method = RequestMethod.POST)
+    public void postAssignmentVideo(@RequestParam("video") MultipartFile video,
+                               @RequestParam("courseID") String courseID,
+                               @RequestParam("assignmentID") String assignmentID) {
+        System.out.println("Success! " + courseID + " " + assignmentID);
+        String courseCode = courseDAO.getCourseCodeFromId(courseID);
+
+        FilesystemInterface.storeAssignmentVideo(courseCode, courseID, assignmentID, video);
+
     }
 }
