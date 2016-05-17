@@ -41,6 +41,11 @@ window.NewProfile = React.createClass({
         reloadScripts();
 
     },
+
+	clickSettingsHandler: function () {
+		ReactDOM.render(<Settings userID={this.props.userID}/>, document.getElementById('modal-container'));
+		reloadScripts();
+	},
 	render : function() {
 		/*return <div className="three columns offset-by-nine" id="profile">
 			<h6 id="profileName" onClick={this.clickHandler} className="md-trigger md-setperspective" data-modal="modal-19">{profileData.name}</h6>
@@ -52,6 +57,8 @@ window.NewProfile = React.createClass({
 				<div className="dropdown-content">
 					<h6 onClick={this.clickHandler} className="md-trigger md-setperspective dropdown-head" data-modal="modal-19">Test equipment</h6>
 					<h6 onClick={this.clickFaqHandler} className="md-trigger md-setperspective dropdown-head" data-modal="modal-19">FAQ</h6>
+					<h6 onClick={this.clickSettingsHandler} className="md-trigger md-setperspective dropdown-head"
+						data-modal="modal-19">Settings</h6>
 				</div>
 
 			</div>

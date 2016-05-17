@@ -3,6 +3,27 @@ var CourseList = React.createClass({
         ReactDOM.render(<AssignmentContent course="kurs 3" assignment="assignment 2"/>,document.getElementById("courseContent"));
     },
     
+    studentSubmissions: function () {
+        ReactDOM.render(<StudentList />, document.getElementById('courseContent'));
+
+        // var users = [{
+        //     assignmentID: 1000,
+        //     studentID: 21,
+        //     studentName: "Anton Andersson",
+        //     submissionDate: "2010-06-23",
+        //     grade: "G",
+        //     teacherID: 12
+        // },
+        // {
+        //     assignmentID: 1000,
+        //     studentID: 21,
+        //     studentName: "Lukas Lundberg",
+        //     submissionDate: "2010-06-23",
+        //     grade: "K",
+        //     teacherID: 12
+        // }];
+        // ReactDOM.render(<StudentList students={users}/>, document.getElementById('courseContent'));
+        // var tf1 = setFilterGrid("students-table");
     studentSubmitions: function () {
          $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:1000},function (res) {
              //var users = JSON.parse(res);
