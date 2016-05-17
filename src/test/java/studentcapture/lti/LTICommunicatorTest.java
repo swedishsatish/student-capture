@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import studentcapture.model.Grade;
-import studentcapture.model.Submission;
+import studentcapture.submission.Submission;
 
 /**
  * Will test the LTICommunicator

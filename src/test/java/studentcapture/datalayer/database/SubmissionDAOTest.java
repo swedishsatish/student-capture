@@ -9,7 +9,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.model.Grade;
-import studentcapture.model.Submission;
+import studentcapture.submission.Submission;
+import studentcapture.submission.SubmissionDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
