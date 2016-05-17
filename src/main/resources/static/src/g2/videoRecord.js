@@ -12,6 +12,9 @@
  * postButtonID:    [Optional] Id of the post video button. If left out the stop button posts the video to server.
  * replay:          replay="true" if you want the recording to be playable in the same video tag.
  * fileName:        The name the video recording should have.
+ * camOn:           camOn="true" If the camera is to start before recording. User will have to click stopbutton to be able
+ *                  to reuse camera.
+ * autoRecord:      autoRecord="true" if the camera should start recording when class is instantiated.
  *
  *
  * watch HardwareTest.js for example of use.
@@ -27,10 +30,179 @@ var Recorder = React.createClass({
         var blobsize;
         var sendTime;
 
-        var autoRec = (typeof props.recButtonID === "undefined");
+        var cameraStartOnLoad = (typeof props.camOn === "undefined") ?
+                        true : props.camOn == "true";
+        var cameraStarted = false;
+        var startRecordButtonExists = (typeof props.recButtonID !== "undefined");
+        var shouldAutoRecord = (typeof props.autoRecord === "undefined") ?
+                        !startRecordButtonExists : props.autoRecord == "true";
 
         var replay = props.replay == "true";
+        var stopButton = document.getElementById(props.stopButtonID);
+        var previewElement;
+        var recordAudio, recordVideo;
+        var mediaStream;
 
+
+        if(startRecordButtonExists) {
+            var recordButton = document.getElementById(props.recButtonID);
+            if(cameraStarted) {
+                recordButton.disabled = true;
+                console.log("record.disabled = true;");
+            }
+        }
+
+        if(typeof props.calc !== "undefined")
+            previewElement = document.getElementById('prev-test');
+        else
+            previewElement = document.getElementById('preview');
+
+        navigator.getUserMedia = ( navigator.getUserMedia ||
+                                  navigator.webkitGetUserMedia ||
+        navigator.mediaDevices.getUserMedia ||
+                                  navigator.msGetUserMedia);
+
+        if(cameraStartOnLoad) {
+            startCamera();
+        }
+
+        /* The onclick function for the start record button if it exists. */
+        if(startRecordButtonExists) {
+            recordButton.onclick = startRecord;
+        }
+
+        /* The onclick function for the stop record button. */
+        stopButton.onclick = function () {
+            if(!shouldAutoRecord){
+                recordButton.disabled = false;
+            }
+
+            stopButton.disabled = true;
+
+            previewElement.src = '';
+
+            var postbutton = null;
+            if (typeof props.postButtonID !== "undefined") {
+                postbutton = document.getElementById(props.postButtonID);
+            }
+
+            recordVideo.stopRecording(function (url) {
+                if(replay) {
+                    previewElement.src = url;
+                    previewElement.setAttribute("controls","controls");
+                    previewElement.removeAttribute("muted");
+                }
+
+                if(postbutton == null) {
+                    if(props.siteView !== null) {
+                        PostBlob(recordVideo.getBlob(), props.siteView);
+                    } else {
+                        PostBlob(recordVideo.getBlob());
+                    }
+                }
+                else {
+                    previewElement.src = url;
+                    previewElement.setAttribute("controls","controls");
+                    previewElement.removeAttribute("muted");
+                    postbutton.disabled = false;
+                    postbutton.onclick = function () {
+                        if(props.siteView !== null) {
+                            PostBlob(recordVideo.getBlob(), props.siteView);
+                        } else {
+                            PostBlob(recordVideo.getBlob());
+                        }
+                    }
+                }
+                mediaStream.stop();
+                mediaStream = null;
+                if(typeof props.calc !== "undefined") {
+                    document.getElementById("test-rec-text").innerHTML = "";
+                }
+                else {
+                    document.getElementById("rec-text").innerHTML = "";
+                }
+                cameraStarted = false;
+            });
+            var hasModal = document.getElementById("assignment-modal");
+            if (hasModal !== null) {
+                hasModal.style.display = 'none';
+            }
+        };
+
+        /* Will start recording and start the webcam if not enabled. */
+        function startRecord() {
+            if(!cameraStarted) {
+                startCamera();
+                window.setTimeout(function() {
+                    recordAudio.startRecording();
+                    recordingStarted();
+                }, 1000);
+            } else {
+                recordAudio.startRecording();
+                recordingStarted();
+            }
+        }
+
+        function recordingStarted() {
+            if(startRecordButtonExists) {
+                recordButton.disabled = true;
+            }
+            stopButton.disabled = false;
+
+            if(typeof props.calc !== "undefined") {
+                document.getElementById("test-rec-text").innerHTML = "Recording..";
+            }
+            else {
+                document.getElementById("rec-text").innerHTML = "Recording..";
+            }
+        }
+
+        /* Start stream from webcam and start record if autoRecording is true,
+         * will record with forced low settings for smaller files. */
+        function startCamera () {
+            navigator.getUserMedia({
+                audio: true,
+                video: {
+                    mandatory: {
+                        minWidth: 160,
+                        maxWidth: 320,
+                        minHeight: 120,
+                        maxHeight: 240,
+                        minFrameRate: 5,
+                        maxFrameRate: 10
+                    }
+                }
+            }, function (stream) {
+                mediaStream = stream;
+                previewElement.src = window.URL.createObjectURL(mediaStream);
+                previewElement.removeAttribute("controls");
+                previewElement.setAttribute("muted", "muted");
+                previewElement.play();
+
+                recordAudio = RecordRTC(mediaStream, {
+                    onAudioProcessStarted: function () {
+                        recordVideo.startRecording();
+                    }
+                });
+
+                recordVideo = RecordRTC(mediaStream, {
+                    type: 'video'
+                });
+
+                if(startRecordButtonExists && cameraStartOnLoad) {
+                    recordButton.disabled = false;
+                }
+
+                if(shouldAutoRecord) {
+                    startRecord();
+                }
+                cameraStarted = true;
+            }, function (error) {
+                alert("Problem occured, make sure camera is not\nused elsewhere and that you are connected\nby https.");
+            });
+        }
+
+        /* Post to the server */
         function PostBlob(blob, siteView) {
             // FormData - data to be sent to the server
             var formData = props.formDataBuilder(blob,props.fileName);
@@ -85,151 +257,7 @@ var Recorder = React.createClass({
             }
         }
 
-        if(!autoRec) {
-            var record = document.getElementById(props.recButtonID);
-            record.disabled = true;
-        }
-
-        var stop = document.getElementById(props.stopButtonID);
-
-        var preview;
-        if(typeof props.calc !== "undefined")
-            preview = document.getElementById('prev-test');
-        else
-            preview = document.getElementById('preview');
-
-        navigator.getUserMedia = ( navigator.getUserMedia ||
-                                  navigator.webkitGetUserMedia ||
-        navigator.mediaDevices.getUserMedia ||
-                                  navigator.msGetUserMedia);
-
-
-        var recordAudio, recordVideo;
-        var localStream;
-        var startRecord = function () {
-            if(!autoRec) {
-                record.disabled = true;
-            }
-            stop.disabled = false;
-            recordAudio.startRecording();
-            if(typeof props.calc !== "undefined") {
-                document.getElementById("test-rec-text").innerHTML = "Recording..";
-            }
-            else {
-                document.getElementById("rec-text").innerHTML = "Recording..";
-            }
-        };
-
-        // Start stream from webcam and start record if autoRecording is true,
-        // will record with forced low settings for smaller files.
-        navigator.getUserMedia({
-            audio: true,
-            video: {
-                mandatory: {
-                    minWidth: 160,
-                    maxWidth: 320,
-                    minHeight: 120,
-                    maxHeight: 240,
-                    minFrameRate: 5,
-                    maxFrameRate: 10
-                }
-            }
-        }, function (stream) {
-            preview.src = window.URL.createObjectURL(stream);
-            preview.play();
-            localStream = stream;
-
-            recordAudio = RecordRTC(stream, {
-                onAudioProcessStarted: function () {
-                    recordVideo.startRecording();
-                }
-            });
-
-            recordVideo = RecordRTC(stream, {
-                type: 'video'
-            });
-
-            recordAudio = RecordRTC(localStream, {
-                onAudioProcessStarted: function () {
-                    recordVideo.startRecording();
-                }
-            });
-
-            recordVideo = RecordRTC(localStream, {
-                type: 'video'
-            });
-
-            if(!autoRec) {
-                record.disabled = false;
-            } else {
-                startRecord();
-            }
-        }, function (error) {
-            alert("Problem occured, make sure camera is not\nused elsewhere and that you are connected\nby https.");
-        });
-
-        if(!autoRec) {
-            record.onclick = startRecord;
-        }
-
-        stop.onclick = function () {
-            if(!autoRec){
-                record.disabled = false;
-            }
-
-            stop.disabled = true;
-
-            preview.src = '';
-
-            var postbutton = null;
-            if (typeof props.postButtonID !== "undefined") {
-                postbutton = document.getElementById(props.postButtonID);
-            }
-
-            recordVideo.stopRecording(function (url) {
-                if(replay){
-                    preview.src = url;
-                    preview.setAttribute("controls","controls");
-                    preview.removeAttribute("muted");
-                }
-
-                if(postbutton == null) {
-                    if(props.siteView !== null) {
-                        PostBlob(recordVideo.getBlob(), props.siteView);
-                    } else {
-                        PostBlob(recordVideo.getBlob());
-                    }
-                }
-                else {
-                    preview.src = url;
-                    preview.setAttribute("controls","controls");
-                    preview.removeAttribute("muted");
-                    postbutton.disabled = false;
-                    postbutton.onclick = function () {
-                        if(props.siteView !== null) {
-                            PostBlob(recordVideo.getBlob(), props.siteView);
-                        } else {
-                            PostBlob(recordVideo.getBlob());
-                        }
-                    }
-                }
-                localStream.stop();
-                localStream = null;
-                if(typeof props.calc !== "undefined") {
-                    document.getElementById("test-rec-text").innerHTML = "";
-                }
-                else {
-                    document.getElementById("rec-text").innerHTML = "";
-                }
-
-
-            });
-            var hasModal = document.getElementById("assignment-modal");
-            if (hasModal !== null) {
-                hasModal.style.display = 'none';
-            }
-        };
-
+        /* Function for sending XMLHttpRequests. */
         function xhr(url, data, callback) {
             var request = new XMLHttpRequest();
             request.onreadystatechange = function () {
