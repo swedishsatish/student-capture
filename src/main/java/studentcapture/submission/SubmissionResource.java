@@ -1,7 +1,6 @@
 package studentcapture.submission;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +26,15 @@ public class SubmissionResource {
     public ResponseEntity<Submission> getSubmission(@PathVariable("assignmentID") String assignment,
                                                     @PathVariable("studentID") String studentID){
         //TODO fix unity in DAO API
-        return new ResponseEntity<Submission>(DAO.getSubmission(Integer.parseInt(assignment), Integer.parseInt(studentID)).get(), HttpStatus.OK);
+        Submission body = DAO.getSubmission(Integer.parseInt(assignment), Integer.parseInt(studentID)).get();
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") String assignment){
-        return new ResponseEntity<List<Submission>>(DAO.getAllSubmissions(assignment).get(), HttpStatus.OK);
+        //TODO check permissions
+        List<Submission> body = DAO.getAllSubmissions(assignment).get();
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.PUT)
