@@ -3,7 +3,11 @@ package studentcapture.login;
 import static org.junit.Assert.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.net.URI;
 
 import javax.validation.constraints.AssertTrue;
 
@@ -17,6 +21,7 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import studentcapture.config.StudentCaptureApplicationTests;
 
@@ -132,4 +137,30 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
     	LoginDBController c = new LoginDBController();
     	c.encryptPassword("ASDF");
     }
+    
+    @Test
+    public void testResetPassword() throws Exception{
+        mockMvc.perform(post("/testResetPassword")
+                //.with(csrf()) //csrf is required
+                .param("email", "my_email"))
+                .andExpect(status().isOk());
+    }
+    /*
+    @Test
+    public void testLostPassword() throws Exception{
+        mockMvc.perform(post("/lostPassword")
+                //.with(csrf()) //csrf is required
+                .param("email", "my_email")
+                .param("username", "my_username"))
+                .andExpect(status().isOk());
+    }
+    
+    @Test
+    public void testEmailExist() throws Exception{
+        mockMvc.perform(post("/DB/userEmailExist")
+                //.with(csrf()) //csrf is required
+                .param("email", "my_email"))
+                //.param("username", "my_username"))
+                .andExpect(status().isOk());
+    }*/
 }

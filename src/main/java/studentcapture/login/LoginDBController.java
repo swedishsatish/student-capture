@@ -1,10 +1,14 @@
 package studentcapture.login;
 
 import java.net.URI;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,24 +37,67 @@ public class LoginDBController {
     @Autowired
     private RestTemplate requestSender;
     
+    @RequestMapping(value = "/testResetPassword", method = RequestMethod.POST)
+    public String resetPassword(
+            HttpServletRequest request, @RequestParam("email") String userEmail) {
+        
+        String token = UUID.randomUUID().toString();
+        System.out.println("Email: " + userEmail + ", Token: " + token);
+        
+        String url = 
+                "http://" + request.getServerName() + 
+                ":" + request.getServerPort() + 
+                request.getContextPath();   
+        
+        System.out.println("Url: " + url);
+        
+        return token;
+    }
+    
     @RequestMapping(value = "/lostPassword", method = RequestMethod.POST)
     public ModelAndView lostPassword(
-            @RequestParam(value="email", required = true)               String email,
-            @RequestParam(value="username", required = true)            String username
+            @RequestParam(value="email", required = true)    String email,
+            @RequestParam(value="username", required = true) String username,
+            HttpServletRequest request
             ){
+        
+        String token = UUID.randomUUID().toString();
+        System.out.println("Email: " + email + ", Token: " + token);
+        
+        String url = 
+                "http://" + request.getServerName() + 
+                ":" + request.getServerPort() + 
+                request.getContextPath();
+        
+        
+        System.out.println("Url: " + url);
+        
+        ModelAndView mav = new ModelAndView(); 
+        mav.setViewName("redirect:login");
+
+        
+        //Validate credentials
+        //Check if email and username match
         if(checkEmailExistsWithUserName(email,username))
             System.out.println("success!");
-        else
+        else{
             System.out.println("fail...");
-        //Validate credentials
-        //Must check if email and username match
+            mav.setViewName("redirect:login?error=invaliduser");
+
+        }
         
         //Generate link
         //Spring generate token http://www.baeldung.com/spring-security-registration-i-forgot-my-password
         
+        //Store token in db ?
+        
+        
         //Email link
         //Spring or custom mail?
-        return null;
+        
+        //Compare header token with db token <-- another method?
+        
+        return mav;
     }
     
     /**
@@ -212,8 +259,13 @@ public class LoginDBController {
                 .queryParam("username", userName)
                 .build()
                 .toUri();
+        
+        System.out.println("Target: " + targetUrl);
+        
+        Boolean answer = requestSender.getForObject(targetUrl, Boolean.class);
+        System.out.println(answer);
         //Send request to DB and get the boolean answer
-        return !requestSender.getForObject(targetUrl, Boolean.class);
+        return requestSender.getForObject(targetUrl, Boolean.class);
 	}
 
 	/**
