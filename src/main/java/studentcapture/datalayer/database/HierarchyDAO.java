@@ -6,7 +6,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import studentcapture.model.Course;
+import studentcapture.course.Course;
+import studentcapture.course.CourseDAO;
 import studentcapture.model.Hierarchy;
 import studentcapture.model.Submission;
 import studentcapture.model.Hierarchy.AssignmentPackage;

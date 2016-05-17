@@ -12,12 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import studentcapture.assignment.AssignmentModel;
+import studentcapture.course.Course;
+import studentcapture.course.CourseDAO;
 import studentcapture.datalayer.database.*;
 import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Assignment;
-import studentcapture.model.Course;
 import studentcapture.model.Grade;
 import studentcapture.model.Hierarchy;
 import studentcapture.model.Participant;
@@ -307,102 +308,6 @@ public class DatalayerCommunicator {
         return userDAO.getPswd(username);
     }
     
-    /**
-     * Adds a course to the database.
-     * 
-     * @param courseID
-     * @param courseCode
-     * @param year
-     * @param term
-     * @param courseName
-     * @param courseDescription		
-     * @param active				
-     * @return						true i successful, else false
-     * 
-     * @see Course
-     *
-     * @author tfy12hsm
-     */
-    /*
-    @CrossOrigin
-    @RequestMapping(
-    produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.POST,
-    value = "/addCourse")
-    @ResponseBody
-    public Boolean addCourse(
-    		@RequestParam(value="courseID") String courseID,
-    		@RequestParam(value="courseCode") String courseCode, 
-    		@RequestParam(value="year") String year,
-    		@RequestParam(value="term") String term, 
-    		@RequestParam(value="courseName") String courseName, 
-    		@RequestParam(value="courseDescription") String courseDescription,
-    		@RequestParam(value="active") Boolean active) {
-    	return courseDAO.addCourse(courseID, courseCode, year, term, courseName,
-    			courseDescription, active);
-    }
-    */
-    /**
-     * Adds a course with a to the database.
-     *
-     * @param courseID
-     * @param courseCode
-     * @param year
-     * @param term
-     * @param courseName
-     * @param courseDescription
-     * @param active
-     * @return						true i successful, else false
-     *
-     * @see Course
-     *
-     * @author tfy12hsm
-     */
-    /*
-    @Transactional(rollbackFor=Exception.class)
-    @CrossOrigin
-    @RequestMapping(
-    produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.POST,
-    value = "/addCourseWithTeacher")
-    @ResponseBody
-    public Boolean addCourseWithTeacher(
-    		@RequestParam(value="courseID") String courseID,
-    		@RequestParam(value="courseCode") String courseCode, 
-    		@RequestParam(value="year") String year,
-    		@RequestParam(value="term") String term, 
-    		@RequestParam(value="courseName") String courseName, 
-    		@RequestParam(value="courseDescription") String courseDescription,
-    		@RequestParam(value="active") Boolean active,
-    		@RequestParam(value="userID") String userID) {
-    	 Boolean result1 = courseDAO.addCourse(courseID, courseCode, year, term, 
-    			 courseName, courseDescription, active);
-    	 Boolean result2 = participantDAO.addParticipant(userID, courseID, 
-    			 "Teacher");
-    	 if(!(result1 && result2))
-    		 throw new RuntimeException();
-    	 return (result1 && result2);
-    }
-    */
-    /**
-     * Returns a course with given identifier.
-     *
-     * @param courseID		    course identifier
-     * @return					found course
-     *
-     * @author tfy12hsm
-     */
-    /*
-    @CrossOrigin
-    @RequestMapping(
-    produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.GET,
-    value = "/getCourse")
-    @ResponseBody
-    public Course getCourse(@RequestParam(value="courseID") String courseID) {
-    	return courseDAO.getCourse(courseID);
-    }
-*/
     /**
      * Adds participant to course in database.
      *

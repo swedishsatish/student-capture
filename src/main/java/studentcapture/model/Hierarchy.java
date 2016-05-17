@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import studentcapture.course.Course;
+
 /**
  * Used to collect all relevant data in a users course-assignment
  * hierarchy. A course-assignment hierarchy is a container of all 

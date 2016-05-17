@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import studentcapture.datalayer.database.CourseDAO;
+import studentcapture.course.Course;
+import studentcapture.course.CourseDAO;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
-import studentcapture.model.Course;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
