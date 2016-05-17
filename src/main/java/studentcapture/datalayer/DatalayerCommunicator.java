@@ -64,6 +64,7 @@ public class DatalayerCommunicator {
      * @param submission
      * @return
      */
+    /*
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
     public Map<String, Object> getGrade(@Valid Submission submission) {
@@ -72,12 +73,13 @@ public class DatalayerCommunicator {
         result.put("feedback", fsi.getFeedbackText(submission));
         return result;
     }
-
+*/
 
     /**
      *
      * @return
      */
+    /*
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
     public String createAssignment(@RequestBody AssignmentModel assignmentModel)
@@ -99,7 +101,7 @@ public class DatalayerCommunicator {
 
         return assignmentID.toString();
     }
-
+    */
     /**
      * Upload an assignment video via the file system interface.
      *
@@ -143,6 +145,7 @@ public class DatalayerCommunicator {
      * @param feedbackText Text feedback
      * @return True if feedback was successfully saved to the database, else false
      */
+    /*
     @CrossOrigin
     @RequestMapping(value = "/setFeedback", method = RequestMethod.POST)
     public boolean setFeedback(@RequestParam(value = "Submission") Submission submission,
@@ -162,7 +165,7 @@ public class DatalayerCommunicator {
 
         return feedback != 0;
     }
-
+*/
     /**
      * Publish feedback to the student
      * @param submission An object representing a submission
@@ -320,6 +323,7 @@ public class DatalayerCommunicator {
      *
      * @author tfy12hsm
      */
+    /*
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -337,7 +341,7 @@ public class DatalayerCommunicator {
     	return courseDAO.addCourse(courseID, courseCode, year, term, courseName,
     			courseDescription, active);
     }
-    
+    */
     /**
      * Adds a course with a to the database.
      *
@@ -354,6 +358,7 @@ public class DatalayerCommunicator {
      *
      * @author tfy12hsm
      */
+    /*
     @Transactional(rollbackFor=Exception.class)
     @CrossOrigin
     @RequestMapping(
@@ -378,7 +383,7 @@ public class DatalayerCommunicator {
     		 throw new RuntimeException();
     	 return (result1 && result2);
     }
-    
+    */
     /**
      * Returns a course with given identifier.
      *
@@ -387,6 +392,7 @@ public class DatalayerCommunicator {
      *
      * @author tfy12hsm
      */
+    /*
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -396,7 +402,7 @@ public class DatalayerCommunicator {
     public Course getCourse(@RequestParam(value="courseID") String courseID) {
     	return courseDAO.getCourse(courseID);
     }
-
+*/
     /**
      * Adds participant to course in database.
      *

@@ -29,19 +29,21 @@ public class CourseDAO {
      * 
      * @author tfy12hsm
      */
-    public boolean addCourse(String courseID, String courseCode, String year,
-    		String term, String courseName, String courseDescription, 
-    		Boolean active) {
+    public boolean addCourse(Course course) {
     	boolean result;
-    	int years = Integer.parseInt(year);
 
         String addCourseStatement =
                 "INSERT INTO Course VALUES (?,?,?,?,?,?,?)";
 
         try {
             int rowsAffected = jdbcTemplate.update(addCourseStatement,
-                    courseID, years, term, courseCode, courseName, 
-                    courseDescription, active);
+                    course.getCourseId(),
+                    course.getYear(),
+                    course.getTerm(),
+                    course.getCourseCode(),
+                    course.getCourseName(),
+                    course.getCourseDescription(), 
+                    course.getActive());
             if (rowsAffected == 1) {
             	result = true;
             } else {
@@ -57,10 +59,10 @@ public class CourseDAO {
     }
 
 
-    public String getCourseID(String term,String courseCode){
+    public String getCourseID(Course course){
     	String sql = "SELECT courseID from course WHERE CourseCode=? "
     			+ "AND Term=?";
-    	return jdbcTemplate.queryForObject(sql, new Object[]{courseCode,term}, String.class);
+    	return jdbcTemplate.queryForObject(sql, new Object[]{course.getCourseCode(),course.getTerm()}, String.class);
     }
     
     /**
@@ -71,13 +73,13 @@ public class CourseDAO {
      * 
      * @author tfy12hsm
      */
-	public Course getCourse(String courseID) {
+	public Course getCourse(Course course) {
 		Course result = new Course();
 		try {
             String getCourseStatement =
                     "SELECT * FROM Course WHERE CourseId=?";
             Map<String, Object> map = jdbcTemplate.queryForMap(
-        			getCourseStatement, courseID);
+        			getCourseStatement, course.getCourseId());
             result.parseMap(map);		
 		} catch (IncorrectResultSizeDataAccessException e) {
 			return new Course();
@@ -95,16 +97,15 @@ public class CourseDAO {
 	 * @param description
 	 * @return
 	 */
-	public Boolean changeDescriptionOnCourse(String courseID, 
-			String description) {
+	public Boolean changeDescriptionOnCourse(Course course) {
 		String changeDescriptionOnCourseStatement = "UPDATE Course SET "
 				+ "CourseDescription=? WHERE CourseId=?";
 		Boolean result = null;
 		
 		try {
             int rowsAffected = jdbcTemplate.update(
-            		changeDescriptionOnCourseStatement, description, 
-            		courseID);
+            		changeDescriptionOnCourseStatement, course.getCourseDescription(), 
+            		course.getCourseId());
             if (rowsAffected == 1) {
             	result = true;
             } else {
@@ -127,14 +128,14 @@ public class CourseDAO {
      * 
      * @author tfy12hsm
      */
-    public boolean removeCourse(String courseID) {
+    public boolean removeCourse(Course course) {
     	boolean result;
 
         String removeCourseStatement = "DELETE FROM Course WHERE CourseID=?";
 
         try {
             int rowsAffected = jdbcTemplate.update(removeCourseStatement,
-                    courseID);
+                    course.getCourseId());
             result = rowsAffected == 1;
         } catch (IncorrectResultSizeDataAccessException e){
             result = false;
@@ -151,12 +152,12 @@ public class CourseDAO {
      * @param courseId Unique identifier for the course
      * @return course code
      */
-    public String getCourseCodeFromId(String courseId){
+    public String getCourseCodeFromId(Course course){
         String query = "SELECT coursecode FROM Course WHERE courseid = ?;";
         String courseCode;
 
         try {
-            courseCode = jdbcTemplate.queryForObject(query, new Object[]{courseId}, String.class);
+            courseCode = jdbcTemplate.queryForObject(query, new Object[]{course.getCourseId()}, String.class);
 
             if (courseCode == null) {
                 courseCode = "Missing value";

@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+
 import studentcapture.datalayer.database.CourseDAO;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
+import studentcapture.model.Course;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -41,7 +43,9 @@ public class AssignmentController {
                                @RequestParam("courseID") String courseID,
                                @RequestParam("assignmentID") String assignmentID) {
         System.out.println("Success! " + courseID + " " + assignmentID);
-        String courseCode = courseDAO.getCourseCodeFromId(courseID);
+        Course course = new Course();
+		course.setCourseId(courseID);
+        String courseCode = courseDAO.getCourseCodeFromId(course);
 
         FilesystemInterface.storeAssignmentVideo(courseCode, courseID, assignmentID, video);
 

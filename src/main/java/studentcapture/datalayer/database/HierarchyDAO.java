@@ -2,21 +2,17 @@ package studentcapture.datalayer.database;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.model.Course;
 import studentcapture.model.Hierarchy;
 import studentcapture.model.Submission;
 import studentcapture.model.Hierarchy.AssignmentPackage;
 import studentcapture.model.Hierarchy.CoursePackage;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.sql.Types;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,7 +124,9 @@ public class HierarchyDAO {
     				throw new NullPointerException();
     		} catch (NullPointerException e) {
     			currentCourse = new CoursePackage();
-    			currentCourse.setCourse(courseDAO.getCourse(courseId));
+    			Course course = new Course();
+    			course.setCourseId(courseId);
+    			currentCourse.setCourse(courseDAO.getCourse(course));
     			hierarchy.getTeacherCourses().put(courseId, currentCourse);
     		}
 
@@ -205,7 +203,9 @@ public class HierarchyDAO {
     				throw new NullPointerException();
     		} catch (NullPointerException e) {
     			currentCourse = new CoursePackage();
-    			currentCourse.setCourse(courseDAO.getCourse(courseId));
+    			Course course = new Course();
+    			course.setCourseId(courseId);
+    			currentCourse.setCourse(courseDAO.getCourse(course));
     			hierarchy.getStudentCourses().put(courseId, currentCourse);
     		}
 
