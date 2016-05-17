@@ -4,7 +4,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import studentcapture.assignment.AssignmentDateIntervalls;
 import studentcapture.assignment.AssignmentModel;
+import studentcapture.assignment.AssignmentVideoIntervall;
 import studentcapture.config.StudentCaptureApplicationTests;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +36,18 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
 
     @Before
     public void setUp() {
+        AssignmentVideoIntervall videoIntervall = new AssignmentVideoIntervall();
+        AssignmentDateIntervalls assignmentIntervalls = new AssignmentDateIntervalls();
+
+        videoIntervall.setMinTimeSeconds(180);
+        videoIntervall.setMaxTimeSeconds(360);
+        assignmentIntervalls.setStartDate(currentDatePlusDaysGenerator(2));
+        assignmentIntervalls.setEndDate(currentDatePlusDaysGenerator(3));
+        assignmentIntervalls.setPublishedDate(currentDatePlusDaysGenerator(1));
         am = new AssignmentModel("PVT", //Title
                 "", // Info
-                180, // MinTime
-                360, // MaxTime
-                currentDatePlusDaysGenerator(2), // StartDate
-                currentDatePlusDaysGenerator(3), // EndDate
-                currentDatePlusDaysGenerator(1), // PublishDate
+                videoIntervall,
+                assignmentIntervalls,
                 "U_O_K_G", // GradeScale
                 ""); // Recap
         am.setCourseID(courseID);
@@ -76,13 +83,13 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
         while (srs.next()) {
             assertEquals(courseID, srs.getString("CourseID"));
             assertEquals(am.getTitle(), srs.getString("Title"));
-            assertEquals(am.getStartDate(),
+            assertEquals(am.getAssignmentIntervall().getStartDate(),
                         srs.getString("StartDate").replaceAll("\\.\\d+", ""));
-            assertEquals(am.getEndDate(),
+            assertEquals(am.getAssignmentIntervall().getEndDate(),
                         srs.getString("EndDate").replaceAll("\\.\\d+", ""));
-            assertEquals(am.getMinTimeSeconds(), srs.getInt("MinTime"));
-            assertEquals(am.getMaxTimeSeconds(), srs.getInt("MaxTime"));
-            assertEquals(am.getPublished(),
+            assertEquals(am.getVideoIntervall().getMinTimeSeconds(), srs.getInt("MinTime"));
+            assertEquals(am.getVideoIntervall().getMaxTimeSeconds(), srs.getInt("MaxTime"));
+            assertEquals(am.getAssignmentIntervall().getPublishedDate(),
                         srs.getString("Published").replaceAll("\\.\\d+", ""));
             assertEquals(am.getScale(), srs.getString("GradeScale"));
         }
@@ -98,7 +105,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
 
     @Test
     public void shouldCreateAssignmentWithoutPublishdate(){
-        am.setPublished(null);
+        am.getAssignmentIntervall().setPublishedDate(null);
 
         int assID = assignmentDAO.createAssignment(am);
 
@@ -107,19 +114,16 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
         while (srs.next()) {
             assertEquals(courseID, srs.getString("CourseID"));
             assertEquals(am.getTitle(), srs.getString("Title"));
-            assertEquals(am.getStartDate(),
+            assertEquals(am.getAssignmentIntervall().getStartDate(),
                         srs.getString("StartDate").replaceAll("\\.\\d+", ""));
-            assertEquals(am.getEndDate(),
+            assertEquals(am.getAssignmentIntervall().getEndDate(),
                         srs.getString("EndDate").replaceAll("\\.\\d+", ""));
-            assertEquals(am.getMinTimeSeconds(), srs.getInt("MinTime"));
-            assertEquals(am.getMaxTimeSeconds(), srs.getInt("MaxTime"));
+            assertEquals(am.getVideoIntervall().getMinTimeSeconds(), srs.getInt("MinTime"));
+            assertEquals(am.getVideoIntervall().getMaxTimeSeconds(), srs.getInt("MaxTime"));
             assertNull(srs.getString("Published"));
             assertEquals(am.getScale(), srs.getString("GradeScale"));
         }
     }
-
-
-
 
     private String currentDatePlusDaysGenerator(int days){
         return LocalDateTime.now().plusDays(days).format(formatter);

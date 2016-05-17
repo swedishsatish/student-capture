@@ -11,12 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import studentcapture.assignment.AssignmentModel;
+import studentcapture.course.CourseDAO;
 import studentcapture.datalayer.database.*;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Assignment;
-import studentcapture.model.Course;
 import studentcapture.model.Hierarchy;
 import studentcapture.model.Participant;
 import studentcapture.submission.Submission;
@@ -63,6 +62,7 @@ public class DatalayerCommunicator {
      * @param submission
      * @return
      */
+    /*
     @CrossOrigin()
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "getGrade", method = RequestMethod.GET)
     public Map<String, Object> getGrade(@Valid Submission submission) {
@@ -71,12 +71,13 @@ public class DatalayerCommunicator {
         result.put("feedback", fsi.getFeedbackText(submission));
         return result;
     }
-
+*/
 
     /**
      *
      * @return
      */
+    /*
     @CrossOrigin
     @RequestMapping(value = "/createAssignment", method = RequestMethod.POST)
     public String createAssignment(@RequestBody AssignmentModel assignmentModel)
@@ -86,7 +87,7 @@ public class DatalayerCommunicator {
 
         return null;
     }
-
+    */
     /**
      * Upload an assignment video via the file system interface.
      *
@@ -130,6 +131,7 @@ public class DatalayerCommunicator {
      * @param feedbackText Text feedback
      * @return True if feedback was successfully saved to the database, else false
      */
+    /*
     @CrossOrigin
     @RequestMapping(value = "/setFeedback", method = RequestMethod.POST)
     public boolean setFeedback(@RequestParam(value = "Submission") Submission submission,
@@ -149,7 +151,7 @@ public class DatalayerCommunicator {
 
         return feedback != 0;
     }
-
+*/
     /**
      * Publish feedback to the student
      * @param submission An object representing a submission
@@ -291,99 +293,6 @@ public class DatalayerCommunicator {
         return userDAO.getPswd(username);
     }
     
-    /**
-     * Adds a course to the database.
-     * 
-     * @param courseID
-     * @param courseCode
-     * @param year
-     * @param term
-     * @param courseName
-     * @param courseDescription		
-     * @param active				
-     * @return						true i successful, else false
-     * 
-     * @see Course
-     *
-     * @author tfy12hsm
-     */
-    @CrossOrigin
-    @RequestMapping(
-    produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.POST,
-    value = "/addCourse")
-    @ResponseBody
-    public Boolean addCourse(
-    		@RequestParam(value="courseID") String courseID,
-    		@RequestParam(value="courseCode") String courseCode, 
-    		@RequestParam(value="year") String year,
-    		@RequestParam(value="term") String term, 
-    		@RequestParam(value="courseName") String courseName, 
-    		@RequestParam(value="courseDescription") String courseDescription,
-    		@RequestParam(value="active") Boolean active) {
-    	return courseDAO.addCourse(courseID, courseCode, year, term, courseName,
-    			courseDescription, active);
-    }
-    
-    /**
-     * Adds a course with a to the database.
-     *
-     * @param courseID
-     * @param courseCode
-     * @param year
-     * @param term
-     * @param courseName
-     * @param courseDescription
-     * @param active
-     * @return						true i successful, else false
-     *
-     * @see Course
-     *
-     * @author tfy12hsm
-     */
-    @Transactional(rollbackFor=Exception.class)
-    @CrossOrigin
-    @RequestMapping(
-    produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.POST,
-    value = "/addCourseWithTeacher")
-    @ResponseBody
-    public Boolean addCourseWithTeacher(
-    		@RequestParam(value="courseID") String courseID,
-    		@RequestParam(value="courseCode") String courseCode, 
-    		@RequestParam(value="year") String year,
-    		@RequestParam(value="term") String term, 
-    		@RequestParam(value="courseName") String courseName, 
-    		@RequestParam(value="courseDescription") String courseDescription,
-    		@RequestParam(value="active") Boolean active,
-    		@RequestParam(value="userID") String userID) {
-    	 Boolean result1 = courseDAO.addCourse(courseID, courseCode, year, term, 
-    			 courseName, courseDescription, active);
-    	 Boolean result2 = participantDAO.addParticipant(userID, courseID, 
-    			 "Teacher");
-    	 if(!(result1 && result2))
-    		 throw new RuntimeException();
-    	 return (result1 && result2);
-    }
-    
-    /**
-     * Returns a course with given identifier.
-     *
-     * @param courseID		    course identifier
-     * @return					found course
-     *
-     * @author tfy12hsm
-     */
-    @CrossOrigin
-    @RequestMapping(
-    produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.GET,
-    value = "/getCourse")
-    @ResponseBody
-    public Course getCourse(@RequestParam(value="courseID") String courseID) {
-    	return courseDAO.getCourse(courseID);
-    }
-
     /**
      * Adds participant to course in database.
      *

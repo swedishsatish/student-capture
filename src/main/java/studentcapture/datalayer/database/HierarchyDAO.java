@@ -6,6 +6,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.course.Course;
+import studentcapture.course.CourseDAO;
 import studentcapture.model.Hierarchy;
 import studentcapture.submission.Submission;
 import studentcapture.model.Hierarchy.AssignmentPackage;
@@ -124,7 +126,9 @@ public class HierarchyDAO {
     				throw new NullPointerException();
     		} catch (NullPointerException e) {
     			currentCourse = new CoursePackage();
-    			currentCourse.setCourse(courseDAO.getCourse(courseId));
+    			Course course = new Course();
+    			course.setCourseId(courseId);
+    			currentCourse.setCourse(courseDAO.getCourse(course));
     			hierarchy.getTeacherCourses().put(courseId, currentCourse);
     		}
 
@@ -201,7 +205,9 @@ public class HierarchyDAO {
     				throw new NullPointerException();
     		} catch (NullPointerException e) {
     			currentCourse = new CoursePackage();
-    			currentCourse.setCourse(courseDAO.getCourse(courseId));
+    			Course course = new Course();
+    			course.setCourseId(courseId);
+    			currentCourse.setCourse(courseDAO.getCourse(course));
     			hierarchy.getStudentCourses().put(courseId, currentCourse);
     		}
 

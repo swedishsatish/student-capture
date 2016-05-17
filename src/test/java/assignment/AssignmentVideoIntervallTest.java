@@ -2,20 +2,20 @@ package assignment;
 
 import org.junit.Before;
 import org.junit.Test;
-import studentcapture.assignment.VideoIntervall;
+import studentcapture.assignment.AssignmentVideoIntervall;
 
 import static org.junit.Assert.assertEquals;
 
 /**
  * Created by David Björkstrand on 5/17/16.
  */
-public class VideoIntervallTest {
+public class AssignmentVideoIntervallTest {
 
-    private VideoIntervall videoIntervall;
+    private AssignmentVideoIntervall videoIntervall;
 
     @Before
     public void setUp() {
-        videoIntervall = new VideoIntervall();
+        videoIntervall = new AssignmentVideoIntervall();
     }
 
     @Test

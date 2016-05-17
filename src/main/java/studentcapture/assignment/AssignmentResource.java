@@ -12,14 +12,13 @@ import studentcapture.datalayer.database.AssignmentDAO;
  */
 @RestController
 @RequestMapping("/assignments")
-public class AssignmentController {
+public class AssignmentResource {
 
     @Autowired
     private AssignmentDAO assignmentDAO;
 
     @RequestMapping(method = RequestMethod.POST)
     public int createAssignment(@RequestBody AssignmentModel assignment) {
-        AssignmentValidator.validate(assignment);
         return assignmentDAO.createAssignment(assignment);
     }
 

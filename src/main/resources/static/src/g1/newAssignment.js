@@ -3,7 +3,7 @@ var NewAssignment = React.createClass({
         $("#startDate").datetimepicker(
             {
                 dateFormat: "yy-mm-dd",
-                timeFormat: "HH:mi:ss",
+                timeFormat: "HH:mm:ss",
                 /*
                  minDate
                  jQuery datepicker option
@@ -14,7 +14,7 @@ var NewAssignment = React.createClass({
         $("#endDate").datetimepicker(
             {
                 dateFormat: "yy-mm-dd",
-                timeFormat: "HH:mi:ss",
+                timeFormat: "HH:mm:ss",
                 /*
                  minDate
                  jQuery datepicker option
@@ -25,7 +25,7 @@ var NewAssignment = React.createClass({
         $("#publish").datetimepicker(
             {
                 dateFormat: "yy-mm-dd",
-                timeFormat: "HH:mi:ss",
+                timeFormat: "HH:mm:ss",
                 /*
                  minDate
                  jQuery datepicker option
@@ -35,14 +35,19 @@ var NewAssignment = React.createClass({
             });
     },
     submitAssignment: function() {
-        var reqBody = {}
+        var reqBody = {};
+        var videoIntervall = {};
+        var assignmentIntervall = {};
+
+        videoIntervall["minTimeSeconds"] = $("#minTimeSeconds").val();
+        videoIntervall["maxTimeSeconds"] = $("#maxTimeSeconds").val();
+        assignmentIntervall["startDate"] = $("#startDate").val();
+        assignmentIntervall["endDate"] = $("#endDate").val();
+        assignmentIntervall["publishedDate"] = $("#publish").val();
         reqBody["title"] = $("#title").val();
         reqBody["info"] = $("#info").val();
-        reqBody["minTimeSeconds"] = $("#minTimeSeconds").val();
-        reqBody["maxTimeSeconds"] = $("#maxTimeSeconds").val();
-        reqBody["startDate"] = $("#startDate").val();
-        reqBody["endDate"] = $("#endDate").val();
-        reqBody["published"] = $("#publish").val();
+        reqBody["videoIntervall"] = videoIntervall;
+        reqBody["assignmentIntervall"] = assignmentIntervall;
         reqBody["recap"] = $("#recap").val();
         reqBody["scale"] = $("#scale").val();
         $.ajax({

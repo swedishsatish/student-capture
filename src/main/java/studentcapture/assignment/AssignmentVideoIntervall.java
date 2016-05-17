@@ -5,14 +5,14 @@ import javax.validation.Valid;
 /**
  * Created by David Björkstrand on 5/17/16.
  */
-public class VideoIntervall {
+public class AssignmentVideoIntervall {
 
     private int minTimeSeconds;
     private boolean minTimeIsSet;
     private int maxTimeSeconds;
     private boolean maxTimeIsSet;
 
-    public VideoIntervall() {
+    public AssignmentVideoIntervall() {
         minTimeIsSet = false;
         maxTimeIsSet = false;
     }

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentModel;
+import studentcapture.course.Course;
+import studentcapture.course.CourseDAO;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Assignment;
@@ -58,8 +60,9 @@ public class AssignmentDAO {
         String courseCode;
 
         // Construct query, depends on if assignment has publishdate or not.
-        String insertQueryString = getQueryString(assignmentModel.getPublished());
+        String insertQueryString = getQueryString(assignmentModel.getAssignmentIntervall().getPublishedDate());
 
+        System.err.println(assignmentModel.getAssignmentIntervall().getStartDate());
         // Execute query and fetch generated AssignmentID
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
@@ -69,11 +72,11 @@ public class AssignmentDAO {
                                     Statement.RETURN_GENERATED_KEYS);
                     ps.setString(1, assignmentModel.getCourseID());
                     ps.setString(2, assignmentModel.getTitle());
-                    ps.setString(3, assignmentModel.getStartDate());
-                    ps.setString(4, assignmentModel.getEndDate());
-                    ps.setInt(5, assignmentModel.getMinTimeSeconds());
-                    ps.setInt(6, assignmentModel.getMaxTimeSeconds());
-                    ps.setString(7, assignmentModel.getPublished());
+                    ps.setString(3, assignmentModel.getAssignmentIntervall().getStartDate());
+                    ps.setString(4, assignmentModel.getAssignmentIntervall().getEndDate());
+                    ps.setInt(5, assignmentModel.getVideoIntervall().getMinTimeSeconds());
+                    ps.setInt(6, assignmentModel.getVideoIntervall().getMaxTimeSeconds());
+                    ps.setString(7, assignmentModel.getAssignmentIntervall().getPublishedDate());
                     ps.setString(8, assignmentModel.getScale());
                     return ps;
                 },
@@ -88,7 +91,9 @@ public class AssignmentDAO {
             assignmentID = keyHolder.getKey().intValue();
         }
 
-        courseCode = courseDAO.getCourseCodeFromId(assignmentModel.getCourseID());
+        /*Course course = new Course();
+        course.setCourseId(assignmentModel.getCourseID());
+        courseCode = courseDAO.getCourseCodeFromId(course);
         try {
             FilesystemInterface.storeAssignmentText(courseCode, assignmentModel.getCourseID(),
                     assignmentID.toString(), assignmentModel.getInfo(),
@@ -98,7 +103,7 @@ public class AssignmentDAO {
                     FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
             //TODO: HANDLE THIS
-        }
+        }*/
 
         return assignmentID;
     }
@@ -125,9 +130,11 @@ public class AssignmentDAO {
     }
 
     public void addAssignmentVideo(MultipartFile video, String courseID, String assignmentID) {
-        String courseCode = courseDAO.getCourseCodeFromId(courseID);
+        Course course = new Course();
+        course.setCourseId(courseID);
+        //String courseCode = courseDAO.getCourseCodeFromId(course);
         //TODO Should be enough with courseID + assignmentID
-        FilesystemInterface.storeAssignmentVideo(courseCode, courseID, assignmentID, video);
+        //FilesystemInterface.storeAssignmentVideo(courseCode, courseID, assignmentID, video);
     }
 
     /**

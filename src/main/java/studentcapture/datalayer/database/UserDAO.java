@@ -5,6 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.course.CourseDAO;
 import studentcapture.model.User;
 import studentcapture.submission.SubmissionDAO;
 
