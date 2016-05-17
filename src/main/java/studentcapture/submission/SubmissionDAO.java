@@ -167,10 +167,10 @@ public class SubmissionDAO {
 				+ "sub.studentId=stu.userId WHERE (AssignmentId=?) AND "
 				+ "(Grade IS NULL)";
 
-    	List<Submission> submissions = new ArrayList<>();
-    	int assignmentId = Integer.parseInt(assId);
-    	try {
-	    	List<Map<String, Object>> rows = databaseConnection.queryForList(
+		int assignmentId = Integer.parseInt(assId);
+		List<Submission> submissions = new ArrayList<>();
+		try {
+			List<Map<String, Object>> rows = databaseConnection.queryForList(
 	    			getAllUngradedStatement, assignmentId);
 	    	for (Map<String, Object> row : rows) {
 	    		Submission submission = new Submission(row);
