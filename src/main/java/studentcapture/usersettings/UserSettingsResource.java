@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Created by Andreas Savva, Squad 8
  */
 @RestController
-public class UserSettingsController {
+public class UserSettingsResource {
 
     @Autowired
     private RestTemplate requestSender;

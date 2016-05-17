@@ -32,6 +32,10 @@ input[type=text]:disabled {
     color:#424242;
 }
 
+#popUpDiv {
+	background-colo:black;
+}
+
 .container {
   	height: 100%;
   	width: 100%;

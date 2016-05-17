@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by andreassavva on 2016-05-12.
  */
-public class UserSettingsControllerTest extends StudentCaptureApplicationTests {
+public class UserSettingsResourceTest extends StudentCaptureApplicationTests {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
