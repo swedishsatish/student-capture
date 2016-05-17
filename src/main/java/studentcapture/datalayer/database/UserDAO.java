@@ -140,6 +140,23 @@ public class UserDAO {
         return user;
     }
 
+    /**
+     * Check if given username exist with given email.
+     * @author Timmy Olsson
+     *
+     * @param userName
+     * @param email
+     * @return true if user and email exist else false.
+     */
+    public boolean userNameExistWithEmail(String userName, String email) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM users "
+                + "WHERE  UserName = ? AND email = ?)";
+
+        Object[] args = new Object[]{userName,email};
+        int[] types = new int[]{Types.VARCHAR,Types.VARCHAR};
+
+        return jdbcTemplate.queryForObject(sql,args,types,Boolean.class);
+    }
 
     /**
      * Checks if given username already exists.
