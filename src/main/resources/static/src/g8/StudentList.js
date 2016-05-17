@@ -21,7 +21,7 @@ var StudentList = React.createClass({
     },
 
     // Method that is called when a user clicks on a submission (a table row).
-    // It creates a new interface for submission grading.
+    // It creates a new interface for submission grading..
     clickhandle: function (user, event) {
         console.log(event);
         console.log(user);
