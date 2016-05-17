@@ -30,7 +30,7 @@ public class AssignmentModel {
                            String publishDate,
                            String scale,
                            String recap) throws InputMismatchException {
-        this.courseID = "1000"; //should be changed.
+        this.courseID = "1200"; //should be changed.
         this.title = title;
         this.info = info;
         this.minTimeSeconds = minTimeSeconds;
@@ -46,7 +46,7 @@ public class AssignmentModel {
     }
 
     public AssignmentModel() {
-        this.courseID = "1000"; //should be changed.
+        this.courseID = "1200"; //should be changed.
     }
 
     public String getCourseID() {
