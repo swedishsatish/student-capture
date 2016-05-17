@@ -38,15 +38,41 @@ var StudentList = React.createClass({
         window.teacherID = user.teacherID;
         document.getElementById("answerContainer").innerHTML = ""; //TODO: find better solution.
         ReactDOM.render(<RenderHandle />, document.getElementById("answerContainer"));
+        this.getData();
         //TODO: render other user story.
     },
 
+    getData: function () {
+
+        var reqBody = {};
+
+        reqBody["AssignmentID"] = window.assignmentID;
+        reqBody["CourseID"] = window.courseID;
+        reqBody["TeacherID"] = window.teacherID;
+        reqBody["StudentID"] = window.studentID;
+
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            url: "https://localhost:8443/feedback/get",
+            data: JSON.stringify(reqBody),
+            timeout: 100000,
+            success: function (response) {
+                console.log("SUCCESS: ", response);
+                // TODO: check response with if/else, if respons is fail give error message
+
+            }, error: function (e) {
+                console.log("ERROR: ", e);
+                console.log(reqBody);
+            }, done: function (e) {
+                console.log("DONE");
+            }
+        });
+
+    },
+
     componentWillMount: function () {
-
-        this.submissions = this.props.submissions;
-        this.participants = this.props.participants;
-
-        /* GET request to database to get all the submissions from the students.
+        // GET request to database to get all the submissions from the students.
         $.ajax({
             url: window.globalURL + "/DB/getAllSubmissions", // URL to send to
             type: "GET", // Type of http
@@ -74,7 +100,7 @@ var StudentList = React.createClass({
                 // Handle the error
                 console.log("Error Participants");
             }.bind(this)
-        });*/
+        });
     },
 
     render: function () {
@@ -93,7 +119,7 @@ var StudentList = React.createClass({
         });
         return (
             <div className="row">
-                <div className="four columns">
+                <div className="four columns offset-by-one">
                     <table className="u-full-width sortable" id="students-table">
                         <thead>
                         <tr >
