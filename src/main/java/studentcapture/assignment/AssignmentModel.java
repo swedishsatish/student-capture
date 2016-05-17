@@ -1,6 +1,5 @@
 package studentcapture.assignment;
 
-import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 
 /**
@@ -17,8 +16,6 @@ public class AssignmentModel {
     private AssignmentDateIntervalls assignmentIntervall;
     private GradeScale scale;
     private String recap;
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(
-            "yyyy-MM-dd HH:mm:ss");
 
     public AssignmentModel(String title,
                            String info,

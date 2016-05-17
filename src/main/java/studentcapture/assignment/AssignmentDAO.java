@@ -41,10 +41,6 @@ public class AssignmentDAO {
     @Autowired
     protected JdbcTemplate jdbcTemplate;
 
-    //TODO Remove when filesystem changes
-    @Autowired
-    CourseDAO courseDAO;
-
     /**
      * Inserts an assignment into the database.
      *
@@ -62,7 +58,6 @@ public class AssignmentDAO {
         // Construct query, depends on if assignment has publishdate or not.
         String insertQueryString = getQueryString(assignmentModel.getAssignmentIntervall().getPublishedDate());
 
-        System.err.println(assignmentModel.getAssignmentIntervall().getStartDate());
         // Execute query and fetch generated AssignmentID
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
@@ -91,19 +86,15 @@ public class AssignmentDAO {
             assignmentID = keyHolder.getKey().intValue();
         }
 
-        /*Course course = new Course();
-        course.setCourseId(assignmentModel.getCourseID());
-        courseCode = courseDAO.getCourseCodeFromId(course);
+
         try {
-            FilesystemInterface.storeAssignmentText(courseCode, assignmentModel.getCourseID(),
-                    assignmentID.toString(), assignmentModel.getInfo(),
-                    FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
-            FilesystemInterface.storeAssignmentText(courseCode, assignmentModel.getCourseID(),
-                    assignmentID.toString(), assignmentModel.getRecap(),
-                    FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+            FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
+                    assignmentModel.getInfo(), FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+            FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
+                    assignmentModel.getRecap(), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
             //TODO: HANDLE THIS
-        }*/
+        }
 
         return assignmentID;
     }
@@ -130,11 +121,7 @@ public class AssignmentDAO {
     }
 
     public void addAssignmentVideo(MultipartFile video, String courseID, String assignmentID) {
-        Course course = new Course();
-        course.setCourseId(courseID);
-        //String courseCode = courseDAO.getCourseCodeFromId(course);
-        //TODO Should be enough with courseID + assignmentID
-        //FilesystemInterface.storeAssignmentVideo(courseCode, courseID, assignmentID, video);
+        FilesystemInterface.storeAssignmentVideo(courseID, assignmentID, video);
     }
 
     /**

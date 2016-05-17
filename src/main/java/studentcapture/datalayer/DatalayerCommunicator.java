@@ -96,7 +96,7 @@ public class DatalayerCommunicator {
      * @return The string "OK" if ok, error message otherwise.
      * @author c13ljn
      */
-    @CrossOrigin
+    /*@CrossOrigin
     @RequestMapping(value = "/createAssignmentVideo/{courseCode}/{courseID}/{assignmentID}", method = RequestMethod.POST)
     public String createAssignmentVideo(@PathVariable(value = "courseCode") String courseCode,
                                         @PathVariable(value = "courseID") String courseID,
@@ -108,7 +108,7 @@ public class DatalayerCommunicator {
         } else {
             return "Failed to add assignment video to filesystem.";
         }
-    }
+    }*/
 
     /**
      * Save grade for a submission
