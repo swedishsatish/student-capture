@@ -49,23 +49,27 @@ body {
 }
 
 .nameField {
-	width:43%;
+	width:44%;
 }
 
 #firstName {
-	margin-right:2%;
+	float:left;
+	margin-right:1%;
 }
 
 #lastName {
-	margin-left:2%; 
+	float: right;
+	margin-left:1%;
 }
 
 #firstPass {
-	margin-right:2%;
+	float:left;
+	margin-right:1%;
 }
 
 #secondPass {
-	margin-left:2%; 
+	float: right;
+	margin-left:1%;
 }
 
 .forms {
@@ -75,16 +79,22 @@ body {
 	background-color: #107D91;
 }
 
-#regPage {
-	top: calc(50% - 167px)
+#registerPage {
+	top: calc(50% - 176px)
 }
 
-#cnclBtn {
-	margin-right:0;
+#lostPasswordPage {
+	top: calc(50% - 135px)
 }
 
-#regBtn {
-	margin-left:4%; 
+.bckBtn {
+	float:left;
+	margin-right:1%;
+}
+
+.nxtBtn {
+	float: right;
+	margin-left:1%;
 }
 
 #regText {
@@ -133,7 +143,7 @@ body {
    	border-bottom: 26px solid transparent;
 }
 
-input:focus + .tooltip{
+input:focus:invalid + .tooltip{
     display: block;
 }
 
