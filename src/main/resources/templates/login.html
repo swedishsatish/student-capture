@@ -36,10 +36,10 @@
 
 		    <!-- div containing all the inputs.-->
 
-                <img src="images/sc-logo.png" id="loginLogo" />
-                <input type="text" class="loginField" placeholder="username" name="username"/>
+                <img src="images/sc-logo.png" class="loginLogo" />
+                <input type="text" class="loginField" placeholder="username" name="username" required="required"/>
 
-                <input type="password" class="loginField" placeholder="password" name="password"/>
+                <input type="password" class="loginField" placeholder="password" name="password" required="required"/>
 
                 <button type="submit" class="SCButton" id="loginButton">
                     Login
@@ -56,8 +56,8 @@
 
 		<!-- forms -->
             <form id="registerPage" class="forms four columns offset-by-four" th:action="@{/register}" method="POST">
-                <img src="images/sc-logo.png" id="loginLogo" />
-                <h6 id="regText">registration</h6>
+                <img src="images/sc-logo.png" class="loginLogo" />
+                <h6 class="regText">registration</h6>
 
                 <input type="text" id="firstName"
                        class="loginField nameField"
@@ -111,8 +111,8 @@
 
         <form id="lostPasswordPage" class="forms four columns offset-by-four" th:action="@{/lostPassword}" method="POST">
 
-            <img src="images/sc-logo.png" id="loginLogo" />
-            <h6 id="regText">reset password</h6>
+            <img src="images/sc-logo.png" class="loginLogo" />
+            <h6 class="regText">reset password</h6>
 
             <input type="email" class="loginField" placeholder="example@mail.com" required="required" name="email"
                    pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" />

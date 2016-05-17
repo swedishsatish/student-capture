@@ -16,7 +16,7 @@ body {
 	background-repeat: no-repeat;
 }
 
-#loginLogo {
+.loginLogo {
 	margin-left:3%;
 	margin-right:3%;
 	width:94%;
@@ -74,7 +74,7 @@ body {
 
 .forms {
 	border-radius: 20px;
-	position:relative;
+	position:absolute;
 	top: calc(50% - 130px);
 	background-color: #107D91;
 }
@@ -97,7 +97,7 @@ body {
 	margin-left:1%;
 }
 
-#regText {
+.regText {
 	text-transform: uppercase;
 	text-align: center;
 }

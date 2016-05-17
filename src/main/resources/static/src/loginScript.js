@@ -17,30 +17,62 @@ var lostLink = document.getElementById("lostLink");
 // When the user clicks the button
 btn.onclick = function() {
     loginForm.reset();
-    loginForm.style.display = "none";
-    regForm.style.display = "block";
+
+    fadeIn(regForm);
+    fadeOut(loginForm);
 }
 
 lostLink.onclick = function() {
     loginForm.reset();
-    loginForm.style.display = "none";
-    lostForm.style.display = "block";
+    fadeOut(loginForm);
+    fadeIn(lostForm);
 }
 
 
 // When the user clicks the button
 cnclBtn.onclick = function() {
-    loginForm.style.display = "block";
-    regForm.style.display = "none";
+    fadeIn(loginForm);
+    fadeOut(regForm);
     regForm.reset();
 }
 
 // When the user clicks the button
 cnclBtn2.onclick = function() {
-    loginForm.style.display = "block";
-    lostForm.style.display = "none";
+    fadeIn(loginForm);
+    fadeOut(lostForm);
     lostForm.reset();
 }
+//------------------------------------modal-------------------------------------
+
+// fade out
+
+function fadeOut(el){
+  el.style.opacity = 1;
+
+  (function fade() {
+    if ((el.style.opacity -= .1) < 0) {
+      el.style.display = "none";
+    } else {
+      requestAnimationFrame(fade);
+    }
+  })();
+}
+
+// fade in
+
+function fadeIn(el, display){
+  el.style.opacity = 0;
+  el.style.display = display || "block";
+
+  (function fade() {
+    var val = parseFloat(el.style.opacity);
+    if (!((val += .1) > 1)) {
+      el.style.opacity = val;
+      requestAnimationFrame(fade);
+    }
+  })();
+}
+
 //------------------------------------modal-------------------------------------
 
 var modal = document.getElementById('myModal');
