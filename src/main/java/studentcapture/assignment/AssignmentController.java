@@ -1,17 +1,9 @@
 package studentcapture.assignment;
 
-import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.datalayer.database.AssignmentDAO;
-import studentcapture.datalayer.database.CourseDAO;
-import studentcapture.datalayer.filesystem.FilesystemInterface;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by victor on 2016-04-28.
@@ -27,6 +19,7 @@ public class AssignmentController {
 
     @RequestMapping(method = RequestMethod.POST)
     public int createAssignment(@RequestBody AssignmentModel assignment) {
+        AssignmentValidator.validate(assignment);
         return assignmentDAO.createAssignment(assignment);
     }
 

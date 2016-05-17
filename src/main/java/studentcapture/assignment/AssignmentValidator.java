@@ -9,8 +9,16 @@ import java.time.format.DateTimeParseException;
  */
 public class AssignmentValidator {
 
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(
+            "yyyy-MM-dd HH:mm:ss");
+
     public static void validate(AssignmentModel assignmentModel) {
         LocalDateTime startDateTime, endDateTime, publishedDate;
+        String startDateString = FORMATTER.format(LocalDateTime.parse(assignmentModel.getStartDate(), FORMATTER));
+        String endDateString = FORMATTER.format(LocalDateTime.parse(assignmentModel.getEndDate(), FORMATTER));
+
+        assignmentModel.setStartDate(startDateString);
+        assignmentModel.setEndDate(endDateString);
 
         //Check dates
         startDateTime = convertStringToLDTFormat(assignmentModel.getStartDate(), "startDate is not in format" +
@@ -34,7 +42,6 @@ public class AssignmentValidator {
 
         // Check time
         validateMinMaxTime(assignmentModel.getMinTimeSeconds(), assignmentModel.getMaxTimeSeconds());
-
 
     }
 
@@ -69,17 +76,17 @@ public class AssignmentValidator {
 
     private static void validateMinMaxTime(int minTime, int maxTime)
             throws IllegalArgumentException{
-        if (minTime >= maxTime) {
-            throw new IllegalArgumentException("minTime must be less than " +
-                    "maxTime");
-        }
-        if (minTime < 0) {
-            throw new IllegalArgumentException("minTime must be greater or " +
-                    "equal to 0");
-        }
-        if (maxTime <= 0) {
-            throw new IllegalArgumentException("maxTime must be greater " +
-                    "than 0");
-        }
+            if (minTime >= maxTime) {
+                throw new IllegalArgumentException("minTime must be less than " +
+                        "maxTime");
+            }
+            if (minTime < 0) {
+                throw new IllegalArgumentException("minTime must be greater or " +
+                        "equal to 0");
+            }
+            if (maxTime <= 0) {
+                throw new IllegalArgumentException("maxTime must be greater " +
+                        "than 0");
+            }
     }
 }

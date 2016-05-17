@@ -3,6 +3,7 @@ var NewAssignment = React.createClass({
         $("#startDate").datetimepicker(
             {
                 dateFormat: "yy-mm-dd",
+                timeFormat: "HH:mi:ss",
                 /*
                  minDate
                  jQuery datepicker option
@@ -13,6 +14,7 @@ var NewAssignment = React.createClass({
         $("#endDate").datetimepicker(
             {
                 dateFormat: "yy-mm-dd",
+                timeFormat: "HH:mi:ss",
                 /*
                  minDate
                  jQuery datepicker option
@@ -23,6 +25,7 @@ var NewAssignment = React.createClass({
         $("#publish").datetimepicker(
             {
                 dateFormat: "yy-mm-dd",
+                timeFormat: "HH:mi:ss",
                 /*
                  minDate
                  jQuery datepicker option
@@ -45,7 +48,7 @@ var NewAssignment = React.createClass({
         $.ajax({
             type : "POST",
             contentType : "application/json",
-            url : "assignment",
+            url : "assignments",
             data : JSON.stringify(reqBody),
             timeout : 100000,
             success : function(response) {
@@ -104,7 +107,7 @@ var NewAssignmentVideo = React.createClass({
         return (
             <div>
                 <Recorder id="recorder" playCallback={this.playVideo}
-                          postURL="/assignmentVideo" formDataBuilder={this.formDataBuilder}
+                          postURL="/assignments/video" formDataBuilder={this.formDataBuilder}
                           recButtonID="record-question" stopButtonID="stop-question" fileName="assignmentVideo.webm" replay="true"
                           postButtonID="post-video"
                 />

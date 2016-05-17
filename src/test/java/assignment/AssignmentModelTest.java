@@ -98,7 +98,7 @@ public class AssignmentModelTest {
         assertEquals(290, assignmentModel.getMaxTimeSeconds());
     }
 
-    @Test
+    /*@Test
     public void shouldNotThrowDateTimeParseException() {
         new AssignmentModel("Test", "info", 120, 300, "2015-01-20 10:00:00", "2015-01-22 10:00:00",
                 "2015-01-20 10:00:00", "NUMBER_SCALE", "Recap");
@@ -117,7 +117,7 @@ public class AssignmentModelTest {
         System.out.println(a.getStartDate());
     }*/
 
-    @Test(expected = DateTimeParseException.class)
+    /*@Test(expected = DateTimeParseException.class)
     public void hourShouldBeUnder23() {
         new AssignmentModel("Test", "info", 120, 300, "2015-01-20 25:00:00", "2015-01-20 10:00:00",
                 "2015-01-20 10:00:00", "NUMBER_SCALE", "Recap");
@@ -133,16 +133,9 @@ public class AssignmentModelTest {
     public void minTimeShouldBeSmallerThanMaxTime() {
         assignmentModel.setMaxTimeSeconds(60);
         assignmentModel.setMinTimeSeconds(120);
-    }
+    }  */
 
-    @Test
-    public void shouldNotThrowExceptionSinceMaxTimeIs0() {
-        assignmentModel.setMaxTimeSeconds(0);
-        assignmentModel.setMinTimeSeconds(120);
-        assertEquals(120, assignmentModel.getMinTimeSeconds());
-    }
-
-    @Test(expected = InputMismatchException.class)
+    /*@Test(expected = InputMismatchException.class)
     public void startDateShouldNotBeAfterEndDate() {
         assignmentModel.setStartDate("2015-01-22 10:00:00");
         assignmentModel.setEndDate("2015-01-20 10:00:00");
@@ -152,5 +145,5 @@ public class AssignmentModelTest {
     public void publishDateShouldNotBeAfterStartDate() {
         assignmentModel.setStartDate("2015-01-19 10:00:00");
         assignmentModel.setPublished("2015-01-20 10:00:00");
-    }
+    }*/
 }

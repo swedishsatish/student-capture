@@ -8,6 +8,8 @@ import studentcapture.assignment.AssignmentValidator;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Created by David Björkstrand on 5/17/16.
  */
@@ -47,6 +49,7 @@ public class AssignmentValidatorTest {
         String startDate = "20161019 111212"; // Faulty date format
         //Set wrong date
 
+        am.setStartDate(startDate);
         AssignmentValidator.validate(am);
     }
 
@@ -55,6 +58,9 @@ public class AssignmentValidatorTest {
         String startDate = currentDatePlusDaysGenerator(3);
         String endDate = currentDatePlusDaysGenerator(2); // enddate is one day
         // before startdate
+
+        am.setStartDate(startDate);
+        am.setEndDate(endDate);
         AssignmentValidator.validate(am);
     }
 
@@ -63,6 +69,8 @@ public class AssignmentValidatorTest {
         int minTime = 300; // Faulty when minTime is greater than maxTime
         int maxTime = 210;
 
+        am.setMinTimeSeconds(minTime);
+        am.setMaxTimeSeconds(maxTime);
         AssignmentValidator.validate(am);
     }
 
@@ -70,6 +78,7 @@ public class AssignmentValidatorTest {
     public void shouldThrowWhenCreateWithTimeNegative() throws Exception {
         int minTime = -1; // Faulty when time is negative
 
+        am.setMinTimeSeconds(minTime);
         AssignmentValidator.validate(am);
     }
 
@@ -77,6 +86,7 @@ public class AssignmentValidatorTest {
     public void shouldThrowWhenCreateWithTimeZero() throws Exception {
         int maxTime = 0; //Faulty when time is zero
 
+        am.setMaxTimeSeconds(maxTime);
         AssignmentValidator.validate(am);
     }
 

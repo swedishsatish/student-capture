@@ -14,11 +14,8 @@ public class AssignmentModel {
     private String courseID;
     private String title;
     private String info;
-    private int minTimeSeconds;
-    private int maxTimeSeconds;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private LocalDateTime publishDate;
+    private VideoIntervall videoIntervall;
+    private AssignmentIntervall assignmentIntervall;
     private GradeScale scale;
     private String recap;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(
@@ -26,26 +23,20 @@ public class AssignmentModel {
 
     public AssignmentModel(String title,
                            String info,
-                           int minTimeSeconds,
-                           int maxTimeSeconds,
-                           String startDate,
-                           String endDate,
-                           String publishDate,
+                           VideoIntervall videoIntervall,
+                           AssignmentIntervall assignmentIntervall,
                            String scale,
                            String recap) throws InputMismatchException {
         this.courseID = "1000"; //should be changed.
         this.title = title;
         this.info = info;
-        this.minTimeSeconds = minTimeSeconds;
-        this.maxTimeSeconds = maxTimeSeconds;
-        this.setStartDate(startDate);
-        this.setEndDate(endDate);
-        this.setPublished(publishDate);
+        this.videoIntervall = videoIntervall;
+        this.assignmentIntervall = assignmentIntervall;
         this.scale = GradeScale.valueOf(scale);
         this.recap = recap;
 
-        validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
-        validateStartEndTime(this.startDate, this.endDate);
+        //validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
+        //validateStartEndTime(this.startDate, this.endDate);
     }
 
     public AssignmentModel() {
@@ -61,20 +52,22 @@ public class AssignmentModel {
     }
 
     public String getPublished() {
-        if (publishDate != null){
+        return publishDate;
+        /*if (publishDate != null){
             return FORMATTER.format(publishDate);
         } else {
             return null;
-        }
+        }*/
     }
 
     public void setPublished(String publishDate) {
-        if(publishDate != null) {
-            this.publishDate = LocalDateTime.parse(publishDate, FORMATTER);
-            validatePublishAndStartTime(this.startDate, this.publishDate);
+        this.publishDate = publishDate;
+        /*if(publishDate != null) {
+
+            //validatePublishAndStartTime(this.startDate, this.publishDate);
         } else {
             this.publishDate = null;
-        }
+        }*/
     }
 
     public String getTitle() {
@@ -99,7 +92,7 @@ public class AssignmentModel {
 
     public void setMinTimeSeconds(int minTimeSeconds) throws InputMismatchException {
         this.minTimeSeconds = minTimeSeconds;
-        validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
+        //validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
     }
 
     public int getMaxTimeSeconds() {
@@ -108,24 +101,28 @@ public class AssignmentModel {
 
     public void setMaxTimeSeconds(int maxTimeSeconds) throws InputMismatchException {
         this.maxTimeSeconds = maxTimeSeconds;
-        validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
+        //validateMinMaxTimeSeconds(minTimeSeconds, maxTimeSeconds);
     }
 
     public String getEndDate() {
-        return FORMATTER.format(endDate);
+        return endDate;
+        //return FORMATTER.format(endDate);
     }
 
     public void setEndDate(String endDate) {
-        this.endDate = LocalDateTime.parse(endDate, FORMATTER);
-        validateStartEndTime(this.startDate, this.endDate);
+        this.endDate = endDate;
+        //this.endDate = LocalDateTime.parse(endDate, FORMATTER);
+        //validateStartEndTime(this.startDate, this.endDate);
     }
 
     public String getStartDate() {
-        return FORMATTER.format(startDate);
+        return startDate;
+        //return FORMATTER.format(startDate);
     }
 
     public void setStartDate(String startDate) {
-        this.startDate = LocalDateTime.parse(startDate, FORMATTER);
+        this.startDate = startDate;
+        //this.startDate = LocalDateTime.parse(startDate, FORMATTER);
     }
 
     public String getScale() {
