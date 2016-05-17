@@ -27,9 +27,9 @@ window.Feedback = React.createClass({
             }, error: function (e) {
                 console.log("ERROR: ", e);
                 ReactDOM.render(
-                    <h1>
+                    <p style={{color: 'red',fontSize: '200px'}}>
                         ERROR
-                    </h1>,
+                    </p>,
                     document.getElementById('courseContent')
                 )
             }, statusCode: {
