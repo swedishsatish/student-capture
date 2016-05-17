@@ -1,12 +1,12 @@
 
 function genScripts(){
 	var script1 = document.createElement("script");
-	script1.setAttribute("src","../static/src/g2/classie.js");
+	script1.setAttribute("src","src/g2/classie.js");
 	script1.setAttribute("id","script1");
 	document.body.appendChild(script1);
 	var script2 = document.createElement("script");
 	script2.setAttribute("id","script2");
-	script2.setAttribute("src","../static/src/g2/modalEffects.js");
+	script2.setAttribute("src","src/g2/modalEffects.js");
 	document.body.appendChild(script2);
 	
 }
