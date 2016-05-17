@@ -164,7 +164,9 @@ button{
     height: 40%;
     top: 50%;
     margin-top: -9em; /*set to a negative number 1/2 of your height*/
-    margin-left: -30em; /*set to a negative number 1/2 of your width*/
+    /*The popup is by default centered for coursecontent, but it looks better if its centered for the whole screen
+    margin left 35% centers it to the whole screen. */
+    margin-left: -35%; /*set to a negative number 1/2 of your width*/
     border:5px solid #000;
     z-index: 9002;
 }
