@@ -163,4 +163,4 @@ var StudentList = React.createClass({
     }
 });
 
-window.StudentList = StudentList;
+window.HardcodeList = HardcodeList;

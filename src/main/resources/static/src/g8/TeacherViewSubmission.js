@@ -66,7 +66,7 @@ var TeacherViewSubmission = React.createClass({
 
     render: function () {
         this.calculateSubmissions();
-        
+        console.log("eliashej")
         return (
             <div class="row">
                 <div className="four columns offset-by-one">

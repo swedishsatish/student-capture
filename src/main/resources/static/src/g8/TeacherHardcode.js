@@ -102,4 +102,4 @@ var TeacherViewSubmission = React.createClass({
     }
 });
 
-window.TeacherViewSubmission = TeacherViewSubmission;
+window.HardcodeTeacher = HardcodeTeacher;
