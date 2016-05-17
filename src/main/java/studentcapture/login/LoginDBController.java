@@ -23,7 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import studentcapture.model.User;
-
+import studentcapture.mail.MailClient;
 
 /**
  * Controller for handling HTTP requests related to the login page.
@@ -72,6 +72,8 @@ public class LoginDBController {
         
         System.out.println("Url: " + url);
         
+        String tokenUrl = url + "/lostPassword?token=" + token;
+        
         ModelAndView mav = new ModelAndView(); 
         mav.setViewName("redirect:login");
 
@@ -94,6 +96,12 @@ public class LoginDBController {
         
         //Email link
         //Spring or custom mail?
+        
+        
+        MailClient mailClient = new MailClient();
+        //mailClient.send(String to, String from, String subject, String msg)
+        mailClient.send("receiver", "sender", "Reset Password", tokenUrl);
+        
         
         //Compare header token with db token <-- another method?
         
