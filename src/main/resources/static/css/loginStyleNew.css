@@ -26,6 +26,10 @@ body {
 	height:100%;
 }
 
+#loginPage {
+	text-align: center;
+}
+
 #registerButton {
 	position:fixed;
 	top:60px;
@@ -76,7 +80,7 @@ body {
 }
 
 #cnclBtn {
-	margin-right:0%;
+	margin-right:0;
 }
 
 #regBtn {
@@ -141,6 +145,16 @@ input:invalid{
 	color:#EC7E15;
 }
 
+#lostLink {
+	cursor: pointer;
+	position: relative;
+	bottom:5px;
+}
+
+#lostPasswordPage {
+	display:none;
+}
+
 /*------------------------------------modal-----------------------------------*/
 
 #modalBtn {
@@ -198,7 +212,7 @@ input:invalid{
     cursor: pointer;
 }
 
-.close:hover, {
+.close:hover {
     color: #000;
     text-decoration: none;
     cursor: pointer;
