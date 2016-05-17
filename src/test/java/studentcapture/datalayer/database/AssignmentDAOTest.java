@@ -60,11 +60,6 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
 
     @Test
     public void shouldCreateAssignment() throws Exception {
-        //AssignmentModel am = new AssignmentModel("PVT", "",
-        //        180, 360, currentDatePlusDaysGenerator(2),
-        //        currentDatePlusDaysGenerator(3),
-        //        currentDatePlusDaysGenerator(1),"U_O_K_G", "");
-
         int assID = assignmentDAO.createAssignment(courseID, am.getTitle(),
                 am.getStartDate(), am.getEndDate(), am.getMinTimeSeconds(),
                 am.getMaxTimeSeconds(), am.getPublished(), am.getScale());
