@@ -22,11 +22,11 @@ public class SubmissionResource {
     @Autowired
     SubmissionDAO DAO;
 
-    @RequestMapping(value = "{submissionID}", method = RequestMethod.GET)
+    @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
     public Submission getSubmission(@PathVariable("assignmentID") String assignment,
-                                              @PathVariable("submissionID") String submission){
+                                              @PathVariable("studentID") String studentID){
         //TODO fix unity in DAO API
-        return DAO.getSubmission(Integer.parseInt(assignment), Integer.parseInt(submission)).get();
+        return DAO.getSubmission(Integer.parseInt(assignment), Integer.parseInt(studentID)).get();
     }
 
     @RequestMapping(method = RequestMethod.GET)
