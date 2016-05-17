@@ -147,7 +147,7 @@ var Question = React.createClass({
         );
     },
     componentDidMount: function() {
-        this.serverRequest = getJson("test/assignmentdata.json", function (data) {
+        this.serverRequest = getJson("../static/test/assignmentdata.json", function (data) {
             var json = JSON.parse(data);
 //            console.log("json is: " + json["AssignmentQuestion"]);
             this.setState({question: json["AssignmentQuestion"]});

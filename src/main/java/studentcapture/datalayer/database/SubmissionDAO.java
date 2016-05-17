@@ -200,7 +200,7 @@ public class SubmissionDAO {
 		String getAllSubmissionsStatement = "SELECT "
 				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
 				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId,"
-				+ "sub.StudentPublishConsent,sub.PublishStudentSubmission FROM"
+				+ "sub.StudentPublishConsent,sub.PublishStudentSubmission, sub.Status FROM"
 				+ " Submission AS sub LEFT JOIN Users AS stu ON "
 				+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
 
@@ -210,7 +210,7 @@ public class SubmissionDAO {
 	    	for (Map<String, Object> row : rows) {
 	    		Submission submission = new Submission(row);
 	    		submissions.add(submission);
-	    	}
+			}
 
 	    } catch (IncorrectResultSizeDataAccessException e){
 			//TODO

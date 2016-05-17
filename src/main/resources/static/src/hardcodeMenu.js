@@ -2,14 +2,14 @@ var CourseList = React.createClass({
     printVideo : function() {
         ReactDOM.render(<AssignmentContent course="kurs 3" assignment="assignment 2"/>,document.getElementById("courseContent"));
     },
-    
+
     studentSubmitions: function () {
-         $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:1000},function (res) {
-             //var users = JSON.parse(res);
-             console.log(res);
-             //console.log(users);
-             ReactDOM.render(<StudentList students={res}/>, document.getElementById('courseContent'));
-         });
+         // $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:1000},function (res) {
+         //     //var users = JSON.parse(res);
+         //     console.log(res);
+         //     //console.log(users);
+         //     ReactDOM.render(<StudentList students={res}/>, document.getElementById('courseContent'));
+         // });
         var users = [{
             videoURL:"http://www.w3schools.com/html/mov_bbb.mp4",
             assignmentID: 1000,
