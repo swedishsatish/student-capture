@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by root on 5/4/16.
  */
-public class AssignmentControllerTest extends StudentCaptureApplicationTests {
+public class AssignmentResourceTest extends StudentCaptureApplicationTests {
 
     @Autowired
     private WebApplicationContext context;
