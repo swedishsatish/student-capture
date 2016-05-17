@@ -1,4 +1,6 @@
-package studentcapture.model;
+package studentcapture.submission;
+
+import studentcapture.model.Grade;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;

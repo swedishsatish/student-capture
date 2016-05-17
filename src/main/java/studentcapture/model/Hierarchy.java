@@ -1,5 +1,7 @@
 package studentcapture.model;
 
+import studentcapture.submission.Submission;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

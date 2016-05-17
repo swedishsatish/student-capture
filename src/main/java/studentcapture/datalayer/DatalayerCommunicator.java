@@ -13,16 +13,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.*;
-import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Assignment;
 import studentcapture.model.Course;
-import studentcapture.model.Grade;
 import studentcapture.model.Hierarchy;
 import studentcapture.model.Participant;
-import studentcapture.model.Submission;
+import studentcapture.submission.Submission;
 import studentcapture.model.User;
+import studentcapture.submission.SubmissionDAO;
 
 import javax.validation.Valid;
 
