@@ -4,10 +4,10 @@
  **/
 
 var TeacherViewSubmission = React.createClass({
-    nSubmissions: 0,
-    nWithdrawals: 0,
-    nDone: 0,
-    nParticipants: 0,
+    nSubmissions: 0, //Antal som svarat
+    nWithdrawals: 0, //Antal som lämnat blankt
+    nDone: 0, //Totala antalet som gjort uppgiften
+    nParticipants: 0, //Totala antalet i kurslistan
     
     submissionsArray: null,
     participantsArray: null,
