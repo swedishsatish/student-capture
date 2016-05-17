@@ -37,83 +37,43 @@ var StudentList = React.createClass({
         window.courseID = user.courseID;
         window.teacherID = user.teacherID;
         document.getElementById("answerContainer").innerHTML = ""; //TODO: find better solution.
-        ReactDOM.render(<RenderHandle student={user.studentName} />,document.getElementById("courseContent"));
-        this.getData();
         ReactDOM.render(<RenderHandle />, document.getElementById("answerContainer"));
         //TODO: render other user story.
     },
 
-    getData: function () {
-
-        var reqBody = {};
-        reqBody["AssignmentID"] = window.assignmentID;
-        reqBody["CourseID"] = window.courseID;
-        reqBody["TeacherID"] = window.teacherID;
-        reqBody["StudentID"] = window.studentID;
-
+    componentWillMount: function () {
+        // GET request to database to get all the submissions from the students.
         $.ajax({
-            type: "GET",
-            contentType: "application/json",
-            url: "https://localhost:8443/feedback/get",
-            data: JSON.stringify(reqBody),
-            timeout: 100000,
-            success: function (response) {
-                console.log("SUCCESS: ", response);
-
-
-                //document.getElementById('dropDownMenu').value =
-
-
-                // TODO: check response with if/else, if respons is fail give error message
-
-                //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
-            }, error: function (e) {
-                console.log("ERROR: ", e);
-            }, done: function (e) {
-                console.log("DONE");
-            }
+            url: window.globalURL + "/DB/getAllSubmissions", // URL to send to
+            type: "GET", // Type of http
+            async: false,
+            data: {assignmentID: 1200},
+            success: function(data,status) { // Function to perform when ok
+                this.submissions = data;
+            }.bind(this),
+            error: function(xhr, status, err) {
+                // Handle the error
+                console.log("Error Submissions");
+            }.bind(this)
         });
 
+        // GET request to database to get all the participants in a course.
+        $.ajax({
+            url: window.globalURL + "/DB/getAllParticipantsFromCourse", // URL to send to
+            type: "GET", // Type of http
+            async: false,
+            data: {courseID: 1200},
+            success: function(data,status) { // Function to perform when ok
+                this.participants = data;
+            }.bind(this),
+            error: function(xhr, status, err) {
+                // Handle the error
+                console.log("Error Participants");
+            }.bind(this)
+        });
     },
 
-    componentWillMount: function () {
-
-        this.submissions = this.props.submissions;
-        this.participants = this.props.participants;
-
-        /* GET request to database to get all the submissions from the students.
-         $.ajax({
-         url: window.globalURL + "/DB/getAllSubmissions", // URL to send to
-         type: "GET", // Type of http
-         async: false,
-         data: {assignmentID: 1200},
-         success: function(data,status) { // Function to perform when ok
-         this.submissions = data;
-         }.bind(this),
-         error: function(xhr, status, err) {
-         // Handle the error
-         console.log("Error Submissions");
-         }.bind(this)
-         });
-
-         // GET request to database to get all the participants in a course.
-         $.ajax({
-         url: window.globalURL + "/DB/getAllParticipantsFromCourse", // URL to send to
-         type: "GET", // Type of http
-         async: false,
-         data: {courseID: 1200},
-         success: function(data,status) { // Function to perform when ok
-         this.participants = data;
-         }.bind(this),
-         error: function(xhr, status, err) {
-         // Handle the error
-         console.log("Error Participants");
-         }.bind(this)
-         });*/
-    },
-
-    render: function (){
-
+    render: function () {
         var tmp = this;
         var userList = this.submissions.map(function (user) {
             var date = new Date(user.submissionDate);
@@ -129,7 +89,7 @@ var StudentList = React.createClass({
         });
         return (
             <div className="row">
-                <div className="four columns">
+                <div className="four columns offset-by-one">
                     <table className="u-full-width sortable" id="students-table">
                         <thead>
                         <tr >

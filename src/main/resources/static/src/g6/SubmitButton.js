@@ -124,7 +124,6 @@ function submitForm() {
     reqBody["CourseID"] = window.courseID;
     reqBody["TeacherID"] = window.teacherID;
     reqBody["StudentID"] = window.studentID;
-    //Lägg till jquery skickning
 
     $.ajax({
         type: "POST",
@@ -139,7 +138,6 @@ function submitForm() {
           //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);
-            console.log(reqBody);
         }, done: function (e) {
             console.log("DONE");
         }
@@ -151,7 +149,6 @@ function submitForm() {
  * Sending data to database.
  */
 function sendData () {
-    // Ändrat, tog bort tidigare checkbox kontroll som redan finns ovan.
     submitForm();
 
 }
