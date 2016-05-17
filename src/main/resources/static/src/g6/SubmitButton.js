@@ -123,13 +123,13 @@ function submitForm() {
     reqBody["AssignmentID"] = window.assignmentID;
     reqBody["CourseID"] = window.courseID;
     reqBody["TeacherID"] = window.teacherID;
-    reqBody["value"] = "set";
-
+    reqBody["StudentID"] = window.studentID;
+    //Lägg till jquery skickning
 
     $.ajax({
         type: "POST",
         contentType: "application/json",
-        url: "feedback",
+        url: "https://localhost:8443/feedback/set",
         data: JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {
@@ -139,23 +139,19 @@ function submitForm() {
           //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);
+            console.log(reqBody);
         }, done: function (e) {
             console.log("DONE");
         }
     });
 }
+
+
 /**
  * Sending data to database.
  */
 function sendData () {
-    // answer contains true if Ok is pressed., false if cancel is pressed.
-    var passedStatus = 'No pass';
-    // alert(document.getElementById('teachercomments').value);
-    if (document.getElementById('ifStudentPass').checked) {
-        passedStatus = 'Pass';
-    } else {
-        passedStatus = 'No pass'
-    }
+    // Ändrat, tog bort tidigare checkbox kontroll som redan finns ovan.
     submitForm();
 
 }

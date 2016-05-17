@@ -39,7 +39,41 @@ var StudentList = React.createClass ({
         window.teacherID=user.teacherID;
         document.getElementById("answerContainer").innerHTML = ""; //TODO: find better solution.
         ReactDOM.render(<RenderHandle student={user.studentName} />,document.getElementById("courseContent"));
+        this.getData();
         //TODO: render other user story.
+    },
+
+    getData: function () {
+
+        var reqBody = {};
+        reqBody["AssignmentID"] = window.assignmentID;
+        reqBody["CourseID"] = window.courseID;
+        reqBody["TeacherID"] = window.teacherID;
+        reqBody["StudentID"] = window.studentID;
+
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            url: "https://localhost:8443/feedback/get",
+            data: JSON.stringify(reqBody),
+            timeout: 100000,
+            success: function (response) {
+                console.log("SUCCESS: ", response);
+
+
+                //document.getElementById('dropDownMenu').value =
+
+
+                // TODO: check response with if/else, if respons is fail give error message
+
+                //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
+            }, error: function (e) {
+                console.log("ERROR: ", e);
+            }, done: function (e) {
+                console.log("DONE");
+            }
+        });
+
     },
 
     render: function (){
