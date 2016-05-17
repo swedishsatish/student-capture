@@ -4,12 +4,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 import studentcapture.config.StudentCaptureApplicationTests;
 
+import java.util.HashMap;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,9 +46,23 @@ public class AssignmentControllerTest extends StudentCaptureApplicationTests {
      * @throws Exception
      */
     @Test(expected = NestedServletException.class)
-    public void shouldWorkToSendPost() throws Exception {
+    public void shouldWorkToSendJSONToCreateAssignment() throws Exception {
         mvc.perform(post("/assignment").contentType(MediaType.APPLICATION_JSON).content(json_test_string))
                 .andExpect(status().isOk());
 
+    }
+
+    @Test
+    public void shouldHaveBadRequestOnWrongJSON() throws Exception {
+        mvc.perform(post("/assignment").contentType(MediaType.APPLICATION_JSON).content("{\"wrong\":\"json\""))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldWorkToSendFileAndMetaData() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("data", "assignment.webm", "form", "some video".getBytes());
+        HashMap<String, String> contentTypeParams = new HashMap<String, String>();
+
+        mvc.perform(fileUpload("/assignmentVideo").file(file).param("courseID", "1000").param("assignmentID", "3"));
     }
 }
