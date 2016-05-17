@@ -42,7 +42,11 @@ var StudentList = React.createClass({
     },
 
     componentWillMount: function () {
-        // GET request to database to get all the submissions from the students.
+
+        this.submissions = this.props.submissions;
+        this.participants = this.props.participants;
+
+        /* GET request to database to get all the submissions from the students.
         $.ajax({
             url: window.globalURL + "/DB/getAllSubmissions", // URL to send to
             type: "GET", // Type of http
@@ -70,7 +74,7 @@ var StudentList = React.createClass({
                 // Handle the error
                 console.log("Error Participants");
             }.bind(this)
-        });
+        });*/
     },
 
     render: function () {
@@ -89,7 +93,7 @@ var StudentList = React.createClass({
         });
         return (
             <div className="row">
-                <div className="four columns offset-by-one">
+                <div className="four columns">
                     <table className="u-full-width sortable" id="students-table">
                         <thead>
                         <tr >
