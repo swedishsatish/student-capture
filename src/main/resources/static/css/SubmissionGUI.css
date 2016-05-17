@@ -162,6 +162,7 @@ button{
     background-color: #2D728F;
     width:30%;
     height: 30%;
+    right: 30%;
     border:5px solid #000;
     z-index: 9002;
 }
