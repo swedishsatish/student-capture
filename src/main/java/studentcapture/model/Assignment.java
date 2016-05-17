@@ -1,8 +1,12 @@
 package studentcapture.model;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.Map;
+
+import studentcapture.assignment.GradeScale;
 
 /**
  * Created by c13elt on 2016-05-12.
@@ -19,6 +23,8 @@ public class Assignment {
     private Timestamp published;
     private String gradeScale;
     private String description;
+    private GradeScale scale;
+    private String recap;
     
     public Assignment() {
 	}
@@ -79,12 +85,20 @@ public class Assignment {
         this.title = title;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public String getStartDate() {
+        return startDate.toString().replace('T', ' ') + ":00";
     }
-
-    public void setStartDate(Timestamp startDate) {
-        this.startDate = startDate;
+    
+    public void setStartDate(Timestamp timestamp) {
+		this.startDate = timestamp;
+		//validateStartEndTime(this.startDate, this.endDate);
+	}
+    
+    public void setStartDate(String startDate) {
+        startDate = startDate.replace(' ', 'T');
+        startDate = startDate.substring(0, 16);
+        this.startDate = Timestamp.valueOf(LocalDateTime.parse(startDate));
+        //validateStartEndTime(this.startDate, this.endDate);
     }
 
     public Date getEndDate() {
@@ -99,24 +113,29 @@ public class Assignment {
         return minTime;
     }
 
-    public void setMinTime(int minTime) {
-        this.minTime = minTime;
+    public void setMinTime(int minTimeSeconds) throws InputMismatchException {
+        this.minTime = minTimeSeconds;
+        validateMinMaxTimeSeconds(minTimeSeconds, maxTime);
     }
 
     public int getMaxTime() {
         return maxTime;
     }
-
-    public void setMaxTime(int maxTime) {
-        this.maxTime = maxTime;
+    
+    public void setMaxTime(int maxTimeSeconds) throws InputMismatchException {
+        this.maxTime = maxTimeSeconds;
+        validateMinMaxTimeSeconds(minTime, maxTimeSeconds);
     }
 
-    public Date getPublished() {
-        return published;
+    public String getPublished() {
+        return published.toString().replace('T', ' ') + ":00";
     }
 
-    public void setPublished(Timestamp published) {
-        this.published = published;
+    public void setPublished(String publishDate) {
+        publishDate = publishDate.replace(' ', 'T');
+        publishDate = publishDate.substring(0, 16);
+        this.published = Timestamp.valueOf(LocalDateTime.parse(publishDate));
+        validatePublishAndStartTime(this.startDate, this.published);
     }
 
     public String getGradeScale() {
@@ -126,4 +145,56 @@ public class Assignment {
     public void setGradeScale(String gradeScale) {
         this.gradeScale = gradeScale;
     }
+
+	/**
+	 * @return the scale
+	 */
+    public String getScale() {
+        return scale.name();
+    }
+
+    public void setScale(String scale) {
+        this.scale = GradeScale.valueOf(scale);
+    }
+
+	/**
+	 * @return the recap
+	 */
+	public String getRecap() {
+		return recap;
+	}
+
+	/**
+	 * @param recap the recap to set
+	 */
+	public void setRecap(String recap) {
+		this.recap = recap;
+	}
+	
+	private void validateStartEndTime(Timestamp startDate,
+            Timestamp endDate)
+            		throws InputMismatchException {
+		if (startDate.after(endDate)) {
+				throw new InputMismatchException("Start Time is after end time, Start time was " + startDate +
+						" and end time " + endDate);
+		}
+	}
+
+	private void validatePublishAndStartTime(Timestamp startDate,
+                   Timestamp publishDate)
+                		   throws InputMismatchException {
+		if (publishDate.after(startDate)) {
+				throw new InputMismatchException("Publish time is after Start time, Start time was " + startDate +
+						" and publish time " + publishDate);
+		}
+	}
+
+	private void validateMinMaxTimeSeconds(int minTimeSeconds, int maxTimeSeconds) {
+		if ((minTimeSeconds > maxTimeSeconds) && (maxTimeSeconds != 0)) {
+				throw new InputMismatchException(
+			"Minimum time can't be larger than max time." +
+				" Input was, min: " + minTimeSeconds +
+				" max: " + maxTimeSeconds);
+		}
+	}
 }
