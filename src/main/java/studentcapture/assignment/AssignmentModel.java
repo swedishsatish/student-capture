@@ -58,14 +58,22 @@ public class AssignmentModel {
     }
 
     public String getPublished() {
-        return publishDate.toString().replace('T', ' ') + ":00";
+        if (publishDate != null){
+            return publishDate.toString().replace('T', ' ') + ":00";
+        } else {
+            return null;
+        }
     }
 
     public void setPublished(String publishDate) {
-        publishDate = publishDate.replace(' ', 'T');
-        publishDate = publishDate.substring(0, 16);
-        this.publishDate = LocalDateTime.parse(publishDate);
-        validatePublishAndStartTime(this.startDate, this.publishDate);
+        if(publishDate != null) {
+            publishDate = publishDate.replace(' ', 'T');
+            publishDate = publishDate.substring(0, 16);
+            this.publishDate = LocalDateTime.parse(publishDate);
+            validatePublishAndStartTime(this.startDate, this.publishDate);
+        } else {
+            this.publishDate = null;
+        }
     }
 
     public String getTitle() {
