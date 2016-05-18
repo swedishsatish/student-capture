@@ -149,7 +149,7 @@ var DynamicMenu = React.createClass({
 });
 
 window.RenderMenu = function (userID) {
-    $.get(window.globalURL + "/DB/getHierarchy", {userID}, function (res) {
+    $.get(window.globalURL + "/course", {userID}, function (res) {
 
         // if(res)
         var SCList = objToList(res.studentCourses);
