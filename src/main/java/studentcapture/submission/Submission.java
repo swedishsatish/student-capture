@@ -209,19 +209,19 @@ public class Submission {
     @Override
     public String toString() {
         return "Submission{" +
-                "assignmentID=" + assignmentID +
-                ", studentID=" + studentID +
-                ", studentPublishConsent=" + studentPublishConsent +
-                ", submissionDate=" + submissionDate +
-                ", grade=" + grade +
-                ", teacherID=" + grade.getTeacherID() +
-                ", publishStudentSubmission=" + publishStudentSubmission +
-                ", courseID='" + courseID + '\'' +
-                ", courseCode='" + courseCode + '\'' +
-                ", feedback='" + feedback + '\'' +
-                ", subStatus=" + subStatus +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                "\n\tassignmentID=" + assignmentID +
+                ", \n\tstudentID=" + studentID +
+                ", \n\tstudentPublishConsent=" + studentPublishConsent +
+                ", \n\tsubmissionDate=" + submissionDate +
+                ", \n\tgrade=" + grade +
+                ", \n\tteacherID=" + grade.getTeacherID() +
+                ", \n\tpublishStudentSubmission=" + publishStudentSubmission +
+                ", \n\tcourseID='" + courseID + '\'' +
+                ", \n\tcourseCode='" + courseCode + '\'' +
+                ", \n\tfeedback='" + feedback + '\'' +
+                ", \n\tsubStatus=" + subStatus +
+                ", \n\tfirstName='" + firstName + '\'' +
+                ", \n\tlastName='" + lastName + '\'' +
                 '}';
     }
 
