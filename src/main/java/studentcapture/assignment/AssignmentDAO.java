@@ -94,6 +94,7 @@ public class AssignmentDAO {
                     assignmentModel.getRecap(), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
             //TODO: HANDLE THIS
+            System.err.println("IOEXCEPTION");
         }
 
         return assignmentID;

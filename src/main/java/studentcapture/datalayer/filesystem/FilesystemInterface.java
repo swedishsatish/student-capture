@@ -168,8 +168,7 @@ public class FilesystemInterface {
 	 */
 	public static boolean storeAssignmentVideo(String courseID, String assignmentID, MultipartFile source) {
 
-		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/" +
-				FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
+		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/";
 
 		try {
 			storeFile(source, path, FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME);

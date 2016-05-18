@@ -33,7 +33,8 @@ public class AssignmentModel {
     }
 
     public AssignmentModel() {
-        this.courseID = "1200"; //should be changed.
+
+
     }
 
     public String getCourseID() {
