@@ -170,8 +170,7 @@ public class SubmissionDAO {
      * 
      * @author tfy12hsm
 	 */
-    public Optional<List<Submission>> getAllSubmissions(String assId) {
-    	int assignmentId = Integer.parseInt(assId);
+    public Optional<List<Submission>> getAllSubmissions(int assignmentID) {
 
 		String getAllSubmissionsStatement = "SELECT "
 				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
@@ -179,8 +178,7 @@ public class SubmissionDAO {
 				+ "sub.StudentPublishConsent,sub.PublishStudentSubmission FROM"
 				+ " Submission AS sub LEFT JOIN Users AS stu ON "
 				+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
-
-    	return getSubmissionsFromStatement(getAllSubmissionsStatement, assignmentId);
+		return getSubmissionsFromStatement(getAllSubmissionsStatement, assignmentID);
     }
 
 	/**

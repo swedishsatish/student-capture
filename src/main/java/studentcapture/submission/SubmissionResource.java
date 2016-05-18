@@ -23,28 +23,41 @@ public class SubmissionResource {
     SubmissionDAO DAO;
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
-    public ResponseEntity<Submission> getSubmission(@PathVariable("assignmentID") String assignment,
-                                                    @PathVariable("studentID") String studentID){
+    public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
+                                                            @PathVariable("studentID") int studentID){
         //TODO fix unity in DAO API
-        Submission body = DAO.getSubmission(Integer.parseInt(assignment), Integer.parseInt(studentID)).get();
+        Submission body = DAO.getSubmission(assignmentID, studentID).get();
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") String assignment){
+    public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") int assignmentID){
         //TODO check permissions
-        List<Submission> body = DAO.getAllSubmissions(assignment).get();
+        List<Submission> body = DAO.getAllSubmissions(assignmentID).get();
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "{studentID}", method = RequestMethod.PUT)
-    public HttpStatus updateSubmission(@PathVariable("assignmentID") String assignment,
-                                       @PathVariable("studentID") String studentID,
-                                       @RequestBody Submission updatedSubmission){
+    @RequestMapping(value = "{studentID}", method = RequestMethod.PATCH)
+    public HttpStatus markSubmission(@PathVariable("assignmentID") String assignmentID,
+                                     @PathVariable("studentID") String studentID,
+                                     @RequestBody Submission submission){
+        //TODO Not implemented - updates partial information of the submission object, such as setting the grade
         /*Validation of Submission
         * if sent by a student: send to a method which only stores the information a student has permission to change (i.e not grade)
         * if sent by a teacher: send to a method which only stores the information a teacher has permission to change (i.e not the answer but the grade)
         *
+        * validate the Submission.studentID against studentID and permissions*/
+        return HttpStatus.NOT_IMPLEMENTED;
+    }
+
+    @RequestMapping(value = "{studentID}", method = RequestMethod.PUT)
+    public HttpStatus storeSubmission(@PathVariable("assignmentID") String assignmentID,
+                                      @PathVariable("studentID") String studentID,
+                                      @RequestBody Submission updatedSubmission){
+        //TODO Not implemented - stores a submission in the database
+        /*Validation of Submission
+        * Should be sent by a student, might have to validate that the student didnt set the grade himself.
+        * However this should probably be handled somewhere else
         * validate the Submission.studentID against studentID and permissions*/
         return HttpStatus.NOT_IMPLEMENTED;
     }
