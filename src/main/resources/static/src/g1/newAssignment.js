@@ -1,4 +1,7 @@
 var NewAssignment = React.createClass({
+    getInitialState: function() {
+        return {courseID : 0};
+    },
     componentDidMount: function () {
         $("#startDate").datetimepicker(
             {
@@ -33,6 +36,29 @@ var NewAssignment = React.createClass({
                  */
                 minDate: 0
             });
+
+        tinymce.init({
+            selector: 'textarea.inputField',
+            theme: 'modern',
+            plugins: [
+                'advlist autolink lists link image charmap preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars code fullscreen',
+                'insertdatetime nonbreaking save table contextmenu directionality',
+                'template paste textcolor colorpicker textpattern imagetools autoresize'
+            ],
+            autoresize_max_height: 300,
+            toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            toolbar2: 'preview | forecolor backcolor',
+            image_advtab: true,
+            templates: [
+                { title: 'Test template 1', content: 'Test 1' },
+                { title: 'Test template 2', content: 'Test 2' }
+            ],
+            content_css: [
+                '//fast.fonts.net/cssapi/e6dc9b99-64fe-4292-ad98-6974f93cd2a2.css',
+                '//www.tinymce.com/css/codepen.min.css'
+            ]
+        });
     },
     submitAssignment: function() {
         var reqBody = {};
@@ -45,7 +71,7 @@ var NewAssignment = React.createClass({
         assignmentIntervall["startDate"] = $("#startDate").val();
         assignmentIntervall["endDate"] = $("#endDate").val();
         assignmentIntervall["publishedDate"] = $("#publish").val();
-        reqBody["courseID"] = "1200";
+        reqBody["courseID"] = this.props.courseID;
         reqBody["title"] = $("#title").val();
         reqBody["description"] = $("#description").val();
         reqBody["videoIntervall"] = videoIntervall;
@@ -60,20 +86,25 @@ var NewAssignment = React.createClass({
             timeout : 100000,
             success : function(response) {
                 console.log("SUCCESS: ", response);
-                ReactDOM.render(<NewAssignmentVideo assignmentID={response}/>, document.getElementById('courseContent'));
-            }, error : function(e) {
+                this.renderChild(response);
+            }.bind(this), 
+            error : function(e) {
                 console.log("ERROR: ", e);
-            }, done : function(e) {
+            }, 
+            done : function(e) {
                 console.log("DONE");
             }
         });
     },
+    renderChild : function (assignmentID) {
+        ReactDOM.render(<NewAssignmentVideo courseID={this.props.courseID} assignmentID={assignmentID}/>, document.getElementById('courseContent'));
+    },
     render : function() {
       return <div>
-                <div id="form">
+                <div id="newAssForm">
                 <input className="inputField" id="title" type="text" placeholder="title" /><br/>
-                <input className="inputField" id="description" type="text" placeholder="description" /><br/>
-                <input className="inputField" id="recap" type="text" placeholder="recap" /><br/>
+                <textarea className="inputField" id="description" type="text" placeholder="description" /><br/>
+                <textarea className="inputField" id="recap" type="text" placeholder="recap" /><br/>
 
                 <input id="startDate" type="button" value="yyyy-mm-dd 00:00"/>Start Date<br/>
                 <input id="endDate" type="button" value="yyyy-mm-dd 00:00"/>End Date<br/>
@@ -100,13 +131,16 @@ function handleCancel() {
 }
 
 var NewAssignmentVideo = React.createClass({
+    getInitialState: function() {
+        return {courseID : 0, assignmentID : 0};
+    },
     playVideo: function () {
         console.log("Video success");
     },
     formDataBuilder: function (blob, fileName) {
         var fd = new FormData();
         fd.append("video", blob);
-        fd.append("courseID", 1200);
+        fd.append("courseID", this.props.courseID);
         fd.append("assignmentID", this.props.assignmentID);
         return fd;
     },
@@ -157,5 +191,5 @@ window.CourseContent = React.createClass({
     }
 });
 
-//ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
+ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
 window.NewAssignment = NewAssignment;
