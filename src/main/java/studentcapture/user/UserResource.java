@@ -45,8 +45,15 @@ public class UserResource {
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity addUser(@RequestParam(value = "User")User user) {
-
+    public ResponseEntity addUser(
+            @RequestParam(value="firstname", required = true)           String firstName,
+            @RequestParam(value="lastname", required = true)            String lastName,
+            @RequestParam(value="email", required = true)               String email,
+            @RequestParam(value="username", required = true)            String username,
+            @RequestParam(value="password", required = true)            String password) {
+       
+        User user = new User(username, firstName, lastName, email, password);
+        
         boolean success = userDAO.addUser(user);
 
         if(!success) {
