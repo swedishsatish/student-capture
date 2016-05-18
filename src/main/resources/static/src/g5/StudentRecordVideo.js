@@ -31,6 +31,7 @@ var StudentRecordVideo = React.createClass({
                                   postURL="/uploadVideo/" formDataBuilder={this.formDataBuilder}
                                   stopButtonID="studentSubmit" autoRecord={autoRecord}
                                   siteView="submission" fileName="submission.webm"
+                                  camOnLoad="true"
                         />
 
                      <button id="studentSubmit" className="recControls" disabled>Submit answer</button>
