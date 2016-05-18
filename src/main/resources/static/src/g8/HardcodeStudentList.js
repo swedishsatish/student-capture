@@ -73,61 +73,72 @@ var StudentList = React.createClass({
     },
 
     componentWillMount: function () {
-
-        this.submissions = this.props.submissions;
-        this.participants = this.props.participants;
-
         // GET request to database to get all the submissions from the students.
-       /* HAR FLYTTATS TILL TEACHERVIEWSUBMISSION.JS
-          $.ajax({
-            url: window.globalURL + "/DB/getAllSubmissions", // URL to send to
-            type: "GET", // Type of http
-            async: false,
-            data: {assignmentID: 1200},
-            success: function(data,status) { // Function to perform when ok
-                this.submissions = data;
-            }.bind(this),
-            error: function(xhr, status, err) {
-                // Handle the error
-                console.log("Error Submissions");
-            }.bind(this)
-        });
+        /* HAR FLYTTATS TILL TEACHERVIEWSUBMISSION.JS
+         $.ajax({
+         url: window.globalURL + "/DB/getAllSubmissions", // URL to send to
+         type: "GET", // Type of http
+         async: false,
+         data: {assignmentID: 1200},
+         success: function(data,status) { // Function to perform when ok
+         this.submissions = data;
+         }.bind(this),
+         error: function(xhr, status, err) {
+         // Handle the error
+         console.log("Error Submissions");
+         }.bind(this)
+         });
 
-        // GET request to database to get all the participants in a course.
-        $.ajax({
-            url: window.globalURL + "/DB/getAllParticipantsFromCourse", // URL to send to
-            type: "GET", // Type of http
-            async: false,
-            data: {courseID: 1200},
-            success: function(data,status) { // Function to perform when ok
-                this.participants = data;
-            }.bind(this),
-            error: function(xhr, status, err) {
-                // Handle the error
-                console.log("Error Participants");
-            }.bind(this)
-        });*/
+         // GET request to database to get all the participants in a course.
+         $.ajax({
+         url: window.globalURL + "/DB/getAllParticipantsFromCourse", // URL to send to
+         type: "GET", // Type of http
+         async: false,
+         data: {courseID: 1200},
+         success: function(data,status) { // Function to perform when ok
+         this.participants = data;
+         }.bind(this),
+         error: function(xhr, status, err) {
+         // Handle the error
+         console.log("Error Participants");
+         }.bind(this)
+         });*/
     },
 
     render: function () {
         var tmp = this;
-        var userList = this.submissions.map(function (user) {
-            var date = new Date(user.submissionDate);
-            return (
-                <tr onClick={tmp.clickhandle.bind(tmp,user)}>
-                    <video width="96" height="54" class="clip-thumbnail"> <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4"/> </video>
-                    <td>{user.firstName + " " + user.lastName}</td>
-                    <td>{date.getFullYear() + "-" + (date.getMonth()+1/*Months start from 0)*/ + "-" + date.getDate())}</td>
-                    <td>{user.gradeSign}</td>
-                </tr>
-            );
+        /* KOMMENTERAR TAS BORT SENARE, ENBART HÄR FÖR HÅRDKODAT TEST
+         var userList = this.submissions.map(function (user) {
+         var date = new Date(user.submissionDate);
+         return (
+         <tr onClick={tmp.clickhandle.bind(tmp,user)}>
+         <video width="96" height="54" class="clip-thumbnail"> <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4"/> </video>
+         <td>{user.firstName + " " + user.lastName}</td>
+         <td>{date.getFullYear() + "-" + (date.getMonth()+1/*Months start from 0) + "-" + date.getDate()}</td>
+         <td>{user.gradeSign}</td>
+         </tr>
+         );
 
-            // console.log(tmp);
+         // console.log(tmp);
+         });
+
+         */
+        //DENNA SKA TAS BORT MOT DEN UTKOMMENTERADE
+        var userList = window.users.map(function (user) {
+            console.log(user.videoURL);
+
+
+            return <tr onClick={tmp.clickhandle.bind(tmp,user)}>
+                <video width="96" height="54" class="clip-thumbnail"> <source src={user.videoURL} type="video/mp4"/> </video>
+                <td>{user.studentName}</td>
+                <td>{user.submissionDate}</td>
+                <td>{user.grade}</td>
+
+            </tr>
         });
-
         return (
             <div className="row">
-                <div className="four columns">
+                <div className="four columns offset-by-one">
                     <table className="u-full-width sortable" id="students-table">
                         <thead>
                         <tr >
@@ -152,4 +163,4 @@ var StudentList = React.createClass({
     }
 });
 
-window.StudentList = StudentList;
+window.HardcodeList = HardcodeList;

@@ -8,7 +8,7 @@ var TeacherViewSubmission = React.createClass({
     nWithdrawals: 0, //Antal som lämnat blankt
     nDone: 0, //Totala antalet som gjort uppgiften
     nParticipants: 0, //Totala antalet i kurslistan
-    
+
     submissionsArray: null,
     participantsArray: null,
 
@@ -19,7 +19,8 @@ var TeacherViewSubmission = React.createClass({
         this.nParticipants = 0;
 
         // GET request to database to get all the submissions from the students.
-       $.ajax({
+        //SKA AVKOMMENTERAS SENARE
+        /**  $.ajax({
             url: window.globalURL + "/DB/getAllSubmissions", // URL to send to
             type: "GET", // Type of http
             async: false,
@@ -33,8 +34,8 @@ var TeacherViewSubmission = React.createClass({
             }.bind(this)
         });
 
-        // GET request to database to get all the participants in a course.
-        $.ajax({
+         // GET request to database to get all the participants in a course.
+         $.ajax({
             url: window.globalURL + "/DB/getAllParticipantsFromCourse", // URL to send to
             type: "GET", // Type of http
             async: false,
@@ -46,27 +47,43 @@ var TeacherViewSubmission = React.createClass({
                 // Handle the error
                 console.log("Error Participants");
             }.bind(this)
-        });
+        });**/
     },
+
+    /* kommenterar ska tas bort
+     calculateSubmissions: function () {
+     this.nParticipants = this.participantsArray.length;
+
+     for (var i=0;i<this.submissionsArray.length;i++) {
+     if (this.submissionsArray[i].status == "Answer") {
+     this.nSubmissions++;
+     } else if (this.submissionsArray[i].status == "Blank") {
+     this.nWithdrawals++;
+     }
+     }
+
+     this.nDone = this.nSubmissions + this.nWithdrawals;
+     },*/
+
+
+    //DENNA FUNKTION SKA TAS BORT
     calculateSubmissions: function () {
-        this.nParticipants = this.participantsArray.length;
-        
-        for (var i=0;i<this.submissionsArray.length;i++) {
-            if (this.submissionsArray[i].status == "Answer") {
-                this.nSubmissions++;
-            } else if (this.submissionsArray[i].status == "Blank") {
+        var userList=window.users;
+        for(var i=0; i < userList.length;i++){
+            console.log(userList[i].studentName.value)
+            if(userList[i].withdraw){
                 this.nWithdrawals++;
+                continue;
             }
+            this.nSubmissions++;
         }
-
-        this.nDone = this.nSubmissions + this.nWithdrawals;
+        this.nDone=this.nSubmissions+this.nWithdrawals;
+        this.nParticipants=userList.length;
     },
-
-    
 
     render: function () {
         this.calculateSubmissions();
-        console.log("eliashej")
+
         return (
             <div class="row">
                 <div className="four columns offset-by-one">
@@ -85,4 +102,4 @@ var TeacherViewSubmission = React.createClass({
     }
 });
 
-window.TeacherViewSubmission = TeacherViewSubmission;
+window.HardcodeTeacher = HardcodeTeacher;
