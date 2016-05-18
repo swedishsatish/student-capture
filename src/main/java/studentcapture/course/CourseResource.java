@@ -31,6 +31,8 @@ public class CourseResource {
     private CourseDAO courseDAO;
 	@Autowired
 	private ParticipantDAO participantDAO;
+	@Autowired
+	private HierarchyDAO hierarchyDAO;
 	
 	/**
 	 * Adds a course to the database. 
@@ -149,30 +151,25 @@ public class CourseResource {
 //    }
     
     
-//    /**
-//     * Returns list of all submissions made in response to a given assignment,
-//     * including students that are part of the course but has not yet made a
-//     * submissionDAO.
-//     *
-//     * @param userID		assignment identifier
-//     * @return					list of submissions
-//     *
-//     * @author tfy12hsm
-//     */
-//    @CrossOrigin
-//    @RequestMapping(
-//    produces = MediaType.APPLICATION_JSON_VALUE,
-//    method = RequestMethod.GET,
-//    value = "/getHierarchy")
-//    @ResponseBody
-//    public HierarchyModel getHierarchy(
-//    		@RequestParam(value="userID") String userID) {
-//    	Optional<HierarchyModel> hierarchy = 
-//    			hierarchyDAO.getCourseAssignmentHierarchy(userID);
-//    	if(hierarchy.isPresent()) 
-//    		return hierarchy.get();
-//    	return null;
-//    }
+
+    /**
+    *
+    * @author tfy12hsm
+     */
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.GET,
+    value = "/getHierarchy")
+    @ResponseBody
+    public HierarchyModel getHierarchy(
+    		@RequestParam(value="userID") String userID) {
+    	Optional<HierarchyModel> hierarchy = 
+    			hierarchyDAO.getCourseAssignmentHierarchy(userID);
+    	if(hierarchy.isPresent()) 
+    		return hierarchy.get();
+    	throw new ResourceNotFoundException();
+    }
     
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public static class ResourceNotFoundException extends RuntimeException {

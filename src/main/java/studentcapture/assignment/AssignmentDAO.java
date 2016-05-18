@@ -201,14 +201,14 @@ public class AssignmentDAO {
      * 
      * @author tfy12hsm
      */
-	public Optional<Assignment> getAssignment(int assignmentId) {
+	public Optional<AssignmentModel> getAssignment(int assignmentId) {
 		try {
             String getAssignmentStatement = "SELECT * FROM "
                     + "Assignment WHERE AssignmentId=?";
 
 			Map<String, Object> map = jdbcTemplate.queryForMap(
 	    			getAssignmentStatement, assignmentId);
-			Assignment result = new Assignment(map);
+			AssignmentModel result = new AssignmentModel(map);
 	    	
 	    	return Optional.of(result);
 		} catch (IncorrectResultSizeDataAccessException e){
