@@ -1,4 +1,7 @@
 var NewAssignment = React.createClass({
+    getInitialState: function() {
+        return {courseID : 0};
+    },
     componentDidMount: function () {
         $("#startDate").datetimepicker(
             {
@@ -45,7 +48,7 @@ var NewAssignment = React.createClass({
         assignmentIntervall["startDate"] = $("#startDate").val();
         assignmentIntervall["endDate"] = $("#endDate").val();
         assignmentIntervall["publishedDate"] = $("#publish").val();
-        reqBody["courseID"] = "1200";
+        reqBody["courseID"] = this.props.courseID;
         reqBody["title"] = $("#title").val();
         reqBody["description"] = $("#description").val();
         reqBody["videoIntervall"] = videoIntervall;
@@ -60,13 +63,18 @@ var NewAssignment = React.createClass({
             timeout : 100000,
             success : function(response) {
                 console.log("SUCCESS: ", response);
-                ReactDOM.render(<NewAssignmentVideo assignmentID={response}/>, document.getElementById('courseContent'));
-            }, error : function(e) {
+                this.renderChild(response);
+            }.bind(this), 
+            error : function(e) {
                 console.log("ERROR: ", e);
-            }, done : function(e) {
+            }, 
+            done : function(e) {
                 console.log("DONE");
             }
         });
+    },
+    renderChild : function (assignmentID) {
+        ReactDOM.render(<NewAssignmentVideo courseID={this.props.courseID} assignmentID={assignmentID}/>, document.getElementById('courseContent'));
     },
     render : function() {
       return <div>
@@ -100,13 +108,16 @@ function handleCancel() {
 }
 
 var NewAssignmentVideo = React.createClass({
+    getInitialState: function() {
+        return {courseID : 0, assignmentID : 0};
+    },
     playVideo: function () {
         console.log("Video success");
     },
     formDataBuilder: function (blob, fileName) {
         var fd = new FormData();
         fd.append("video", blob);
-        fd.append("courseID", 1200);
+        fd.append("courseID", this.props.courseID);
         fd.append("assignmentID", this.props.assignmentID);
         return fd;
     },
