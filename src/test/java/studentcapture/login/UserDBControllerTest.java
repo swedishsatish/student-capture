@@ -30,12 +30,15 @@ import studentcapture.config.StudentCaptureApplicationTests;
  * @author dv11osi
  *
  */
-public class LoginDBControllerTest extends StudentCaptureApplicationTests {
+public class UserDBControllerTest extends StudentCaptureApplicationTests {
 	
     @Autowired
     private WebApplicationContext context;
     
     private MockMvc mockMvc;
+    
+    private UserDBController c;
+
     
     //CSRF token generator, to be able to send http post
     HttpSessionCsrfTokenRepository httpSessionCsrfTokenRepository = new HttpSessionCsrfTokenRepository();
@@ -48,6 +51,8 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
+        
+        c = new UserDBController();
     }
     
     @Test
@@ -81,7 +86,6 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
     @Test
     public void incorrectEmail() throws Exception {
     	String email = "somethingemail.com";
-    	LoginDBController c = new LoginDBController();
     	if(c.checkEmailFormat(email)) {
     		fail("Email is incorrect but passes");
     	}
@@ -90,7 +94,6 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
     @Test
     public void correctEmail() throws Exception {
     	String email = "something@email.com";
-    	LoginDBController c = new LoginDBController();
     	if(!c.checkEmailFormat(email)) {
     		fail("Email is correct but fails");
     	}
@@ -99,7 +102,6 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
     @Test
     public void incorrectPasswordFormat() throws Exception {
     	String password = "korrekt123";
-    	LoginDBController c = new LoginDBController();
     	if(c.checkPasswordFormat(password)) {
     		fail("Password is incorrect but passes");
     	}
@@ -108,7 +110,6 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
     @Test
     public void correctPasswordFormat() throws Exception {
     	String password = "Korrekt123";
-    	LoginDBController c = new LoginDBController();
     	if(!c.checkPasswordFormat(password)) {
     		fail("Password is correct but fails");
     	}
@@ -117,7 +118,6 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
     @Test
     public void userLengthIncorrect() throws Exception {
     	String username = "1234";
-    	LoginDBController c = new LoginDBController();
     	if(c.checkUsernameLength(username)) {
     		fail("Username is too short but passes");
     	}
@@ -126,7 +126,6 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
     @Test
     public void userLengthCorrect() throws Exception {
     	String username = "12344567890+";
-    	LoginDBController c = new LoginDBController();
     	if(!c.checkUsernameLength(username)) {
     		fail("Username is correct but fails");
     	}
@@ -134,10 +133,9 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
     
     @Test
     public void testSalt() throws Exception {
-    	LoginDBController c = new LoginDBController();
     	c.encryptPassword("ASDF");
     }
-    
+    /*
     @Test
     public void testResetPassword() throws Exception{
         mockMvc.perform(post("/testResetPassword")
@@ -145,6 +143,7 @@ public class LoginDBControllerTest extends StudentCaptureApplicationTests {
                 .param("email", "my_email"))
                 .andExpect(status().isOk());
     }
+    */
     /*
     @Test
     public void testLostPassword() throws Exception{
