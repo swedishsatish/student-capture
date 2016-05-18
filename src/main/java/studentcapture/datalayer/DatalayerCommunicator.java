@@ -375,24 +375,6 @@ public class DatalayerCommunicator {
     	return null;
     }
     
-    /**
-     * Returns list of all submissions made in response to a given assignment.
-     *
-     * @param assignmentID		assignment identifier
-     * @return					list of submissions
-     *
-     * @author tfy12hsm
-     */
-    @CrossOrigin
-    @RequestMapping(
-    produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.GET,
-    value = "/getAllSubmissions")
-    @ResponseBody
-    public List<Submission> getAllSubmissions(
-    		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submissionDAO.getAllSubmissions(assignmentID).get();
-    }
 
     /**
      * Returns list of all ungraded submissions made in response to a given
