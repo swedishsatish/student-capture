@@ -161,32 +161,11 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/publishFeedback", method = RequestMethod.POST)
     public boolean publishFeedback(@RequestParam(value = "Submission") Submission submission,
                                @RequestParam(value = "Publish") boolean publish) {
-        String courseID = assignment.getCourseIDForAssignment(String.valueOf(submission.getAssignmentID()));
+        String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID());
         submission.setCourseID(courseID);
         return submissionDAO.publishFeedback(submission, publish);
     }
 
-    /**
-     * Sends the assignment video file.
-     * @param courseCode    Courses 6 character identifier.
-     * @param courseId      Courses unique database id.
-     * @param assignmentId  Assignments unique database id.
-     * @return              The video file vie http.
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/getAssignmentVideo/{courseCode}/{courseId}/{assignmentId}",
-            method = RequestMethod.GET, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> getAssignmentVideo(
-            @PathVariable("courseCode") String courseCode,
-            @PathVariable("courseId") String courseId,
-            @PathVariable("assignmentId") String assignmentId) {
-
-        String path = FilesystemInterface.generatePath(courseCode,courseId,assignmentId)
-                + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
-        ResponseEntity<InputStreamResource> responseEntity = FilesystemInterface.getVideo(path);
-
-        return responseEntity;
-    }
 
     /**
      * Sends the feedback video file.
