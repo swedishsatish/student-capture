@@ -112,7 +112,7 @@ public class HierarchyDAO {
 	    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
 	    		+ "ass.courseId LEFT JOIN Submission AS sub ON "
 	    		+ "ass.assignmentId=sub.assignmentId WHERE par.userId=? AND "
-	    		+ "par.function='Teacher'";
+	    		+ "par.function='teacher'";
 
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(
     			getTeacherHierarchyStatement, userId);
@@ -187,11 +187,13 @@ public class HierarchyDAO {
 		String getStudentHierarchyStatement = "SELECT par.courseId AS CourseId,"
 				+ "ass.assignmentId AS AssignmentId,sub.submissionDate AS "
 				+ "SubmissionDate,sub.studentId AS StudentId "
-	    		+ "FROM Participant AS par LEFT JOIN Course AS cou ON par.courseId="
+	    		+ "FROM Participant AS par LEFT JOIN Course AS"
+	    		+ " cou ON par.courseId="
 	    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
 	    		+ "ass.courseId LEFT JOIN Submission AS sub ON par.userId="
 	    		+ "sub.studentId AND ass.assignmentId=sub.assignmentId WHERE "
-	    		+ "par.userId=? AND par.function='Student'";
+	    		+ "par.userId=? AND par.function='student' AND ass.published "
+	    		+ "< current_timestamp";
 
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(
     			getStudentHierarchyStatement, userId);

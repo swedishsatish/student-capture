@@ -47,21 +47,6 @@ public class VideoInControllerTest extends StudentCaptureApplicationTests {
     }
 
     @Test
-    public void testUploadBadID() throws Exception {
-        when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
-
-        mockMvc.perform(fileUpload("/uploadVideo/" + Integer.toString(userID.hashCode()) + "asdsad")
-                .file(new MockMultipartFile("video", fileContent))
-                .param("userID", userID)
-                .param("assignmentID", "1337")
-                .param("courseID", "5DV151")
-                .param("courseCode", "5DV151")
-                .param("videoType", "submission")
-                .contentType("multipart/form-data"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     public void testWithWrongHeader() throws Exception {
         when(templateMock.postForObject(any(String.class), any(LinkedMultiValueMap.class), any())).thenReturn("OK");
 
