@@ -12,8 +12,8 @@
  * postButtonID:    [Optional] Id of the post video button. If left out the stop button posts the video to server.
  * replay:          replay="true" if you want the recording to be playable in the same video tag.
  * fileName:        The name the video recording should have.
- * camOn:           camOn="true" If the camera is to start before recording. User will have to click stopbutton to be able
- *                  to reuse camera.
+ * camOnLoad:       camOnLoad="true" If the camera is to start before recording. User will have to click
+ *                  stopbutton to be able to reuse camera.
  * autoRecord:      autoRecord="true" if the camera should start recording when class is instantiated.
  *
  *
@@ -30,8 +30,8 @@ var Recorder = React.createClass({
         var blobsize;
         var sendTime;
 
-        var cameraStartOnLoad = (typeof props.camOn === "undefined") ?
-                        false : props.camOn == "true";
+        var cameraStartOnLoad = (typeof props.camOnLoad === "undefined") ?
+                        false : props.camOnLoad == "true";
         var cameraStarted = false;
         var startRecordButtonExists = (typeof props.recButtonID !== "undefined");
         var shouldAutoRecord = (typeof props.autoRecord === "undefined") ?
@@ -48,7 +48,6 @@ var Recorder = React.createClass({
             var recordButton = document.getElementById(props.recButtonID);
             if(cameraStarted) {
                 recordButton.disabled = true;
-                console.log("record.disabled = true;");
             }
         }
 
@@ -63,7 +62,6 @@ var Recorder = React.createClass({
                                   navigator.msGetUserMedia);
 
         if(cameraStartOnLoad) {
-            console.log(cameraStartOnLoad)
             startCamera();
         }
 
@@ -73,7 +71,83 @@ var Recorder = React.createClass({
         }
 
         /* The onclick function for the stop record button. */
-        stopButton.onclick = function () {
+        stopButton.onclick = stopRecording;
+
+        /* Will start recording and start the webcam if not enabled. */
+        function startRecord() {
+            if(!cameraStarted) {
+                startCamera();
+                window.setTimeout(function() {
+                    recordAudio.startRecording();
+                    recordingStarted();
+                }, 1000);
+            } else {
+                recordAudio.startRecording();
+                recordingStarted();
+            }
+        }
+
+        function recordingStarted() {
+            if(startRecordButtonExists) {
+                recordButton.disabled = true;
+            }
+            stopButton.disabled = false;
+
+            if(typeof props.calc !== "undefined") {
+                document.getElementById("test-rec-text").innerHTML = "Recording..";
+            }
+            else {
+                document.getElementById("rec-text").innerHTML = "Recording..";
+            }
+        }
+
+        /* Start stream from webcam and start recording if autoRecording is true,
+         * will record with forced low settings for smaller files. */
+        function startCamera () {
+            navigator.getUserMedia({
+                audio: true,
+                video: {
+                    mandatory: {
+                        minWidth: 160,
+                        maxWidth: 320,
+                        minHeight: 120,
+                        maxHeight: 240,
+                        minFrameRate: 5,
+                        maxFrameRate: 10
+                    }
+                }
+            }, function (stream) {
+                mediaStream = stream;
+                previewElement.src = window.URL.createObjectURL(mediaStream);
+                previewElement.removeAttribute("controls");
+                previewElement.setAttribute("muted", "muted");
+                previewElement.play();
+
+                recordAudio = RecordRTC(mediaStream, {
+                    onAudioProcessStarted: function () {
+                        recordVideo.startRecording();
+                    }
+                });
+
+                recordVideo = RecordRTC(mediaStream, {
+                    type: 'video'
+                });
+
+                if(startRecordButtonExists && cameraStartOnLoad) {
+                    recordButton.disabled = false;
+                }
+
+                if(shouldAutoRecord) {
+                    startRecord();
+                }
+                cameraStarted = true;
+            }, function (error) {
+                alert("Problem occured, make sure camera is not\nused elsewhere and that you are connected\nby https.");
+            });
+        }
+
+        /* Closes the webcam stream and post to server if auto recording is on. */
+        function stopRecording() {
             if(!shouldAutoRecord){
                 recordButton.disabled = false;
             }
@@ -128,79 +202,6 @@ var Recorder = React.createClass({
             if (hasModal !== null) {
                 hasModal.style.display = 'none';
             }
-        };
-
-        /* Will start recording and start the webcam if not enabled. */
-        function startRecord() {
-            if(!cameraStarted) {
-                startCamera();
-                window.setTimeout(function() {
-                    recordAudio.startRecording();
-                    recordingStarted();
-                }, 1000);
-            } else {
-                recordAudio.startRecording();
-                recordingStarted();
-            }
-        }
-
-        function recordingStarted() {
-            if(startRecordButtonExists) {
-                recordButton.disabled = true;
-            }
-            stopButton.disabled = false;
-
-            if(typeof props.calc !== "undefined") {
-                document.getElementById("test-rec-text").innerHTML = "Recording..";
-            }
-            else {
-                document.getElementById("rec-text").innerHTML = "Recording..";
-            }
-        }
-
-        /* Start stream from webcam and start record if autoRecording is true,
-         * will record with forced low settings for smaller files. */
-        function startCamera () {
-            navigator.getUserMedia({
-                audio: true,
-                video: {
-                    mandatory: {
-                        minWidth: 160,
-                        maxWidth: 320,
-                        minHeight: 120,
-                        maxHeight: 240,
-                        minFrameRate: 5,
-                        maxFrameRate: 10
-                    }
-                }
-            }, function (stream) {
-                mediaStream = stream;
-                previewElement.src = window.URL.createObjectURL(mediaStream);
-                previewElement.removeAttribute("controls");
-                previewElement.setAttribute("muted", "muted");
-                previewElement.play();
-
-                recordAudio = RecordRTC(mediaStream, {
-                    onAudioProcessStarted: function () {
-                        recordVideo.startRecording();
-                    }
-                });
-
-                recordVideo = RecordRTC(mediaStream, {
-                    type: 'video'
-                });
-
-                if(startRecordButtonExists && cameraStartOnLoad) {
-                    recordButton.disabled = false;
-                }
-
-                if(shouldAutoRecord) {
-                    startRecord();
-                }
-                cameraStarted = true;
-            }, function (error) {
-                alert("Problem occured, make sure camera is not\nused elsewhere and that you are connected\nby https.");
-            });
         }
 
         /* Post to the server */
@@ -220,7 +221,6 @@ var Recorder = React.createClass({
 
                 xhReq.onreadystatechange = function () {
                     if (xhReq.readyState === 4 && xhReq.status == 200) {
-                        console.log("id: " + xhReq.responseText);
 
                         xhr(window.globalURL + props.postURL + xhReq.responseText, formData, props.playCallback);
                     } else if(xhReq.readyState === 4 && xhReq.status !== 200) {
