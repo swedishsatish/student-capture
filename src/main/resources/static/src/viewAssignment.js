@@ -72,7 +72,6 @@ window.AssignmentContent = React.createClass({
 /*
  * Shows the video, question summary, countdown and student recording video
  * in the appropriate order.
- * TODO: Start recording AFTER countdown! (need interface to StudentRecordVideo)
  */
 var AssignmentStart = React.createClass({
     getInitialState: function() {
@@ -90,12 +89,12 @@ var AssignmentStart = React.createClass({
                                : <div />;
         var recordContent = this.state.startRecording
                             ? <div>
-                                <StudentRecordVideo /><br />
+                                <div><StudentRecordVideo autoRecord="true" /><br />
                                 Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
                                 Current video length: {this.state.time}<br />
-                              </div>
+                              </div></div>
                             : <div>
-                                <StudentRecordVideo />
+                                <StudentRecordVideo autoRecord="false" /><br />
                               </div>;
         return (
             <div id="assignment-modal">
