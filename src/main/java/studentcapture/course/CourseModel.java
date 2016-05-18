@@ -7,19 +7,21 @@ import java.util.Map;
  * @author tfy12hsm
  *
  */
-public class Course {
-	private String courseId;
+public class CourseModel {
+	private Integer courseId;
 	private Integer year;
 	private String term;
 	private String courseName;
 	private String courseDescription;
 	private Boolean active;
+	private Integer initialTeacherId;
+	private Integer errorCode;
 	
-	public Course() {
+	public CourseModel() {
 		
 	}
 	
-	public Course(Map<String, Object> map) {
+	public CourseModel(Map<String, Object> map) {
 		parseMap(map);
 	}
 	
@@ -31,7 +33,7 @@ public class Course {
      * @author tfy12hsm
 	 */
 	public void parseMap(Map<String, Object> map) {
-		courseId = (String) map.get("CourseId");
+		courseId = (Integer) map.get("CourseId");
 		year = (Integer) map.get("Year");
 		term = (String) map.get("Term");
 		try {
@@ -50,13 +52,13 @@ public class Course {
 	/**
 	 * @return the courseId
 	 */
-	public String getCourseId() {
+	public Integer getCourseId() {
 		return courseId;
 	}
 	/**
 	 * @param courseId the courseId to set
 	 */
-	public void setCourseId(String courseId) {
+	public void setCourseId(Integer courseId) {
 		this.courseId = courseId;
 	}
 	/**
@@ -118,5 +120,17 @@ public class Course {
 	 */
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+	
+	public Integer getInitialTeacherId() {
+		return initialTeacherId;
+	}
+	
+	public void setErrorCode(Integer errorCode) {
+		this.errorCode = errorCode;
+	}
+	
+	public Integer getErrorCode() {
+		return errorCode;
 	}
 }

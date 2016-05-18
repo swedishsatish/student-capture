@@ -1,3 +1,14 @@
 #newAssTitle {
 	width:100%;
 }
+
+#newAssForm {
+	width: 80%;
+	margin-left: 10%;
+	margin-right: 10%;
+    margin-top:20px;
+}
+
+#title {
+    width: 100%;
+}

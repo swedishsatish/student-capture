@@ -2,14 +2,14 @@ var CourseList = React.createClass({
     printVideo : function() {
         ReactDOM.render(<AssignmentContent course="kurs 3" assignment="assignment 2"/>,document.getElementById("courseContent"));
     },
-    
+
     studentSubmitions: function () {
-         $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:1000},function (res) {
-             //var users = JSON.parse(res);
-             console.log(res);
-             //console.log(users);
-             ReactDOM.render(<StudentList students={res}/>, document.getElementById('courseContent'));
-         });
+         // $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:1000},function (res) {
+         //     //var users = JSON.parse(res);
+         //     console.log(res);
+         //     //console.log(users);
+         //     ReactDOM.render(<StudentList students={res}/>, document.getElementById('courseContent'));
+         // });
         var users = [{
             videoURL:"http://www.w3schools.com/html/mov_bbb.mp4",
             assignmentID: 1000,
@@ -27,6 +27,7 @@ var CourseList = React.createClass({
                 studentName: "Lukas Lundberg",
                 submissionDate: "2010-06-23",
                 grade: "K",
+<<<<<<< Temporary merge branch 1
                 teacherID: 12,
                 withdraw: false
             },
@@ -43,7 +44,7 @@ var CourseList = React.createClass({
         ];
         window.users=users;
         console.log("jebjeb")
-        ReactDOM.render(<TeacherViewSubmission students={users}/>, document.getElementById('courseContent'));
+        ReactDOM.render(<HardcodeTeacher students={users}/>, document.getElementById('courseContent'));
     },
 
     printFeedback : function() {

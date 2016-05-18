@@ -168,8 +168,7 @@ public class FilesystemInterface {
 	 */
 	public static boolean storeAssignmentVideo(String courseID, String assignmentID, MultipartFile source) {
 
-		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/" +
-				FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
+		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/";
 
 		try {
 			storeFile(source, path, FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME);
@@ -279,6 +278,22 @@ public class FilesystemInterface {
 		fileWriter = new FileWriter(file);
 		fileWriter.write(contents);
 		fileWriter.close();
+	}
+
+	public static String getAssignmentText(String courseId, String assignmentId, String fileName)
+			throws FileNotFoundException, IOException {
+		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/" + fileName;
+		File file = new File(path);
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		StringBuilder builder = new StringBuilder();
+		String line;
+
+		while((line = reader.readLine()) != null) {
+			builder.append(line);
+			builder.append(System.getProperty("line.separator"));
+		}
+
+		return builder.toString().trim();
 	}
 
     /**

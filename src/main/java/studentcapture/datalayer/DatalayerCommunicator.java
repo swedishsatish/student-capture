@@ -11,7 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.CourseDAO;
+import studentcapture.course.HierarchyDAO;
 import studentcapture.datalayer.database.*;
+
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Assignment;
@@ -20,6 +22,7 @@ import studentcapture.model.Participant;
 import studentcapture.submission.Submission;
 import studentcapture.model.User;
 import studentcapture.submission.SubmissionDAO;
+
 
 import javax.validation.Valid;
 
@@ -160,7 +163,7 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/publishFeedback", method = RequestMethod.POST)
     public boolean publishFeedback(@RequestParam(value = "Submission") Submission submission,
                                @RequestParam(value = "Publish") boolean publish) {
-        String courseID = assignment.getCourseIDForAssignment(String.valueOf(submission.getAssignmentID()));
+        String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID());
         submission.setCourseID(courseID);
         return submissionDAO.publishFeedback(submission, publish);
     }
@@ -255,17 +258,6 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/userEmailExist", method = RequestMethod.GET)
     public boolean userEmailExist(@RequestParam(value = "email") String email) {
         return userDAO.emailExist(email);
-    }
-
-    /**
-     * @param email
-     * @return true if email exist else false
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/userEmailExistWithUserName", method = RequestMethod.GET)
-    public boolean userEmailExistWithUserName(@RequestParam(value = "email") String email,
-                                              @RequestParam(value = "username") String userName) {
-        return userDAO.userNameExistWithEmail(userName,email);
     }
 
     /**
@@ -385,24 +377,7 @@ public class DatalayerCommunicator {
     	return null;
     }
     
-    /**
-     * Returns list of all submissions made in response to a given assignment.
-     *
-     * @param assignmentID		assignment identifier
-     * @return					list of submissions
-     *
-     * @author tfy12hsm
-     */
-    @CrossOrigin
-    @RequestMapping(
-    produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.GET,
-    value = "/getAllSubmissions")
-    @ResponseBody
-    public List<Submission> getAllSubmissions(
-    		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submissionDAO.getAllSubmissions(assignmentID).get();
-    }
+   
 
     /**
      * Returns list of all ungraded submissions made in response to a given
@@ -444,31 +419,7 @@ public class DatalayerCommunicator {
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submissionDAO.getAllSubmissionsWithStudents(assignmentID).get();
     }
-    
-    /**
-     * Returns list of all submissions made in response to a given assignment,
-     * including students that are part of the course but has not yet made a
-     * submissionDAO.
-     *
-     * @param userID		assignment identifier
-     * @return					list of submissions
-     *
-     * @author tfy12hsm
-     */
-    @CrossOrigin
-    @RequestMapping(
-    produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.GET,
-    value = "/getHierarchy")
-    @ResponseBody
-    public Hierarchy getHierarchy(
-    		@RequestParam(value="userID") String userID) {
-    	Optional<Hierarchy> hierarchy = 
-    			hierarchyDAO.getCourseAssignmentHierarchy(userID);
-    	if(hierarchy.isPresent()) 
-    		return hierarchy.get();
-    	return null;
-    }
+
 
     /**
      * Add a submission to the database and filesystem.

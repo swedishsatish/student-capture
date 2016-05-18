@@ -19,6 +19,10 @@ input {
 	border-radius: 10px !important;
 }
 
+input[type=text]:disabled {
+	background: #dddddd;
+}
+
 #courseContent h1,
 #courseContent h2,
 #courseContent h3,
@@ -26,6 +30,10 @@ input {
 #courseContent h5,
 #courseContent h6 {
     color:#424242;
+}
+
+#popUpDiv {
+	background-colo:black;
 }
 
 .container {

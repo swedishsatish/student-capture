@@ -17,8 +17,11 @@
             <div class="row">
                 <div id="blanket" style={{"display":"none"}}></div>
                 <div id="popUpDiv" style={{"display":"none"}}></div>
+
                 <TeacherRecordVideo/>
+
                 <div id="feedBackContainer">
+
                     <div id="submissioncontainer">
                         <div id="commentbox">
                             <CommentBox />
@@ -38,7 +41,7 @@
                             <BackButton />
                         </div>
                         <div id="submitButton">
-                            <SubmitButton student={this.props.student} />
+                            <SubmitButton />
                         </div>
 
                     </div>

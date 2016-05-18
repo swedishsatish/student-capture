@@ -1,8 +1,10 @@
 package studentcapture.assignment;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -10,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentModel;
-import studentcapture.course.Course;
+import studentcapture.course.CourseModel;
 import studentcapture.course.CourseDAO;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
@@ -86,14 +88,14 @@ public class AssignmentDAO {
             assignmentID = keyHolder.getKey().intValue();
         }
 
-
         try {
             FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
-                    assignmentModel.getInfo(), FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+                    assignmentModel.getDescription(), FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
             FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
                     assignmentModel.getRecap(), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
             //TODO: HANDLE THIS
+            System.err.println("IOEXCEPTION");
         }
 
         return assignmentID;
@@ -122,6 +124,19 @@ public class AssignmentDAO {
 
     public void addAssignmentVideo(MultipartFile video, String courseID, String assignmentID) {
         FilesystemInterface.storeAssignmentVideo(courseID, assignmentID, video);
+    }
+
+    /**
+     * Gets the video question corresponding to the specified assignment.
+     * @param assignmentID  Unique assignment identifier.
+     * @return              The video and Http status OK or Http status NOT_FOUND.
+     */
+    public ResponseEntity<InputStreamResource> getAssignmentVideo(int assignmentID) {
+        String courseID = this.getCourseIDForAssignment(assignmentID);
+        //String path = FilesystemInterface.generatePath(courseID,assignmentID)
+        //        + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
+        //TODO: uncomment and use path. generatePath needs to be refactored first.
+        return FilesystemInterface.getVideo("bugsbunny.webm");
     }
 
     /**
@@ -188,7 +203,7 @@ public class AssignmentDAO {
     	return jdbcTemplate.queryForObject(sql, new Object[]{courseID,assignmentTitle},String.class);
 	}
 
-    public String getCourseIDForAssignment(String assignmentID) {
+    public String getCourseIDForAssignment(int assignmentID) {
         String sql = "SELECT courseID from Assignment WHERE assignmentID = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{assignmentID},String.class);
     }
@@ -201,14 +216,14 @@ public class AssignmentDAO {
      * 
      * @author tfy12hsm
      */
-	public Optional<Assignment> getAssignment(int assignmentId) {
+	public Optional<AssignmentModel> getAssignment(int assignmentId) {
 		try {
             String getAssignmentStatement = "SELECT * FROM "
                     + "Assignment WHERE AssignmentId=?";
 
 			Map<String, Object> map = jdbcTemplate.queryForMap(
 	    			getAssignmentStatement, assignmentId);
-			Assignment result = new Assignment(map);
+			AssignmentModel result = new AssignmentModel(map);
 	    	
 	    	return Optional.of(result);
 		} catch (IncorrectResultSizeDataAccessException e){

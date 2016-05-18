@@ -6,16 +6,6 @@ var generateCourseID = function () {
     return Math.floor((Math.random() * 1000000000) + 1);
 }
 
-var callback = function (res,uid) {
-    
-    if(res){
-        alert("Course Added");
-        RenderMenu(uid);
-    }
-    else {
-        alert("Failed to add course");
-    }
-}
 
 window.CreateCourse = React.createClass({
     componentDidMount: function () {
@@ -23,40 +13,40 @@ window.CreateCourse = React.createClass({
             height: 350});
     },
     handleClick: function (uid,event) {
-        var fd = new FormData();
-        fd.append("courseID",generateCourseID());
-        fd.append("courseCode",$("#course-code").val());
-        fd.append("year",$("#course-year").val());
-        fd.append("term",$("#course-term").val());
-        fd.append("courseName",$("#course-name").val());
-        fd.append("courseDescription",tinymce.get('course-description').getContent());
-        fd.append("active",$("#course-active").val());
 
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function () {
-            if (request.readyState == 4 && request.status == 200) {
-                callback(request.responseText,uid);
-            }
-
-        };
-
-        request.onload = function(){
-
-            if(request.status == 404) {
-
-                alert("Upload failed, no server connection.");
-            }
-            else if(request.status == 408) {
-
-                alert("Connection timed out.");
-            }
-
-
+        var course = {
+            courseId: generateCourseID(),
+            year: parseInt($("#course-year").val(),10),
+            term: $("#course-term").val(),
+            courseName: $("#course-name").val(),
+            courseDescription: tinymce.get('course-description').getContent(),
+            active: $("#course-active").is(":checked"),
+            initialTeacherId:uid
         }
 
-        request.open('POST', window.globalURL + "/DB/addCourse",true);
+        $.ajax({
+            type : "POST",
+            contentType : "application/json",
+            url : window.globalURL + "/course",
+            data : JSON.stringify(course),
+            timeout : 100000,
+            success : function(res) {
+                if(res){
+                    alert("Course Added");
+                    RenderMenu(uid);
+                }
+                else {
+                    alert("Failed to add course");
+                }
+            }, error : function(e) {
+                console.log("ERROR: ", e);
+            }, done : function(e) {
+                console.log("DONE");
+            }
+        });
 
-        request.send(fd);
+
+
 
     },
     render: function () {
@@ -72,8 +62,7 @@ window.CreateCourse = React.createClass({
                     <br />
                     <input type="text" id="course-term" placeholder="Course term"/>
                     <br />
-                    <input type="text" id="course-code" placeholder="Course code"/>
-                    <br />
+
                     <input type="checkbox" id="course-active"/>Active Course
                     <br />
                     <h5>Course Description</h5>

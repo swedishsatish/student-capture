@@ -1,13 +1,12 @@
-package studentcapture.model;
+package studentcapture.course;
 
+import studentcapture.assignment.AssignmentModel;
 import studentcapture.submission.Submission;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import studentcapture.course.Course;
 
 /**
  * Used to collect all relevant data in a users course-assignment
@@ -16,16 +15,16 @@ import studentcapture.course.Course;
  *
  * @author tfy12hsm
  */
-public class Hierarchy {
+public class HierarchyModel {
 	private int userId;
 	private String firstName;
 	private String lastName;
-	private Map<String, CoursePackage> teacherCourses;
-	private Map<String, CoursePackage> studentCourses;
+	private Map<Integer, CoursePackage> teacherCourses;
+	private Map<Integer, CoursePackage> studentCourses;
 	private List<CoursePackage> teacherCoursesList;
 	private List<CoursePackage> studentCoursesList;
 
-	public Hierarchy() {
+	public HierarchyModel() {
 		teacherCourses = new HashMap<>();
 		studentCourses = new HashMap<>();
 		teacherCoursesList = null;
@@ -77,28 +76,28 @@ public class Hierarchy {
 	/**
 	 * @return the teacherCourses
 	 */
-	public Map<String, CoursePackage> getTeacherCourses() {
+	public Map<Integer, CoursePackage> getTeacherCourses() {
 		return teacherCourses;
 	}
 
 	/**
 	 * @param teacherCourses the teacherCourses to set
 	 */
-	public void setTeacherCourses(Map<String, CoursePackage> teacherCourses) {
+	public void setTeacherCourses(Map<Integer, CoursePackage> teacherCourses) {
 		this.teacherCourses = teacherCourses;
 	}
 
 	/**
 	 * @return the studentCourses
 	 */
-	public Map<String, CoursePackage> getStudentCourses() {
+	public Map<Integer, CoursePackage> getStudentCourses() {
 		return studentCourses;
 	}
 
 	/**
 	 * @param studentCourses the studentCourses to set
 	 */
-	public void setStudentCourses(Map<String, CoursePackage> studentCourses) {
+	public void setStudentCourses(Map<Integer, CoursePackage> studentCourses) {
 		this.studentCourses = studentCourses;
 	}
 
@@ -152,7 +151,7 @@ public class Hierarchy {
      * @author tfy12hsm
      */
     public static class CoursePackage {
-    	private Course course;
+    	private CourseModel course;
     	private Map<Integer, AssignmentPackage> assignments;
 		private List<AssignmentPackage> assignmentsList;
 
@@ -173,14 +172,14 @@ public class Hierarchy {
 		/**
 		 * @return the course
 		 */
-		public Course getCourse() {
+		public CourseModel getCourse() {
 			return course;
 		}
 
 		/**
 		 * @param course the course to set
 		 */
-		public void setCourse(Course course) {
+		public void setCourse(CourseModel course) {
 			this.course = course;
 		}
 		
@@ -220,21 +219,21 @@ public class Hierarchy {
      * @author tfy12hsm
      */
     public static class AssignmentPackage {
-    	private Assignment assignment = null;
+    	private AssignmentModel assignment = null;
     	private Map<Integer, Submission> submissions = null;
     	private List<Submission> submissionsList = null;
 		
     	/**
 		 * @return the assignment
 		 */
-		public Assignment getAssignment() {
+		public AssignmentModel getAssignment() {
 			return assignment;
 		}
 
 		/**
 		 * @param assignment the assignment to set
 		 */
-		public void setAssignment(Assignment assignment) {
+		public void setAssignment(AssignmentModel assignment) {
 			this.assignment = assignment;
 		}
 
