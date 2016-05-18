@@ -26,7 +26,7 @@ public class SubmissionResource {
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
                                                             @PathVariable("studentID") int studentID){
         //TODO fix unity in DAO API
-        System.out.println("Fungerar");
+
         Submission body = DAO.getSubmission(assignmentID, studentID).get();
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
@@ -51,11 +51,16 @@ public class SubmissionResource {
         return HttpStatus.NOT_IMPLEMENTED;
     }
 
+
     @RequestMapping(value = "{studentID}", method = RequestMethod.PUT)
-    public HttpStatus storeSubmission(@PathVariable("assignmentID") String assignmentID,
-                                      @PathVariable("studentID") String studentID,
+    public HttpStatus storeSubmission(@PathVariable("assignmentID") int assignmentID,
+                                      @PathVariable("studentID") int studentID,
                                       @RequestBody Submission updatedSubmission){
+
+        updatedSubmission.setStudentID(studentID);
+        updatedSubmission.setAssignmentID(assignmentID);
         //TODO Not implemented - stores a submission in the database
+
         /*Validation of Submission
         * Should be sent by a student, might have to validate that the student didnt set the grade himself.
         * However this should probably be handled somewhere else
