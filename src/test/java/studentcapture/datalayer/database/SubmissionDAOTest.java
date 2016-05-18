@@ -15,7 +15,6 @@ import studentcapture.submission.SubmissionDAO;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -80,6 +79,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      * Tests that the insertion of test data works
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void databaseSetUpTest() {
         String sql = "SELECT * FROM Submission WHERE assignmentID = 1 AND studentID = 1";
 
@@ -97,6 +97,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      * Tests the correct insertion of values from method setGrade
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void setGradeValues() {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 3);
@@ -202,8 +203,8 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     protected class SubmissionDAOWrapper implements org.springframework.jdbc.core.RowMapper {
 
         @Override
-        public Object mapRow(ResultSet rs, int i) throws SQLException {
-            HashMap<String,String> info = new HashMap();
+        public HashMap<String, String> mapRow(ResultSet rs, int i) throws SQLException {
+            HashMap<String,String> info = new HashMap<>();
             info.put("AssignmentId",rs.getString("AssignmentId"));
             info.put("StudentId",rs.getString("StudentId"));
             info.put("StudentPublishConsent",rs.getString("StudentPublishConsent"));
