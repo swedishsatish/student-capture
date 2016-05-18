@@ -5,11 +5,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import studentcapture.datalayer.database.AssignmentDAO;
-import studentcapture.datalayer.database.CourseDAO;
-import studentcapture.datalayer.database.SubmissionDAO;
-import studentcapture.user.User;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -24,14 +19,6 @@ public class UserDAO {
     // This template should be used to send queries to the database
     @Autowired
     protected JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private CourseDAO course;
-    @Autowired
-    private AssignmentDAO assignment;
-    @Autowired
-    private SubmissionDAO submissionDAO;
-
 
     /**
      * Add a new user to the User-table in the database.
@@ -68,6 +55,7 @@ public class UserDAO {
      * @param flag 0 returns user object by giving username
      *             1 returns user object by giving userID.
      *
+     *
      * @return User object, that contains all related information to
      *          a user otherwise null will be returned.
      */
@@ -86,6 +74,7 @@ public class UserDAO {
             types = new int[]{Types.INTEGER};
             sql = "SELECT  * FROM users WHERE userid = ?";
         } else {
+            System.out.println("WRONG FLAG!!!!!!!!!!!!!!!!!!!!!!!!!");
             //Invalid flag
             return null;
         }
@@ -96,6 +85,7 @@ public class UserDAO {
                     new UserWrapper());
         } catch (Exception e) {
             System.out.println(e);
+            System.out.println("FUCKING EXCEPTION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             return  null;
         }
 

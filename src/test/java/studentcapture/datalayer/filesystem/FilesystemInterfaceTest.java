@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.config.StudentCaptureApplication;
-import studentcapture.model.Submission;
+import studentcapture.submission.Submission;
 
 import java.io.*;
 
@@ -35,6 +35,7 @@ public class FilesystemInterfaceTest {
     @After
     public void tearDown() throws Exception {
         deleteFile(new File(StudentCaptureApplication.ROOT+"/moose/"+courseCode));
+        deleteFile(new File(StudentCaptureApplication.ROOT+"/moose/"+courseID));
     }
 
     @SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions"})
@@ -149,11 +150,11 @@ public class FilesystemInterfaceTest {
         String path;
         File file;
 
-        FilesystemInterface.storeAssignmentText(courseCode, courseID, assignmentID, "This is a test",
+        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "This is a test",
                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
 
-        path = FilesystemInterface.generatePath(courseCode, courseID, assignmentID) +
-                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME;
+        path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/" +
+            FilesystemConstants.ASSIGNMENT_RECAP_FILENAME;
         file = new File(path);
 
         assertTrue(file.isFile());
@@ -167,12 +168,12 @@ public class FilesystemInterfaceTest {
         char[] buf = new char[22];
         String content;
 
-        FilesystemInterface.storeAssignmentText(courseCode, courseID, assignmentID, "This should be overwritten",
+        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "This should be overwritten",
                 FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
-        FilesystemInterface.storeAssignmentText(courseCode, courseID, assignmentID, "This should be in file",
+        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "This should be in file",
                 FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
 
-        path = FilesystemInterface.generatePath(courseCode, courseID, assignmentID) +
+        path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/" +
                 FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
         file = new File(path);
         fileReader = new FileReader(file);
@@ -186,15 +187,15 @@ public class FilesystemInterfaceTest {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionAssignment(){
-        FilesystemInterface.storeAssignmentVideo("test","5DV151","1337",null);
+        FilesystemInterface.storeAssignmentVideo("test","1337",null);
     }
     @Test
     public void shouldStoreFileToNewPathAssignment(){
         createMockFile();
-        FilesystemInterface.storeAssignmentVideo(courseCode,courseID,assignmentID,testFile);
+        FilesystemInterface.storeAssignmentVideo(courseID,assignmentID,testFile);
 
-        File storedFile = new File(StudentCaptureApplication.ROOT + "/moose/" +
-                courseCode + "/" + courseID + "/" + assignmentID + "/assignment.webm");
+        File storedFile = new File(StudentCaptureApplication.ROOT + "/moose/"+
+                "/" + courseID + "/" + assignmentID + "/assignment.webm");
         assertTrue(storedFile.exists());
     }
 

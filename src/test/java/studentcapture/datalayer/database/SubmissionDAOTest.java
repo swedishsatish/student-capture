@@ -9,12 +9,12 @@ import org.springframework.web.context.WebApplicationContext;
 
 import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.model.Grade;
-import studentcapture.model.Submission;
+import studentcapture.submission.Submission;
+import studentcapture.submission.SubmissionDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -79,6 +79,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      * Tests that the insertion of test data works
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void databaseSetUpTest() {
         String sql = "SELECT * FROM Submission WHERE assignmentID = 1 AND studentID = 1";
 
@@ -96,6 +97,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      * Tests the correct insertion of values from method setGrade
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void setGradeValues() {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 3);
@@ -188,48 +190,6 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         assertTrue(returnValue);
     }
 
-    /**
-     * Retrieving ungraded grade, only time should be returned
-     */
-    @Test
-    public void getGradeShouldReturnNullOnGradeAndTeacher() {
-        Submission model = createSubmissionModel(1,1);
-        Map result = submissionDAO.getGrade(model);
-        assertEquals(null, result.get("grade"));
-        assertEquals(null, result.get("teacher"));
-        assertEquals("2016-05-13 11:00:00.0", result.get("time"));
-        assertEquals(null, result.get("error"));
-    }
-
-    /**
-     * Retrieve graded grade, everything should be returned
-     * (not error message)
-     */
-    @Test
-    public void getGradeShouldReturnAllValues() {
-        Submission submission = createSubmissionModel(1,3);
-        Map result = submissionDAO.getGrade(submission);
-        assertEquals("MVG", result.get("grade"));
-        assertEquals("abcd defg", result.get("teacher"));
-        assertEquals("2016-05-13 11:00:00.0", result.get("time"));
-        assertEquals(null, result.get("error"));
-    }
-
-    /**
-     * No rows in the tables has the values sent into getGrade,
-     * error message returned
-     */
-    @Test
-    public void getGradeShouldHandleNonExistingIds() {
-        Submission submission = createSubmissionModel(3546,124);
-        Map result = submissionDAO.getGrade(submission);
-        assertEquals(null, result.get("grade"));
-        assertEquals(null, result.get("teacher"));
-        assertEquals(null, result.get("time"));
-        assertEquals("The given parameters does not have an entry in the database",
-                result.get("error"));
-    }
-
     private Submission createSubmissionModel(int assignmentID, int studentID) {
         Submission submission = new Submission();
         submission.setAssignmentID(assignmentID);
@@ -243,8 +203,8 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     protected class SubmissionDAOWrapper implements org.springframework.jdbc.core.RowMapper {
 
         @Override
-        public Object mapRow(ResultSet rs, int i) throws SQLException {
-            HashMap<String,String> info = new HashMap();
+        public HashMap<String, String> mapRow(ResultSet rs, int i) throws SQLException {
+            HashMap<String,String> info = new HashMap<>();
             info.put("AssignmentId",rs.getString("AssignmentId"));
             info.put("StudentId",rs.getString("StudentId"));
             info.put("StudentPublishConsent",rs.getString("StudentPublishConsent"));

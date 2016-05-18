@@ -1,7 +1,7 @@
 package studentcapture.lti;
 
 
-import studentcapture.model.Submission;
+import studentcapture.submission.Submission;
 
 /**
  * Will take care of all the communication towards any LTI-related usage.
