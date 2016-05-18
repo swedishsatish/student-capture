@@ -123,22 +123,23 @@ function submitForm() {
     reqBody["ShareData"] = document.getElementById('PermissionFromStudent').checked;
     reqBody["AssignmentID"] = window.assignmentID;
     reqBody["CourseID"] = window.courseID;
-    reqBody["TeacherID"] = window.teacherID;
     reqBody["StudentID"] = window.studentID;
 
     $.ajax({
         type: "POST",
         contentType: "application/json",
-        url: "https://localhost:8443/feedback/set",
+        url: window.globalURL + "/assignments/" + $("#assignment").val() + "/submissions/" + $("#student").val(),
         data: JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
+            console.log("SUCCESS reqBody contains:", reqBody);
             // TODO: check response with if/else, if respons is fail give error message
 
           //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);
+            console.log("ReqBody contains:", reqBody);
         }, done: function (e) {
             console.log("DONE");
         }
