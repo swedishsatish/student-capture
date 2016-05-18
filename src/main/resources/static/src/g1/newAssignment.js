@@ -108,8 +108,8 @@ var NewAssignment = React.createClass({
                         <option value="U_G_VG_MVG">U,G,VG,MVG</option>
                         <option value="U_O_K_G">U,O,K,G</option>
                     </select>Grade scale<br/>
-                <div className="button primary-button" onClick = {handleCancel}> CANCEL </div>
-                <div className="button primary-button" id="post-question" onClick = {this.submitAssignment}> SUBMIT </div>
+                <div className="button primary-button SCButton" onClick = {handleCancel}> CANCEL </div>
+                <div className="button primary-button SCButton" id="post-question" onClick = {this.submitAssignment}> SUBMIT </div>
 
             </div>
         </div>
