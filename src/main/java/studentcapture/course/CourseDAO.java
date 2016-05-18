@@ -107,7 +107,7 @@ public class CourseDAO {
      * 
      * @author tfy12hsm
      */
-	public CourseModel getCourse(String courseId) {
+	public CourseModel getCourse(Integer courseId) {
 		try {
             String getCourseStatement =
                     "SELECT * FROM Course WHERE CourseId=?";
@@ -180,7 +180,7 @@ public class CourseDAO {
         }
     }
     
-    public CourseModel removeCourse(String courseId) {
+    public CourseModel removeCourse(Integer courseId) {
         String removeCourseStatement = "DELETE FROM Course WHERE CourseID=?";
 
         try {
