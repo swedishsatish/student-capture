@@ -76,7 +76,7 @@ var PopUpStudentName = React.createClass({
     render: function () {
 
         return(
-            <p id="smallLetter">{window.studentName}</p>
+            <p id="smallLetter">{this.props.student}</p>
         )
 
     }
@@ -91,7 +91,8 @@ var PopUpRender = React.createClass({
                 <p id="smallLetter">You are about to give</p>
                 <PopUpStudentName student={this.props.student}/> <p id="smallLetter">a</p>
                 <PopUpPassBox/> <p id="smallLetter">with grade</p> <PopUpGrade/>
-                <br/>
+                <PopUpStudentName student={this.props.student}/>
+                <p id="smallLetter">will be notified</p>
                 <div id="popUpButtonContainer">
                     <PopUpCancelButton/>
                     <PopUpConfirmButton/>
@@ -149,6 +150,14 @@ function submitForm() {
  * Sending data to database.
  */
 function sendData () {
+    // answer contains true if Ok is pressed., false if cancel is pressed.
+    var passedStatus = 'No pass';
+    // alert(document.getElementById('teachercomments').value);
+    if (document.getElementById('ifStudentPass').checked) {
+        passedStatus = 'Pass';
+    } else {
+        passedStatus = 'No pass'
+    }
     submitForm();
 
 }

@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.assignment;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -8,8 +8,15 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.web.multipart.MultipartFile;
+import studentcapture.assignment.AssignmentModel;
+import studentcapture.course.CourseModel;
+import studentcapture.course.CourseDAO;
+import studentcapture.datalayer.filesystem.FilesystemConstants;
+import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Assignment;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -34,54 +41,22 @@ public class AssignmentDAO {
     @Autowired
     protected JdbcTemplate jdbcTemplate;
 
-
     /**
      * Inserts an assignment into the database.
      *
-     * @param courseID        the courseID existing in the course-table
-     * @param assignmentTitle the title to the assignment
-     * @param startDate       the startdate of the assignment, should be on
-     *                        format "YYYY-MM-DD HH:MI:SS"
-     * @param endDate         the enddate of the assignment, should be on
-     *                        format "YYYY-MM-DD HH:MI:SS"
-     * @param minTime         minimum time for the assignment, in seconds
-     * @param maxTime         maximum time for the assignment, in seconds
-     * @param published       true if the assignment should be published
+     * @param assignmentModel - The data a assignment consists of.
      * @return the generated AssignmentID
      * @throws IllegalArgumentException fails if startDate or endDate is not
      *                        in the right format
      */
-    public int createAssignment(String courseID, String assignmentTitle,
-                                String startDate, String endDate,
-                                int minTime, int maxTime, String published, String gradeScale)
+    public int createAssignment(AssignmentModel assignmentModel)
     throws IllegalArgumentException {
-        LocalDateTime startDateTime, endDateTime, publishedDate;
 
-        //Check dates
-        startDateTime = convertStringToLDTFormat(startDate, "startDate is not in format" +
-                " YYYY-MM-DD HH:MI:SS");
-
-        endDateTime = convertStringToLDTFormat(endDate, "endDate is not in " +
-                "format YYYY-MM-DD HH:MI:SS");
-
-        checkIfTime1IsBeforeTime2(startDateTime, endDateTime, "Start date" +
-                " must be before the end date");
-
-        if (published != null) {
-            LocalDateTime currentDate = LocalDateTime.now();
-
-            publishedDate = convertStringToLDTFormat(published, "published is" +
-                    " not in format YYYY-MM-DD HH:MI:SS");
-
-            checkIfTime1IsBeforeTime2(currentDate, publishedDate, "Published" +
-                    " date must be after the current date");
-        }
-
-        // Check time
-        validateMinMaxTime(minTime, maxTime);
+        Integer assignmentID;
+        String courseCode;
 
         // Construct query, depends on if assignment has publishdate or not.
-        String insertQueryString = getQueryString(published);
+        String insertQueryString = getQueryString(assignmentModel.getAssignmentIntervall().getPublishedDate());
 
         // Execute query and fetch generated AssignmentID
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -90,50 +65,40 @@ public class AssignmentDAO {
                     PreparedStatement ps =
                             connection.prepareStatement(insertQueryString,
                                     Statement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, courseID);
-                    ps.setString(2, assignmentTitle);
-                    ps.setString(3, startDate);
-                    ps.setString(4, endDate);
-                    ps.setInt(5, minTime);
-                    ps.setInt(6, maxTime);
-                    ps.setString(7, published);
-                    ps.setString(8, gradeScale);
+                    ps.setString(1, assignmentModel.getCourseID());
+                    ps.setString(2, assignmentModel.getTitle());
+                    ps.setString(3, assignmentModel.getAssignmentIntervall().getStartDate());
+                    ps.setString(4, assignmentModel.getAssignmentIntervall().getEndDate());
+                    ps.setInt(5, assignmentModel.getVideoIntervall().getMinTimeSeconds());
+                    ps.setInt(6, assignmentModel.getVideoIntervall().getMaxTimeSeconds());
+                    ps.setString(7, assignmentModel.getAssignmentIntervall().getPublishedDate());
+                    ps.setString(8, assignmentModel.getScale());
                     return ps;
                 },
                 keyHolder);
 
         // Return generated AssignmentID
-        return keyHolder.getKey().intValue();
-    }
+        //This is a work around, keyHolder has several keys which it shouldn't
+        if (keyHolder.getKeys().size() > 1) {
+            assignmentID = (int) keyHolder.getKeys().get("assignmentid");
+        } else {
+            //If only one key assumes it is assignmentid.
+            assignmentID = keyHolder.getKey().intValue();
+        }
 
-    private LocalDateTime convertStringToLDTFormat(String timeDateString,
-                                              String errorMessage)
-            throws IllegalArgumentException {
-        LocalDateTime dateTime;
 
         try {
-            dateTime = checkIfCorrectDateTimeFormat(timeDateString);
-        } catch (DateTimeParseException e){
-            throw new IllegalArgumentException(errorMessage);
+            FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
+                    assignmentModel.getInfo(), FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+            FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
+                    assignmentModel.getRecap(), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+        } catch (IOException e) {
+            //TODO: HANDLE THIS
         }
 
-        return dateTime;
+        return assignmentID;
     }
 
-    private LocalDateTime checkIfCorrectDateTimeFormat(String dateTime)
-            throws DateTimeParseException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
-                "yyyy-MM-dd HH:mm:ss");
-        return LocalDateTime.parse(dateTime, formatter);
-    }
-
-    private void checkIfTime1IsBeforeTime2(LocalDateTime t1, LocalDateTime t2,
-                                     String errorMessage)
-            throws IllegalArgumentException {
-        if (t2.isBefore(t1)){
-            throw new IllegalArgumentException(errorMessage);
-        }
-    }
 
     private String getQueryString(String published){
         String insertQueryString;
@@ -155,20 +120,8 @@ public class AssignmentDAO {
         return insertQueryString;
     }
 
-    private void validateMinMaxTime(int minTime, int maxTime)
-            throws IllegalArgumentException{
-        if (minTime >= maxTime) {
-            throw new IllegalArgumentException("minTime must be less than " +
-                    "maxTime");
-        }
-        if (minTime < 0) {
-            throw new IllegalArgumentException("minTime must be greater or " +
-                    "equal to 0");
-        }
-        if (maxTime <= 0) {
-            throw new IllegalArgumentException("maxTime must be greater " +
-                    "than 0");
-        }
+    public void addAssignmentVideo(MultipartFile video, String courseID, String assignmentID) {
+        FilesystemInterface.storeAssignmentVideo(courseID, assignmentID, video);
     }
 
     /**

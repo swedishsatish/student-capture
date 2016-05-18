@@ -1,9 +1,13 @@
 package studentcapture.model;
 
+import studentcapture.submission.Submission;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import studentcapture.course.CourseModel;
 
 /**
  * Used to collect all relevant data in a users course-assignment
@@ -148,7 +152,7 @@ public class Hierarchy {
      * @author tfy12hsm
      */
     public static class CoursePackage {
-    	private Course course;
+    	private CourseModel course;
     	private Map<Integer, AssignmentPackage> assignments;
 		private List<AssignmentPackage> assignmentsList;
 
@@ -169,14 +173,14 @@ public class Hierarchy {
 		/**
 		 * @return the course
 		 */
-		public Course getCourse() {
+		public CourseModel getCourse() {
 			return course;
 		}
 
 		/**
 		 * @param course the course to set
 		 */
-		public void setCourse(Course course) {
+		public void setCourse(CourseModel course) {
 			this.course = course;
 		}
 		

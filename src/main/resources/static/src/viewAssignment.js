@@ -44,7 +44,7 @@ window.AssignmentContent = React.createClass({
         var assignment = this.props.assignment;
         var course = this.props.course;
         if(!this.state.loaded) {
-            getJson("../static/test/assignmentdata.json", this.jsonReady);
+            getJson("test/assignmentdata.json", this.jsonReady);
         }
         return (
             <div id="assignment-div">
@@ -99,7 +99,7 @@ var AssignmentStart = React.createClass({
                               </div>;
         return (
             <div id="assignment-modal">
-//            <div className="modal-dialog">
+            <div className="modal-dialog">
                 <div id="assignment-content" className="modal-content">
                     <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
                     <div id="question-div">
@@ -112,8 +112,9 @@ var AssignmentStart = React.createClass({
                     <div id="answer-div">
                         {recordContent}
                     </div>
+
+            </div>
                 </div>
-//            </div>
             </div>
         )
     },
@@ -173,6 +174,7 @@ var Question = React.createClass({
     componentDidMount: function() {
         this.serverRequest = getJson("../static/test/assignmentdata.json", function (data) {
             var json = JSON.parse(data);
+//            console.log("json is: " + json["AssignmentQuestion"]);
             this.setState({question: json["AssignmentQuestion"]});
         }.bind(this));
     }

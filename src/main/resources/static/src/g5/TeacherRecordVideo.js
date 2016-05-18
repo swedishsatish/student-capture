@@ -26,8 +26,9 @@ var TeacherRecordVideo = React.createClass({
                     <div id="videocontainer" className="six columns">
                         <Recorder playCallback={this.playVideo}
                                   postURL="/uploadVideo/" formDataBuilder={this.formDataBuilder}
-                                  recButtonID="teacherRecordButton" stopButtonID="teacherStopButton" fileName="assignment.webm"
-                                  replay="true" postButtonID="postTeacherVideo" siteView="createAssignment"
+                                  recButtonID="teacherRecordButton" stopButtonID="teacherStopButton"
+                                  fileName="assignment.webm" replay="true" postButtonID="postTeacherVideo"
+                                  siteView="createAssignment" camOnLoad="true"
                         />
                     </div>
                 </div>
