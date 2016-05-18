@@ -54,6 +54,13 @@ var Assignments = React.createClass({
     handleClick: function (course, event) {
         ReactDOM.render(<NewAssignment courseID={course.courseId} courseCode={course.courseCode} />,document.getElementById("courseContent"))
     },
+    editClick: function (course,event) {
+        $.get(window.globalURL + "/course/" + course.courseId,function (res) {
+            ReactDOM.render(<EditCourse course={res}/>,document.getElementById("courseContent"));
+            console.log("get")
+        });
+
+    },
     render: function() {
         var course = this.props.course;
         var role = this.props.role;
@@ -65,6 +72,12 @@ var Assignments = React.createClass({
             assList.push(<li className="active course menuItem navigationText">
                     <div onClick={this.handleClick.bind(this,course.course)}>
                         + New Assignent
+                    </div>
+                </li>
+            );
+            assList.push(<li className="active course menuItem navigationText">
+                    <div onClick={this.editClick.bind(this,course.course)}>
+                        Edit course
                     </div>
                 </li>
             );

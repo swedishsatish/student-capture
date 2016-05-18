@@ -9,9 +9,10 @@ import org.springframework.stereotype.Repository;
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.HierarchyModel.AssignmentPackage;
 import studentcapture.course.HierarchyModel.CoursePackage;
-import studentcapture.datalayer.database.UserDAO;
+import studentcapture.user.UserDAO;
 import studentcapture.submission.Submission;
 import studentcapture.submission.SubmissionDAO;
+
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ import java.util.Optional;
 @Repository
 
 /**
- * Aware of code smell.
+ * Now with slightly less code smell.
  * 
  * @author tfy12hsm
  *
@@ -52,9 +53,8 @@ public class HierarchyDAO {
      * @author tfy12hsm
      */
     public Optional<HierarchyModel> getCourseAssignmentHierarchy(
-    		String userID) {
+    		Integer userId) {
     	HierarchyModel hierarchy = new HierarchyModel();
-    	int userId = Integer.parseInt(userID);
     	try {
     		addStudentHierarchy(hierarchy, userId);
     		addTeacherHierarchy(hierarchy, userId);
@@ -117,62 +117,10 @@ public class HierarchyDAO {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(
     			getTeacherHierarchyStatement, userId);
     	for (Map<String, Object> row : rows) {
-    		CoursePackage currentCourse;
-    		String courseId = (String) row.get("CourseId");
-    		try {
-    			currentCourse = hierarchy.getTeacherCourses().get(courseId);
-    			if(currentCourse==null)
-    				throw new NullPointerException();
-    		} catch (NullPointerException e) {
-    			currentCourse = new CoursePackage();
-    			CourseModel course = new CourseModel();
-    			course.setCourseId(courseId);
-    			currentCourse.setCourse(courseDAO.getCourse(course));
-    			hierarchy.getTeacherCourses().put(courseId, currentCourse);
-    		}
-
-    		AssignmentPackage currentAssignment;
-
-    		try {
-        		int assignmentId = (int) row.get("AssignmentId");
-
-    			try {
-        			currentAssignment = currentCourse.getAssignments()
-        					.get(assignmentId);
-
-					if (currentAssignment == null) {
-						throw new NullPointerException();
-					}
-        		} catch (NullPointerException e) {
-        			currentAssignment = new AssignmentPackage();
-        			currentAssignment.setAssignment(assignmentDAO
-        					.getAssignment(assignmentId).get());
-        			currentAssignment.setSubmissions(new HashMap<>());
-        			currentCourse.getAssignments()
-        					.put(assignmentId, currentAssignment);
-        		}
-    			
-    			Submission currentSubmission;
-    			Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
-    			Integer studentId = (Integer) row.get("StudentId");
-				if (submissionDate != null) {
-    				try {
-    					currentSubmission = currentAssignment.getSubmissions().get(studentId);
-    					if(currentSubmission==null)
-    						throw new NullPointerException();
-					} catch (NullPointerException e) {
-    					currentSubmission = submissionDAO.getSubmission(
-    							assignmentId,studentId).get();
-    					currentAssignment.getSubmissions().put(studentId,
-    							currentSubmission);
-    				}
-    			}
-    		} catch (NullPointerException e) {
-    			continue;
-    		}
+    		addTeacherMapToHierarchy(hierarchy, row);
     	}
 	}
-
+	
 	/**
 	 * Adds course, assignment and submission data, related to a given student,
 	 * from the database to a {@link CourseAssignmentHierarchy}
@@ -198,57 +146,102 @@ public class HierarchyDAO {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(
     			getStudentHierarchyStatement, userId);
     	for (Map<String, Object> row : rows) {
-    		CoursePackage currentCourse;
-    		String courseId = (String) row.get("CourseId");
-    		try {
-    			currentCourse = hierarchy.getStudentCourses().get(courseId);
-    			if(currentCourse==null)
-    				throw new NullPointerException();
-    		} catch (NullPointerException e) {
-    			currentCourse = new CoursePackage();
-    			CourseModel course = new CourseModel();
-    			course.setCourseId(courseId);
-    			currentCourse.setCourse(courseDAO.getCourse(course));
-    			hierarchy.getStudentCourses().put(courseId, currentCourse);
-    		}
-
-    		AssignmentPackage currentAssignment;
-    		try {
-        		int assignmentId = (int) row.get("AssignmentId");
-
-    			try {
-        			currentAssignment = currentCourse.getAssignments().get(
-        					assignmentId);
-        			if(currentAssignment==null)
-        				throw new NullPointerException();
-        		} catch (NullPointerException e) {
-        			currentAssignment = new AssignmentPackage();
-        			currentAssignment.setAssignment(assignmentDAO
-        					.getAssignment(assignmentId).get());
-        			currentAssignment.setSubmissions(new HashMap<>());
-        			currentCourse.getAssignments().put(assignmentId,
-        					currentAssignment);
-        		}
-
-    			Submission currentSubmission = null;
-    			Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
-    			Integer studentId = (Integer) row.get("StudentId");
-    			if (submissionDate != null) {
-    				try {
-    					currentSubmission = currentAssignment.getSubmissions().get(studentId);
-    					if(currentSubmission==null)
-    						throw new NullPointerException();
-					} catch (NullPointerException e) {
-    					currentSubmission = submissionDAO.getSubmission(
-    							assignmentId,userId).get();
-    					currentAssignment.getSubmissions().put(studentId,
-    							currentSubmission);
-    				}
-    			}
-    		} catch (NullPointerException e) {
-    			continue;
-    		}
-
+    		addStudentMapToHierarchy(hierarchy, row);
     	}
+	}
+
+	private void addTeacherMapToHierarchy(HierarchyModel hierarchy,
+			Map<String, Object> row) {
+		Integer courseId = (Integer) row.get("CourseId");
+		CoursePackage currentCourse = addCourseToHierarchy(hierarchy.getTeacherCourses(), courseId);
+		
+		try {
+			int assignmentId = (int) row.get("AssignmentId");
+			 AssignmentPackage currentAssignment = addAssignmentToHierarchy(currentCourse,
+					assignmentId);
+			
+			Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
+			Integer studentId = (Integer) row.get("StudentId");
+			if (submissionDate != null) {
+				addSubmissionToHierarchy(assignmentId, currentAssignment,
+						studentId);
+			}
+		} catch (NullPointerException e) {
+			return;
+		}
+	}
+
+	private void addStudentMapToHierarchy(HierarchyModel hierarchy,
+			Map<String, Object> row) {
+		Integer courseId = (Integer) row.get("CourseId");
+		CoursePackage currentCourse = addCourseToHierarchy(hierarchy.getStudentCourses(), courseId);
+		
+		try {
+			int assignmentId = (int) row.get("AssignmentId");
+			 AssignmentPackage currentAssignment = addAssignmentToHierarchy(currentCourse,
+					assignmentId);
+			
+			Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
+			Integer studentId = (Integer) row.get("StudentId");
+			if (submissionDate != null) {
+				addSubmissionToHierarchy(assignmentId, currentAssignment,
+						studentId);
+			}
+		} catch (NullPointerException e) {
+			return;
+		}
+	}
+	
+	private void addSubmissionToHierarchy(int assignmentId,
+			AssignmentPackage currentAssignment, Integer studentId) {
+		Submission currentSubmission;
+		try {
+			currentSubmission = currentAssignment.getSubmissions().get(studentId);
+			if(currentSubmission==null)
+				throw new NullPointerException();
+		} catch (NullPointerException e) {
+			currentSubmission = submissionDAO.getSubmission(
+					assignmentId,studentId).get();
+			currentAssignment.getSubmissions().put(studentId,
+					currentSubmission);
+		}
+	}
+
+	private AssignmentPackage addAssignmentToHierarchy(
+			CoursePackage currentCourse, int assignmentId) {
+		AssignmentPackage currentAssignment;
+		try {
+			currentAssignment = currentCourse.getAssignments()
+					.get(assignmentId);
+
+			if (currentAssignment == null) {
+				throw new NullPointerException();
+			}
+		} catch (NullPointerException e) {
+			currentAssignment = new AssignmentPackage();
+			currentAssignment.setAssignment(assignmentDAO
+					.getAssignment(assignmentId).get());
+			currentAssignment.setSubmissions(new HashMap<>());
+			currentCourse.getAssignments()
+					.put(assignmentId, currentAssignment);
+		}
+		return currentAssignment;
+	}
+
+	private CoursePackage addCourseToHierarchy(
+			Map<Integer, CoursePackage> courses, Integer courseId) {
+		CoursePackage currentCourse;
+		try {
+			currentCourse = courses.get(courseId);
+			if(currentCourse==null)
+				throw new NullPointerException();
+		} catch (NullPointerException e) {
+			currentCourse = new CoursePackage();
+			CourseModel course = new CourseModel();
+			course.setCourseId(courseId);
+			currentCourse.setCourse(courseDAO.getCourse(course));
+			courses.put(courseId, currentCourse);
+		}
+		return currentCourse;
 	}
 }

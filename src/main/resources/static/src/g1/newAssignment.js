@@ -65,7 +65,6 @@ var NewAssignment = React.createClass({
         var videoIntervall = {};
         var assignmentIntervall = {};
 
-
         videoIntervall["minTimeSeconds"] = $("#minTimeSeconds").val();
         videoIntervall["maxTimeSeconds"] = $("#maxTimeSeconds").val();
         assignmentIntervall["startDate"] = $("#startDate").val();
@@ -73,10 +72,10 @@ var NewAssignment = React.createClass({
         assignmentIntervall["publishedDate"] = $("#publish").val();
         reqBody["courseID"] = this.props.courseID;
         reqBody["title"] = $("#title").val();
-        reqBody["description"] = $("#description").val();
+        reqBody["description"] = tinymce.get('description').getContent()
         reqBody["videoIntervall"] = videoIntervall;
         reqBody["assignmentIntervall"] = assignmentIntervall;
-        reqBody["recap"] = $("#recap").val();
+        reqBody["recap"] = tinymce.get('recap').getContent()
         reqBody["scale"] = $("#scale").val();
         $.ajax({
             type : "POST",
@@ -102,22 +101,26 @@ var NewAssignment = React.createClass({
     render : function() {
       return <div>
                 <div id="newAssForm">
-                <input className="inputField" id="title" type="text" placeholder="title" /><br/>
-                <textarea className="inputField" id="description" type="text" placeholder="description" /><br/>
-                <textarea className="inputField" id="recap" type="text" placeholder="recap" /><br/>
+                <input className="inputField" id="title" type="text" placeholder="title" />
 
-                <input id="startDate" type="button" value="yyyy-mm-dd 00:00"/>Start Date<br/>
-                <input id="endDate" type="button" value="yyyy-mm-dd 00:00"/>End Date<br/>
-                <input id="minTimeSeconds" type="text" placeholder="minTimeSeconds" /><br/>
-                <input id="maxTimeSeconds" type="text" placeholder="maxTimeSeconds" /><br/>
-                    <input id="publish" type="button" value="yyyy-mm-dd 00:00"/>Publish Date<br/>
+                <input id="startDate" type="button" value="start: yyyy-mm-dd 00:00"/>
+                <input id="endDate" type="button" value="submit by: yyyy-mm-dd 00:00"/>
+                <input id="minTimeSeconds" type="text" placeholder="minimum length of answer (sec)" />
+                <input id="maxTimeSeconds" type="text" placeholder="maximum length of answer (sec)" />
+                    <input id="publish" type="button" value="publish by: yyyy-mm-dd 00:00"/>
                     <select id="scale">
                         <option value="NUMBER_SCALE">1,2,3,4,5</option>
                         <option value="U_G_VG_MVG">U,G,VG,MVG</option>
                         <option value="U_O_K_G">U,O,K,G</option>
-                    </select>Grade scale<br/>
-                <div className="button primary-button" onClick = {handleCancel}> CANCEL </div>
-                <div className="button primary-button" id="post-question" onClick = {this.submitAssignment}> SUBMIT </div>
+                    </select>
+
+                    <h2>Description of the assignment</h2>
+                    <textarea className="inputField" id="description" type="text" placeholder="description" /><br/>
+                    <h2>Recap of the question</h2>
+                    <p>STUDENT WILL BE ABLE TO SEE THIS DURING RECORDING</p>
+                    <textarea className="inputField" id="recap" type="text" placeholder="recap" /><br/>
+                <div className="button primary-button SCButton" onClick = {handleCancel}> CANCEL </div>
+                <div className="button primary-button SCButton" id="post-question" onClick = {this.submitAssignment}> NEXT </div>
 
             </div>
         </div>
@@ -191,5 +194,5 @@ window.CourseContent = React.createClass({
     }
 });
 
-ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
+//ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
 window.NewAssignment = NewAssignment;

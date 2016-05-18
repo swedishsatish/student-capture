@@ -74,9 +74,8 @@ var PopUpGrade = React.createClass({
  */
 var PopUpStudentName = React.createClass({
     render: function () {
-
         return(
-            <p id="smallLetter">{this.props.student}</p>
+            <p id="smallLetter">{window.studentName}</p>
         )
 
     }
@@ -89,9 +88,8 @@ var PopUpRender = React.createClass({
         return(
             <div class="row">
                 <p id="smallLetter">You are about to give</p>
-                <PopUpStudentName student={this.props.student}/> <p id="smallLetter">a</p>
+                <PopUpStudentName/> <p id="smallLetter">a</p>
                 <PopUpPassBox/> <p id="smallLetter">with grade</p> <PopUpGrade/>
-                <PopUpStudentName student={this.props.student}/>
                 <br/>
                 <div id="popUpButtonContainer">
                     <PopUpCancelButton/>

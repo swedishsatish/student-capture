@@ -89,12 +89,28 @@ var AssignmentStart = React.createClass({
                                : <div />;
         var recordContent = this.state.startRecording
                             ? <div>
-                                <div><StudentRecordVideo autoRecord="true" /><br />
-                                Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
-                                Current video length: {this.state.time}<br />
-                              </div></div>
+                                <svg width="30" height="30">
+                                    <circle cx="15" cy="15" r="11" stroke="black" stroke-width="4" fill="red" />
+                                    Red circle.
+                                </svg>
+                                <p id="descriptor">[REC]</p>
+                                <div>
+                                    <StudentRecordVideo autoRecord="true" /><br />
+                                    Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
+                                    Current video length: {this.state.time}
+                                </div>
+                              </div>
                             : <div>
-                                <StudentRecordVideo autoRecord="false" /><br />
+                                <svg width="30" height="30">
+                                    <circle cx="15" cy="15" r="11" stroke="black" stroke-width="4" fill="black" />
+                                    Black circle.
+                                </svg>
+                                <p id="descriptor">[---]</p>
+                                <div>
+                                    <StudentRecordVideo autoRecord="false" /><br />
+                                    Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
+                                    Current video length: {this.state.time}
+                                </div>
                               </div>;
         return (
             <div id="assignment-modal">
@@ -102,6 +118,7 @@ var AssignmentStart = React.createClass({
                     <div id="assignment-content" className="modal-content">
                         <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
                         <div id="question-div">
+                            <h3>Question Video</h3>
                             <Vid url={assignmentData.assignmentUrl} count={this.count}/><br />
                             {questionContent}
                         </div>

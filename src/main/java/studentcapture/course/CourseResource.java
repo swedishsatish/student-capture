@@ -50,7 +50,7 @@ public class CourseResource {
     	}
     	if(course.getInitialTeacherId()!=null) {
     	   	Boolean result2 = participantDAO.addParticipant(
-    	   			course.getInitialTeacherId().toString(), result1.getCourseId(), 
+    	   			course.getInitialTeacherId().toString(), result1.getCourseId().toString(), 
     	   			"teacher");
     	   	if(!result2) 
     	   		throw new ResourceNotFoundException();
@@ -104,7 +104,7 @@ public class CourseResource {
     value = "/{CourseId}")
     @ResponseBody
     public CourseModel getCourse(
-    		@PathVariable(value = "CourseId") String courseID) {
+    		@PathVariable(value = "CourseId") Integer courseID) {
     	CourseModel result = courseDAO.getCourse(courseID);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
@@ -118,8 +118,9 @@ public class CourseResource {
     value = "/{CourseId}")
     @ResponseBody
     public CourseModel putCourseWithId(
-    		@PathVariable(value = "CourseId") String courseID,
+    		@PathVariable(value = "CourseId") Integer courseID,
     		@RequestBody CourseModel course) {
+    	course.setCourseId(courseID);
     	CourseModel result = courseDAO.updateCourse(course);
     	if(result.getCourseId()==null) {
     		if(result.getErrorCode()==HttpStatus.CONFLICT.value())
@@ -141,7 +142,7 @@ public class CourseResource {
     value = "/{CourseId}")
     @ResponseBody
     public CourseModel deleteCourse(
-    		@PathVariable(value = "CourseId") String courseID) {
+    		@PathVariable(value = "CourseId") Integer courseID) {
     	CourseModel result = courseDAO.removeCourse(courseID);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
@@ -159,7 +160,7 @@ public class CourseResource {
     value = "")
     @ResponseBody
     public HierarchyModel getHierarchy(
-    		@RequestParam(value="userID") String userID) {
+    		@RequestParam(value="userID") Integer userID) {
     	Optional<HierarchyModel> hierarchy = 
     			hierarchyDAO.getCourseAssignmentHierarchy(userID);
     	if(hierarchy.isPresent()) 

@@ -19,8 +19,8 @@ public class HierarchyModel {
 	private int userId;
 	private String firstName;
 	private String lastName;
-	private Map<String, CoursePackage> teacherCourses;
-	private Map<String, CoursePackage> studentCourses;
+	private Map<Integer, CoursePackage> teacherCourses;
+	private Map<Integer, CoursePackage> studentCourses;
 	private List<CoursePackage> teacherCoursesList;
 	private List<CoursePackage> studentCoursesList;
 
@@ -76,28 +76,28 @@ public class HierarchyModel {
 	/**
 	 * @return the teacherCourses
 	 */
-	public Map<String, CoursePackage> getTeacherCourses() {
+	public Map<Integer, CoursePackage> getTeacherCourses() {
 		return teacherCourses;
 	}
 
 	/**
 	 * @param teacherCourses the teacherCourses to set
 	 */
-	public void setTeacherCourses(Map<String, CoursePackage> teacherCourses) {
+	public void setTeacherCourses(Map<Integer, CoursePackage> teacherCourses) {
 		this.teacherCourses = teacherCourses;
 	}
 
 	/**
 	 * @return the studentCourses
 	 */
-	public Map<String, CoursePackage> getStudentCourses() {
+	public Map<Integer, CoursePackage> getStudentCourses() {
 		return studentCourses;
 	}
 
 	/**
 	 * @param studentCourses the studentCourses to set
 	 */
-	public void setStudentCourses(Map<String, CoursePackage> studentCourses) {
+	public void setStudentCourses(Map<Integer, CoursePackage> studentCourses) {
 		this.studentCourses = studentCourses;
 	}
 

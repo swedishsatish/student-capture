@@ -59,14 +59,22 @@ var NewFeedback = React.createClass({
     render: function () {
 
         var feedbackResponse = this.props.feedbackResponse;
+
+        feedbackResponse.submissionDate = new Date((feedbackResponse
+        .submissionDate));
+
         return (
             <div>
-                <h5>Teacher:</h5>
-                {feedbackResponse.teacher}
+                <h5>Firstname:</h5>
+                {feedbackResponse.firstName}
+                <h5>Lastname:</h5>
+                {feedbackResponse.lastName}
                 <h5>Grade:</h5>
                 {feedbackResponse.grade}
-                <h5>Time:</h5>
-                {feedbackResponse.time}
+                <h5>Gradesign:</h5>
+                {feedbackResponse.gradeSign}
+                <h5>Submissiondate:</h5>
+                {feedbackResponse.submissionDate.toGMTString()}
                 <h5>Feedback:</h5>
                 {feedbackResponse.feedback}
                 <br />
