@@ -26,6 +26,7 @@ public class SubmissionResource {
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
                                                             @PathVariable("studentID") int studentID){
         //TODO fix unity in DAO API
+        System.out.println("Fungerar");
         Submission body = DAO.getSubmission(assignmentID, studentID).get();
         return new ResponseEntity<>(body, HttpStatus.OK);
     }

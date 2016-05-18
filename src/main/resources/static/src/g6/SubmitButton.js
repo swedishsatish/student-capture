@@ -116,6 +116,7 @@ function close(){
  * Submits data that will sent later, data in reqBody will be sent.
  */
 function submitForm() {
+
     var reqBody = {};
     reqBody["TeacherComments"] = document.getElementById('teachercomments').value;
     reqBody["Grade"] = document.getElementById('dropDownMenu').value;
@@ -126,16 +127,14 @@ function submitForm() {
     reqBody["StudentID"] = window.studentID;
 
     $.ajax({
-        type: "POST",
+        type: "GET",
         contentType: "application/json",
-        url: window.globalURL + "/assignments/" + $("#assignment").val() + "/submissions/" + $("#student").val(),
-        data: JSON.stringify(reqBody),
+        url: window.globalURL + "/assignments/" + 6 + "/submissions/" + 98,
+        data: reqBody,
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
-            console.log("SUCCESS reqBody contains:", reqBody);
             // TODO: check response with if/else, if respons is fail give error message
-
           //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);
