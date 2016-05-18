@@ -35,6 +35,7 @@ public class FilesystemInterfaceTest {
     @After
     public void tearDown() throws Exception {
         deleteFile(new File(StudentCaptureApplication.ROOT+"/moose/"+courseCode));
+        deleteFile(new File(StudentCaptureApplication.ROOT+"/moose/"+courseID));
     }
 
     @SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions"})
