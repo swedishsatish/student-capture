@@ -52,9 +52,8 @@ public class HierarchyDAO {
      * @author tfy12hsm
      */
     public Optional<HierarchyModel> getCourseAssignmentHierarchy(
-    		String userID) {
+    		Integer userId) {
     	HierarchyModel hierarchy = new HierarchyModel();
-    	int userId = Integer.parseInt(userID);
     	try {
     		addStudentHierarchy(hierarchy, userId);
     		addTeacherHierarchy(hierarchy, userId);
@@ -152,7 +151,7 @@ public class HierarchyDAO {
 
 	private void addTeacherMapToHierarchy(HierarchyModel hierarchy,
 			Map<String, Object> row) {
-		String courseId = (String) row.get("CourseId");
+		Integer courseId = (Integer) row.get("CourseId");
 		CoursePackage currentCourse = addCourseToHierarchy(hierarchy.getTeacherCourses(), courseId);
 		
 		try {
@@ -173,7 +172,7 @@ public class HierarchyDAO {
 
 	private void addStudentMapToHierarchy(HierarchyModel hierarchy,
 			Map<String, Object> row) {
-		String courseId = (String) row.get("CourseId");
+		Integer courseId = (Integer) row.get("CourseId");
 		CoursePackage currentCourse = addCourseToHierarchy(hierarchy.getStudentCourses(), courseId);
 		
 		try {
@@ -229,7 +228,7 @@ public class HierarchyDAO {
 	}
 
 	private CoursePackage addCourseToHierarchy(
-			Map<String, CoursePackage> courses, String courseId) {
+			Map<Integer, CoursePackage> courses, Integer courseId) {
 		CoursePackage currentCourse;
 		try {
 			currentCourse = courses.get(courseId);
