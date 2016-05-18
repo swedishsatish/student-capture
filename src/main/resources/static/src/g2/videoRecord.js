@@ -121,7 +121,7 @@ var Recorder = React.createClass({
                 previewElement.src = window.URL.createObjectURL(mediaStream);
                 previewElement.removeAttribute("controls");
                 previewElement.setAttribute("muted", "muted");
-                previewElement.play();
+                window.setTimeout(function() { previewElement.play(); }, 200);
 
                 recordAudio = RecordRTC(mediaStream, {
                     onAudioProcessStarted: function () {
