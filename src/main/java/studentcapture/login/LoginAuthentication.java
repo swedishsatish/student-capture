@@ -36,7 +36,7 @@ public class LoginAuthentication implements AuthenticationProvider {
     @Autowired
     private RestTemplate requestSender;
     
-    private UserDBController userDBController;
+    //private UserDBController userDBController;
 
     /*
     Login only works with users in the database. 

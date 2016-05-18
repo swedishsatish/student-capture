@@ -5,6 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -139,47 +141,7 @@ public class UserDBController {
         //Send request to DB and get the boolean answer
         return requestSender.getForObject(targetUrl, Boolean.class);
     }
-    
-    /**
-     * Checks if user is registered in the database.
-     * @param username User name
-     * @param password User input password
-     * @return true if user name and password match in the database, else false
-     */
-    /*//Vad ska denna göra egentligen?
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public boolean checkUser(String username) {
-        
-        /*
-        //System.out.println("checkUser() in Authenticator");
-        System.out.println("Checking user data in DB with user: " + username);
-        
-        //Get user from DB
-        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
-                .path("DB/userNameExist")
-                .queryParam("userName", username)
-                //.queryParam("pswd", password)
-                .build()
-                .toUri();
-        
-        System.out.println("Target: " + targetUrl);
-        
-        //DB must be correct
-        Boolean userExist = requestSender.getForObject(targetUrl, Boolean.class);
-        
-        if(userExist == null){
-            System.out.println("ERROR: Incorrect username");
-            return false;
-        }
-        //System.out.println("Verifying user: " + user.getUserName());
 
-        //TODO: change username to id
-        //return verifyUserPassword(user.getUserName(), password, user.getPswd());
-        return true;
-        
-        return checkUserExists(username);
-        
-    }*/
     
     /**
      * Get User object based on user id
@@ -197,7 +159,17 @@ public class UserDBController {
                 .queryParam("user_id", id)
                 .build()
                 .toUri();
-        User user = requestSender.getForObject(targetUrl, User.class);
+        //User user = requestSender.getForObject(targetUrl, User.class);
+        ResponseEntity<?> response = requestSender.getForEntity(targetUrl, User.class);
+        System.out.println("Received status code: " + response.getStatusCode());
+        
+        //Check if NOT_FOUND was received
+        if(response.getStatusCode().compareTo(HttpStatus.NOT_FOUND) == 0){
+            //Return error?
+            return null;
+        }
+        
+        User user = (User) response.getBody();
         
         return user;
     }
@@ -233,9 +205,7 @@ public class UserDBController {
         }
         return false;
     }
-    
-    
-    
+
     /**
      * Checks if email exists in database
      * @param email The email
