@@ -3,7 +3,7 @@
  *@author: Tobias Estefors <dv13tes>
  **/
 
-var TeacherViewSubmission = React.createClass({
+var HardcodeTeacher = React.createClass({
     nSubmissions: 0, //Antal som svarat
     nWithdrawals: 0, //Antal som lämnat blankt
     nDone: 0, //Totala antalet som gjort uppgiften
@@ -89,7 +89,7 @@ var TeacherViewSubmission = React.createClass({
                 <div className="four columns offset-by-one">
 
                     <div id="studentContainer">
-                        <StudentList submissions={this.submissionsArray} participants={this.participantsArray} />
+                        <HardcodeList submissions={this.submissionsArray} participants={this.participantsArray} />
                         <div id="textList">
                             <p>Submissions: {this.nSubmissions}/{this.nParticipants}</p>
                             <p>Withdrawals: {this.nWithdrawals}</p>
