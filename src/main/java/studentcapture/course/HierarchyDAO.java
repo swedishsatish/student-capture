@@ -9,9 +9,10 @@ import org.springframework.stereotype.Repository;
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.HierarchyModel.AssignmentPackage;
 import studentcapture.course.HierarchyModel.CoursePackage;
-import studentcapture.datalayer.database.UserDAO;
+import studentcapture.user.UserDAO;
 import studentcapture.submission.Submission;
 import studentcapture.submission.SubmissionDAO;
+
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -52,9 +53,8 @@ public class HierarchyDAO {
      * @author tfy12hsm
      */
     public Optional<HierarchyModel> getCourseAssignmentHierarchy(
-    		String userID) {
+    		Integer userId) {
     	HierarchyModel hierarchy = new HierarchyModel();
-    	int userId = Integer.parseInt(userID);
     	try {
     		addStudentHierarchy(hierarchy, userId);
     		addTeacherHierarchy(hierarchy, userId);

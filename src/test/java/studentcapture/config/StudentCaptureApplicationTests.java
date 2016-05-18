@@ -33,6 +33,7 @@ public class StudentCaptureApplicationTests {
 	@Bean
 	@Primary
 	public JdbcTemplate jdbcTemplateMock() {
+
 		return new JdbcTemplate(H2DataSource.dataSource());
 	}
 

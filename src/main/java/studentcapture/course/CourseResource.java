@@ -104,7 +104,7 @@ public class CourseResource {
     value = "/{CourseId}")
     @ResponseBody
     public CourseModel getCourse(
-    		@PathVariable(value = "CourseId") String courseID) {
+    		@PathVariable(value = "CourseId") Integer courseID) {
     	CourseModel result = courseDAO.getCourse(courseID);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
@@ -142,7 +142,7 @@ public class CourseResource {
     value = "/{CourseId}")
     @ResponseBody
     public CourseModel deleteCourse(
-    		@PathVariable(value = "CourseId") String courseID) {
+    		@PathVariable(value = "CourseId") Integer courseID) {
     	CourseModel result = courseDAO.removeCourse(courseID);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
@@ -160,7 +160,7 @@ public class CourseResource {
     value = "")
     @ResponseBody
     public HierarchyModel getHierarchy(
-    		@RequestParam(value="userID") String userID) {
+    		@RequestParam(value="userID") Integer userID) {
     	Optional<HierarchyModel> hierarchy = 
     			hierarchyDAO.getCourseAssignmentHierarchy(userID);
     	if(hierarchy.isPresent()) 

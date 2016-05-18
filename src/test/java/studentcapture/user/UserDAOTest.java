@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.user;
 
 import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,14 +6,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import studentcapture.config.StudentCaptureApplicationTests;
-// import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 
-
-import studentcapture.model.User;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -21,6 +18,7 @@ import static org.junit.Assert.*;
  * Created by tfy12hsm.
  */
 public class UserDAOTest extends StudentCaptureApplicationTests {
+
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -31,19 +29,30 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @Autowired
     private JdbcTemplate jdbcMock;
 
+    private User userSetup;
+
     @Before
     public void setup() {
+        //Add one user
         String sql = "INSERT INTO users"
                 +" (username, firstname, lastname, email, pswd)"
                 +" VALUES (?, ?, ?, ?, ?)";
 
-        Object[] args = new Object[] {"testUser", "testFName", "testLName",
-                                      "testEmail@example.com", "testPassword123"};
+        userSetup = new User("testUser","testFName","testLName",
+                             "testEmail@example.com","testPassword123");
+
+        Object[] args = new Object[] {userSetup.getUserName(), userSetup.getfName(),
+                            userSetup.getlName(),userSetup.getEmail(),
+                            userSetup.getPswd()};
 
         int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
                 Types.VARCHAR,Types.VARCHAR};
 
-        jdbcMock.update(sql,args,types);
+        try {
+            jdbcMock.update(sql,args,types);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -53,14 +62,17 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @After
     public void tearDown() {
         String sql1 = "DELETE FROM Users;";
-        String sql2 = "DELETE FROM Course;";
-        String sql3 = "DELETE FROM Assignment;";
-        String sql4 = "DELETE FROM Submission;";
-
-        jdbcMock.update(sql4);
-        jdbcMock.update(sql3);
-        jdbcMock.update(sql2);
+        String sql2 = "ALTER TABLE users ALTER COLUMN userid RESTART WITH 1";
         jdbcMock.update(sql1);
+        jdbcMock.update(sql2);
+    }
+
+    @Test
+    public void testGetUserByID() {
+       // printUsersTableTemp();
+        User userRes = userDAO.getUser("1",1);
+        System.out.println("username:" + userRes.getUserName());
+        assertEquals(userSetup,userRes);
     }
 
 
@@ -70,88 +82,64 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         User user = new User("userPelle","Pelle","Jönsson","pelle@gmail.com",
                             "mypassword123");
 
-       boolean res = userDAO.addUser(user);
-
-        //Getting values from table user
-        String sql = "SELECT * FROM users WHERE username = 'userPelle'";
-        User dbUser = (User) jdbcMock.queryForObject(sql, new UserWrapper());
-
-        assertEquals("userPelle",dbUser.getUserName());
-        assertEquals("Pelle",dbUser.getfName());
-        assertEquals("Jönsson",dbUser.getlName());
-        assertEquals("pelle@gmail.com",dbUser.getEmail());
-        assertEquals("mypassword123",dbUser.getPswd());
+        boolean res = userDAO.addUser(user);
+        User userRes = userDAO.getUser("userPelle",0);
 
         assertTrue(res);
+        assertEquals(user,userRes);
     }
 
     @Test
-    public void testGetPswd() {
-        assertEquals("testPassword123",userDAO.getPswd("testUser"));
-    }
-
-    @Test
-    public void testGetPswdForNonExistingUser() {
-        assertEquals(null,userDAO.getPswd("testUser1"));
-    }
-
-    @Test
-    public void testEmailExist() {
-        assertTrue(userDAO.emailExist("testEmail@example.com"));
-    }
-
-    @Test
-    public void testEmailDoesNotExist() {
-        assertFalse(userDAO.emailExist("testEmail2@example.com"));
-    }
-
-    @Test
-    public void testUserExist() {
-        assertTrue(userDAO.userNameExist("testUser"));
-    }
-
-    @Test
-    public void testUserDoesNotExist() {
-        assertFalse(userDAO.userNameExist("test321321321321User"));
+    public void testGetNonExistingUser() {
+        User userRes = userDAO.getUser("notExist",0);
+        assertEquals(null,userRes);
     }
 
 
-    @Test
-    public void testChangePswdHasChanged() {
-        boolean res = userDAO.changePswd("testUser","newpswd");
 
-        //Getting values from table user
-        String sql = "SELECT * FROM users WHERE username = 'testUser'";
-        User dbUser = (User) jdbcMock.queryForObject(sql, new UserWrapper());
+    @Test
+    public void testUpdateUser() {
+        User user = new User("testUser","newFirstName","newLname",
+                             "newemai@gmail.com","new_pswd_1fdsgasda213fC");
+
+        boolean res = userDAO.updateUser(user);
+        User userRes = userDAO.getUser("testUser",0);
 
         assertTrue(res);
-        assertEquals("newpswd",dbUser.getPswd());
+        assertEquals(user,userRes);
     }
 
     @Test
-    public void testChangeNonExistingUserPswd() {
-        boolean res = userDAO.changePswd("testUserNotExist","pswd");
-        assertFalse(res);
-    }
-
-
-    @Test
-    public void testUserNameExistsWithEmail() {
-
-        boolean res = userDAO.userNameExistWithEmail("testUser",
-                "testEmail@example.com");
-
-        assertTrue(res);
-    }
-    @Test
-    public void testUserNameDoesNotExistsWithEmail() {
-
-        boolean res = userDAO.userNameExistWithEmail("testUser",
-                "NonExistingMail@example.com");
+    public void testUpdateNonExistingUser() {
+        User user = new User("testUserNotExists","newFirstName","newLname",
+                "newemai@gmail.com","new_pswd_1fdsgasda213fC");
+        boolean res = userDAO.updateUser(user);
 
         assertFalse(res);
+
     }
 
+    /**
+     * Used for debugging purposes.
+     */
+    private void printUsersTableTemp() {
+        System.out.println("!!!!!!!!!!!!!!!!!TABLE!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+
+        String sql = "SELECT * FROM users";
+        List<Map<String,Object>> users = jdbcMock.queryForList(sql);
+
+        if(users != null && !users.isEmpty()) {
+            for(Map<String,Object> user: users) {
+                for(Iterator<Map.Entry<String, Object>> it = user.entrySet().iterator(); it.hasNext();) {
+                    Map.Entry<String,Object> entry = it.next();
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    System.out.println(key + " = " + value);
+                }
+                System.out.println();
+            }
+        }
+    }
 
     /*
     @Test
@@ -200,22 +188,4 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         assertEquals(result.lastName,"nameLast");
     }
 	*/
-
-
-
-
-    /**
-     *  Used to collect user information, and return a hashmap.
-     */
-    protected class UserWrapper implements org.springframework.jdbc.core.RowMapper {
-
-        @Override
-        public Object mapRow(ResultSet rs, int i) throws SQLException {
-            User user = new User(rs.getString("username"),rs.getString("firstname"),
-                    rs.getString("lastname"),rs.getString("email"),
-                    rs.getString("pswd"));
-            return user;
-        }
-    }
-
 }
