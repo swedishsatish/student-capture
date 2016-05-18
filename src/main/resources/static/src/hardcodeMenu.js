@@ -43,7 +43,7 @@ var CourseList = React.createClass({
         ];
         window.users=users;
         console.log("jebjeb")
-        ReactDOM.render(<TeacherViewSubmission students={users}/>, document.getElementById('courseContent'));
+        ReactDOM.render(<HardcodeTeacher students={users}/>, document.getElementById('courseContent'));
     },
 
     printFeedback : function() {
