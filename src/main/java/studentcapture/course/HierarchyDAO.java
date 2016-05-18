@@ -52,9 +52,8 @@ public class HierarchyDAO {
      * @author tfy12hsm
      */
     public Optional<HierarchyModel> getCourseAssignmentHierarchy(
-    		String userID) {
+    		Integer userId) {
     	HierarchyModel hierarchy = new HierarchyModel();
-    	int userId = Integer.parseInt(userID);
     	try {
     		addStudentHierarchy(hierarchy, userId);
     		addTeacherHierarchy(hierarchy, userId);
