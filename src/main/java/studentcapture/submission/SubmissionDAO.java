@@ -237,14 +237,5 @@ public class SubmissionDAO {
 
         return Optional.of(result);
 	}
-
-    public static class SubmissionWrapper {
-    	public int assignmentId;
-    	public int studentId;
-    	public String studentName;
-    	public String submissionDate;
-    	public String grade;
-    	public Integer teacherId;
-    }
 }
 
