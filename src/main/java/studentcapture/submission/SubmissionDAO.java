@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.submission;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -89,7 +89,7 @@ public class SubmissionDAO {
 		return updatedRows == 1;
 	}
 
-	
+
 
 	/**
 	 * Remove a submission
