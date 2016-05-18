@@ -111,6 +111,24 @@ public class CourseResource {
     	return result;
     }
     
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.PUT,
+    value = "/{CourseId}")
+    @ResponseBody
+    public CourseModel putCourseWithId(
+    		@PathVariable(value = "CourseId") String courseID,
+    		@RequestBody CourseModel course) {
+    	CourseModel result = courseDAO.updateCourse(course);
+    	if(result.getCourseId()==null) {
+    		if(result.getErrorCode()==HttpStatus.CONFLICT.value())
+    			throw new ResourceConflictException();
+    		throw new ResourceNotFoundException(); 
+    	}
+    	return result;
+    }
+    
     /**
      * 
      * @param courseID
