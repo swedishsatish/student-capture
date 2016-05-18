@@ -14,6 +14,7 @@ public class CourseModel {
 	private String courseName;
 	private String courseDescription;
 	private Boolean active;
+	private Integer initialTeacherId;
 	
 	public CourseModel() {
 		
@@ -118,5 +119,9 @@ public class CourseModel {
 	 */
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+	
+	public Integer getInitialTeacherId() {
+		return initialTeacherId;
 	}
 }

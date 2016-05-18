@@ -40,6 +40,7 @@ public class CourseResource {
 	 * @param course
 	 * @return
 	 */
+	@Transactional(rollbackFor=Exception.class)
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -48,10 +49,22 @@ public class CourseResource {
     @ResponseBody
     public CourseModel postCourse(
     		@RequestBody CourseModel course) {
-    	CourseModel result = courseDAO.addCourse(course);
-    	if(result.getCourseId()==null)
-    		throw new ResourceNotFoundException();
-    	return result;
+    	if(course.getInitialTeacherId()==null) {
+    		CourseModel result = courseDAO.addCourse(course);
+        	if(result.getCourseId()==null)
+        		throw new ResourceNotFoundException();
+        	return result;
+    	}
+    	CourseModel result1 = courseDAO.addCourse(course);
+	   	if(result1.getCourseId()==null) 
+	   		throw new ResourceNotFoundException();
+	   	Boolean result2 = participantDAO.addParticipant(
+	   			course.getInitialTeacherId().toString(), result1.getCourseId(), 
+	   			"Teacher");
+	   	if(!result2) 
+	   		throw new ResourceNotFoundException();
+	   	return result1;
+    	
     }
     
     @CrossOrigin
@@ -121,36 +134,7 @@ public class CourseResource {
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
     	return result;
-    }
-    
-//    /**
-//     * Adds a course with a teacher.
-//     * 
-//     * @param course
-//     * @param teacherID
-//     * @return
-//     */
-//    @Transactional(rollbackFor=Exception.class)
-//    @CrossOrigin
-//    @RequestMapping(
-//    produces = MediaType.APPLICATION_JSON_VALUE,
-//    method = RequestMethod.POST,
-//    value = "")
-//    @ResponseBody
-//    public Course postCourseWithTeacher(
-//    		@RequestBody Course course,
-//    		@RequestParam(value="teacherID") String teacherID) {
-//    	 Course result1 = courseDAO.addCourse(course);
-//    	 if(result1.getCourseId()==null) 
-//    		 throw new ResourceNotFoundException();
-//    	 Boolean result2 = participantDAO.addParticipant(teacherID, result1.getCourseId(), 
-//    			 "Teacher");
-//    	 if(!result2) 
-//    		 throw new ResourceNotFoundException();
-//    	 return result1;
-//    }
-    
-    
+    } 
 
     /**
     *
@@ -160,7 +144,7 @@ public class CourseResource {
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
     method = RequestMethod.GET,
-    value = "/getHierarchy")
+    value = "")
     @ResponseBody
     public HierarchyModel getHierarchy(
     		@RequestParam(value="userID") String userID) {
