@@ -1,7 +1,5 @@
 package studentcapture.datalayer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -13,16 +11,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.datalayer.database.*;
-import studentcapture.datalayer.database.SubmissionDAO.SubmissionWrapper;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Assignment;
 import studentcapture.model.Course;
-import studentcapture.model.Grade;
 import studentcapture.model.Hierarchy;
 import studentcapture.model.Participant;
 import studentcapture.model.Submission;
-import studentcapture.model.User;
+import studentcapture.user.UserDAO;
 
 import javax.validation.Valid;
 
@@ -249,61 +245,61 @@ public class DatalayerCommunicator {
     }
 
 
-    /**
-     * @param userName
-     * @return
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/userNameExist", method = RequestMethod.GET)
-    public boolean userNameExist(
-                  @RequestParam(value = "userName") String userName) {
-        return userDAO.userNameExist(userName);
-    }
+//    /**
+//     * @param userName
+//     * @return
+//     */
+//    @CrossOrigin
+//    @RequestMapping(value = "/userNameExist", method = RequestMethod.GET)
+//    public boolean userNameExist(
+//                  @RequestParam(value = "userName") String userName) {
+//        return userDAO.userNameExist(userName);
+//    }
+//
+//    /**
+//     * @param email
+//     * @return true if email exist else false
+//     */
+//    @CrossOrigin
+//    @RequestMapping(value = "/userEmailExist", method = RequestMethod.GET)
+//    public boolean userEmailExist(@RequestParam(value = "email") String email) {
+//        return userDAO.emailExist(email);
+//    }
 
-    /**
-     * @param email
-     * @return true if email exist else false
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/userEmailExist", method = RequestMethod.GET)
-    public boolean userEmailExist(@RequestParam(value = "email") String email) {
-        return userDAO.emailExist(email);
-    }
-
-    /**
-     * Register user by given information.
-     * @return true if registration was successfull else false
-     */
-    @CrossOrigin
-    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE,
-                    method = RequestMethod.GET,
-                    value = "/addUser")
-    public boolean addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
-        ObjectMapper mapper = new ObjectMapper();
-        User user = null;
-        try {
-            user = mapper.readValue(jsonStringUser,User.class);
-            return userDAO.addUser(user);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    /**
-     * Get hashed password for a given username.
-     * @param username username for a user
-     * @return hashed password else null.
-     */
-    @CrossOrigin
-    @RequestMapping( produces = MediaType.APPLICATION_JSON_VALUE,
-                     method = RequestMethod.GET,
-                     value = "/getHpswd")
-    public String getUserPswd(@RequestParam(value = "username") String username) {
-        return userDAO.getPswd(username);
-    }
-    
+//    /**
+//     * Register user by given information.
+//     * @return true if registration was successfull else false
+//     */
+//    @CrossOrigin
+//    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE,
+//                    method = RequestMethod.GET,
+//                    value = "/addUser")
+//    public boolean addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
+//        ObjectMapper mapper = new ObjectMapper();
+//        User user = null;
+//        try {
+//            user = mapper.readValue(jsonStringUser,User.class);
+//            return userDAO.addUser(user);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return false;
+//    }
+//
+//    /**
+//     * Get hashed password for a given username.
+//     * @param username username for a user
+//     * @return hashed password else null.
+//     */
+//    @CrossOrigin
+//    @RequestMapping( produces = MediaType.APPLICATION_JSON_VALUE,
+//                     method = RequestMethod.GET,
+//                     value = "/getHpswd")
+//    public String getUserPswd(@RequestParam(value = "username") String username) {
+//        return userDAO.getPswd(username);
+//    }
+//
     /**
      * Adds a course to the database.
      * 

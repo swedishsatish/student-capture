@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.User;
 
 import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,8 @@ import studentcapture.config.StudentCaptureApplicationTests;
 // import studentcapture.datalayer.database.Submission.SubmissionWrapper;
 
 
-import studentcapture.model.User;
+import studentcapture.user.User;
+import studentcapture.user.UserDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +23,7 @@ import static org.junit.Assert.*;
  */
 public class UserDAOTest extends StudentCaptureApplicationTests {
 
+
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -31,19 +33,29 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @Autowired
     private JdbcTemplate jdbcMock;
 
+    private User userSetup;
+
     @Before
     public void setup() {
         String sql = "INSERT INTO users"
                 +" (username, firstname, lastname, email, pswd)"
                 +" VALUES (?, ?, ?, ?, ?)";
 
-        Object[] args = new Object[] {"testUser", "testFName", "testLName",
-                                      "testEmail@example.com", "testPassword123"};
+        userSetup = new User("testUser","testFName","testLName",
+                             "testEmail@example.com","testPassword123");
+
+        Object[] args = new Object[] {userSetup.getUserName(), userSetup.getfName(),
+                            userSetup.getlName(),userSetup.getEmail(),
+                            userSetup.getPswd()};
 
         int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
                 Types.VARCHAR,Types.VARCHAR};
 
-        jdbcMock.update(sql,args,types);
+        try {
+            jdbcMock.update(sql,args,types);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -70,86 +82,47 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         User user = new User("userPelle","Pelle","Jönsson","pelle@gmail.com",
                             "mypassword123");
 
-       boolean res = userDAO.addUser(user);
-
-        //Getting values from table user
-        String sql = "SELECT * FROM users WHERE username = 'userPelle'";
-        User dbUser = (User) jdbcMock.queryForObject(sql, new UserWrapper());
-
-        assertEquals("userPelle",dbUser.getUserName());
-        assertEquals("Pelle",dbUser.getfName());
-        assertEquals("Jönsson",dbUser.getlName());
-        assertEquals("pelle@gmail.com",dbUser.getEmail());
-        assertEquals("mypassword123",dbUser.getPswd());
+        boolean res = userDAO.addUser(user);
+        User userRes = userDAO.getUser("userPelle",0);
 
         assertTrue(res);
+        assertEquals(user,userRes);
     }
 
     @Test
-    public void testGetPswd() {
-        assertEquals("testPassword123",userDAO.getPswd("testUser"));
+    public void testGetNonExistingUser() {
+        User userRes = userDAO.getUser("notExist",0);
+        assertEquals(null,userRes);
     }
 
     @Test
-    public void testGetPswdForNonExistingUser() {
-        assertEquals(null,userDAO.getPswd("testUser1"));
-    }
-
-    @Test
-    public void testEmailExist() {
-        assertTrue(userDAO.emailExist("testEmail@example.com"));
-    }
-
-    @Test
-    public void testEmailDoesNotExist() {
-        assertFalse(userDAO.emailExist("testEmail2@example.com"));
-    }
-
-    @Test
-    public void testUserExist() {
-        assertTrue(userDAO.userNameExist("testUser"));
-    }
-
-    @Test
-    public void testUserDoesNotExist() {
-        assertFalse(userDAO.userNameExist("test321321321321User"));
+    public void testGetUserByID() {
+        User userRes = userDAO.getUser("1",1);
+        System.out.println("username:" + userRes.getUserName());
+        assertEquals(userSetup,userRes);
     }
 
 
     @Test
-    public void testChangePswdHasChanged() {
-        boolean res = userDAO.changePswd("testUser","newpswd");
+    public void testUpdateUser() {
+        User user = new User("testUser","newFirstName","newLname",
+                             "newemai@gmail.com","new_pswd_1fdsgasda213fC");
 
-        //Getting values from table user
-        String sql = "SELECT * FROM users WHERE username = 'testUser'";
-        User dbUser = (User) jdbcMock.queryForObject(sql, new UserWrapper());
+        boolean res = userDAO.updateUser(user);
+        User userRes = userDAO.getUser("testUser",0);
 
         assertTrue(res);
-        assertEquals("newpswd",dbUser.getPswd());
+        assertEquals(user,userRes);
     }
 
     @Test
-    public void testChangeNonExistingUserPswd() {
-        boolean res = userDAO.changePswd("testUserNotExist","pswd");
-        assertFalse(res);
-    }
-
-
-    @Test
-    public void testUserNameExistsWithEmail() {
-
-        boolean res = userDAO.userNameExistWithEmail("testUser",
-                "testEmail@example.com");
-
-        assertTrue(res);
-    }
-    @Test
-    public void testUserNameDoesNotExistsWithEmail() {
-
-        boolean res = userDAO.userNameExistWithEmail("testUser",
-                "NonExistingMail@example.com");
+    public void testUpdateNonExistingUser() {
+        User user = new User("testUserNotExists","newFirstName","newLname",
+                "newemai@gmail.com","new_pswd_1fdsgasda213fC");
+        boolean res = userDAO.updateUser(user);
 
         assertFalse(res);
+
     }
 
 
