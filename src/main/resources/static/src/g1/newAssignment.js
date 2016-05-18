@@ -1,4 +1,7 @@
 var NewAssignment = React.createClass({
+    getInitialState: function() {
+        return {courseID : 0};
+    },
     componentDidMount: function () {
         $("#startDate").datetimepicker(
             {
@@ -62,18 +65,17 @@ var NewAssignment = React.createClass({
         var videoIntervall = {};
         var assignmentIntervall = {};
 
-
         videoIntervall["minTimeSeconds"] = $("#minTimeSeconds").val();
         videoIntervall["maxTimeSeconds"] = $("#maxTimeSeconds").val();
         assignmentIntervall["startDate"] = $("#startDate").val();
         assignmentIntervall["endDate"] = $("#endDate").val();
         assignmentIntervall["publishedDate"] = $("#publish").val();
-        reqBody["courseID"] = "1200";
+        reqBody["courseID"] = this.props.courseID;
         reqBody["title"] = $("#title").val();
-        reqBody["description"] = $("#description").val();
+        reqBody["description"] = tinymce.get('description').getContent()
         reqBody["videoIntervall"] = videoIntervall;
         reqBody["assignmentIntervall"] = assignmentIntervall;
-        reqBody["recap"] = $("#recap").val();
+        reqBody["recap"] = tinymce.get('recap').getContent()
         reqBody["scale"] = $("#scale").val();
         $.ajax({
             type : "POST",
@@ -83,13 +85,18 @@ var NewAssignment = React.createClass({
             timeout : 100000,
             success : function(response) {
                 console.log("SUCCESS: ", response);
-                ReactDOM.render(<NewAssignmentVideo assignmentID={response}/>, document.getElementById('courseContent'));
-            }, error : function(e) {
+                this.renderChild(response);
+            }.bind(this), 
+            error : function(e) {
                 console.log("ERROR: ", e);
-            }, done : function(e) {
+            }, 
+            done : function(e) {
                 console.log("DONE");
             }
         });
+    },
+    renderChild : function (assignmentID) {
+        ReactDOM.render(<NewAssignmentVideo courseID={this.props.courseID} assignmentID={assignmentID}/>, document.getElementById('courseContent'));
     },
     render : function() {
       return <div>
@@ -123,13 +130,16 @@ function handleCancel() {
 }
 
 var NewAssignmentVideo = React.createClass({
+    getInitialState: function() {
+        return {courseID : 0, assignmentID : 0};
+    },
     playVideo: function () {
         console.log("Video success");
     },
     formDataBuilder: function (blob, fileName) {
         var fd = new FormData();
         fd.append("video", blob);
-        fd.append("courseID", 1200);
+        fd.append("courseID", this.props.courseID);
         fd.append("assignmentID", this.props.assignmentID);
         return fd;
     },
@@ -180,5 +190,5 @@ window.CourseContent = React.createClass({
     }
 });
 
-ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
+//ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
 window.NewAssignment = NewAssignment;
