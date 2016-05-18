@@ -2,13 +2,10 @@ package studentcapture.login;
 
 import java.net.URI;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,10 +14,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import studentcapture.model.User;
 import studentcapture.mail.MailClient;
 
 /**
@@ -43,7 +36,7 @@ public class LoginDBController {
         System.out.println("Email: " + userEmail + ", Token: " + token);
         
         String url = 
-                "http://" + request.getServerName() + 
+                "https://" + request.getServerName() + 
                 ":" + request.getServerPort() + 
                 request.getContextPath();   
         
@@ -123,6 +116,28 @@ public class LoginDBController {
         
         return mav;
         
+    }
+    
+    /**
+     * Checks if email and user exist in the same user.
+     * @param email Email address to check
+     * @param userName Username to check
+     * @return True if Email and Username belong to the same user.
+     */
+    protected boolean checkEmailExistsWithUserName(String email, String userName) {
+        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
+                .path("DB/userEmailExistWithUserName")
+                .queryParam("email", email)
+                .queryParam("username", userName)
+                .build()
+                .toUri();
+        
+        System.out.println("Target: " + targetUrl);
+        
+        Boolean answer = requestSender.getForObject(targetUrl, Boolean.class);
+        System.out.println(answer);
+        //Send request to DB and get the boolean answer
+        return requestSender.getForObject(targetUrl, Boolean.class);
     }
     
     

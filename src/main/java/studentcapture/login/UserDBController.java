@@ -221,27 +221,7 @@ public class UserDBController {
         return !requestSender.getForObject(targetUrl, Boolean.class);
     }
 
-    /**
-     * Checks if email and user exist in the same user.
-     * @param email Email address to check
-     * @param userName Username to check
-     * @return True if Email and Username belong to the same user.
-     */
-    protected boolean checkEmailExistsWithUserName(String email, String userName) {
-        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
-                .path("DB/userEmailExistWithUserName")
-                .queryParam("email", email)
-                .queryParam("username", userName)
-                .build()
-                .toUri();
-        
-        System.out.println("Target: " + targetUrl);
-        
-        Boolean answer = requestSender.getForObject(targetUrl, Boolean.class);
-        System.out.println(answer);
-        //Send request to DB and get the boolean answer
-        return requestSender.getForObject(targetUrl, Boolean.class);
-    }
+    
 
     /**
      * Checks if the user name is required length 
