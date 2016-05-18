@@ -5,10 +5,10 @@
  */
 
 window.Settings = React.createClass({
-    
+
     /*
-    Function that is automatically called after the component is rendered.
-    It fills the settings panel with the users current settings.
+     Function that is automatically called after the component is rendered.
+     It fills the settings panel with the users current settings.
      */
     componentDidMount: function () {
         var settingsArray = this.GETSettings();
@@ -32,25 +32,32 @@ window.Settings = React.createClass({
      When the user presses "Save" to save their settings, this function will
      send a HTTP POST request to save the settings in the database.
      */
-    POSTSettings: function () {
-        $.post(
-            window.globalURL + "/settings",
-            {
-                "userID": this.props.userID + "",
+    PUTSettings: function () {
+
+        $.ajax({
+            url: window.globalURL + "/users/" + this.props.userID + "/settings",
+            type: "PUT",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
                 "language": document.getElementById("languageSelect").value + "",
-                "emailAddress": document.getElementById("emailAddressInput").value + "",
-                "textSize": document.getElementById("textSizeSelect").value + "",
-                "receiveEmails": document.getElementById("emailCheckbox").checked
-            },
-            function () {
-                console.log("Saved");
-            }
-        );
+                "email": document.getElementById("emailAddressInput").value + "",
+                "mailUpdate": document.getElementById("emailCheckbox").checked,
+                "textSize": document.getElementById("textSizeSelect").value + ""
+            }),
+            success: function (data, status) {
+                console.log("saved");
+            }.bind(this),
+            error: function (xhr, status, err) {
+                console.log("Settings.js: Error: PUTSettings");
+            }.bind(this)
+        });
     },
 
     /*
-    Gets the saved settings for the current user. This is in order to show what the
-    current settings are, for the user.
+     Gets the saved settings for the current user. This is in order to show what the
+     current settings are, for the user.
      */
     GETSettings: function () {
 
@@ -62,25 +69,21 @@ window.Settings = React.createClass({
             textSize: "",
             receiveEmails: true
         };
-        
+
         $.ajax({
-            url: window.globalURL + "/settings",
+            url: window.globalURL + "/users/" + this.props.userID + "/settings",
             type: "GET",
             async: false,
-            data: {
-                "userID": this.props.userID + ""
-            },
             success: function (data, status) {
-                settingsArray.userID = data.userID;
-                settingsArray.emailAddress = data.emailAddress;
+                settingsArray.emailAddress = data.email;
                 settingsArray.textSize = data.textSize;
                 settingsArray.language = data.language;
-                settingsArray.receiveEmails = data.receiveEmails;
+                settingsArray.receiveEmails = data.mailUpdate;
             }.bind(this),
             error: function (xhr, status, err) {
                 console.log("Settings.js: Error: GETSettings");
             }.bind(this)
-    });
+        });
         return settingsArray
     },
 
@@ -112,7 +115,7 @@ window.Settings = React.createClass({
 
                     Language:<br />
                     <select id="languageSelect">
-                        <option value="Greek"   id="langGreek">Greek</option>
+                        <option value="Greek" id="langGreek">Greek</option>
                         <option value="English" id="langEnglish">English</option>
                         <option value="Swedish" id="langSwedish">Swedish</option>
                     </select><br />
@@ -121,7 +124,7 @@ window.Settings = React.createClass({
 
                 <div className="row">
                     <div className="two columns u-pull-left">
-                        <button onClick={this.POSTSettings}>Save</button>
+                        <button onClick={this.PUTSettings}>Save</button>
                     </div>
 
                     <div className="two columns u-pull-right">
@@ -131,6 +134,6 @@ window.Settings = React.createClass({
             </div>
         );
 
-        
+
     }
 });

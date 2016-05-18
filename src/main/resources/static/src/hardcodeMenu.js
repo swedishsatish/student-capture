@@ -1,47 +1,27 @@
 var CourseList = React.createClass({
-    printVideo: function () {
-        ReactDOM.render(<AssignmentContent course="kurs 3"
-                                           assignment="assignment 2"/>, document.getElementById("courseContent"));
+    printVideo : function() {
+        ReactDOM.render(<AssignmentContent course="kurs 3" assignment="assignment 2"/>,document.getElementById("courseContent"));
     },
     
     studentSubmissions: function () {
-        ReactDOM.render(<StudentList />, document.getElementById('courseContent'));
-
-        // var users = [{
-        //     assignmentID: 1000,
-        //     studentID: 21,
-        //     studentName: "Anton Andersson",
-        //     submissionDate: "2010-06-23",
-        //     grade: "G",
-        //     teacherID: 12
-        // },
-        // {
-        //     assignmentID: 1000,
-        //     studentID: 21,
-        //     studentName: "Lukas Lundberg",
-        //     submissionDate: "2010-06-23",
-        //     grade: "K",
-        //     teacherID: 12
-        // }];
-        // ReactDOM.render(<StudentList students={users}/>, document.getElementById('courseContent'));
-        // var tf1 = setFilterGrid("students-table");
+        ReactDOM.render(<TeacherViewSubmission />, document.getElementById('courseContent'));
     },
 
-    printFeedback: function () {
-        ReactDOM.render(<Feedback />, document.getElementById("courseContent"));
+    printFeedback : function() {
+        ReactDOM.render(<Feedback />,document.getElementById("courseContent"));
     },
 
-    newAssignment: function () {
+    newAssignment : function() {
         ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
     },
-    teacherRecordVideo: function () {
+    teacherRecordVideo : function() {
         ReactDOM.render(<TeacherRecordVideo />, document.getElementById('courseContent'));
     },
     studentRecordVideo: function () {
         ReactDOM.render(<StudentRecordVideo />, document.getElementById('courseContent'));
     },
     settings: function () {
-        ReactDOM.render(<Settings userID="1"/>, document.getElementById('courseContent'));
+        ReactDOM.render(<Settings userID="13"/>, document.getElementById('courseContent'));
     },
     render: function () {
         var listComponents = [];
@@ -69,4 +49,4 @@ var CourseList = React.createClass({
         return <div>{listComponents}</div>;
     }
 });
-ReactDOM.render(<CourseList />, document.getElementById('desktopNavigation'));
+ReactDOM.render(<CourseList />, document.getElementById('desktopNavigation')); 

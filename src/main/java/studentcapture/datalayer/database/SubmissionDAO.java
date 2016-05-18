@@ -193,9 +193,9 @@ public class SubmissionDAO {
      * 
      * @author tfy12hsm
 	 */
-    public Optional<List<Submission>> getAllSubmissions(String assId) {
+    public Optional<List<Submission>> getAllSubmissions(int assId) {
     	List<Submission> submissions = new ArrayList<>();
-    	int assignmentId = Integer.parseInt(assId);
+    	int assignmentId = assId;
 
 		String getAllSubmissionsStatement = "SELECT "
 				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
