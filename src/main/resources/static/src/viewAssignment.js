@@ -63,7 +63,8 @@ window.AssignmentContent = React.createClass({
 var AssignmentStart = React.createClass({
     getInitialState: function() {
         return {startCountDown: false,
-                startRecording: false
+                startRecording: false,
+                time: 0
                 };
     },
     render: function() {
@@ -75,12 +76,14 @@ var AssignmentStart = React.createClass({
                                : <div />;
         var recordContent = this.state.startRecording
                             ? <div>
-                                <StudentRecordVideo />
-                               
-                              </div>
+                                <div><StudentRecordVideo autoRecord="true" /><br />
+                                Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
+                                Current video length: {this.state.time}<br />
+                                <BlankBox />
+                              </div></div>
                             : <div>
-                                <StudentRecordVideo />
-
+                                <StudentRecordVideo autoRecord="false" /><br />
+                                <BlankBox />
                               </div>;
         return (
             <div id="assignment-modal">

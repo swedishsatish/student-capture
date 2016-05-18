@@ -19,21 +19,24 @@ var StudentRecordVideo = React.createClass({
     playVideo: function (fName) {
     },
     render: function () {
+        var autoRecord = this.props.autoRecord;
+        if(typeof autoRecord === "undefined")
+            autoRecord = "true";
         return (
-<div>
+            <div>
                 <h3>Student Recording Video</h3>
 
                     <h5 id="isRecording"></h5>
                         <Recorder playCallback={this.playVideo}
                                   postURL="/uploadVideo/" formDataBuilder={this.formDataBuilder}
-                                  stopButtonID="studentSubmit" siteView="submission" fileName="submission.webm"
+                                  stopButtonID="studentSubmit" autoRecord={autoRecord}
+                                  siteView="submission" fileName="submission.webm"
                         />
 
 
                      <button id="studentSubmit" className="recControls" disabled>Submit answer</button>
                      <BlankBox/>
-
-</div>
+            </div>
 
         );
     }

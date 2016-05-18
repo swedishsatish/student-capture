@@ -9,7 +9,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.model.Grade;
-import studentcapture.model.Submission;
+import studentcapture.submission.Submission;
+import studentcapture.submission.SubmissionDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -186,48 +187,6 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         boolean returnValue = submissionDAO.publishFeedback(submission, true);
 
         assertTrue(returnValue);
-    }
-
-    /**
-     * Retrieving ungraded grade, only time should be returned
-     */
-    @Test
-    public void getGradeShouldReturnNullOnGradeAndTeacher() {
-        Submission model = createSubmissionModel(1,1);
-        Map result = submissionDAO.getGrade(model);
-        assertEquals(null, result.get("grade"));
-        assertEquals(null, result.get("teacher"));
-        assertEquals("2016-05-13 11:00:00.0", result.get("time"));
-        assertEquals(null, result.get("error"));
-    }
-
-    /**
-     * Retrieve graded grade, everything should be returned
-     * (not error message)
-     */
-    @Test
-    public void getGradeShouldReturnAllValues() {
-        Submission submission = createSubmissionModel(1,3);
-        Map result = submissionDAO.getGrade(submission);
-        assertEquals("MVG", result.get("grade"));
-        assertEquals("abcd defg", result.get("teacher"));
-        assertEquals("2016-05-13 11:00:00.0", result.get("time"));
-        assertEquals(null, result.get("error"));
-    }
-
-    /**
-     * No rows in the tables has the values sent into getGrade,
-     * error message returned
-     */
-    @Test
-    public void getGradeShouldHandleNonExistingIds() {
-        Submission submission = createSubmissionModel(3546,124);
-        Map result = submissionDAO.getGrade(submission);
-        assertEquals(null, result.get("grade"));
-        assertEquals(null, result.get("teacher"));
-        assertEquals(null, result.get("time"));
-        assertEquals("The given parameters does not have an entry in the database",
-                result.get("error"));
     }
 
     private Submission createSubmissionModel(int assignmentID, int studentID) {
