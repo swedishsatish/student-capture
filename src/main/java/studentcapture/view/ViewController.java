@@ -1,4 +1,4 @@
-package studentcapture.helloworld.controller;
+package studentcapture.view;
 
 import groovyjarjarasm.asm.commons.Method;
 
