@@ -33,11 +33,11 @@ public class ParticipantDAO {
      * 
      * @author tfy12hsm
      */
-    public boolean addParticipant(String userID, String courseId, String function) {
+    public boolean addParticipant(String userID, String courseID, String function) {
     	String addParticipantStatement = "INSERT INTO Participant VALUES (?,?,?)";
         boolean result;
         int userId = Integer.parseInt(userID);
-
+        int courseId = Integer.parseInt(courseID);
         try {
             int rowsAffected = jdbcTemplate.update(addParticipantStatement,
                     userId, courseId, function);
@@ -61,10 +61,10 @@ public class ParticipantDAO {
      * 
      * @author tfy12hsm
      */
-    public Optional<String> getFunctionForParticipant(String userID, String courseId) {
+    public Optional<String> getFunctionForParticipant(String userID, String courseID) {
     	String result = null;
         int userId = Integer.parseInt(userID);
-
+        int courseId = Integer.parseInt(courseID);
         String getFunctionForParticipantStatement =
                 "SELECT Function FROM Participant WHERE (UserId=? AND CourseId=?)";
 
@@ -91,9 +91,9 @@ public class ParticipantDAO {
      * 
      * @author tfy12hsm
      */
-    public Optional<List<Participant>> getAllParticipantsFromCourse(String courseId){
+    public Optional<List<Participant>> getAllParticipantsFromCourse(String courseID){
     	List<Participant> participants = new ArrayList<>();
-
+    	int courseId = Integer.parseInt(courseID);
         String getAllParticipantFromCourseStatement =
                 "SELECT * FROM Participant WHERE (CourseId=?)";
 
@@ -160,10 +160,10 @@ public class ParticipantDAO {
      * 
      * @author tfy12hsm
      */
-    public boolean removeParticipant(String userID, String courseId){
+    public boolean removeParticipant(String userID, String courseID){
     	boolean result;
     	int userId = Integer.parseInt(userID);
-
+    	int courseId = Integer.parseInt(courseID);
         String removeParticipantStatement =
                 "DELETE FROM Participant WHERE (UserId=? AND CourseId=?)";
 
