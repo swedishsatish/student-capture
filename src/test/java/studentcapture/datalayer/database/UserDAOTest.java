@@ -26,10 +26,10 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    UserDAO userDAO;
+    private UserDAO userDAO;
 
     @Autowired
-    private  JdbcTemplate jdbcMock;
+    private JdbcTemplate jdbcMock;
 
     @Before
     public void setup() {
@@ -113,6 +113,43 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @Test
     public void testUserDoesNotExist() {
         assertFalse(userDAO.userNameExist("test321321321321User"));
+    }
+
+
+    @Test
+    public void testChangePswdHasChanged() {
+        boolean res = userDAO.changePswd("testUser","newpswd");
+
+        //Getting values from table user
+        String sql = "SELECT * FROM users WHERE username = 'testUser'";
+        User dbUser = (User) jdbcMock.queryForObject(sql, new UserWrapper());
+
+        assertTrue(res);
+        assertEquals("newpswd",dbUser.getPswd());
+    }
+
+    @Test
+    public void testChangeNonExistingUserPswd() {
+        boolean res = userDAO.changePswd("testUserNotExist","pswd");
+        assertFalse(res);
+    }
+
+
+    @Test
+    public void testUserNameExistsWithEmail() {
+
+        boolean res = userDAO.userNameExistWithEmail("testUser",
+                "testEmail@example.com");
+
+        assertTrue(res);
+    }
+    @Test
+    public void testUserNameDoesNotExistsWithEmail() {
+
+        boolean res = userDAO.userNameExistWithEmail("testUser",
+                "NonExistingMail@example.com");
+
+        assertFalse(res);
     }
 
 

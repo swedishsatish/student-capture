@@ -14,8 +14,8 @@
 		<title>
 			Login page
 		</title>
-		<meta content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" charset="UTF-8"/>
-
+		<meta content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" charset="UTF-8">
+		
 		<!-- css stylesheets -->
 		<link rel="stylesheet" type="text/css" href="css/normalize.css"/>
 		<link rel="stylesheet" type="text/css" href="css/skeleton.css"/>
@@ -25,15 +25,15 @@
     	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
     	<script type="text/babel" src="src/loginScript.js"></script>
 	</head>
-
-	<!-- body container that contains the form
+	
+	<!-- body container that contains the form 
 	that the login nad registration is shown -->
 	<body>
-
+		
 		<!-- forms -->
 		<div id="loginDiv">
 		<form id="loginPage" class="forms four columns offset-by-four" th:action="@{/login}" method="POST">
-
+		
 		    <!-- div containing all the inputs.-->
 
                 <img src="images/sc-logo.png" class="loginLogo" />
@@ -53,7 +53,7 @@
                     Register
                 </button>
 		</form>
-
+		
 		<!-- forms -->
             <form id="registerPage" class="forms four columns offset-by-four" th:action="@{/register}" method="POST">
                 <img src="images/sc-logo.png" class="loginLogo" />
@@ -126,11 +126,28 @@
                 Recover
             </button>
 
-        </form>
+		</form>
 		</div>
-
-
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	    <!-- Trigger/Open The Modal -->
         <div id="modalBtn" class="twelve columns">
         	<p id="sysReqs">This service requires {SMALL OVERVIEW OF SYSTEM REQUIREMENTS LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM}. &nbsp;<span id="readMore">Read more.</span></p>

@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
-import studentcapture.model.Submission;
+import studentcapture.submission.Submission;
 
 import java.io.*;
 
@@ -161,19 +161,17 @@ public class FilesystemInterface {
 	/**
 	 * Store the assignment video for an assignment at a course.
 	 *
-	 * @param courseCode the code for the course.
 	 * @param courseID course id from the database.
 	 * @param assignmentID from database.
 	 * @return true if video was stored successfully, false otherwise.
 	 * @author c13ljn
 	 */
-	public static boolean storeAssignmentVideo(String courseCode, String courseID,
-											String assignmentID, MultipartFile source) {
+	public static boolean storeAssignmentVideo(String courseID, String assignmentID, MultipartFile source) {
 
-		String path = FilesystemInterface.generatePath(courseCode, courseID,
-				assignmentID);
+		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/" +
+				FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
 
-        try {
+		try {
 			storeFile(source, path, FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -256,7 +254,6 @@ public class FilesystemInterface {
 
 	/**
 	 * Stores assignment description or recap depending on the filename parameter
-	 * @param courseCode courses 6 character identifier
 	 * @param courseId a unique database id
 	 * @param assignmentId a unique database id
 	 * @param contents The contents in the file
@@ -264,13 +261,12 @@ public class FilesystemInterface {
 	 *                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME)
      * @throws IOException
      */
-	public static void storeAssignmentText(String courseCode,
-										   String courseId,
+	public static void storeAssignmentText(String courseId,
 										   String assignmentId,
 										   String contents,
 										   String fileName) throws IOException {
 
-		String dirPath = generatePath(courseCode, courseId, assignmentId);
+		String dirPath = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/";
 		File dir = new File(dirPath);
 		File file;
 		FileWriter fileWriter;

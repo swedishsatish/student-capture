@@ -134,6 +134,7 @@ button{
 */
 #passchecklabel{
     position: relative;
+    color: #F5EE9E;
 }
 /*
  * The blanket that is shown around the popup. Needs to be resized to a smaller size, due to the popup having problems
@@ -151,7 +152,7 @@ button{
     z-index: 9001;
     width:100%;
     height:100%;
-    
+
 }
 /* The popup that is shown when a teacher has to confirm the feedback that is about to be given.
  */
@@ -220,4 +221,9 @@ button{
 #teacherRecord {
 
     margin-left: 26%;
+}
+
+#tmpDiv {
+
+    height: 20%;
 }

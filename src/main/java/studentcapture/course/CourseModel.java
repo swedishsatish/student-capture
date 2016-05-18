@@ -1,4 +1,4 @@
-package studentcapture.model;
+package studentcapture.course;
 
 import java.util.Map;
 
@@ -7,20 +7,19 @@ import java.util.Map;
  * @author tfy12hsm
  *
  */
-public class Course {
+public class CourseModel {
 	private String courseId;
 	private Integer year;
 	private String term;
-	private String courseCode;
 	private String courseName;
 	private String courseDescription;
 	private Boolean active;
 	
-	public Course() {
+	public CourseModel() {
 		
 	}
 	
-	public Course(Map<String, Object> map) {
+	public CourseModel(Map<String, Object> map) {
 		parseMap(map);
 	}
 	
@@ -35,7 +34,6 @@ public class Course {
 		courseId = (String) map.get("CourseId");
 		year = (Integer) map.get("Year");
 		term = (String) map.get("Term");
-		courseCode = (String) map.get("CourseCode");
 		try {
 			courseName = (String) map.get("CourseName");
 		} catch (NullPointerException e) {
@@ -84,18 +82,6 @@ public class Course {
 	 */
 	public void setTerm(String term) {
 		this.term = term;
-	}
-	/**
-	 * @return the courseCode
-	 */
-	public String getCourseCode() {
-		return courseCode;
-	}
-	/**
-	 * @param courseCode the courseCode to set
-	 */
-	public void setCourseCode(String courseCode) {
-		this.courseCode = courseCode;
 	}
 	/**
 	 * @return the courseName

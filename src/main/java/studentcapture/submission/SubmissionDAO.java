@@ -69,15 +69,22 @@ public class SubmissionDAO {
 	 * @param grade      Object containing grade, teacherID, date, publish
 	 * @return True if a row was changed, otherwise false
 	 */
-	public boolean setGrade(Submission submission, Grade grade) {
+	public boolean setGrade(Submission submission) {
+		Grade grade = submission.getGrade();
         /* If a person that is not a teacher tries to set a grade, return false */
-        String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
+        String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE" +
+				" (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
         int rows = databaseConnection.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
         if(rows != 1)
             return false;
 
-		String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, SubmissionDate = ?, PublishStudentSubmission = ? WHERE (AssignmentID = ?) AND (StudentID = ?);";
-		int updatedRows = databaseConnection.update(setGrade, grade.getGrade(), grade.getTeacherID(), grade.getDate(), grade.getPublishStudentSubmission(), submission.getAssignmentID(), submission.getStudentID());
+		String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, PublishStudentSubmission = ?" +
+				" WHERE (AssignmentID = ?) AND (StudentID = ?);";
+		int updatedRows = databaseConnection.update(setGrade, grade.getGrade(),
+																grade.getTeacherID(),
+																grade.getPublishStudentSubmission(),
+																submission.getAssignmentID(),
+																submission.getStudentID());
 
 		return updatedRows == 1;
 	}
@@ -165,24 +172,32 @@ public class SubmissionDAO {
 				+ "sub.studentId=stu.userId WHERE (AssignmentId=?) AND "
 				+ "(Grade IS NULL)";
 
-    	List<Submission> submissions = new ArrayList<>();
-    	int assignmentId = Integer.parseInt(assId);
-    	try {
-	    	List<Map<String, Object>> rows = databaseConnection.queryForList(
-	    			getAllUngradedStatement, assignmentId);
-	    	for (Map<String, Object> row : rows) {
-	    		Submission submission = new Submission(row);
-	    		submissions.add(submission);
-	    	}
+		int assignmentId = Integer.parseInt(assId);
 
+        return getSubmissionsFromStatement(getAllUngradedStatement, assignmentId);
+    }
+
+    /**
+     * Will return the result of a query to the DB.
+     * @param statement the string containing the sql statement
+     * @param assignmentID ID to specify assignment to get submissions for.
+     * @return a list of submissions.
+     */
+    private Optional<List<Submission>> getSubmissionsFromStatement(String statement, int assignmentID){
+        List<Submission> submissions = new ArrayList<>();
+        //TODO exceptions should maybe be handled in a better way?
+        try {
+            List<Map<String, Object>> rows = databaseConnection.queryForList(
+                    statement, assignmentID);
+            for (Map<String, Object> row : rows) {
+                Submission submission = new Submission(row);
+                submissions.add(submission);
+            }
         } catch (IncorrectResultSizeDataAccessException e) {
-            //TODO
             return Optional.empty();
         } catch (DataAccessException e1) {
-            //TODO
             return Optional.empty();
         }
-
         return Optional.of(submissions);
     }
 
@@ -204,23 +219,7 @@ public class SubmissionDAO {
 				+ " Submission AS sub LEFT JOIN Users AS stu ON "
 				+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
 
-    	try {
-	    	List<Map<String, Object>> rows = databaseConnection.queryForList(
-	    			getAllSubmissionsStatement, assignmentId);
-	    	for (Map<String, Object> row : rows) {
-	    		Submission submission = new Submission(row);
-	    		submissions.add(submission);
-			}
-
-	    } catch (IncorrectResultSizeDataAccessException e){
-			//TODO
-		    return Optional.empty();
-		} catch (DataAccessException e1){
-			//TODO
-			return Optional.empty();
-		}
-
-        return Optional.of(submissions);
+    	return getSubmissionsFromStatement(getAllSubmissionsStatement, assignmentId);
     }
 
 	/**
@@ -247,23 +246,7 @@ public class SubmissionDAO {
 						+ "Submission AS sub ON par.userId=sub.studentId WHERE "
 						+ "(par.function='Student') AND (ass.AssignmentId=?)";
 
-    	try {
-	    	List<Map<String, Object>> rows = databaseConnection.queryForList(
-	    			getAllSubmissionsWithStudentsStatement, assignmentId);
-	    	for (Map<String, Object> row : rows) {
-	    		Submission submission = new Submission(row);
-	    		submissions.add(submission);
-	    	}
-
-	    } catch (IncorrectResultSizeDataAccessException e){
-			//TODO
-		    return Optional.empty();
-		} catch (DataAccessException e1){
-			//TODO
-			return Optional.empty();
-		}
-
-        return Optional.of(submissions);
+    	return getSubmissionsFromStatement(getAllSubmissionsWithStudentsStatement, assignmentId);
     }
     
     /**

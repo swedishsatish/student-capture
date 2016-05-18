@@ -120,35 +120,37 @@ for(var i=0; i<urlVars.length; i++) {
     }
 }
 /*
-error=invalidEmail
-error=invallidPassword
-error=duplicateUsername
-error=duplicateEmail
+error=usernamelength
+error=passwordformat
+error=passwordmatch
+error=emailformat
+error=emailexists
+error=userexists
 */
 if(err){
     var msg;
     switch(type){
-        case "login":
-            msg = "Login failed";
+        case "usernamelength":
+            msg = "Username is too short";
             break;
-        case "register":
-            msg = "Registration failed";
+        case "passwordformat":
+            msg = "Password is not in valid format";
             break;
-        case "invalidEmail":
+        case "passwordmatch":
+            msg = "The two passwords do not match";
+            break;
+        case "emailformat":
             msg = "Invalid Email";
             break;
-        case "invalidPassword":
-            msg = "Invalid Email";
-            break;
-        case "duplicateUsername":
-            msg = "Username already taken";
-            break;
-        case "duplicateEmail":
+        case "emailexists":
             msg = "Email already associated with an account";
+            break;
+        case "userexists":
+            msg = "Username already used by another user";
             break;
         default:
             msg = "Unknown Error";
             break;
     }
-    alert("TERRIBLE ERROR \n"+msg);
+    alert("TERRIBLE ERROR\n"+msg);
 }
