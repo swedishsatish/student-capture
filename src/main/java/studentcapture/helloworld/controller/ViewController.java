@@ -38,5 +38,11 @@ public class ViewController {
     public String loggedinView() {
         return "loggedin";
     }
-
+    
+    /* TODO: Remove when index works as intended */
+    @RequestMapping(value = "/demo")
+    public String demoView() {
+        return "demo";
+    }
+    
 }
