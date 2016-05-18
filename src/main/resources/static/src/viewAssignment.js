@@ -1,10 +1,25 @@
 /*
  * viewAssignment.js
+ * Authors: Zacharias Berggren
+ *          Joakim Sandman
+ *          Victor Zars
+ *
+ * Shows the assignment front page and (when the assignment is started)
+ * plays the assignment video followed by a countdown and finally records the
+ * student answer.
  */
 
+/* Global variable containing some data about the assignment */
 var assignmentData = {
+    minTime: '',
+    maxTime: '',
+    assignmentName: '',
+    assignmentUrl: ''
 }
 
+/*
+ * Shows the assignment front page and sets the assignmentData global variable.
+ */
 window.AssignmentContent = React.createClass({
     getInitialState: function() {
         return {loaded: false,
@@ -51,14 +66,13 @@ window.AssignmentContent = React.createClass({
                 </div>
             </div>
         )
-    },
-    componentDidMount: function() {
     }
 });
 
 /*
- * Shows the video and everything else.
- * TODO: start recording AFTER countdown!
+ * Shows the video, question summary, countdown and student recording video
+ * in the appropriate order.
+ * TODO: Start recording AFTER countdown! (need interface to StudentRecordVideo)
  */
 var AssignmentStart = React.createClass({
     getInitialState: function() {
@@ -76,18 +90,16 @@ var AssignmentStart = React.createClass({
                                : <div />;
         var recordContent = this.state.startRecording
                             ? <div>
-                                <div><StudentRecordVideo autoRecord="true" /><br />
+                                <StudentRecordVideo /><br />
                                 Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
                                 Current video length: {this.state.time}<br />
-                                <BlankBox />
-                              </div></div>
+                              </div>
                             : <div>
-                                <StudentRecordVideo autoRecord="false" /><br />
-                                <BlankBox />
+                                <StudentRecordVideo />
                               </div>;
         return (
             <div id="assignment-modal">
-            <div class="modal-dialog">
+            <div className="modal-dialog">
                 <div id="assignment-content" className="modal-content">
                     <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
                     <div id="question-div">
@@ -106,14 +118,21 @@ var AssignmentStart = React.createClass({
             </div>
         )
     },
+    tick: function() {
+        this.setState({time: this.state.time + 1});
+    },
     count: function() {
         this.setState({startCountDown: true});
     },
     record: function() {
         this.setState({startRecording: true});
+        this.interval = setInterval(this.tick, 1000);
     }
 });
 
+/*
+ * Button for starting the assignment. It requires confirmation after clicking.
+ */
 var But = React.createClass({
     getInitialState: function() {
         return {disabled: false};
@@ -137,6 +156,9 @@ var But = React.createClass({
     }
 });
 
+/*
+ * Shows question summary after retrieving it from the json file.
+ */
 var Question = React.createClass({
     getInitialState: function() {
         return {question: ''};
@@ -150,7 +172,7 @@ var Question = React.createClass({
         );
     },
     componentDidMount: function() {
-        this.serverRequest = getJson("test/assignmentdata.json", function (data) {
+        this.serverRequest = getJson("../static/test/assignmentdata.json", function (data) {
             var json = JSON.parse(data);
 //            console.log("json is: " + json["AssignmentQuestion"]);
             this.setState({question: json["AssignmentQuestion"]});
@@ -158,6 +180,10 @@ var Question = React.createClass({
     }
 });
 
+/*
+ * Shows the countdown and then signal parent to start recording.
+ * TODO: Set countdown time to 10 (or read from json).
+ */
 var CountDown = React.createClass({
     getInitialState: function() {
         return {timeLeft: 3};
@@ -178,6 +204,10 @@ var CountDown = React.createClass({
     }
 });
 
+/*
+ * Shows the assignment video (which autoplays), progress bar and time passed.
+ * Then signals parent to start countdown and show question summary.
+ */
 var Vid = React.createClass({
     getInitialState: function() {
         return {currTime: 0,
@@ -187,7 +217,9 @@ var Vid = React.createClass({
     render: function() {
         return (
             <div>
-                <video id='videoPlayer' src={this.props.url}></video>
+                <video id='videoPlayer' src={this.props.url}>
+                    Cannot show video, it may not be supported by your browser!
+                </video>
                 <div>
                     <progress id="progress-bar" value={this.state.currTime} max={this.state.totalTime} />
                     {Math.round(this.state.currTime)} / {Math.round(this.state.totalTime)}
@@ -197,9 +229,9 @@ var Vid = React.createClass({
     },
     componentDidMount: function() {
         var vid = document.getElementById("videoPlayer");
-        vid.addEventListener('ended',this.onEnded,false);
-        vid.addEventListener('pause', this.onPause, false);
         vid.addEventListener('canplay', this.canPlay, false);
+        vid.addEventListener('pause', this.onPause, false);
+        vid.addEventListener('ended',this.onEnded,false);
         vid.play();
         this.interval = setInterval(this.ticker, 1000);
     },
