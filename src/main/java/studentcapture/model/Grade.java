@@ -55,4 +55,15 @@ public class Grade {
     public void setDate() {
         this.date = new Date();
     }
+
+    @java.lang.Override
+    public java.lang.String toString() {
+        return "Grade{" +
+                "grade='" + grade + '\'' +
+                ", teacherID=" + teacherID +
+                ", date=" + date +
+                ", publishStudentSubmission=" + publishStudentSubmission +
+                ", publishFeedback=" + publishFeedback +
+                '}';
+    }
 }
