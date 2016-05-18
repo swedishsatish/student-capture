@@ -48,7 +48,6 @@ var Recorder = React.createClass({
             var recordButton = document.getElementById(props.recButtonID);
             if(cameraStarted) {
                 recordButton.disabled = true;
-                console.log("record.disabled = true;");
             }
         }
 
@@ -63,7 +62,6 @@ var Recorder = React.createClass({
                                   navigator.msGetUserMedia);
 
         if(cameraStartOnLoad) {
-            console.log("camera start on load")
             startCamera();
         }
 
@@ -78,7 +76,6 @@ var Recorder = React.createClass({
         /* Will start recording and start the webcam if not enabled. */
         function startRecord() {
             if(!cameraStarted) {
-                console.log("camera is not started.");
                 startCamera();
                 window.setTimeout(function() {
                     recordAudio.startRecording();
@@ -107,7 +104,6 @@ var Recorder = React.createClass({
         /* Start stream from webcam and start recording if autoRecording is true,
          * will record with forced low settings for smaller files. */
         function startCamera () {
-            console.log("startCamera");
             navigator.getUserMedia({
                 audio: true,
                 video: {
@@ -225,7 +221,6 @@ var Recorder = React.createClass({
 
                 xhReq.onreadystatechange = function () {
                     if (xhReq.readyState === 4 && xhReq.status == 200) {
-                        console.log("id: " + xhReq.responseText);
 
                         xhr(window.globalURL + props.postURL + xhReq.responseText, formData, props.playCallback);
                     } else if(xhReq.readyState === 4 && xhReq.status !== 200) {
