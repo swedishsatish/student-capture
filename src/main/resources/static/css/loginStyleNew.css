@@ -16,7 +16,7 @@ body {
 	background-repeat: no-repeat;
 }
 
-#loginLogo {
+.loginLogo {
 	margin-left:3%;
 	margin-right:3%;
 	width:94%;
@@ -24,6 +24,10 @@ body {
 
 #loginDiv {
 	height:100%;
+}
+
+#loginPage {
+	text-align: center;
 }
 
 #registerButton {
@@ -45,59 +49,102 @@ body {
 }
 
 .nameField {
-	width:43%;
+	width:44%;
 }
 
 #firstName {
-	margin-right:2%;
+	float:left;
+	margin-right:1%;
 }
 
 #lastName {
-	margin-left:2%; 
+	float: right;
+	margin-left:1%;
 }
 
 #firstPass {
-	margin-right:2%;
+	float:left;
+	margin-right:1%;
 }
 
 #secondPass {
-	margin-left:2%; 
+	float: right;
+	margin-left:1%;
 }
 
 .forms {
 	border-radius: 20px;
-	position:relative;
+	position:absolute;
 	top: calc(50% - 130px);
 	background-color: #107D91;
 }
 
-#regPage {
-	top: calc(50% - 167px)
+#registerPage {
+	top: calc(50% - 176px)
 }
 
-#cnclBtn {
-	margin-right:0%;
+#lostPasswordPage {
+	top: calc(50% - 135px)
 }
 
-#regBtn {
-	margin-left:4%; 
+.bckBtn {
+	float:left;
+	margin-right:1%;
 }
 
-#regText {
+.nxtBtn {
+	float: right;
+	margin-left:1%;
+}
+
+.regText {
 	text-transform: uppercase;
 	text-align: center;
 }
 
-.tooltipText{display: none;}
+.tooltip{
+	width:300px;
+	display: none;
+	position: absolute;
+	right:104%;
+	bottom:20px;
+	background-color: #107D91;
+   	border: 6px solid #EC7E15;
+   	border-radius: 6px;
+}
 
-.forms input:focus + .tooltipText{
+#uNameTip {
+	bottom:100px;
+}
+
+#uNamePoint {
+	top:6px;
+	border-top: 20px solid transparent;
+   	border-left: 40px solid #EC7E15;
+   	border-bottom: 20px solid transparent;
+}
+
+.tooltipText {
+	color:#FAFAFA;
+	line-height: 20px;
+	margin-top: 10px;
+	margin-left: 6px;
+}
+
+.point {
+	content:"";
+   	position: absolute;
+   	left: 100%;
+   	top: 14px;
+   	width: 0;
+   	height: 0;
+   	border-top: 26px solid transparent;
+   	border-left: 40px solid #EC7E15;
+   	border-bottom: 26px solid transparent;
+}
+
+input:focus:invalid + .tooltip{
     display: block;
-    position: absolute;
-    top:101%;
-    left: center;
-    color:#FFFFFF; 
-    margin:5px; 
- 
 }
 
 #registerPage {
@@ -105,7 +152,17 @@ body {
 }
 
 input:invalid{
-color:#EC7E15;
+	color:#EC7E15;
+}
+
+#lostLink {
+	cursor: pointer;
+	position: relative;
+	bottom:5px;
+}
+
+#lostPasswordPage {
+	display:none;
 }
 
 /*------------------------------------modal-----------------------------------*/
@@ -165,7 +222,7 @@ color:#EC7E15;
     cursor: pointer;
 }
 
-.close:hover, {
+.close:hover {
     color: #000;
     text-decoration: none;
     cursor: pointer;

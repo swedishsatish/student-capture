@@ -1,6 +1,8 @@
 package studentcapture.assignment;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.Map;
 
@@ -13,23 +15,24 @@ public class AssignmentModel {
 	private Integer assignmentID;
     private String courseID;
     private String title;
-    private String info;
+    private String description;
     private AssignmentVideoIntervall videoIntervall;
     private AssignmentDateIntervalls assignmentIntervall;
     private GradeScale scale;
     private String recap;
     private Timestamp published;
-    private String description;
+    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss");
 
     public AssignmentModel(String title,
-                           String info,
+                           String description,
                            AssignmentVideoIntervall videoIntervall,
                            AssignmentDateIntervalls assignmentIntervall,
                            String scale,
                            String recap) throws InputMismatchException {
         this.courseID = "1200"; //should be changed.
         this.title = title;
-        this.info = info;
+        this.description = description;
         this.videoIntervall = videoIntervall;
         this.assignmentIntervall = assignmentIntervall;
         this.scale = GradeScale.valueOf(scale);
@@ -37,7 +40,8 @@ public class AssignmentModel {
     }
 
     public AssignmentModel() {
-        this.courseID = "1200"; //should be changed.
+
+
     }
 
     public AssignmentModel(Map<String, Object> map) {
@@ -45,8 +49,8 @@ public class AssignmentModel {
 		courseID = (String) map.get("CourseId");
 		title = (String) map.get("Title");
 		assignmentIntervall = new AssignmentDateIntervalls();
-		assignmentIntervall.setStartDate((String) map.get("StartDate"));
-		assignmentIntervall.setEndDate((String) map.get("EndDate"));
+		assignmentIntervall.setStartDate(FORMATTER.format((Timestamp) map.get("StartDate")));
+		assignmentIntervall.setEndDate(FORMATTER.format((Timestamp) map.get("EndDate")));
 		videoIntervall = new AssignmentVideoIntervall();
 		videoIntervall.setMinTimeSeconds((Integer) map.get("MinTime"));
 		videoIntervall.setMaxTimeSeconds((Integer) map.get("MaxTime"));
@@ -98,12 +102,12 @@ public class AssignmentModel {
         this.title = title;
     }
 
-    public String getInfo() {
-        return info;
+    public String getDescription() {
+        return description;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getScale() {

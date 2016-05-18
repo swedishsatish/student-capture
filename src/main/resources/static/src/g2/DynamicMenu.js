@@ -30,12 +30,12 @@ var Assignment = React.createClass({
                 document.getElementById('courseContent'));
         }
         else if(this.props.role == "teacher"){
-            $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:assID},function (res) {
+           /* $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:assID},function (res) {
 
 
                 ReactDOM.render(<StudentList students={res} courseId={courseID} assignmentId={assID}/>,
                                 document.getElementById('courseContent') );
-            });
+            });*/
 
         }
 
@@ -61,12 +61,15 @@ var Assignments = React.createClass({
         var assList = assignments.map(function (ass) {
             return <Assignment key={ass.assignment.assignmentId} courseId={course.course.courseId} assignment={ass} role={role}/>
         });
-        assList.push(<li className="active course menuItem navigationText">
-                        <div onClick={this.handleClick.bind(this,course.course)}>
-                            + New Assignent
-                        </div>
-                    </li>
-        );
+        if(role=="teacher"){
+            assList.push(<li className="active course menuItem navigationText">
+                    <div onClick={this.handleClick.bind(this,course.course)}>
+                        + New Assignent
+                    </div>
+                </li>
+            );
+        }
+
         console.log(assList);
         return <ul>{assList}</ul>;
     }
@@ -149,7 +152,7 @@ var DynamicMenu = React.createClass({
 });
 
 window.RenderMenu = function (userID) {
-    $.get(window.globalURL + "/DB/getHierarchy", {userID}, function (res) {
+    $.get(window.globalURL + "/course", {userID}, function (res) {
 
         // if(res)
         var SCList = objToList(res.studentCourses);

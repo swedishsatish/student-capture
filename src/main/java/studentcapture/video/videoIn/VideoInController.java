@@ -17,7 +17,9 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
-
+/**
+ * @deprecated Use AssignmentResource/SubmissionResource/FeedbackResource instead of VideoInController.
+ */
 @RestController
 public class VideoInController {
 
@@ -31,6 +33,7 @@ public class VideoInController {
      *
      * @return Status 200 if success. Status 400 on bad request. Status 500 on error.
      * @author c13ljn (Modified to support assignment videos)
+     * @deprecated
      */
     @CrossOrigin()
     @RequestMapping(value = "/uploadVideo/{id}",
@@ -50,14 +53,7 @@ public class VideoInController {
             return new ResponseEntity<String>("Empty video.", HttpStatus.BAD_REQUEST);
         }
 
-        // Check if url{id} is generated correctly, first done in Request-Manager
-        String temp = HashCodeGenerator.generateHash(userID);
-        if (!temp.equals(id)) {
-            // User has not been granted permission to upload files.
-            System.err.println("User has not been granted permission to upload video.");
-            return new ResponseEntity<>("No permission to upload video.", HttpStatus.UNAUTHORIZED);
-        } else if (!videoType.equals("assignment") && !videoType.equals("submission") && !videoType.equals("feedback")) {
-            // Request must contain the type of upload.
+        if (!videoType.equals("assignment") && !videoType.equals("submission") && !videoType.equals("feedback")) {
             System.err.println("Wrong video type. Videotype: " + videoType);
             return new ResponseEntity<>("Unknown type of upload.",HttpStatus.BAD_REQUEST);
         }
@@ -73,7 +69,6 @@ public class VideoInController {
         }
 
         try {
-            // Get the bytes from the video
             final byte[] raw = video.getBytes();
 
             // Use an AbstractResource container for the bytearray.
@@ -114,6 +109,7 @@ public class VideoInController {
      * Generate a random filename.
      * @param userID
      * @return
+     * @deprecated
      */
     private String randomizeFilename(String userID) {
         SecureRandom random = new SecureRandom();

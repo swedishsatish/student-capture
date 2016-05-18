@@ -14,6 +14,7 @@ import studentcapture.course.CourseDAO;
 import studentcapture.course.HierarchyDAO;
 import studentcapture.course.HierarchyModel;
 import studentcapture.datalayer.database.*;
+
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Assignment;
@@ -21,6 +22,7 @@ import studentcapture.model.Participant;
 import studentcapture.submission.Submission;
 import studentcapture.model.User;
 import studentcapture.submission.SubmissionDAO;
+
 
 import javax.validation.Valid;
 
@@ -354,24 +356,6 @@ public class DatalayerCommunicator {
     	return null;
     }
     
-    /**
-     * Returns list of all submissions made in response to a given assignment.
-     *
-     * @param assignmentID		assignment identifier
-     * @return					list of submissions
-     *
-     * @author tfy12hsm
-     */
-    @CrossOrigin
-    @RequestMapping(
-    produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.GET,
-    value = "/getAllSubmissions")
-    @ResponseBody
-    public List<Submission> getAllSubmissions(
-    		@RequestParam(value="assignmentID") String assignmentID) {
-    	return submissionDAO.getAllSubmissions(assignmentID).get();
-    }
 
     /**
      * Returns list of all ungraded submissions made in response to a given

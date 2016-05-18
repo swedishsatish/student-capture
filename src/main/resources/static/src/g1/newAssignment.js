@@ -39,13 +39,15 @@ var NewAssignment = React.createClass({
         var videoIntervall = {};
         var assignmentIntervall = {};
 
+
         videoIntervall["minTimeSeconds"] = $("#minTimeSeconds").val();
         videoIntervall["maxTimeSeconds"] = $("#maxTimeSeconds").val();
         assignmentIntervall["startDate"] = $("#startDate").val();
         assignmentIntervall["endDate"] = $("#endDate").val();
         assignmentIntervall["publishedDate"] = $("#publish").val();
+        reqBody["courseID"] = "1200";
         reqBody["title"] = $("#title").val();
-        reqBody["info"] = $("#info").val();
+        reqBody["description"] = $("#description").val();
         reqBody["videoIntervall"] = videoIntervall;
         reqBody["assignmentIntervall"] = assignmentIntervall;
         reqBody["recap"] = $("#recap").val();
@@ -70,7 +72,7 @@ var NewAssignment = React.createClass({
       return <div>
                 <div id="form">
                 <input className="inputField" id="title" type="text" placeholder="title" /><br/>
-                <input className="inputField" id="info" type="text" placeholder="description" /><br/>
+                <input className="inputField" id="description" type="text" placeholder="description" /><br/>
                 <input className="inputField" id="recap" type="text" placeholder="recap" /><br/>
 
                 <input id="startDate" type="button" value="yyyy-mm-dd 00:00"/>Start Date<br/>

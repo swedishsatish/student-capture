@@ -12,6 +12,7 @@ import java.util.Base64;
 
 /**
  * Created by c13ljn on 2016-04-26.
+ * @deprecated Should not be used.
  */
 @RestController
 public class RequestManager {
@@ -24,6 +25,7 @@ public class RequestManager {
      * @param assignmentID The ID of the exam.
      * @return The URL to upload a video to.
      * @throws Exception Throws an exception if the user is not certified to upload a video.
+     * @deprecated
      */
     @CrossOrigin()
     @RequestMapping(value="/video/inrequest", method = RequestMethod.GET)

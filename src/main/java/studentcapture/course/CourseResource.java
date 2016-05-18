@@ -5,15 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
 import studentcapture.datalayer.database.ParticipantDAO;
@@ -24,7 +16,7 @@ import studentcapture.datalayer.database.ParticipantDAO;
  *
  */
 @RestController
-@RequestMapping(value = "/Course")
+@RequestMapping(value = "/course")
 public class CourseResource {
 	
 	@Autowired
@@ -33,13 +25,14 @@ public class CourseResource {
 	private ParticipantDAO participantDAO;
 	@Autowired
 	private HierarchyDAO hierarchyDAO;
-	
+
 	/**
 	 * Adds a course to the database. 
 	 * 
 	 * @param course
 	 * @return
 	 */
+	@Transactional(rollbackFor=Exception.class)
     @CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -47,11 +40,22 @@ public class CourseResource {
     value = "")
     @ResponseBody
     public CourseModel postCourse(
-    		@RequestBody CourseModel course) {
-    	CourseModel result = courseDAO.addCourse(course);
-    	if(result.getCourseId()==null)
-    		throw new ResourceNotFoundException();
-    	return result;
+    		@RequestBody
+    		CourseModel course) {
+		CourseModel result1 = courseDAO.addCourse(course);
+    	if(result1.getCourseId()==null) {
+    		if(result1.getErrorCode()==HttpStatus.CONFLICT.value())
+    			throw new ResourceConflictException();
+    		throw new ResourceNotFoundException(); 
+    	}
+    	if(course.getInitialTeacherId()!=null) {
+    	   	Boolean result2 = participantDAO.addParticipant(
+    	   			course.getInitialTeacherId().toString(), result1.getCourseId(), 
+    	   			"teacher");
+    	   	if(!result2) 
+    	   		throw new ResourceNotFoundException();
+    	}
+	   	return result1;
     }
     
     @CrossOrigin
@@ -63,8 +67,11 @@ public class CourseResource {
     public CourseModel putCourse(
     		@RequestBody CourseModel course) {
     	CourseModel result = courseDAO.updateCourse(course);
-    	if(result.getCourseId()==null)
-    		throw new ResourceNotFoundException();
+    	if(result.getCourseId()==null) {
+    		if(result.getErrorCode()==HttpStatus.CONFLICT.value())
+    			throw new ResourceConflictException();
+    		throw new ResourceNotFoundException(); 
+    	}
     	return result;
     }
     
@@ -104,6 +111,24 @@ public class CourseResource {
     	return result;
     }
     
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.PUT,
+    value = "/{CourseId}")
+    @ResponseBody
+    public CourseModel putCourseWithId(
+    		@PathVariable(value = "CourseId") String courseID,
+    		@RequestBody CourseModel course) {
+    	CourseModel result = courseDAO.updateCourse(course);
+    	if(result.getCourseId()==null) {
+    		if(result.getErrorCode()==HttpStatus.CONFLICT.value())
+    			throw new ResourceConflictException();
+    		throw new ResourceNotFoundException(); 
+    	}
+    	return result;
+    }
+    
     /**
      * 
      * @param courseID
@@ -121,36 +146,7 @@ public class CourseResource {
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
     	return result;
-    }
-    
-//    /**
-//     * Adds a course with a teacher.
-//     * 
-//     * @param course
-//     * @param teacherID
-//     * @return
-//     */
-//    @Transactional(rollbackFor=Exception.class)
-//    @CrossOrigin
-//    @RequestMapping(
-//    produces = MediaType.APPLICATION_JSON_VALUE,
-//    method = RequestMethod.POST,
-//    value = "")
-//    @ResponseBody
-//    public Course postCourseWithTeacher(
-//    		@RequestBody Course course,
-//    		@RequestParam(value="teacherID") String teacherID) {
-//    	 Course result1 = courseDAO.addCourse(course);
-//    	 if(result1.getCourseId()==null) 
-//    		 throw new ResourceNotFoundException();
-//    	 Boolean result2 = participantDAO.addParticipant(teacherID, result1.getCourseId(), 
-//    			 "Teacher");
-//    	 if(!result2) 
-//    		 throw new ResourceNotFoundException();
-//    	 return result1;
-//    }
-    
-    
+    } 
 
     /**
     *
@@ -160,7 +156,7 @@ public class CourseResource {
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
     method = RequestMethod.GET,
-    value = "/getHierarchy")
+    value = "")
     @ResponseBody
     public HierarchyModel getHierarchy(
     		@RequestParam(value="userID") String userID) {

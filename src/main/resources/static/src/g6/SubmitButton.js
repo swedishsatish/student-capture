@@ -2,7 +2,7 @@
  * Submit button for teacher feedback, will ask for
  * confirmation from teacher then send data to database.
  * @author: dv13trm, c14gls, group 6
-*/
+ */
 
 /**
  * Cancel button for popup window, closes popup.
@@ -25,7 +25,8 @@ var PopUpConfirmButton = React.createClass({
     onclick: function () {
         sendData();
         close();
-        ReactDOM.render(<StudentList/>,document.getElementById('courseContent'));
+        ReactDOM.render(<TeacherViewSubmission/>,document.getElementById('courseContent'));
+
     },
     render: function () {
         return(
@@ -46,7 +47,7 @@ var PopUpPassBox = React.createClass({
             )
         }else{
             return(
-                <p id="popUpFail">NON PASS</p>
+                <p id="popUpFail">NOT PASSED</p>
             )
         }
     }
@@ -87,12 +88,11 @@ var PopUpRender = React.createClass({
     render: function () {
         return(
             <div class="row">
-
                 <p id="smallLetter">You are about to give</p>
                 <PopUpStudentName student={this.props.student}/> <p id="smallLetter">a</p>
-                 <PopUpPassBox/> <p id="smallLetter">with grade</p> <PopUpGrade/>
+                <PopUpPassBox/> <p id="smallLetter">with grade</p> <PopUpGrade/>
                 <PopUpStudentName student={this.props.student}/>
-                <br />
+                <br/>
                 <div id="popUpButtonContainer">
                     <PopUpCancelButton/>
                     <PopUpConfirmButton/>
@@ -120,28 +120,33 @@ function submitForm() {
     reqBody["TeacherComments"] = document.getElementById('teachercomments').value;
     reqBody["Grade"] = document.getElementById('dropDownMenu').value;
     reqBody["StudentPass"] = document.getElementById('ifStudentPass').checked;
+    reqBody["ShareData"] = document.getElementById('PermissionFromStudent').checked;
     reqBody["AssignmentID"] = window.assignmentID;
     reqBody["CourseID"] = window.courseID;
-    reqBody["TeacherID"] = window.teacherID;
-    reqBody["value"] = "set";
-
+    reqBody["StudentID"] = window.studentID;
 
     $.ajax({
         type: "POST",
         contentType: "application/json",
-        url: "feedback",
+        url: window.globalURL + "/assignments/" + $("#assignment").val() + "/submissions/" + $("#student").val(),
         data: JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
-            ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
+            console.log("SUCCESS reqBody contains:", reqBody);
+            // TODO: check response with if/else, if respons is fail give error message
+
+          //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);
+            console.log("ReqBody contains:", reqBody);
         }, done: function (e) {
             console.log("DONE");
         }
     });
 }
+
+
 /**
  * Sending data to database.
  */

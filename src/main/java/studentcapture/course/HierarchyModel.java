@@ -1,7 +1,6 @@
 package studentcapture.course;
 
 import studentcapture.assignment.AssignmentModel;
-import studentcapture.model.Assignment;
 import studentcapture.submission.Submission;
 
 import java.util.ArrayList;

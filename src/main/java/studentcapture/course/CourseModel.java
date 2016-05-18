@@ -14,6 +14,8 @@ public class CourseModel {
 	private String courseName;
 	private String courseDescription;
 	private Boolean active;
+	private Integer initialTeacherId;
+	private Integer errorCode;
 	
 	public CourseModel() {
 		
@@ -118,5 +120,17 @@ public class CourseModel {
 	 */
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+	
+	public Integer getInitialTeacherId() {
+		return initialTeacherId;
+	}
+	
+	public void setErrorCode(Integer errorCode) {
+		this.errorCode = errorCode;
+	}
+	
+	public Integer getErrorCode() {
+		return errorCode;
 	}
 }
