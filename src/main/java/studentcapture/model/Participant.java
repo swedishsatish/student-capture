@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class Participant {
     private Integer userId;
-    private String courseId;
+    private Integer courseId;
     private String function;
     
     public Participant() {
@@ -26,7 +26,7 @@ public class Participant {
      */
     public void parseMap(Map<String, Object> map) {
     	userId = (Integer) map.get("UserId");
-		courseId = (String) map.get("CourseId");
+		courseId = (Integer) map.get("CourseId");
 		function = (String) map.get("Function");
     }
     
@@ -45,13 +45,13 @@ public class Participant {
 	/**
 	 * @return the courseId
 	 */
-	public String getCourseId() {
+	public Integer getCourseId() {
 		return courseId;
 	}
 	/**
 	 * @param courseId the courseId to set
 	 */
-	public void setCourseId(String courseId) {
+	public void setCourseId(Integer courseId) {
 		this.courseId = courseId;
 	}
 	/**
