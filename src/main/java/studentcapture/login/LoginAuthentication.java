@@ -35,6 +35,8 @@ public class LoginAuthentication implements AuthenticationProvider {
     
     @Autowired
     private RestTemplate requestSender;
+    
+    private UserDBController userDBController;
 
     /*
     Login only works with users in the database. 
@@ -46,6 +48,8 @@ public class LoginAuthentication implements AuthenticationProvider {
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
 		String username = auth.getName().trim();
 		String password = auth.getCredentials().toString();
+		
+		//userDBController = new UserDBController();
 
 		if(checkUser(username, password)){
 		    //Set role
@@ -71,6 +75,7 @@ public class LoginAuthentication implements AuthenticationProvider {
 	 * @param password User input password
 	 * @return true if user name and password match in the database, else false
 	 */
+	
 	public boolean checkUser(String username, String password) {
 	    
 	    //System.out.println("checkUser() in Authenticator");
@@ -84,6 +89,7 @@ public class LoginAuthentication implements AuthenticationProvider {
                 .build()
                 .toUri();
         
+        //TODO: Change to User
         Boolean userExist = requestSender.getForObject(targetUrl, Boolean.class);
         
         if(!userExist){
@@ -115,6 +121,35 @@ public class LoginAuthentication implements AuthenticationProvider {
 	    
 		return false;
 	}
+	
+	/* //Uncomment this method when the DB is updated to REST 
+    public boolean checkUser(String username, String password) {
+        
+        
+        //System.out.println("checkUser() in Authenticator");
+        System.out.println("Checking user data in DB with user: " + username);
+        
+        //Get user from DB
+        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
+                .path("DB/userNameExist")
+                .queryParam("userName", username)
+                .build()
+                .toUri();
+        
+        System.out.println("Target: " + targetUrl);
+        
+        //DB must be correct
+        User user = requestSender.getForObject(targetUrl, User.class);
+        
+        if(user == null){
+            System.out.println("ERROR: Incorrect username");
+            return false;
+        }
+        //System.out.println("Verifying user: " + user.getUserName());
+
+        return comparePassword(password, user.getPswd());
+                
+    }*/
 	
 	public boolean comparePassword(String password, String hashed) {
 		//String hashed = "";

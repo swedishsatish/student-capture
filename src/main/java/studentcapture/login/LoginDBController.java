@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -106,6 +104,22 @@ public class LoginDBController {
         //Compare header token with db token <-- another method?
         
         return mav;
+    }
+    
+    //How should this even work?
+    @RequestMapping(value = "/lostPassword", method = RequestMethod.GET)
+    public ModelAndView resetPassword(
+            //@RequestParam(value="email", required = true) String email,
+            @RequestParam(value="token", required = true) String token
+            ){
+        
+        //System.out.println("Received email: " + email + ", token: " + token);
+        System.out.println("Received token: " + token);
+        ModelAndView mav = new ModelAndView(); 
+        mav.setViewName("redirect:login?error=passwordRecoveryNotImplemented");
+        
+        return mav;
+        
     }
     
     /**
