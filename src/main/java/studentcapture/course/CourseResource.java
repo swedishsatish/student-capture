@@ -5,18 +5,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
 import studentcapture.datalayer.database.ParticipantDAO;
+import studentcapture.equipmenttest.EquipmentTestResource;
 
 /**
  * 
@@ -33,7 +26,13 @@ public class CourseResource {
 	private ParticipantDAO participantDAO;
 	@Autowired
 	private HierarchyDAO hierarchyDAO;
-	
+
+    @ModelAttribute("course")
+    public CourseModel getModel(){
+        return new CourseModel();
+    }
+
+
 	/**
 	 * Adds a course to the database. 
 	 * 
@@ -48,7 +47,7 @@ public class CourseResource {
     value = "")
     @ResponseBody
     public CourseModel postCourse(
-    		@RequestBody CourseModel course) {
+    		@ModelAttribute("course") CourseModel course) {
     	if(course.getInitialTeacherId()==null) {
     		CourseModel result = courseDAO.addCourse(course);
         	if(result.getCourseId()==null)
