@@ -27,7 +27,7 @@ public class AssignmentModelTest {
         assignmentIntervalls.setEndDate("2016-01-24 10:00:00");
         assignmentIntervalls.setPublishedDate("2016-01-22 15:00:00");
         assignmentModel.setTitle("Test");
-        assignmentModel.setInfo("Info");
+        assignmentModel.setDescription("Info");
         assignmentModel.setVideoIntervall(videoIntervall);
         assignmentModel.setAssignmentIntervall(assignmentIntervalls);
         assignmentModel.setScale("NUMBER_SCALE");
@@ -47,14 +47,14 @@ public class AssignmentModelTest {
     }
 
     @Test
-    public void infoShouldBeInfo() {
-        assertEquals("Info", assignmentModel.getInfo());
+    public void descriptionShouldBeInfo() {
+        assertEquals("Info", assignmentModel.getDescription());
     }
 
     @Test
-    public void infoShouldBeTest1() {
-        assignmentModel.setInfo("Test1");
-        assertEquals("Test1", assignmentModel.getInfo());
+    public void descriptionShouldBeTest1() {
+        assignmentModel.setDescription("Test1");
+        assertEquals("Test1", assignmentModel.getDescription());
     }
 
     @Test
@@ -86,6 +86,7 @@ public class AssignmentModelTest {
 
     @Test
     public void CourseIDShouldBe1200() {
+        assignmentModel.setCourseID("1200");
         assertEquals("1200", assignmentModel.getCourseID());
     }
 

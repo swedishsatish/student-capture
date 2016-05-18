@@ -89,7 +89,7 @@ public class AssignmentDAO {
 
         try {
             FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
-                    assignmentModel.getInfo(), FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+                    assignmentModel.getDescription(), FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
             FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
                     assignmentModel.getRecap(), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
