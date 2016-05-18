@@ -65,7 +65,6 @@ var NewAssignment = React.createClass({
         var videoIntervall = {};
         var assignmentIntervall = {};
 
-
         videoIntervall["minTimeSeconds"] = $("#minTimeSeconds").val();
         videoIntervall["maxTimeSeconds"] = $("#maxTimeSeconds").val();
         assignmentIntervall["startDate"] = $("#startDate").val();
@@ -73,10 +72,10 @@ var NewAssignment = React.createClass({
         assignmentIntervall["publishedDate"] = $("#publish").val();
         reqBody["courseID"] = this.props.courseID;
         reqBody["title"] = $("#title").val();
-        reqBody["description"] = $("#description").val();
+        reqBody["description"] = tinymce.get('description').getContent()
         reqBody["videoIntervall"] = videoIntervall;
         reqBody["assignmentIntervall"] = assignmentIntervall;
-        reqBody["recap"] = $("#recap").val();
+        reqBody["recap"] = tinymce.get('recap').getContent()
         reqBody["scale"] = $("#scale").val();
         $.ajax({
             type : "POST",
@@ -191,5 +190,5 @@ window.CourseContent = React.createClass({
     }
 });
 
-ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
+//ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
 window.NewAssignment = NewAssignment;
