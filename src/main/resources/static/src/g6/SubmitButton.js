@@ -92,7 +92,7 @@ var PopUpRender = React.createClass({
                 <PopUpStudentName student={this.props.student}/> <p id="smallLetter">a</p>
                 <PopUpPassBox/> <p id="smallLetter">with grade</p> <PopUpGrade/>
                 <PopUpStudentName student={this.props.student}/>
-                <p id="smallLetter">will be notified</p>
+                <br/>
                 <div id="popUpButtonContainer">
                     <PopUpCancelButton/>
                     <PopUpConfirmButton/>

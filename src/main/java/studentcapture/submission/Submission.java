@@ -3,7 +3,6 @@ package studentcapture.submission;
 import studentcapture.model.Grade;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.sql.Timestamp;
 import java.util.Map;
 
