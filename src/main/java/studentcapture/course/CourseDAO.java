@@ -26,11 +26,10 @@ public class CourseDAO {
      */
     public CourseModel addCourse(CourseModel course) {
         String addCourseStatement =
-                "INSERT INTO Course VALUES (?,?,?,?,?,?)";
+                "INSERT INTO Course VALUES (DEFAULT,?,?,?,?,?)";
 
         try {
             int rowsAffected = jdbcTemplate.update(addCourseStatement,
-                    course.getCourseId(),
                     course.getYear(),
                     course.getTerm(),
                     course.getCourseName(),
