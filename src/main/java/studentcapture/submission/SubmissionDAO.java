@@ -259,14 +259,14 @@ public class SubmissionDAO {
      */
     public Optional<Submission> getSubmission(int assignmentId, int userId) {
     	Submission result = null;
-    	String getStudentSubmissionStatement =
+        String getStudentSubmission =
 				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
 
 		try {
-	    	Map<String, Object> map = databaseConnection.queryForMap(
-	    			getStudentSubmissionStatement, assignmentId, userId);
-	    	
-	    	 result = new Submission(map);
+	        result = databaseConnection.queryForObject(
+					getStudentSubmission, new SubmissionRowMapper(), assignmentId, userId);
+
+
 	    } catch (IncorrectResultSizeDataAccessException e){
 			//TODO
 		    return Optional.empty();
