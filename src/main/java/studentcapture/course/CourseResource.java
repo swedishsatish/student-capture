@@ -24,7 +24,7 @@ import studentcapture.datalayer.database.ParticipantDAO;
  *
  */
 @RestController
-@RequestMapping(value = "/Course")
+@RequestMapping(value = "/course")
 public class CourseResource {
 	
 	@Autowired
