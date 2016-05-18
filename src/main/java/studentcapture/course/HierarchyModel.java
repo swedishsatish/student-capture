@@ -1,13 +1,13 @@
-package studentcapture.model;
+package studentcapture.course;
 
+import studentcapture.assignment.AssignmentModel;
+import studentcapture.model.Assignment;
 import studentcapture.submission.Submission;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import studentcapture.course.CourseModel;
 
 /**
  * Used to collect all relevant data in a users course-assignment
@@ -16,7 +16,7 @@ import studentcapture.course.CourseModel;
  *
  * @author tfy12hsm
  */
-public class Hierarchy {
+public class HierarchyModel {
 	private int userId;
 	private String firstName;
 	private String lastName;
@@ -25,7 +25,7 @@ public class Hierarchy {
 	private List<CoursePackage> teacherCoursesList;
 	private List<CoursePackage> studentCoursesList;
 
-	public Hierarchy() {
+	public HierarchyModel() {
 		teacherCourses = new HashMap<>();
 		studentCourses = new HashMap<>();
 		teacherCoursesList = null;
@@ -220,21 +220,21 @@ public class Hierarchy {
      * @author tfy12hsm
      */
     public static class AssignmentPackage {
-    	private Assignment assignment = null;
+    	private AssignmentModel assignment = null;
     	private Map<Integer, Submission> submissions = null;
     	private List<Submission> submissionsList = null;
 		
     	/**
 		 * @return the assignment
 		 */
-		public Assignment getAssignment() {
+		public AssignmentModel getAssignment() {
 			return assignment;
 		}
 
 		/**
 		 * @param assignment the assignment to set
 		 */
-		public void setAssignment(Assignment assignment) {
+		public void setAssignment(AssignmentModel assignment) {
 			this.assignment = assignment;
 		}
 

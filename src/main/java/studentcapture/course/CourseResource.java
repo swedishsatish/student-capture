@@ -1,5 +1,7 @@
 package studentcapture.course;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,7 +95,7 @@ public class CourseResource {
     value = "/{CourseId}")
     @ResponseBody
     public CourseModel getCourse(
-    		@PathVariable(value = "courseID") String courseID) {
+    		@PathVariable(value = "CourseId") String courseID) {
     	CourseModel result = courseDAO.getCourse(courseID);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
@@ -112,7 +114,7 @@ public class CourseResource {
     value = "/{CourseId}")
     @ResponseBody
     public CourseModel deleteCourse(
-    		@PathVariable(value = "courseID") String courseID) {
+    		@PathVariable(value = "CourseId") String courseID) {
     	CourseModel result = courseDAO.removeCourse(courseID);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
@@ -144,6 +146,32 @@ public class CourseResource {
 //    	 if(!result2) 
 //    		 throw new ResourceNotFoundException();
 //    	 return result1;
+//    }
+    
+    
+//    /**
+//     * Returns list of all submissions made in response to a given assignment,
+//     * including students that are part of the course but has not yet made a
+//     * submissionDAO.
+//     *
+//     * @param userID		assignment identifier
+//     * @return					list of submissions
+//     *
+//     * @author tfy12hsm
+//     */
+//    @CrossOrigin
+//    @RequestMapping(
+//    produces = MediaType.APPLICATION_JSON_VALUE,
+//    method = RequestMethod.GET,
+//    value = "/getHierarchy")
+//    @ResponseBody
+//    public HierarchyModel getHierarchy(
+//    		@RequestParam(value="userID") String userID) {
+//    	Optional<HierarchyModel> hierarchy = 
+//    			hierarchyDAO.getCourseAssignmentHierarchy(userID);
+//    	if(hierarchy.isPresent()) 
+//    		return hierarchy.get();
+//    	return null;
 //    }
     
     @ResponseStatus(value = HttpStatus.NOT_FOUND)

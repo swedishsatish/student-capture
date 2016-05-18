@@ -11,11 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.CourseDAO;
+import studentcapture.course.HierarchyDAO;
+import studentcapture.course.HierarchyModel;
 import studentcapture.datalayer.database.*;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Assignment;
-import studentcapture.model.Hierarchy;
 import studentcapture.model.Participant;
 import studentcapture.submission.Submission;
 import studentcapture.model.User;
@@ -433,31 +434,7 @@ public class DatalayerCommunicator {
     		@RequestParam(value="assignmentID") String assignmentID) {
     	return submissionDAO.getAllSubmissionsWithStudents(assignmentID).get();
     }
-    
-    /**
-     * Returns list of all submissions made in response to a given assignment,
-     * including students that are part of the course but has not yet made a
-     * submissionDAO.
-     *
-     * @param userID		assignment identifier
-     * @return					list of submissions
-     *
-     * @author tfy12hsm
-     */
-    @CrossOrigin
-    @RequestMapping(
-    produces = MediaType.APPLICATION_JSON_VALUE,
-    method = RequestMethod.GET,
-    value = "/getHierarchy")
-    @ResponseBody
-    public Hierarchy getHierarchy(
-    		@RequestParam(value="userID") String userID) {
-    	Optional<Hierarchy> hierarchy = 
-    			hierarchyDAO.getCourseAssignmentHierarchy(userID);
-    	if(hierarchy.isPresent()) 
-    		return hierarchy.get();
-    	return null;
-    }
+
 
     /**
      * Add a submission to the database and filesystem.
