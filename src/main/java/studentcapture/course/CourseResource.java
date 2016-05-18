@@ -120,6 +120,7 @@ public class CourseResource {
     public CourseModel putCourseWithId(
     		@PathVariable(value = "CourseId") String courseID,
     		@RequestBody CourseModel course) {
+    	course.setCourseId(courseID);
     	CourseModel result = courseDAO.updateCourse(course);
     	if(result.getCourseId()==null) {
     		if(result.getErrorCode()==HttpStatus.CONFLICT.value())
