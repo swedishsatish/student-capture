@@ -39,11 +39,13 @@ var NewAssignment = React.createClass({
         var videoIntervall = {};
         var assignmentIntervall = {};
 
+
         videoIntervall["minTimeSeconds"] = $("#minTimeSeconds").val();
         videoIntervall["maxTimeSeconds"] = $("#maxTimeSeconds").val();
         assignmentIntervall["startDate"] = $("#startDate").val();
         assignmentIntervall["endDate"] = $("#endDate").val();
         assignmentIntervall["publishedDate"] = $("#publish").val();
+        reqBody["courseID"] = "1200";
         reqBody["title"] = $("#title").val();
         reqBody["description"] = $("#description").val();
         reqBody["videoIntervall"] = videoIntervall;

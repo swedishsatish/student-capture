@@ -86,7 +86,6 @@ public class AssignmentDAO {
             assignmentID = keyHolder.getKey().intValue();
         }
 
-
         try {
             FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
                     assignmentModel.getDescription(), FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
