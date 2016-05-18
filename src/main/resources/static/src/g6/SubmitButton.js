@@ -116,19 +116,19 @@ function close(){
 function submitForm() {
 
     var reqBody = {};
-    reqBody["TeacherComments"] = document.getElementById('teachercomments').value;
-    reqBody["Grade"] = document.getElementById('dropDownMenu').value;
-    reqBody["StudentPass"] = document.getElementById('ifStudentPass').checked;
-    reqBody["ShareData"] = document.getElementById('PermissionFromStudent').checked;
-    reqBody["AssignmentID"] = window.assignmentID;
-    reqBody["CourseID"] = window.courseID;
-    reqBody["StudentID"] = window.studentID;
+    reqBody["feedback"] = document.getElementById('teachercomments').value;
+    reqBody["grade"] = {};
+    reqBody["grade"]["grade"] = "U";
+    reqBody["grade"]["teacherID"] = "7777777"; //TODO: Fix this grade: document.getElementById('dropDownMenu').value;
+    reqBody["studentPass"] = document.getElementById('ifStudentPass').checked;
+    reqBody["shareData"] = document.getElementById('PermissionFromStudent').checked;
+    reqBody["courseID"] = window.courseID;
 
     $.ajax({
-        type: "GET",
+        type: "PUT",
         contentType: "application/json",
         url: window.globalURL + "/assignments/" + 6 + "/submissions/" + 98,
-        data: reqBody,
+        data : JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
