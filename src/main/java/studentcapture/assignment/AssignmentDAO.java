@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentModel;
-import studentcapture.course.Course;
+import studentcapture.course.CourseModel;
 import studentcapture.course.CourseDAO;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;

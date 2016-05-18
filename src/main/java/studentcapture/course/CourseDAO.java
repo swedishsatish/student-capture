@@ -23,7 +23,7 @@ public class CourseDAO {
      * 
      * @author tfy12hsm
      */
-    public Course addCourse(Course course) {
+    public CourseModel addCourse(CourseModel course) {
         String addCourseStatement =
                 "INSERT INTO Course VALUES (?,?,?,?,?,?,?)";
 
@@ -38,12 +38,12 @@ public class CourseDAO {
             if (rowsAffected == 1) {
             	return getCourseWithoutID(course);
             } else {
-            	return new Course();
+            	return new CourseModel();
             }
         } catch (IncorrectResultSizeDataAccessException e){
-            return new Course();
+            return new CourseModel();
         } catch (DataAccessException e1){
-            return new Course();
+            return new CourseModel();
         }
     }
 
@@ -55,7 +55,7 @@ public class CourseDAO {
      * 
      * @author tfy12hsm
      */
-    public Course getCourseWithoutID(Course course){
+    public CourseModel getCourseWithoutID(CourseModel course){
     	try {
     		String sql = "SELECT CourseId from course WHERE Year=? "
         			+ "AND Term=? AND CourseName=?";
@@ -64,11 +64,11 @@ public class CourseDAO {
         			course.getYear(),
         			course.getTerm(),
         			course.getCourseName()});
-        	return new Course(sqlResponse.get(sqlResponse.size() - 1));
+        	return new CourseModel(sqlResponse.get(sqlResponse.size() - 1));
     	} catch (IncorrectResultSizeDataAccessException e) {
-			return new Course();
+			return new CourseModel();
 		} catch (DataAccessException e1) {
-			return new Course();
+			return new CourseModel();
 		}
     }
     
@@ -77,17 +77,17 @@ public class CourseDAO {
      *
      * @author tfy12hsm
      */
-	public Course getCourse(Course course) {
+	public CourseModel getCourse(CourseModel course) {
 		try {
             String getCourseStatement =
                     "SELECT * FROM Course WHERE CourseId=?";
             Map<String, Object> map = jdbcTemplate.queryForMap(
         			getCourseStatement, course.getCourseId());
-            return new Course(map);		
+            return new CourseModel(map);		
 		} catch (IncorrectResultSizeDataAccessException e) {
-			return new Course();
+			return new CourseModel();
 		} catch (DataAccessException e1) {
-			return new Course();
+			return new CourseModel();
 		}
 	}
 	
@@ -99,17 +99,17 @@ public class CourseDAO {
      * 
      * @author tfy12hsm
      */
-	public Course getCourse(String courseId) {
+	public CourseModel getCourse(String courseId) {
 		try {
             String getCourseStatement =
                     "SELECT * FROM Course WHERE CourseId=?";
             Map<String, Object> map = jdbcTemplate.queryForMap(
         			getCourseStatement, courseId);
-            return new Course(map);		
+            return new CourseModel(map);		
 		} catch (IncorrectResultSizeDataAccessException e) {
-			return new Course();
+			return new CourseModel();
 		} catch (DataAccessException e1) {
-			return new Course();
+			return new CourseModel();
 		}
 	}
 
@@ -121,7 +121,7 @@ public class CourseDAO {
 	 * 
 	 * @author tfy12hsm
 	 */
-	public Course updateCourse(Course course) {
+	public CourseModel updateCourse(CourseModel course) {
 		String changeDescriptionOnCourseStatement = "UPDATE Course SET "
 				+ "Year=?,Term=?,CourseName=?,CourseDescription=?,Active=? "
 				+ "WHERE CourseId=?";
@@ -137,12 +137,12 @@ public class CourseDAO {
             if (rowsAffected == 1) {
             	return course;
             } else {
-            	return new Course();
+            	return new CourseModel();
             }
         } catch (IncorrectResultSizeDataAccessException e){
-            return new Course();
+            return new CourseModel();
         } catch (DataAccessException e1){
-            return new Course();
+            return new CourseModel();
         }
 	}
 	
@@ -154,7 +154,7 @@ public class CourseDAO {
      * 
      * @author tfy12hsm
      */
-    public Course removeCourse(Course course) {
+    public CourseModel removeCourse(CourseModel course) {
         String removeCourseStatement = "DELETE FROM Course WHERE CourseID=?";
 
         try {
@@ -164,29 +164,29 @@ public class CourseDAO {
             if(rowsAffected == 1) {
             	return course;
             } 
-            return new Course();
+            return new CourseModel();
         } catch (IncorrectResultSizeDataAccessException e){
-           	return new Course();
+           	return new CourseModel();
         } catch (DataAccessException e1){
-            return new Course();
+            return new CourseModel();
         }
     }
     
-    public Course removeCourse(String courseId) {
+    public CourseModel removeCourse(String courseId) {
         String removeCourseStatement = "DELETE FROM Course WHERE CourseID=?";
 
         try {
-        	Course course = getCourse(courseId);
+        	CourseModel course = getCourse(courseId);
             int rowsAffected = jdbcTemplate.update(removeCourseStatement,
                     courseId);         
             if(rowsAffected == 1) {
             	return course;
             } 
-            return new Course();
+            return new CourseModel();
         } catch (IncorrectResultSizeDataAccessException e){
-           	return new Course();
+           	return new CourseModel();
         } catch (DataAccessException e1){
-            return new Course();
+            return new CourseModel();
         }
     }
 
@@ -196,7 +196,7 @@ public class CourseDAO {
      * @param courseId Unique identifier for the course
      * @return course code
      */
-    public String getCourseCodeFromId(Course course){
+    public String getCourseCodeFromId(CourseModel course){
         String query = "SELECT coursecode FROM Course WHERE courseid = ?;";
         String courseCode;
 

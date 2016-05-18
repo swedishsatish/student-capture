@@ -7,7 +7,7 @@ import java.util.Map;
  * @author tfy12hsm
  *
  */
-public class Course {
+public class CourseModel {
 	private String courseId;
 	private Integer year;
 	private String term;
@@ -15,11 +15,11 @@ public class Course {
 	private String courseDescription;
 	private Boolean active;
 	
-	public Course() {
+	public CourseModel() {
 		
 	}
 	
-	public Course(Map<String, Object> map) {
+	public CourseModel(Map<String, Object> map) {
 		parseMap(map);
 	}
 	

@@ -23,7 +23,7 @@ import studentcapture.datalayer.database.ParticipantDAO;
  */
 @RestController
 @RequestMapping(value = "/Course")
-public class CourseRes {
+public class CourseResource {
 	
 	@Autowired
     private CourseDAO courseDAO;
@@ -42,9 +42,9 @@ public class CourseRes {
     method = RequestMethod.POST,
     value = "")
     @ResponseBody
-    public Course postCourse(
-    		@RequestBody Course course) {
-    	Course result = courseDAO.addCourse(course);
+    public CourseModel postCourse(
+    		@RequestBody CourseModel course) {
+    	CourseModel result = courseDAO.addCourse(course);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
     	return result;
@@ -56,9 +56,9 @@ public class CourseRes {
     method = RequestMethod.PUT,
     value = "")
     @ResponseBody
-    public Course putCourse(
-    		@RequestBody Course course) {
-    	Course result = courseDAO.updateCourse(course);
+    public CourseModel putCourse(
+    		@RequestBody CourseModel course) {
+    	CourseModel result = courseDAO.updateCourse(course);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
     	return result;
@@ -70,9 +70,9 @@ public class CourseRes {
     method = RequestMethod.DELETE,
     value = "")
     @ResponseBody
-    public Course deleteCourse(
-    		@RequestBody Course course) {
-    	Course result = courseDAO.removeCourse(course);
+    public CourseModel deleteCourse(
+    		@RequestBody CourseModel course) {
+    	CourseModel result = courseDAO.removeCourse(course);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
     	return result;
@@ -92,9 +92,9 @@ public class CourseRes {
     method = RequestMethod.GET,
     value = "/{CourseId}")
     @ResponseBody
-    public Course getCourse(
+    public CourseModel getCourse(
     		@PathVariable(value = "courseID") String courseID) {
-    	Course result = courseDAO.getCourse(courseID);
+    	CourseModel result = courseDAO.getCourse(courseID);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
     	return result;
@@ -111,9 +111,9 @@ public class CourseRes {
     method = RequestMethod.DELETE,
     value = "/{CourseId}")
     @ResponseBody
-    public Course deleteCourse(
+    public CourseModel deleteCourse(
     		@PathVariable(value = "courseID") String courseID) {
-    	Course result = courseDAO.removeCourse(courseID);
+    	CourseModel result = courseDAO.removeCourse(courseID);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
     	return result;

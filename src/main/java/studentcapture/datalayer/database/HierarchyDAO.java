@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import studentcapture.assignment.AssignmentDAO;
-import studentcapture.course.Course;
+import studentcapture.course.CourseModel;
 import studentcapture.course.CourseDAO;
 import studentcapture.model.Hierarchy;
 import studentcapture.submission.Submission;
@@ -127,7 +127,7 @@ public class HierarchyDAO {
     				throw new NullPointerException();
     		} catch (NullPointerException e) {
     			currentCourse = new CoursePackage();
-    			Course course = new Course();
+    			CourseModel course = new CourseModel();
     			course.setCourseId(courseId);
     			currentCourse.setCourse(courseDAO.getCourse(course));
     			hierarchy.getTeacherCourses().put(courseId, currentCourse);
@@ -206,7 +206,7 @@ public class HierarchyDAO {
     				throw new NullPointerException();
     		} catch (NullPointerException e) {
     			currentCourse = new CoursePackage();
-    			Course course = new Course();
+    			CourseModel course = new CourseModel();
     			course.setCourseId(courseId);
     			currentCourse.setCourse(courseDAO.getCourse(course));
     			hierarchy.getStudentCourses().put(courseId, currentCourse);
