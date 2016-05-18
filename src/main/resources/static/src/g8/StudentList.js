@@ -1,7 +1,7 @@
 /**
  * A table with all the students who have grades or should be graded
- * @author c13lbm
- * @revision dv13tes
+ * @author Ludvig Boström <c13lbm>
+ * @revision Tobias Estefors <dv13tes>
  */
 
 var StudentList = React.createClass ({

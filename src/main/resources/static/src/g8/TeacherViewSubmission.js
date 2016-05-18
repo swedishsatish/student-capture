@@ -38,6 +38,7 @@ var TeacherViewSubmission = React.createClass({
             url: window.globalURL + "/DB/getAllParticipantsFromCourse", // URL to send to
             type: "GET", // Type of http
             async: false,
+
             data: {courseID: 1200},
             success: function (data, status) { // Function to perform when ok
                 this.participantsArray = data;
