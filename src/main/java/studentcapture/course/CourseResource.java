@@ -1,5 +1,7 @@
 package studentcapture.course;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,8 @@ public class CourseResource {
     private CourseDAO courseDAO;
 	@Autowired
 	private ParticipantDAO participantDAO;
+	@Autowired
+	private HierarchyDAO hierarchyDAO;
 	
 	/**
 	 * Adds a course to the database. 
@@ -93,7 +97,7 @@ public class CourseResource {
     value = "/{CourseId}")
     @ResponseBody
     public CourseModel getCourse(
-    		@PathVariable(value = "courseID") String courseID) {
+    		@PathVariable(value = "CourseId") String courseID) {
     	CourseModel result = courseDAO.getCourse(courseID);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
@@ -112,7 +116,7 @@ public class CourseResource {
     value = "/{CourseId}")
     @ResponseBody
     public CourseModel deleteCourse(
-    		@PathVariable(value = "courseID") String courseID) {
+    		@PathVariable(value = "CourseId") String courseID) {
     	CourseModel result = courseDAO.removeCourse(courseID);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
@@ -145,6 +149,27 @@ public class CourseResource {
 //    		 throw new ResourceNotFoundException();
 //    	 return result1;
 //    }
+    
+    
+
+    /**
+    *
+    * @author tfy12hsm
+     */
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.GET,
+    value = "/getHierarchy")
+    @ResponseBody
+    public HierarchyModel getHierarchy(
+    		@RequestParam(value="userID") String userID) {
+    	Optional<HierarchyModel> hierarchy = 
+    			hierarchyDAO.getCourseAssignmentHierarchy(userID);
+    	if(hierarchy.isPresent()) 
+    		return hierarchy.get();
+    	throw new ResourceNotFoundException();
+    }
     
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public static class ResourceNotFoundException extends RuntimeException {

@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.course;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -7,12 +7,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import studentcapture.assignment.AssignmentDAO;
-import studentcapture.course.CourseModel;
-import studentcapture.course.CourseDAO;
-import studentcapture.model.Hierarchy;
+import studentcapture.course.HierarchyModel.AssignmentPackage;
+import studentcapture.course.HierarchyModel.CoursePackage;
+import studentcapture.datalayer.database.UserDAO;
 import studentcapture.submission.Submission;
-import studentcapture.model.Hierarchy.AssignmentPackage;
-import studentcapture.model.Hierarchy.CoursePackage;
 import studentcapture.submission.SubmissionDAO;
 
 import java.sql.Timestamp;
@@ -53,9 +51,9 @@ public class HierarchyDAO {
      * 
      * @author tfy12hsm
      */
-    public Optional<Hierarchy> getCourseAssignmentHierarchy(
+    public Optional<HierarchyModel> getCourseAssignmentHierarchy(
     		String userID) {
-    	Hierarchy hierarchy = new Hierarchy();
+    	HierarchyModel hierarchy = new HierarchyModel();
     	int userId = Integer.parseInt(userID);
     	try {
     		addStudentHierarchy(hierarchy, userId);
@@ -82,7 +80,7 @@ public class HierarchyDAO {
 	 * 
      * @author tfy12hsm
 	 */
-    private void addUserToHierarchy(Hierarchy hierarchy,
+    private void addUserToHierarchy(HierarchyModel hierarchy,
     		int userId) {
     	String getUserStatement = "SELECT * FROM Users WHERE "
         		+ "UserId=?";
@@ -103,7 +101,7 @@ public class HierarchyDAO {
      * 
      * @author tfy12hsm
 	 */
-	private void addTeacherHierarchy(Hierarchy hierarchy, int
+	private void addTeacherHierarchy(HierarchyModel hierarchy, int
 			userId) {
 
 		String getTeacherHierarchyStatement = "SELECT par.courseId AS "
@@ -184,7 +182,7 @@ public class HierarchyDAO {
      * 
      * @author tfy12hsm
 	 */
-	private void addStudentHierarchy(Hierarchy hierarchy,
+	private void addStudentHierarchy(HierarchyModel hierarchy,
 			int userId) {
 		String getStudentHierarchyStatement = "SELECT par.courseId AS CourseId,"
 				+ "ass.assignmentId AS AssignmentId,sub.submissionDate AS "
