@@ -280,6 +280,22 @@ public class FilesystemInterface {
 		fileWriter.close();
 	}
 
+	public static String getAssignmentText(String courseId, String assignmentId, String fileName)
+			throws FileNotFoundException, IOException {
+		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/" + fileName;
+		File file = new File(path);
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		StringBuilder builder = new StringBuilder();
+		String line;
+
+		while((line = reader.readLine()) != null) {
+			builder.append(line);
+			builder.append(System.getProperty("line.separator"));
+		}
+
+		return builder.toString().trim();
+	}
+
     /**
      * Reads a feedback text file from a teacher from the moose hard drive and returns it.
      * @param submission the submission model containing params to generate the path to the file.

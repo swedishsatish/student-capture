@@ -8,7 +8,7 @@ import java.util.Map;
  *
  */
 public class CourseModel {
-	private String courseId;
+	private Integer courseId;
 	private Integer year;
 	private String term;
 	private String courseName;
@@ -33,7 +33,7 @@ public class CourseModel {
      * @author tfy12hsm
 	 */
 	public void parseMap(Map<String, Object> map) {
-		courseId = (String) map.get("CourseId");
+		courseId = (Integer) map.get("CourseId");
 		year = (Integer) map.get("Year");
 		term = (String) map.get("Term");
 		try {
@@ -52,13 +52,13 @@ public class CourseModel {
 	/**
 	 * @return the courseId
 	 */
-	public String getCourseId() {
+	public Integer getCourseId() {
 		return courseId;
 	}
 	/**
 	 * @param courseId the courseId to set
 	 */
-	public void setCourseId(String courseId) {
+	public void setCourseId(Integer courseId) {
 		this.courseId = courseId;
 	}
 	/**
