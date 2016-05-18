@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.CourseDAO;
 import studentcapture.course.HierarchyDAO;
-import studentcapture.course.HierarchyModel;
 import studentcapture.datalayer.database.*;
 
 import studentcapture.datalayer.filesystem.FilesystemConstants;
@@ -20,7 +19,6 @@ import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Assignment;
 import studentcapture.model.Participant;
 import studentcapture.submission.Submission;
-import studentcapture.model.User;
 import studentcapture.submission.SubmissionDAO;
 
 
@@ -46,8 +44,6 @@ public class DatalayerCommunicator {
     private AssignmentDAO assignment;
     @Autowired
     private CourseDAO courseDAO;
-    @Autowired
-    private UserDAO userDAO;
     @Autowired
     private ParticipantDAO participantDAO;
     @Autowired
@@ -217,62 +213,6 @@ public class DatalayerCommunicator {
         return results;
     }
 
-
-    /**
-     * @param userName
-     * @return
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/userNameExist", method = RequestMethod.GET)
-    public boolean userNameExist(
-                  @RequestParam(value = "userName") String userName) {
-        return userDAO.userNameExist(userName);
-    }
-
-    /**
-     * @param email
-     * @return true if email exist else false
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/userEmailExist", method = RequestMethod.GET)
-    public boolean userEmailExist(@RequestParam(value = "email") String email) {
-        return userDAO.emailExist(email);
-    }
-
-    /**
-     * Register user by given information.
-     * @return true if registration was successfull else false
-     */
-    @CrossOrigin
-    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE,
-                    method = RequestMethod.GET,
-                    value = "/addUser")
-    public boolean addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
-        ObjectMapper mapper = new ObjectMapper();
-        User user = null;
-        try {
-            user = mapper.readValue(jsonStringUser,User.class);
-            return userDAO.addUser(user);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    /**
-     * Get hashed password for a given username.
-     * @param username username for a user
-     * @return hashed password else null.
-     */
-    @CrossOrigin
-    @RequestMapping( produces = MediaType.APPLICATION_JSON_VALUE,
-                     method = RequestMethod.GET,
-                     value = "/getHpswd")
-    public String getUserPswd(@RequestParam(value = "username") String username) {
-        return userDAO.getPswd(username);
-    }
-    
     /**
      * Adds participant to course in database.
      *
@@ -356,6 +296,7 @@ public class DatalayerCommunicator {
     	return null;
     }
     
+   
 
     /**
      * Returns list of all ungraded submissions made in response to a given
