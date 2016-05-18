@@ -14,7 +14,10 @@ import studentcapture.submission.SubmissionDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -33,6 +36,9 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     @Autowired
     SubmissionDAO submissionDAO;
 
+    private Submission subWithoutGrade = new Submission();
+    private Submission subWithGrade = new Submission();
+
     /**
      * Inserts dummy data to test against h2Database
      */
@@ -41,11 +47,13 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         String sql1 = "INSERT INTO Users VALUES (1, 'mkyong', 'abcd', 'defg', 'mkyong@gmail.com', 'MyPassword');";
         String sql2 = "INSERT INTO Users VALUES (2, 'alex', 'abcd', 'defg', 'alex@yahoo.com', 'SecretPassword');";
         String sql3 = "INSERT INTO Users VALUES (3, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword');";
-        String sql4 = "INSERT INTO Course VALUES ('PVT', 2016, 'VT', '1234', 'ABC', null, true);";
-        String sql5 = "INSERT INTO Assignment VALUES (1, 'PVT', 'OU1', '2016-05-13 10:00:00', '2016-05-13 12:00:00', 60, 180, null, 'XYZ');";
-        String sql6 = "INSERT INTO Submission VALUES (1, 1, null, null, '2016-05-13 11:00:00', null, null, null, null);";
-        String sql7 = "INSERT INTO Submission VALUES (1, 3, null, null, '2016-05-13 11:00:00', 'MVG', 2, null, null);";
-        String sql8 = "INSERT INTO Participant VALUES (3, 'PVT', 'Teacher');";
+        String sql4 = "INSERT INTO Users VALUES (4, 'username', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword');";
+        String sql5 = "INSERT INTO Course VALUES ('PVT', 2016, 'VT', '1234', 'ABC', null, true);";
+        String sql6 = "INSERT INTO Assignment VALUES (1, 'PVT', 'OU1', '2016-05-13 10:00:00', '2016-05-13 12:00:00', 60, 180, null, 'XYZ');";
+        String sql7 = "INSERT INTO Submission VALUES (1, 1, null, null, '2016-05-13 11:00:00', null, null, null, null);";
+        String sql8 = createSubmission(subWithoutGrade, false, 3);
+        String sql9 = createSubmission(subWithGrade, true, 4);
+        String sql10 = "INSERT INTO Participant VALUES (3, 'PVT', 'Teacher');";
 
         jdbcMock.update(sql1);
         jdbcMock.update(sql2);
@@ -55,6 +63,56 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         jdbcMock.update(sql6);
         jdbcMock.update(sql7);
         jdbcMock.update(sql8);
+        jdbcMock.update(sql9);
+        jdbcMock.update(sql10);
+    }
+
+    private String createSubmission(Submission submission, boolean isGraded, int studentID) {
+        Grade grade = new Grade();
+        String gradeString;
+        Integer teacherId;
+
+        int assignmentID = 1;
+        boolean studentPublishConsent = false;
+        String status = null;
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        if (isGraded) {
+            gradeString = "MVG";
+            teacherId = 2;
+            grade.setTeacherID(teacherId);
+            grade.setGrade(gradeString);
+            gradeString = "'" + gradeString + "'";
+        } else {
+            gradeString = null;
+            teacherId = null;
+            grade.setTeacherID(teacherId);
+            grade.setGrade(gradeString);
+        }
+        boolean publishStudentSubmission = false;
+        boolean publishFeedback = false;
+        String teacherName = "abcd defg";
+
+        submission.setAssignmentID(assignmentID);
+        submission.setStudentID(studentID);
+        submission.setStudentPublishConsent(studentPublishConsent);
+        submission.setStatus(status);
+        submission.setSubmissionDate(timestamp);
+        submission.setGrade(grade);
+        submission.setPublishStudentSubmission(publishStudentSubmission);
+        submission.setPublishFeedback(publishFeedback);
+        //submission.setGradeSign(teacherName);
+
+        String SQL = "INSERT INTO Submission VALUES ("  + assignmentID + ", "
+                                                        + studentID + ", "
+                                                        + studentPublishConsent + ", "
+                                                        + status + ", "
+                                                        + "'" + timestamp + "'" + ", "
+                                                        + gradeString + ", "
+                                                        + teacherId + ", "
+                                                        + publishStudentSubmission + ", "
+                                                        + publishFeedback + ")";
+
+        return SQL;
     }
 
     /**
@@ -190,11 +248,22 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         assertTrue(returnValue);
     }
 
-    private Submission createSubmissionModel(int assignmentID, int studentID) {
-        Submission submission = new Submission();
-        submission.setAssignmentID(assignmentID);
-        submission.setStudentID(studentID);
-        return submission;
+    @Test
+    public void shouldReturnSubmissionWithGrade() {
+        Optional<Submission> result = submissionDAO.getSubmission(1, 4);
+        Submission submissionFromDB = result.get();
+
+        assertTrue(result.isPresent());
+        assertTrue(subWithGrade.equals(submissionFromDB));
+    }
+
+    @Test
+    public void shouldReturnSubmissionWithoutGrade() {
+        Optional<Submission> result = submissionDAO.getSubmission(1, 3);
+        Submission submissionFromDB = result.get();
+
+        assertTrue(result.isPresent());
+        assertTrue(subWithoutGrade.equals(submissionFromDB));
     }
 
     /**
