@@ -97,7 +97,7 @@ var AssignmentStart = React.createClass({
                                 <div>
                                     <StudentRecordVideo autoRecord="true" /><br />
                                     Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
-                                    Current video length: {this.state.time}<br />
+                                    Current video length: {this.state.time}
                                 </div>
                               </div>
                             : <div>
@@ -109,7 +109,7 @@ var AssignmentStart = React.createClass({
                                 <div>
                                     <StudentRecordVideo autoRecord="false" /><br />
                                     Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
-                                    Current video length: {this.state.time}<br />
+                                    Current video length: {this.state.time}
                                 </div>
                               </div>;
         return (
