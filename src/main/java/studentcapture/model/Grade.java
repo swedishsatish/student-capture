@@ -7,12 +7,12 @@ import java.util.Date;
  */
 public class Grade {
     private String grade;
-    private int teacherID;
+    private Integer teacherID;
     private Date date;
     private boolean publishStudentSubmission = false;
     private boolean publishFeedback = false;
 
-    public Grade(String grade, int teacherID) {
+    public Grade(String grade, Integer teacherID) {
         this.grade = grade;
         this.teacherID = teacherID;
         this.date = new Date();
@@ -40,11 +40,11 @@ public class Grade {
         this.grade = grade;
     }
 
-    public int getTeacherID() {
+    public Integer getTeacherID() {
         return teacherID;
     }
 
-    public void setTeacherID(int teacherID) {
+    public void setTeacherID(Integer teacherID) {
         this.teacherID = teacherID;
     }
 
