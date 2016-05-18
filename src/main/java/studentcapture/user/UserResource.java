@@ -3,10 +3,7 @@ package studentcapture.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by c12ton on 5/17/16.
@@ -21,15 +18,18 @@ public class UserResource {
     /**
      * Get user object containing all related information of a user,
      * except user ID.
-     * @param userName for the user
+     * @param value for the user
+     * @param flag 0 for getting user details by username
+     *             1 for getting user details by userid.
      * @return user object with a httpStatus.OK if successful
      *         else HttpStatus.NOT_FOUND
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<User> getUser(String userName) {
+    public ResponseEntity<User> getUser(@RequestParam(value = "String")String value,
+                                        @RequestParam(value = "int") int flag) {
 
-        User user = userDAO.getUser(userName,0);
+        User user = userDAO.getUser(value,flag);
 
         if(user == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -39,13 +39,13 @@ public class UserResource {
     }
 
     /**
-     *
+     * Add a new user with given user object details
      * @param user
      * @return
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity addUser(User user) {
+    public ResponseEntity addUser(@RequestParam(value = "User")User user) {
 
         boolean success = userDAO.addUser(user);
 
@@ -57,13 +57,13 @@ public class UserResource {
     }
 
     /**
-     *
-     * @param user
-     * @return
+     * Update a existing user by given user object details.
+     * @param user an instance of User, which will replace old user by username
+     * @return HttpStatus.Ok if succesfull else HttpStatus.NOT_FOUND
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity updateUser(User user) {
+    public ResponseEntity updateUser(@RequestParam(value = "User")User user) {
         boolean success = userDAO.updateUser(user);
 
         if(!success) {
