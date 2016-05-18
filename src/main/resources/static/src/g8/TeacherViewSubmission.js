@@ -8,9 +8,9 @@ var TeacherViewSubmission = React.createClass({
     nWithdrawals: 0, //Antal som lämnat blankt
     nDone: 0, //Totala antalet som gjort uppgiften
     nParticipants: 0, //Totala antalet i kurslistan
-    
-    submissionsArray: null,
-    participantsArray: null,
+
+    submissionsArray: null, //Alla som har submittat
+    participantsArray: null, //Hela kurslistan
 
     componentWillMount: function () {
         this.nSubmissions = 0;
@@ -19,7 +19,7 @@ var TeacherViewSubmission = React.createClass({
         this.nParticipants = 0;
 
         // GET request to database to get all the submissions from the students.
-       $.ajax({
+        $.ajax({
             url: window.globalURL + "/DB/getAllSubmissions", // URL to send to
             type: "GET", // Type of http
             async: false,
@@ -50,7 +50,7 @@ var TeacherViewSubmission = React.createClass({
     },
     calculateSubmissions: function () {
         this.nParticipants = this.participantsArray.length;
-        
+
         for (var i=0;i<this.submissionsArray.length;i++) {
             if (this.submissionsArray[i].status == "Answer") {
                 this.nSubmissions++;
@@ -62,7 +62,7 @@ var TeacherViewSubmission = React.createClass({
         this.nDone = this.nSubmissions + this.nWithdrawals;
     },
 
-    
+
 
     render: function () {
         this.calculateSubmissions();

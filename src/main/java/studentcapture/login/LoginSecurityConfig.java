@@ -49,6 +49,7 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
                 .permitAll()
                 //.successHandler(customLoginHandler) //Custom redirection based on role
                 .defaultSuccessUrl("/index", true) //always redirect to "/index"
+                .failureUrl("/login?error=loginerror")
                 .and()
             .logout()
                 .logoutUrl("/logout")

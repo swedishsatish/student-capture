@@ -1,8 +1,10 @@
 package studentcapture.assignment;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -125,6 +127,19 @@ public class AssignmentDAO {
     }
 
     /**
+     * Gets the video question corresponding to the specified assignment.
+     * @param assignmentID  Unique assignment identifier.
+     * @return              The video and Http status OK or Http status NOT_FOUND.
+     */
+    public ResponseEntity<InputStreamResource> getAssignmentVideo(int assignmentID) {
+        String courseID = this.getCourseIDForAssignment(assignmentID);
+        //String path = FilesystemInterface.generatePath(courseID,assignmentID)
+        //        + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
+        //TODO: uncomment and use path. generatePath needs to be refactored first.
+        return FilesystemInterface.getVideo("bugsbunny.webm");
+    }
+
+    /**
      * Used to verify if a given date is in the right format.
      *
      * @param format The format to check against.
@@ -188,7 +203,7 @@ public class AssignmentDAO {
     	return jdbcTemplate.queryForObject(sql, new Object[]{courseID,assignmentTitle},String.class);
 	}
 
-    public String getCourseIDForAssignment(String assignmentID) {
+    public String getCourseIDForAssignment(int assignmentID) {
         String sql = "SELECT courseID from Assignment WHERE assignmentID = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{assignmentID},String.class);
     }
