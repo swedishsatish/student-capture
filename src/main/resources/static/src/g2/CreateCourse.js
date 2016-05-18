@@ -24,8 +24,8 @@ window.CreateCourse = React.createClass({
     },
     handleClick: function (uid,event) {
         var fd = new FormData();
-        fd.append("courseID",generateCourseID());
-        fd.append("courseCode",$("#course-code").val());
+        fd.append("courseId",generateCourseID());
+
         fd.append("year",$("#course-year").val());
         fd.append("term",$("#course-term").val());
         fd.append("courseName",$("#course-name").val());
@@ -54,7 +54,7 @@ window.CreateCourse = React.createClass({
 
         }
 
-        request.open('POST', window.globalURL + "/DB/addCourse",true);
+        request.open('POST', window.globalURL + "/curse",true);
 
         request.send(fd);
 
@@ -72,8 +72,7 @@ window.CreateCourse = React.createClass({
                     <br />
                     <input type="text" id="course-term" placeholder="Course term"/>
                     <br />
-                    <input type="text" id="course-code" placeholder="Course code"/>
-                    <br />
+
                     <input type="checkbox" id="course-active"/>Active Course
                     <br />
                     <h5>Course Description</h5>
