@@ -67,7 +67,7 @@ public class AssignmentDAO {
                     PreparedStatement ps =
                             connection.prepareStatement(insertQueryString,
                                     Statement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, assignmentModel.getCourseID());
+                    ps.setInt(1, Integer.parseInt(assignmentModel.getCourseID()));
                     ps.setString(2, assignmentModel.getTitle());
                     ps.setString(3, assignmentModel.getAssignmentIntervall().getStartDate());
                     ps.setString(4, assignmentModel.getAssignmentIntervall().getEndDate());

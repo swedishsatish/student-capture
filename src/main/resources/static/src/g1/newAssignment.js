@@ -150,7 +150,7 @@ var NewAssignmentVideo = React.createClass({
         return (
             <div>
                 <Recorder id="recorder" playCallback={this.playVideo}
-                          postURL={"assignments/" + this.props.assignmentID + "/video"} formDataBuilder={this.formDataBuilder}
+                          postURL={"/assignments/" + this.props.assignmentID + "/video"} formDataBuilder={this.formDataBuilder}
                           recButtonID="record-question" stopButtonID="stop-question" fileName="assignmentVideo.webm" replay="true"
                           postButtonID="post-video"
                 />
