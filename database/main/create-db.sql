@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS Users (
     );
 
 CREATE TABLE IF NOT EXISTS Course (
-    CourseId             VARCHAR(10)    PRIMARY KEY,
+    CourseId             SERIAL         PRIMARY KEY,
     Year                 INT            NOT NULL,
     Term                 VARCHAR(8)     NOT NULL,
     CourseName           VARCHAR(64)    NOT NULL,

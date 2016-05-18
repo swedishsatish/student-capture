@@ -148,6 +148,9 @@ if(err){
         case "userexists":
             msg = "Username already used by another user";
             break;
+        case "loginerror":
+            msg = "Invalid username or password";
+            break;
         default:
             msg = "Unknown Error";
             break;

@@ -52,8 +52,8 @@ window.AssignmentContent = React.createClass({
                     <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
                     <h5 id="assignment-startAt">Assignment opens: <p id="descriptor">{this.state.startsAt}</p></h5>
                     <h5 id="assignment-endAt">Assignment closes: <p id="descriptor">{this.state.endsAt}</p></h5>
-                    <h5 id="assignment-mintime">Min video duration: <p id="descriptor">{assignmentData.minTime} seconds</p></h5>
-                    <h5 id="assignment-maxtime">Max video duration: <p id="descriptor">{assignmentData.maxTime} seconds</p></h5>
+                    <h5 id="assignment-mintime">Minimum answer video duration: <p id="descriptor">{assignmentData.minTime} seconds</p></h5>
+                    <h5 id="assignment-maxtime">Maximum answer video duration: <p id="descriptor">{assignmentData.maxTime} seconds</p></h5>
                     <h5 id="assignment-information">
                         Assignment information:<br />
                         <p id="descriptor">{this.state.assignmentInformation}</p>
@@ -170,9 +170,8 @@ var Question = React.createClass({
         );
     },
     componentDidMount: function() {
-        this.serverRequest = getJson("../static/test/assignmentdata.json", function (data) {
+        this.serverRequest = getJson("test/assignmentdata.json", function (data) {
             var json = JSON.parse(data);
-//            console.log("json is: " + json["AssignmentQuestion"]);
             this.setState({question: json["AssignmentQuestion"]});
         }.bind(this));
     }
@@ -227,9 +226,10 @@ var Vid = React.createClass({
     },
     componentDidMount: function() {
         var vid = document.getElementById("videoPlayer");
+        vid.oncontextmenu = function (e) {e.preventDefault();};
         vid.addEventListener('canplay', this.canPlay, false);
         vid.addEventListener('pause', this.onPause, false);
-        vid.addEventListener('ended',this.onEnded,false);
+        vid.addEventListener('ended', this.onEnded, false);
         vid.play();
         this.interval = setInterval(this.ticker, 1000);
     },

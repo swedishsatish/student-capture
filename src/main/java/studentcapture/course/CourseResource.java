@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
 import studentcapture.datalayer.database.ParticipantDAO;
-import studentcapture.equipmenttest.EquipmentTestResource;
 
 /**
  * 
@@ -27,12 +26,6 @@ public class CourseResource {
 	@Autowired
 	private HierarchyDAO hierarchyDAO;
 
-    @ModelAttribute("course")
-    public CourseModel getModel(){
-        return new CourseModel();
-    }
-
-
 	/**
 	 * Adds a course to the database. 
 	 * 
@@ -47,23 +40,22 @@ public class CourseResource {
     value = "")
     @ResponseBody
     public CourseModel postCourse(
-    		@ModelAttribute("course") CourseModel course) {
-    	if(course.getInitialTeacherId()==null) {
-    		CourseModel result = courseDAO.addCourse(course);
-        	if(result.getCourseId()==null)
-        		throw new ResourceNotFoundException();
-        	return result;
+    		@RequestBody
+    		CourseModel course) {
+		CourseModel result1 = courseDAO.addCourse(course);
+    	if(result1.getCourseId()==null) {
+    		if(result1.getErrorCode()==HttpStatus.CONFLICT.value())
+    			throw new ResourceConflictException();
+    		throw new ResourceNotFoundException(); 
     	}
-    	CourseModel result1 = courseDAO.addCourse(course);
-	   	if(result1.getCourseId()==null) 
-	   		throw new ResourceNotFoundException();
-	   	Boolean result2 = participantDAO.addParticipant(
-	   			course.getInitialTeacherId().toString(), result1.getCourseId(), 
-	   			"Teacher");
-	   	if(!result2) 
-	   		throw new ResourceNotFoundException();
+    	if(course.getInitialTeacherId()!=null) {
+    	   	Boolean result2 = participantDAO.addParticipant(
+    	   			course.getInitialTeacherId().toString(), result1.getCourseId(), 
+    	   			"teacher");
+    	   	if(!result2) 
+    	   		throw new ResourceNotFoundException();
+    	}
 	   	return result1;
-    	
     }
     
     @CrossOrigin
@@ -75,8 +67,11 @@ public class CourseResource {
     public CourseModel putCourse(
     		@RequestBody CourseModel course) {
     	CourseModel result = courseDAO.updateCourse(course);
-    	if(result.getCourseId()==null)
-    		throw new ResourceNotFoundException();
+    	if(result.getCourseId()==null) {
+    		if(result.getErrorCode()==HttpStatus.CONFLICT.value())
+    			throw new ResourceConflictException();
+    		throw new ResourceNotFoundException(); 
+    	}
     	return result;
     }
     
@@ -113,6 +108,24 @@ public class CourseResource {
     	CourseModel result = courseDAO.getCourse(courseID);
     	if(result.getCourseId()==null)
     		throw new ResourceNotFoundException();
+    	return result;
+    }
+    
+    @CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.PUT,
+    value = "/{CourseId}")
+    @ResponseBody
+    public CourseModel putCourseWithId(
+    		@PathVariable(value = "CourseId") String courseID,
+    		@RequestBody CourseModel course) {
+    	CourseModel result = courseDAO.updateCourse(course);
+    	if(result.getCourseId()==null) {
+    		if(result.getErrorCode()==HttpStatus.CONFLICT.value())
+    			throw new ResourceConflictException();
+    		throw new ResourceNotFoundException(); 
+    	}
     	return result;
     }
     

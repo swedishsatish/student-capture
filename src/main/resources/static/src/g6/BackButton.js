@@ -11,7 +11,7 @@
 var BackButton = React.createClass({
     // Upon clicking on the button, it should go back to the previous GUI window.
     onClick: function() {
-        ReactDOM.render(<TeacherViewSubmission/>,document.getElementById('courseContent'));
+        ReactDOM.render(<HardcodeTeacher/>,document.getElementById('courseContent'));
 
     },
     // Render function for BackButton
