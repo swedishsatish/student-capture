@@ -5,9 +5,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import studentcapture.feedback.FeedbackModel;
+
 import studentcapture.model.Grade;
-import studentcapture.model.Submission;
+
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -208,9 +208,9 @@ public class SubmissionDAO {
      * 
      * @author tfy12hsm
 	 */
-    public Optional<List<Submission>> getAllSubmissions(String assId) {
+    public Optional<List<Submission>> getAllSubmissions(int assId) {
     	List<Submission> submissions = new ArrayList<>();
-    	int assignmentId = Integer.parseInt(assId);
+    	int assignmentId = assId;
 
 		String getAllSubmissionsStatement = "SELECT "
 				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
