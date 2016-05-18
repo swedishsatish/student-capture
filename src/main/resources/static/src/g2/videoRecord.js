@@ -216,46 +216,7 @@ var Recorder = React.createClass({
             }
 
             //call xhr with full url, data and callback function
-            if(siteView == "createAssignment" || siteView == "submission") {
-                var xhReq = new XMLHttpRequest();
-
-                xhReq.onreadystatechange = function () {
-                    if (xhReq.readyState === 4 && xhReq.status == 200) {
-
-                        xhr(window.globalURL + props.postURL + xhReq.responseText, formData, props.playCallback);
-                    } else if(xhReq.readyState === 4 && xhReq.status !== 200) {
-                        if(xhReq.responseText == "")
-                            alert("Upload failed, no server connection.");
-                        else
-                            alert(xhReq.responseText);
-                    }
-                };
-                xhReq.onload = function() {
-                    if(xhReq.status == 404) {
-                        alert("Upload failed, no server connection.");
-                    }
-                    else if(xhReq.status == 408) {
-                        alert("Connection timed out.");
-                    }
-                    else if(xhReq.failed) {
-                        alert("Upload failed, no server connection.");
-                    }
-                }
-
-                var userID = "26";
-                var courseID = "60";
-                var assignmentID = "1000";
-
-                var url = window.globalURL+"/video/inrequest?userID=" + userID + "&courseID=" + courseID +
-                      "&assignmentID=" + assignmentID;
-                var method = "GET";
-
-                xhReq.open(method, url, true);
-                xhReq.send();
-
-            } else {
-                xhr(window.globalURL + props.postURL, formData, props.playCallback);
-            }
+            xhr(window.globalURL + props.postURL, formData, props.playCallback);
         }
 
         /* Function for sending XMLHttpRequests. */

@@ -1,4 +1,7 @@
 var NewAssignment = React.createClass({
+    getInitialState: function() {
+        return {courseID : 0};
+    },
     componentDidMount: function () {
         $("#startDate").datetimepicker(
             {
@@ -33,24 +36,46 @@ var NewAssignment = React.createClass({
                  */
                 minDate: 0
             });
+
+        tinymce.init({
+            selector: 'textarea.inputField',
+            theme: 'modern',
+            plugins: [
+                'advlist autolink lists link image charmap preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars code fullscreen',
+                'insertdatetime nonbreaking save table contextmenu directionality',
+                'template paste textcolor colorpicker textpattern imagetools autoresize'
+            ],
+            autoresize_max_height: 300,
+            toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            toolbar2: 'preview | forecolor backcolor',
+            image_advtab: true,
+            templates: [
+                { title: 'Test template 1', content: 'Test 1' },
+                { title: 'Test template 2', content: 'Test 2' }
+            ],
+            content_css: [
+                '//fast.fonts.net/cssapi/e6dc9b99-64fe-4292-ad98-6974f93cd2a2.css',
+                '//www.tinymce.com/css/codepen.min.css'
+            ]
+        });
     },
     submitAssignment: function() {
         var reqBody = {};
         var videoIntervall = {};
         var assignmentIntervall = {};
 
-
         videoIntervall["minTimeSeconds"] = $("#minTimeSeconds").val();
         videoIntervall["maxTimeSeconds"] = $("#maxTimeSeconds").val();
         assignmentIntervall["startDate"] = $("#startDate").val();
         assignmentIntervall["endDate"] = $("#endDate").val();
         assignmentIntervall["publishedDate"] = $("#publish").val();
-        reqBody["courseID"] = "1200";
+        reqBody["courseID"] = this.props.courseID;
         reqBody["title"] = $("#title").val();
-        reqBody["description"] = $("#description").val();
+        reqBody["description"] = tinymce.get('description').getContent()
         reqBody["videoIntervall"] = videoIntervall;
         reqBody["assignmentIntervall"] = assignmentIntervall;
-        reqBody["recap"] = $("#recap").val();
+        reqBody["recap"] = tinymce.get('recap').getContent()
         reqBody["scale"] = $("#scale").val();
         $.ajax({
             type : "POST",
@@ -60,20 +85,25 @@ var NewAssignment = React.createClass({
             timeout : 100000,
             success : function(response) {
                 console.log("SUCCESS: ", response);
-                ReactDOM.render(<NewAssignmentVideo assignmentID={response}/>, document.getElementById('courseContent'));
-            }, error : function(e) {
+                this.renderChild(response);
+            }.bind(this), 
+            error : function(e) {
                 console.log("ERROR: ", e);
-            }, done : function(e) {
+            }, 
+            done : function(e) {
                 console.log("DONE");
             }
         });
     },
+    renderChild : function (assignmentID) {
+        ReactDOM.render(<NewAssignmentVideo courseID={this.props.courseID} assignmentID={assignmentID}/>, document.getElementById('courseContent'));
+    },
     render : function() {
       return <div>
-                <div id="form">
+                <div id="newAssForm">
                 <input className="inputField" id="title" type="text" placeholder="title" /><br/>
-                <input className="inputField" id="description" type="text" placeholder="description" /><br/>
-                <input className="inputField" id="recap" type="text" placeholder="recap" /><br/>
+                <textarea className="inputField" id="description" type="text" placeholder="description" /><br/>
+                <textarea className="inputField" id="recap" type="text" placeholder="recap" /><br/>
 
                 <input id="startDate" type="button" value="yyyy-mm-dd 00:00"/>Start Date<br/>
                 <input id="endDate" type="button" value="yyyy-mm-dd 00:00"/>End Date<br/>
@@ -85,8 +115,8 @@ var NewAssignment = React.createClass({
                         <option value="U_G_VG_MVG">U,G,VG,MVG</option>
                         <option value="U_O_K_G">U,O,K,G</option>
                     </select>Grade scale<br/>
-                <div className="button primary-button" onClick = {handleCancel}> CANCEL </div>
-                <div className="button primary-button" id="post-question" onClick = {this.submitAssignment}> SUBMIT </div>
+                <div className="button primary-button SCButton" onClick = {handleCancel}> CANCEL </div>
+                <div className="button primary-button SCButton" id="post-question" onClick = {this.submitAssignment}> SUBMIT </div>
 
             </div>
         </div>
@@ -100,13 +130,16 @@ function handleCancel() {
 }
 
 var NewAssignmentVideo = React.createClass({
+    getInitialState: function() {
+        return {courseID : 0, assignmentID : 0};
+    },
     playVideo: function () {
         console.log("Video success");
     },
     formDataBuilder: function (blob, fileName) {
         var fd = new FormData();
         fd.append("video", blob);
-        fd.append("courseID", 1200);
+        fd.append("courseID", this.props.courseID);
         fd.append("assignmentID", this.props.assignmentID);
         return fd;
     },

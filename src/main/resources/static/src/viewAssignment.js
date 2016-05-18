@@ -170,7 +170,7 @@ var Question = React.createClass({
         );
     },
     componentDidMount: function() {
-        this.serverRequest = getJson("../static/test/assignmentdata.json", function (data) {
+        this.serverRequest = getJson("test/assignmentdata.json", function (data) {
             var json = JSON.parse(data);
             this.setState({question: json["AssignmentQuestion"]});
         }.bind(this));
