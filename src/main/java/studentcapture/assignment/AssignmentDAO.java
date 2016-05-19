@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -134,11 +135,15 @@ public class AssignmentDAO {
      * @return              The video and Http status OK or Http status NOT_FOUND.
      */
     public ResponseEntity<InputStreamResource> getAssignmentVideo(int assignmentID) {
-        String courseID = this.getCourseIDForAssignment(assignmentID);
-        //String path = FilesystemInterface.generatePath(courseID,assignmentID)
-        //        + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
-        //TODO: uncomment and use path. generatePath needs to be refactored first.
-        return FilesystemInterface.getVideo("bugsbunny.webm");
+        Optional<AssignmentModel> assignment = this.getAssignment(assignmentID);
+
+        if (assignment.isPresent()) {
+            String path = FilesystemInterface.generatePath(assignment.get());
+            path = path.concat(FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME);
+            return FilesystemInterface.getVideo(path);
+        }
+
+        return new ResponseEntity("Assignment does not exist.", HttpStatus.NOT_FOUND);
     }
 
 //    /**
