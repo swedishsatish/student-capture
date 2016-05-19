@@ -216,7 +216,7 @@ var Recorder = React.createClass({
             }
 
             //call xhr with full url, data and callback function
-            xhr(window.globalURL + props.postURL, formData, props.playCallback);
+            xhr(props.postURL, formData, props.playCallback);
         }
 
         /* Function for sending XMLHttpRequests. */
@@ -260,7 +260,13 @@ var Recorder = React.createClass({
         }
 
         /* Showing recording-light on load (not recording) */
-        document.getElementById("rec-text").innerHTML = "&#11093;";
+
+        if(typeof props.calc !== "undefined") {
+            document.getElementById("test-rec-text").innerHTML = "&#11093;";
+        }
+        else {
+            document.getElementById("rec-text").innerHTML = "&#11093;";
+        }
     },
     render: function() {
         var id;
