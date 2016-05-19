@@ -71,7 +71,7 @@ window.Settings = React.createClass({
         };
 
         $.ajax({
-            url: window.globalURL + "/users/" + this.props.userID + "/settings",
+            url: "users/" + this.props.userID + "/settings",
             type: "GET",
             async: false,
             success: function (data, status) {
