@@ -135,7 +135,7 @@ public class AssignmentDAO {
      * @return              The video and Http status OK or Http status NOT_FOUND.
      */
     public ResponseEntity<InputStreamResource> getAssignmentVideo(int assignmentID) {
-        Optional<AssignmentModel> assignment = this.getAssignment(assignmentID);
+        Optional<AssignmentModel> assignment = getAssignment(assignmentID);
 
         if (assignment.isPresent()) {
             String path = FilesystemInterface.generatePath(assignment.get());
@@ -143,7 +143,7 @@ public class AssignmentDAO {
             return FilesystemInterface.getVideo(path);
         }
 
-        return new ResponseEntity("Assignment does not exist.", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 //    /**

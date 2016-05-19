@@ -64,9 +64,9 @@ public class FilesystemInterface {
 			responseHeaders.add("content-disposition", "inline; filename=AssignmentVideo");
 			responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
 		} catch (FileNotFoundException e) {
-			responseEntity = new ResponseEntity("File not found.", HttpStatus.NOT_FOUND);
+			responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (IOException e) {
-			responseEntity = new ResponseEntity("Error getting file.", HttpStatus.NOT_FOUND);
+			responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		return responseEntity;
