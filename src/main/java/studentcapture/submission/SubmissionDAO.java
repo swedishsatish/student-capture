@@ -5,8 +5,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 import studentcapture.model.Grade;
-import studentcapture.submission.Submission;
+
 
 import java.util.*;
 
@@ -64,6 +65,7 @@ public class SubmissionDAO {
 	 * Add a grade for a subsmission
 	 *
 	 * @param submission Object containing assignmentID, studentID
+	 * @param grade      Object containing grade, teacherID, date, publish
 	 * @return True if a row was changed, otherwise false
 	 */
 	public boolean setGrade(Submission submission) {
@@ -85,6 +87,8 @@ public class SubmissionDAO {
 
 		return updatedRows == 1;
 	}
+
+
 
 	/**
 	 * Remove a submission
@@ -115,6 +119,39 @@ public class SubmissionDAO {
 		return result;
 	}
 
+	/**
+	 * Get information about the grade of a submission
+	 *
+	 * @param submission Unique identifier for the assignment submission grade bra
+	 * @return A list containing the grade, date, and grader
+	 */
+	public Map<String, Object> getGrade(Submission submission) {
+		String queryForGrade = "SELECT grade, submissiondate as time, " +
+				"teacherid FROM submission " +
+				"WHERE (studentid = ? AND assignmentid = ?)";
+		String queryForTeacher = "SELECT concat(firstname,' ', lastname)" +
+				" as teacher FROM users WHERE (userid = ?)";
+		Map<String, Object> response;
+		try {
+			response = databaseConnection.queryForMap(queryForGrade,
+					new Object[]{submission.getStudentID(), submission.getAssignmentID()});
+			if (response.get("teacherid") != null) {
+				String teacherName = databaseConnection.queryForObject(queryForTeacher,
+						new Object[]{response.get("teacherid")}, String.class);
+				response.put("teacher", teacherName);
+			}
+			response.put("time", response.get("time").toString());
+		} catch(IncorrectResultSizeDataAccessException e) {
+			response = new HashMap<>();
+			response.put("error", "The given parameters does not have an" +
+				" entry in the database");
+		} catch(DataAccessException e) {
+			response = new HashMap<>();
+			response.put("error", "Could not connect to the database");
+		}
+
+		return response;
+	}
 
     /**
      * Get all ungraded submissions for an assignment
@@ -170,15 +207,18 @@ public class SubmissionDAO {
      * 
      * @author tfy12hsm
 	 */
-    public Optional<List<Submission>> getAllSubmissions(int assignmentID) {
+    public Optional<List<Submission>> getAllSubmissions(int assId) {
+    	List<Submission> submissions = new ArrayList<>();
+    	int assignmentId = assId;
 
 		String getAllSubmissionsStatement = "SELECT "
 				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
 				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId,"
-				+ "sub.StudentPublishConsent,sub.PublishStudentSubmission FROM"
+				+ "sub.StudentPublishConsent,sub.PublishStudentSubmission, sub.Status FROM"
 				+ " Submission AS sub LEFT JOIN Users AS stu ON "
 				+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
-		return getSubmissionsFromStatement(getAllSubmissionsStatement, assignmentID);
+
+    	return getSubmissionsFromStatement(getAllSubmissionsStatement, assignmentId);
     }
 
 	/**
@@ -219,14 +259,14 @@ public class SubmissionDAO {
      */
     public Optional<Submission> getSubmission(int assignmentId, int userId) {
     	Submission result = null;
-    	String getStudentSubmissionStatement =
+        String getStudentSubmission =
 				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
 
 		try {
-	    	Map<String, Object> map = databaseConnection.queryForMap(
-	    			getStudentSubmissionStatement, assignmentId, userId);
-	    	
-	    	 result = new Submission(map);
+	        result = databaseConnection.queryForObject(
+					getStudentSubmission, new SubmissionRowMapper(), assignmentId, userId);
+
+
 	    } catch (IncorrectResultSizeDataAccessException e){
 			//TODO
 		    return Optional.empty();

@@ -2,32 +2,49 @@ var CourseList = React.createClass({
     printVideo : function() {
         ReactDOM.render(<AssignmentContent course="kurs 3" assignment="assignment 2"/>,document.getElementById("courseContent"));
     },
-    
+
     studentSubmitions: function () {
-         $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:1000},function (res) {
-             //var users = JSON.parse(res);
-             console.log(res);
-             //console.log(users);
-             ReactDOM.render(<StudentList students={res}/>, document.getElementById('courseContent'));
-         });
+         // $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:1000},function (res) {
+         //     //var users = JSON.parse(res);
+         //     console.log(res);
+         //     //console.log(users);
+         //     ReactDOM.render(<StudentList students={res}/>, document.getElementById('courseContent'));
+         // });
         var users = [{
+            videoURL:"http://www.w3schools.com/html/mov_bbb.mp4",
             assignmentID: 1000,
             studentID: 21,
             studentName: "Anton Andersson",
             submissionDate: "2010-06-23",
+            withdraw: false,
             grade: "G",
             teacherID: 12
         },
             {
+                videoURL:"http://techslides.com/demos/sample-videos/small.mp4",
                 assignmentID: 1000,
                 studentID: 21,
                 studentName: "Lukas Lundberg",
                 submissionDate: "2010-06-23",
                 grade: "K",
-                teacherID: 12
-            }];
+<<<<<<< Temporary merge branch 1
+                teacherID: 12,
+                withdraw: false
+            },
+            {
+                videoURL:"http://easyhtml5video.com/assets/video/new/Penguins_of_Madagascar.mp4",
+                assignmentID:213,
+                studentID:2,
+                studentName: "Daniel Eliasson",
+                submissionDate: "2012-05-23",
+                grade: "U",
+                teacherID: 221,
+                withdraw:true
+            }
+        ];
         window.users=users;
-        ReactDOM.render(<StudentList students={users}/>, document.getElementById('courseContent'));
+        console.log("jebjeb")
+        ReactDOM.render(<HardcodeTeacher students={users}/>, document.getElementById('courseContent'));
     },
 
     printFeedback : function() {

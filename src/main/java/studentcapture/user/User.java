@@ -1,4 +1,4 @@
-package studentcapture.model;
+package studentcapture.user;
 
 /**
  * Created by c12ton on 5/12/16.
@@ -12,6 +12,8 @@ public class User {
     private String lName;
     private String email;
     private String pswd;
+    private String userID;
+
 
 
     //Needed because of json
@@ -34,6 +36,14 @@ public class User {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getfName() {
+        return fName;
+    }
+
+    public void setfName(String fName) {
+        this.fName = fName;
     }
 
     public String getlName() {
@@ -60,13 +70,23 @@ public class User {
         this.pswd = pswd;
     }
 
-    public String getfName() {
-        return fName;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
-    public void setfName(String fName) {
-        this.fName = fName;
+    public String getUserID() {
+        return this.userID;
     }
 
 
+    @Override
+    public boolean equals(Object other) {
+        User that = (User) other;
+
+        return (that.getUserName() == this.getUserName())
+                && (that.getfName() == this.fName)
+                && (that.getlName() == this.lName)
+                && (that.getEmail() == this.email)
+                && (that.getPswd()  == this.pswd);
+    }
 }

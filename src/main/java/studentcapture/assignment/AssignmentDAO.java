@@ -2,8 +2,10 @@ package studentcapture.assignment;
 
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -16,7 +18,6 @@ import studentcapture.course.CourseModel;
 import studentcapture.course.CourseDAO;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
-import studentcapture.model.Assignment;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -90,7 +91,6 @@ public class AssignmentDAO {
             assignmentID = keyHolder.getKey().intValue();
         }
 
-
         try {
             FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
                     assignmentModel.getDescription(), FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
@@ -129,6 +129,19 @@ public class AssignmentDAO {
     }
 
     /**
+     * Gets the video question corresponding to the specified assignment.
+     * @param assignmentID  Unique assignment identifier.
+     * @return              The video and Http status OK or Http status NOT_FOUND.
+     */
+    public ResponseEntity<InputStreamResource> getAssignmentVideo(int assignmentID) {
+        String courseID = this.getCourseIDForAssignment(assignmentID);
+        //String path = FilesystemInterface.generatePath(courseID,assignmentID)
+        //        + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
+        //TODO: uncomment and use path. generatePath needs to be refactored first.
+        return FilesystemInterface.getVideo("bugsbunny.webm");
+    }
+
+    /**
      * Used to verify if a given date is in the right format.
      *
      * @param format The format to check against.
@@ -149,50 +162,50 @@ public class AssignmentDAO {
      * @return A list containing information about the assignment.
      *      The list is on the form [course ID, assignment title, opening datetime, closing datetime, minimum video time, maximum video time]
      */
-    public Assignment getAssignmentInfo(int assignmentID){
-        ArrayList<String> returnValues = new ArrayList<>();
-
-        // Construct query
-        String columns[] = {"courseid", "title", "startdate", "enddate", "mintime", "maxtime"};
-        String tempVal;
-        String query;
-
-        // Execute query
-        try {
-            for (String c : columns) {
-                query = "SELECT " + c + " FROM assignment WHERE (assignmentid = ?);";
-                tempVal = jdbcTemplate.queryForObject(query, new Object[]{assignmentID}, String.class);
-
-                if (tempVal == null) {
-                    tempVal = "Missing value";
-                } else {
-                    tempVal = tempVal.trim();
-                }
-                returnValues.add(tempVal);
-            }
-        } catch (IncorrectResultSizeDataAccessException up) {
-            throw up;
-        } catch (DataAccessException down) {
-            throw down;
-        }
-        // Format results
-        Assignment assignment = new Assignment();
-        assignment.setCourseID(returnValues.get(0));
-        assignment.setTitle(returnValues.get(1));
-        assignment.setStartDate(new Timestamp(System.currentTimeMillis()));
-        assignment.setEndDate(new Timestamp(System.currentTimeMillis()));
-        assignment.setMinTime(Integer.parseInt(returnValues.get(4)));
-        assignment.setMaxTime(Integer.parseInt(returnValues.get(5)));
-
-        return assignment;
-    }
+//    public AssignmentModel getAssignmentInfo(int assignmentID){
+//        ArrayList<String> returnValues = new ArrayList<>();
+//
+//        // Construct query
+//        String columns[] = {"courseid", "title", "startdate", "enddate", "mintime", "maxtime"};
+//        String tempVal;
+//        String query;
+//
+//        // Execute query
+//        try {
+//            for (String c : columns) {
+//                query = "SELECT " + c + " FROM assignment WHERE (assignmentid = ?);";
+//                tempVal = jdbcTemplate.queryForObject(query, new Object[]{assignmentID}, String.class);
+//
+//                if (tempVal == null) {
+//                    tempVal = "Missing value";
+//                } else {
+//                    tempVal = tempVal.trim();
+//                }
+//                returnValues.add(tempVal);
+//            }
+//        } catch (IncorrectResultSizeDataAccessException up) {
+//            throw up;
+//        } catch (DataAccessException down) {
+//            throw down;
+//        }
+//        // Format results
+//        AssignmentModel assignment = new AssignmentModel();
+//        assignment.setCourseID(returnValues.get(0));
+//        assignment.setTitle(returnValues.get(1));
+//        assignment.setStartDate(new Timestamp(System.currentTimeMillis()));
+//        assignment.setEndDate(new Timestamp(System.currentTimeMillis()));
+//        assignment.setMinTime(Integer.parseInt(returnValues.get(4)));
+//        assignment.setMaxTime(Integer.parseInt(returnValues.get(5)));
+//
+//        return assignment;
+//    }
 
 	public String getAssignmentID(String courseID,String assignmentTitle){
     	String sql = "SELECT assignmentID from Assignment WHERE courseID = ? AND Title = ?";
     	return jdbcTemplate.queryForObject(sql, new Object[]{courseID,assignmentTitle},String.class);
 	}
 
-    public String getCourseIDForAssignment(String assignmentID) {
+    public String getCourseIDForAssignment(int assignmentID) {
         String sql = "SELECT courseID from Assignment WHERE assignmentID = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{assignmentID},String.class);
     }

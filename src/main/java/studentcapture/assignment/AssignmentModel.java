@@ -1,6 +1,8 @@
 package studentcapture.assignment;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.Map;
 
@@ -19,6 +21,8 @@ public class AssignmentModel {
     private GradeScale scale;
     private String recap;
     private Timestamp published;
+    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss");
 
     public AssignmentModel(String title,
                            String description,
@@ -45,8 +49,8 @@ public class AssignmentModel {
 		courseID = (String) map.get("CourseId");
 		title = (String) map.get("Title");
 		assignmentIntervall = new AssignmentDateIntervalls();
-		assignmentIntervall.setStartDate((String) map.get("StartDate"));
-		assignmentIntervall.setEndDate((String) map.get("EndDate"));
+		assignmentIntervall.setStartDate(FORMATTER.format((Timestamp) map.get("StartDate")));
+		assignmentIntervall.setEndDate(FORMATTER.format((Timestamp) map.get("EndDate")));
 		videoIntervall = new AssignmentVideoIntervall();
 		videoIntervall.setMinTimeSeconds((Integer) map.get("MinTime"));
 		videoIntervall.setMaxTimeSeconds((Integer) map.get("MaxTime"));

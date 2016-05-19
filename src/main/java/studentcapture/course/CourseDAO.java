@@ -3,6 +3,7 @@ package studentcapture.course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -25,11 +26,10 @@ public class CourseDAO {
      */
     public CourseModel addCourse(CourseModel course) {
         String addCourseStatement =
-                "INSERT INTO Course VALUES (?,?,?,?,?,?,?)";
+                "INSERT INTO Course VALUES (DEFAULT,?,?,?,?,?)";
 
         try {
             int rowsAffected = jdbcTemplate.update(addCourseStatement,
-                    course.getCourseId(),
                     course.getYear(),
                     course.getTerm(),
                     course.getCourseName(),
@@ -38,12 +38,19 @@ public class CourseDAO {
             if (rowsAffected == 1) {
             	return getCourseWithoutID(course);
             } else {
-            	return new CourseModel();
+            	CourseModel errorCourse = new CourseModel();
+            	errorCourse.setErrorCode(HttpStatus.CONFLICT.value());
+            	return errorCourse;
             }
         } catch (IncorrectResultSizeDataAccessException e){
-            return new CourseModel();
+        	CourseModel errorCourse = new CourseModel();
+        	errorCourse.setErrorCode(HttpStatus.NOT_FOUND.value());
+        	return errorCourse;
         } catch (DataAccessException e1){
-            return new CourseModel();
+            CourseModel errorCourse = new CourseModel();
+        	errorCourse.setErrorCode(HttpStatus.CONFLICT.value());
+        	return errorCourse;
+            
         }
     }
 
@@ -57,7 +64,7 @@ public class CourseDAO {
      */
     public CourseModel getCourseWithoutID(CourseModel course){
     	try {
-    		String sql = "SELECT CourseId from course WHERE Year=? "
+    		String sql = "SELECT * from course WHERE Year=? "
         			+ "AND Term=? AND CourseName=?";
     		List<Map<String,Object>> sqlResponse = jdbcTemplate.queryForList(
     				sql, new Object[]{
@@ -99,7 +106,7 @@ public class CourseDAO {
      * 
      * @author tfy12hsm
      */
-	public CourseModel getCourse(String courseId) {
+	public CourseModel getCourse(Integer courseId) {
 		try {
             String getCourseStatement =
                     "SELECT * FROM Course WHERE CourseId=?";
@@ -172,7 +179,7 @@ public class CourseDAO {
         }
     }
     
-    public CourseModel removeCourse(String courseId) {
+    public CourseModel removeCourse(Integer courseId) {
         String removeCourseStatement = "DELETE FROM Course WHERE CourseID=?";
 
         try {
@@ -181,13 +188,16 @@ public class CourseDAO {
                     courseId);         
             if(rowsAffected == 1) {
             	return course;
-            } 
-            return new CourseModel();
+            }
         } catch (IncorrectResultSizeDataAccessException e){
-           	return new CourseModel();
         } catch (DataAccessException e1){
-            return new CourseModel();
+        	CourseModel errorCourse = new CourseModel();
+        	errorCourse.setErrorCode(HttpStatus.CONFLICT.value());
+        	return errorCourse;
         }
+        CourseModel errorCourse = new CourseModel();
+    	errorCourse.setErrorCode(HttpStatus.NOT_FOUND.value());
+    	return errorCourse;
     }
 
     /**

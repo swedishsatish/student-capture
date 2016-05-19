@@ -1,30 +1,22 @@
 package studentcapture.datalayer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.CourseDAO;
 import studentcapture.course.HierarchyDAO;
-import studentcapture.course.HierarchyModel;
-import studentcapture.datalayer.database.*;
+import studentcapture.datalayer.database.ParticipantDAO;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
-import studentcapture.model.Assignment;
 import studentcapture.model.Participant;
 import studentcapture.submission.Submission;
-import studentcapture.model.User;
 import studentcapture.submission.SubmissionDAO;
 
 import javax.validation.Valid;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,8 +36,6 @@ public class DatalayerCommunicator {
     private AssignmentDAO assignment;
     @Autowired
     private CourseDAO courseDAO;
-    @Autowired
-    private UserDAO userDAO;
     @Autowired
     private ParticipantDAO participantDAO;
     @Autowired
@@ -161,32 +151,11 @@ public class DatalayerCommunicator {
     @RequestMapping(value = "/publishFeedback", method = RequestMethod.POST)
     public boolean publishFeedback(@RequestParam(value = "Submission") Submission submission,
                                @RequestParam(value = "Publish") boolean publish) {
-        String courseID = assignment.getCourseIDForAssignment(String.valueOf(submission.getAssignmentID()));
+        String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID());
         submission.setCourseID(courseID);
         return submissionDAO.publishFeedback(submission, publish);
     }
 
-    /**
-     * Sends the assignment video file.
-     * @param courseCode    Courses 6 character identifier.
-     * @param courseId      Courses unique database id.
-     * @param assignmentId  Assignments unique database id.
-     * @return              The video file vie http.
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/getAssignmentVideo/{courseCode}/{courseId}/{assignmentId}",
-            method = RequestMethod.GET, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> getAssignmentVideo(
-            @PathVariable("courseCode") String courseCode,
-            @PathVariable("courseId") String courseId,
-            @PathVariable("assignmentId") String assignmentId) {
-
-        String path = FilesystemInterface.generatePath(courseCode,courseId,assignmentId)
-                + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
-        ResponseEntity<InputStreamResource> responseEntity = FilesystemInterface.getVideo(path);
-
-        return responseEntity;
-    }
 
     /**
      * Sends the feedback video file.
@@ -212,86 +181,30 @@ public class DatalayerCommunicator {
      * @param assID Unique identifier for the assignment
      * @return Array containing [course ID, assignment title, opening datetime, closing datetime, minimum video time, maximum video time, description]
      */
-    @CrossOrigin
-    @RequestMapping(value = "/getAssignmentInfo", method = RequestMethod.POST)
-    public Assignment getAssignmentInfo(@RequestParam(value = "assID") int assID){
+//    @CrossOrigin
+//    @RequestMapping(value = "/getAssignmentInfo", method = RequestMethod.POST)
+//    public Assignment getAssignmentInfo(@RequestParam(value = "assID") int assID){
+//
+//        Assignment results = assignment.getAssignmentInfo(assID);
+//
+//        //Need the courseCode for the path
+//        //code for the filesystem
+//        /*String courseCode = courseDAO.getCourseCodeFromId(results.getCourseID());
+//        FileInputStream descriptionStream = fsi.getAssignmentDescription(courseCode, results.getCourseID(), assID);
+//        Scanner scanner = new Scanner(descriptionStream);
+//        String description = "";
+//
+//        //Construct description string
+//        while (scanner.hasNext()){
+//            description += scanner.nextLine() + "\n";
+//        }*/
+//
+//        String description = "beskrivning";
+//
+//        results.setDescription(description);
+//        return results;
+//    }
 
-        Assignment results = assignment.getAssignmentInfo(assID);
-
-        //Need the courseCode for the path
-        //code for the filesystem
-        /*String courseCode = courseDAO.getCourseCodeFromId(results.getCourseID());
-        FileInputStream descriptionStream = fsi.getAssignmentDescription(courseCode, results.getCourseID(), assID);
-        Scanner scanner = new Scanner(descriptionStream);
-        String description = "";
-
-        //Construct description string
-        while (scanner.hasNext()){
-            description += scanner.nextLine() + "\n";
-        }*/
-
-        String description = "beskrivning";
-
-        results.setDescription(description);
-        return results;
-    }
-
-
-    /**
-     * @param userName
-     * @return
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/userNameExist", method = RequestMethod.GET)
-    public boolean userNameExist(
-                  @RequestParam(value = "userName") String userName) {
-        return userDAO.userNameExist(userName);
-    }
-
-    /**
-     * @param email
-     * @return true if email exist else false
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/userEmailExist", method = RequestMethod.GET)
-    public boolean userEmailExist(@RequestParam(value = "email") String email) {
-        return userDAO.emailExist(email);
-    }
-
-    /**
-     * Register user by given information.
-     * @return true if registration was successfull else false
-     */
-    @CrossOrigin
-    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE,
-                    method = RequestMethod.GET,
-                    value = "/addUser")
-    public boolean addUser(@RequestParam(value = "jsonStringUser") String jsonStringUser) {
-        ObjectMapper mapper = new ObjectMapper();
-        User user = null;
-        try {
-            user = mapper.readValue(jsonStringUser,User.class);
-            return userDAO.addUser(user);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    /**
-     * Get hashed password for a given username.
-     * @param username username for a user
-     * @return hashed password else null.
-     */
-    @CrossOrigin
-    @RequestMapping( produces = MediaType.APPLICATION_JSON_VALUE,
-                     method = RequestMethod.GET,
-                     value = "/getHpswd")
-    public String getUserPswd(@RequestParam(value = "username") String username) {
-        return userDAO.getPswd(username);
-    }
-    
     /**
      * Adds participant to course in database.
      *
@@ -375,6 +288,7 @@ public class DatalayerCommunicator {
     	return null;
     }
     
+   
 
     /**
      * Returns list of all ungraded submissions made in response to a given

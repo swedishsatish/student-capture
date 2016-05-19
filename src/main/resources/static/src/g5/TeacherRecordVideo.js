@@ -20,7 +20,7 @@ var TeacherRecordVideo = React.createClass({
     },
     render: function () {
         return (
-            <div>
+            <div id="teacherRecord">
                 <h3>Teacher Recording Video</h3>
                 <div className="row" id="">
                     <div id="videocontainer" className="six columns">

@@ -35,6 +35,7 @@ public class FilesystemInterfaceTest {
     @After
     public void tearDown() throws Exception {
         deleteFile(new File(StudentCaptureApplication.ROOT+"/moose/"+courseCode));
+        deleteFile(new File(StudentCaptureApplication.ROOT+"/moose/"+courseID));
     }
 
     @SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions"})
@@ -157,6 +158,23 @@ public class FilesystemInterfaceTest {
         file = new File(path);
 
         assertTrue(file.isFile());
+    }
+
+    @Test
+    public void shouldGetFileContentsAsString() throws IOException {
+        String fileContents;
+
+        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "The file contains this",
+                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+        fileContents = FilesystemInterface.getAssignmentText(courseID, assignmentID,
+                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+
+        assertEquals("The file contains this", fileContents);
+    }
+
+    @Test(expected = FileNotFoundException.class)
+    public void shouldThrowWhenAssignmentTextDontExist() throws IOException {
+        FilesystemInterface.getAssignmentText(courseID, assignmentID, FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
     }
 
     @Test

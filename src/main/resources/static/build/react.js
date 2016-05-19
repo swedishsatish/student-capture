@@ -3120,7 +3120,7 @@ function accumulateDirectDispatches(events) {
 }
 
 /**
- * A small set of propagation patterns, each of which will accept a small amount
+ * A small set of propagation patterns, each of which will accept a small nParticipants
  * of information, and generate a set of "dispatch ready event objects" - which
  * are sets of events that have already been annotated with a set of dispatched
  * listener functions/ids. The API is designed this way to discourage these
@@ -9564,7 +9564,7 @@ var ReactDefaultPerf = {
         // A "measurement" is a set of metrics recorded for each flush. We want
         // to group the metrics for a given flush together so we can look at the
         // components that rendered and the DOM operations that actually
-        // happened to determine the amount of "wasted work" performed.
+        // happened to determine the nParticipants of "wasted work" performed.
         ReactDefaultPerf._allMeasurements.push(entry = {
           exclusive: {},
           inclusive: {},
@@ -9845,7 +9845,7 @@ function getInclusiveSummary(measurements, onlyClean) {
 function getUnchangedComponents(measurement) {
   // For a given reconcile, look at which components did not actually
   // render anything to the DOM and return a mapping of their ID to
-  // the amount of time it took to render the entire subtree.
+  // the nParticipants of time it took to render the entire subtree.
   var cleanComponents = {};
   var writes = measurement.writes;
   var dirtyComposites = {};

@@ -1,3 +1,64 @@
 #newAssTitle {
 	width:100%;
 }
+
+#newAssForm {
+	width: 80%;
+	margin-left: 6%;
+	margin-right: 6%;
+    margin-top:20px;
+}
+
+#title {
+    width: 100%;
+}
+
+#dates {
+    width: 100%;
+    height: 68px;
+}
+
+#settings {
+    width: 100%;
+    height: 68px;
+}
+
+.DTContainer {
+    width:30%;
+    margin-right: 4%;
+    float:left;
+}
+
+#rightDTContainer {
+    float: right;
+    margin-right: 0;
+}
+
+#grading {
+    float:right;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.DTText {
+    font-size: 62%;
+    margin-bottom: 0;
+}
+
+#minTimeSeconds, #maxTimeSeconds {
+    text-indent: 5px;
+}
+
+.DTContainer input {
+    padding:0;
+    width:100%;
+}
+
+.DTContainer select {
+    padding:0;
+    width:100%;
+}
+
+#startDate, #endDate, #publish {
+    width:100%;
+}

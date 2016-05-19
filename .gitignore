@@ -65,6 +65,7 @@ log/
 ehthumbs.db
 Icon?
 Thumbs.db
+*.DS_Store
 
 # VCS #
 #######
