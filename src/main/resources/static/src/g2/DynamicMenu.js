@@ -35,6 +35,7 @@ var Assignment = React.createClass({
         var courseID = this.props.courseId;
 
         if(this.props.role == "student"){
+
             if(this.props.assignment.assignment.submissions == null){
                 ReactDOM.render(<AssignmentContent course={courseID} assignment={assID} uid={uid}/>,
                     document.getElementById('courseContent'));
@@ -64,8 +65,9 @@ var Assignment = React.createClass({
         var assignment = this.props.assignment;
         var classname = "assignment menuItem navigationText";
         var now = Date.now();
-        if(assignment.assignment.startDate >= now &&
-            assignment.assignment.endDate <= now)
+
+        if(new Date(assignment.assignment.assignmentIntervall.startDate).getTime() >= now &&
+            new Date(assignment.assignment.assignmentIntervall.endDate).getTime() <= now)
             classname += " active";
 
         return <li className={classname}><div onClick={this.handleClick.bind(this,assignment)}>{assignment.assignment.title}</div></li>;
