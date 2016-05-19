@@ -63,6 +63,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @After
     public void tearDown() {
         String sql1 = "DELETE FROM Users;";
+        //Reset serialize userid
         String sql2 = "ALTER TABLE users ALTER COLUMN userid RESTART WITH 1";
         jdbcMock.update(sql1);
         jdbcMock.update(sql2);
@@ -105,14 +106,15 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testUpdateUser() {
-        User user = new User("testUser","newFirstName","newLname",
-                             "newemai@gmail.com","new_pswd_1fdsgasda213fC");
 
-        boolean res = userDAO.updateUser(user);
+        userSetup.setfName("new username");
+        userSetup.setPswd("new password");
+
+        boolean res = userDAO.updateUser(userSetup);
         User userRes = userDAO.getUser("testUser",0);
 
         assertTrue(res);
-        assertEquals(user,userRes);
+        assertEquals(userSetup,userRes);
     }
 
     @Test
@@ -132,8 +134,33 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         assertEquals(ErrorFlags.EMAILEXISTS,res);
     }
 
+    @Test
+    public void testAddToken() {
+        userSetup.setToken("new token");
+
+        boolean res = userDAO.updateUser(userSetup);
+        User user   = userDAO.getUser(userSetup.getUserName(),0);
+
+
+        assertEquals(userSetup,user);
+        assertTrue(res);
+
+    }
+
+    @Test
+    public void testRemoveToken() {
+        userSetup.setToken(null);
+
+        boolean res = userDAO.updateUser(userSetup);
+        User user = userDAO.getUser(userSetup.getUserName(),0);
+
+        assertEquals(userSetup,user);
+        assertTrue(res);
+    }
+
     /**
      * Used for debugging purposes.
+     * Usage: Called inside test method.
      */
     private void printUsersTableTemp() {
         System.out.println("!!!!!!!!!!!!!!!!!TABLE!!!!!!!!!!!!!!!!!!!!!!!!!\n");

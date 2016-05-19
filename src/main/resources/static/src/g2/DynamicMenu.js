@@ -31,12 +31,13 @@ var Assignment = React.createClass({
      */
     handleClick: function(assignment,event) {
         var uid = this.props.uid;
-        var assID = this.props.assignment.assignment.assignmentId;
+        var assID = this.props.assignment.assignment.assignmentID;
         var courseID = this.props.courseId;
-
+        console.log(assID)
         if(this.props.role == "student"){
 
-            if(this.props.assignment.assignment.submissions == null){
+          
+            if(objToList(this.props.assignment.submissions).length == 0){
                 ReactDOM.render(<AssignmentContent course={courseID} assignment={assID} uid={uid}/>,
                     document.getElementById('courseContent'));
             }
@@ -106,7 +107,7 @@ var Assignments = React.createClass({
         var role = this.props.role;
         var assignments = objToList(course.assignments);
         var assList = assignments.map(function (ass) {
-            return <Assignment key={ass.assignment.assignmentId} courseId={course.course.courseId} assignment={ass} uid={uid} role={role}/>
+            return <Assignment key={ass.assignment.assignmentID} courseId={course.course.courseId} assignment={ass} uid={uid} role={role}/>
         });
         if(role=="teacher"){
             assList.push(<li className="active course menuItem navigationText">

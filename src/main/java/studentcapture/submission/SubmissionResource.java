@@ -23,8 +23,6 @@ import java.util.List;
 public class SubmissionResource {
     @Autowired
     SubmissionDAO DAO;
-    AssignmentDAO assignmentDAO;
-    CourseDAO courseDAO;
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
