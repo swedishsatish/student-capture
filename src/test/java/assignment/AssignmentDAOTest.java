@@ -47,11 +47,11 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
         am = new AssignmentModel(
                 courseID,               // CourseId
                 "PVT",                  //Title
-                "",                     // Info
+                "Description",                     // Info
                 videoIntervall,
                 assignmentIntervalls,
                 "U_O_K_G",              // GradeScale
-                "");                    // Recap
+                "Recap");                    // Recap
         am.setCourseID(courseID);
         String sql = "INSERT INTO Course VALUES (502, 1912, 'HT12', " +
                 "'ht1212', 'Comedy','Description' , true);";

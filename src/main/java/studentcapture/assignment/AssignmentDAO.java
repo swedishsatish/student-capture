@@ -237,7 +237,7 @@ public class AssignmentDAO {
      *
      * @author dv14oan
      */
-    public AssignmentModel getAssignmentModel(int assignmentID) throws NotFoundException {
+    public AssignmentModel getAssignmentModel(int assignmentID) throws NotFoundException, IOException {
 
         String getAssignmentStatement = "SELECT * FROM "
                 + "Assignment WHERE AssignmentId=?;";
@@ -260,16 +260,20 @@ public class AssignmentDAO {
             assignmentIntervalls.setPublishedDate(srs.getString("Published").replaceAll("\\.\\d+", ""));
         }
 
+        int courseId = srs.getInt("courseId");
+
+        String description = FilesystemInterface.getAssignmentText(courseId, String.valueOf(assignmentID), FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+        String recap = FilesystemInterface.getAssignmentText(courseId, String.valueOf(assignmentID), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+
         AssignmentModel am = new AssignmentModel(
-                srs.getInt("courseId"),     // CourseId
+                courseId,                   // CourseId
                 srs.getString("Title"),     // Title
-                "",                         // Description
+                description,                // Description
                 videoIntervall,             // videoIntervall
                 assignmentIntervalls,       // assignmentIntervalls
                 srs.getString("GradeScale"),// GradeScale
-                "");                        // Recap
+                recap);                     // Recap
 
-        //am.setCourseID("UA502");
         return am;
     }
 
