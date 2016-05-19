@@ -177,7 +177,7 @@ public class Submission {
         this.assignmentID = assignmentID;
     }
 
-    public boolean getStudentPublishConsent() {
+    public Boolean getStudentPublishConsent() {
         return studentPublishConsent;
     }
 

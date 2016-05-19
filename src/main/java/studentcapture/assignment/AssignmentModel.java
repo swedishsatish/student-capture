@@ -71,6 +71,14 @@ public class AssignmentModel {
 		}
 	}
 
+    public Integer getAssignmentID() {
+    	return assignmentID;
+    }
+    
+    public void setAssignmentID(Integer assignmentID) {
+    	this.assignmentID = assignmentID;
+    }
+    
 	public int getCourseID() {
         return courseID;
     }
