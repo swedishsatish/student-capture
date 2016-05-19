@@ -72,7 +72,11 @@ public class UserResource {
         HttpHeaders httpHeaders = new HttpHeaders();
         
         //Get the correct status message
-        uri = new URI("/login?" + status.toString());
+        if(status == ErrorFlags.NOERROR){
+            uri = new URI("/login?" + status.toString());
+        }else{
+            uri = new URI("/login?error=" + status.toString());
+        }
         httpHeaders.setLocation(uri);
         
         return new ResponseEntity(httpHeaders, HttpStatus.FOUND);
