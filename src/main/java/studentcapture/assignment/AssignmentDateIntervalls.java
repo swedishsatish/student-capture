@@ -94,4 +94,33 @@ public class AssignmentDateIntervalls {
 
         return ((firstDay == secondDay) && (firstMonth == secondMonth) && (firstYear == secondYear));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssignmentDateIntervalls that = (AssignmentDateIntervalls) o;
+
+        if (startDateIsSet != that.startDateIsSet) return false;
+        if (endDateIsSet != that.endDateIsSet) return false;
+        if (publishedDateIsSet != that.publishedDateIsSet) return false;
+        if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null)
+            return false;
+        if (endDate != null ? !endDate.equals(that.endDate) : that.endDate != null)
+            return false;
+        return publishedDate != null ? publishedDate.equals(that.publishedDate) : that.publishedDate == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = startDate != null ? startDate.hashCode() : 0;
+        result = 31 * result + (startDateIsSet ? 1 : 0);
+        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
+        result = 31 * result + (endDateIsSet ? 1 : 0);
+        result = 31 * result + (publishedDate != null ? publishedDate.hashCode() : 0);
+        result = 31 * result + (publishedDateIsSet ? 1 : 0);
+        return result;
+    }
 }
