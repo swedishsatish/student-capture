@@ -13,7 +13,7 @@ public class User {
     private String email;
     private String pswd;
     private String userID;
-
+    private String token;  //Will be used for recovery of password
 
 
     //Needed because of json
@@ -78,6 +78,13 @@ public class User {
         return this.userID;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     @Override
     public boolean equals(Object other) {
@@ -87,6 +94,7 @@ public class User {
                 && (that.getfName() == this.fName)
                 && (that.getlName() == this.lName)
                 && (that.getEmail() == this.email)
-                && (that.getPswd()  == this.pswd);
+                && (that.getPswd()  == this.pswd)
+                && (that.getToken() == this.token);
     }
 }
