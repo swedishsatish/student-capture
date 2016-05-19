@@ -70,7 +70,7 @@ public class AssignmentDAO {
                     PreparedStatement ps =
                             connection.prepareStatement(insertQueryString,
                                     Statement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, assignmentModel.getCourseID());
+                    ps.setInt(1, assignmentModel.getCourseID());
                     ps.setString(2, assignmentModel.getTitle());
                     ps.setString(3, assignmentModel.getAssignmentIntervall().getStartDate());
                     ps.setString(4, assignmentModel.getAssignmentIntervall().getEndDate());
@@ -141,27 +141,12 @@ public class AssignmentDAO {
         return FilesystemInterface.getVideo("bugsbunny.webm");
     }
 
-    /**
-     * Used to verify if a given date is in the right format.
-     *
-     * @param format The format to check against.
-     * @param value The date to check.
-     * @return True if the date follows the format, false if not.
-     */
-    /*private static boolean isValidDateFormat(String format, String value)
-            throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        Date date = sdf.parse(value);
-
-        return value.equals(sdf.format(date));
-    }
-*/
-    /**
-     * Fetches info about an assignment from the database.
-     * @param assignmentID Unique identifier for an assignment.
-     * @return A list containing information about the assignment.
-     *      The list is on the form [course ID, assignment title, opening datetime, closing datetime, minimum video time, maximum video time]
-     */
+//    /**
+//     * Fetches info about an assignment from the database.
+//     * @param assignmentID Unique identifier for an assignment.
+//     * @return A list containing information about the assignment.
+//     *      The list is on the form [course ID, assignment title, opening datetime, closing datetime, minimum video time, maximum video time]
+//     */
 //    public AssignmentModel getAssignmentInfo(int assignmentID){
 //        ArrayList<String> returnValues = new ArrayList<>();
 //
@@ -276,14 +261,15 @@ public class AssignmentDAO {
         }
 
         AssignmentModel am = new AssignmentModel(
-                srs.getString("Title"),     //Title
+                srs.getInt("courseId"),     // CourseId
+                srs.getString("Title"),     // Title
                 "",                         // Description
                 videoIntervall,             // videoIntervall
                 assignmentIntervalls,       // assignmentIntervalls
                 srs.getString("GradeScale"),// GradeScale
                 "");                        // Recap
 
-        am.setCourseID("UA502");
+        //am.setCourseID("UA502");
         return am;
     }
 

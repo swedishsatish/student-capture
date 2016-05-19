@@ -32,7 +32,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
                                             "yyyy-MM-dd HH:mm:ss");
     private AssignmentModel am;
-    private String courseID = "UA502";
+    private int courseID = 502;
 
     @Before
     public void setUp() {
@@ -44,14 +44,16 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
         assignmentIntervalls.setStartDate(currentDatePlusDaysGenerator(2));
         assignmentIntervalls.setEndDate(currentDatePlusDaysGenerator(3));
         assignmentIntervalls.setPublishedDate(currentDatePlusDaysGenerator(1));
-        am = new AssignmentModel("PVT", //Title
-                "", // Info
+        am = new AssignmentModel(
+                courseID,               // CourseId
+                "PVT",                  //Title
+                "",                     // Info
                 videoIntervall,
                 assignmentIntervalls,
-                "U_O_K_G", // GradeScale
-                ""); // Recap
+                "U_O_K_G",              // GradeScale
+                "");                    // Recap
         am.setCourseID(courseID);
-        String sql = "INSERT INTO Course VALUES ('UA502', 1912, 'HT12', " +
+        String sql = "INSERT INTO Course VALUES (502, 1912, 'HT12', " +
                 "'ht1212', 'Comedy','Description' , true);";
         jdbcMock.execute(sql);
     }
