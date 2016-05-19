@@ -20,7 +20,8 @@ var objToList = function (obj) {
 
 }
 
-
+/*  Here assignment information is displayed.
+ */
 var Assignment = React.createClass({
 
     /**
@@ -123,10 +124,18 @@ var Course = React.createClass({
     },
     
     handleClick: function(course,event) {
+        $.get(window.globalURL + "/course/" + course.courseId,function (res) {
+            ReactDOM.render(<EditCourse course={res}/>,document.getElementById("courseContent"));
+            console.log("get")
+        });
 
-            this.setState({showChildren:!this.state.showChildren});
+    
+    
+        //ReactDOM.render(<courseInfo />, document.getElementById("courseContent"));
+        this.setState({showChildren:!this.state.showChildren});
+       // ReactDOM.render(<NewAssignment courseID={course.courseId} courseCode={course.courseCode} />,document.getElementById("courseContent"))
 
-
+        //ReactDOM.render(<FAQInfo />, document.getElementById('modal-container'));
     },
     render: function (){
         var course = this.props.course;
