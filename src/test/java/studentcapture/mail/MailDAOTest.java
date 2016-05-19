@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import studentcapture.config.StudentCaptureApplicationTests;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -67,20 +68,24 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
     @Test
     public void testGetParticipantsEmails(){
 
-        List<String> emailList = mailDAO.getPraticipantsEmails("PVT");
+        List<String> emailList = mailDAO.getPraticipantsEmails("PVT").get();
         assertEquals(2,emailList.size());
         assertEquals("joel@gmail.com", emailList.get(0));
     }
 
     @Test
     public void testGetStartDateFromAssignment(){
-        assertEquals("2016-05-13 10:00:00.0",mailDAO.getStartDateFromAssignment("1"));
+        assertEquals("2016-05-13 10:00:00.0",mailDAO.getStartDateFromAssignment("1").get());
     }
 
     @Test
     public void  testGetCourseIDFromAssignment(){
-        assertEquals("PVT",mailDAO.getCourseIDFromAssignment("1"));
+        assertEquals("PVT",mailDAO.getCourseIDFromAssignment("1").get());
+    }
 
+    @Test
+    public void testWrongAssignmentID(){
+        assertEquals(Optional.empty(),mailDAO.getStartDateFromAssignment("12345"));
     }
 
 
