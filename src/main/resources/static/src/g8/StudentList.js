@@ -83,9 +83,7 @@ var StudentList = React.createClass({
             );
 
             // console.log(tmp);
-        });
 
-            </tr>
         });
         return (
             <div className="row">
