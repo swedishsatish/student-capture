@@ -113,7 +113,7 @@ function close(){
 /**
  * Submits data that will sent later, data in reqBody will be sent.
  */
-function submitForm() {
+function submitForm(method) {
 
     var reqBody = {};
     reqBody["feedback"] = document.getElementById('teachercomments').value;
@@ -126,8 +126,9 @@ function submitForm() {
 
 
 
+
     $.ajax({
-        type: "PATCH",
+        type: method,
         contentType: "application/json",
         url: "assignments/" + 6 + "/submissions/" + 98,
         data : JSON.stringify(reqBody),
@@ -145,6 +146,36 @@ function submitForm() {
             console.log("DONE");
         }
     });
+
+}
+function  getForm(method) {
+
+    $.ajax({
+        type: method,
+        contentType: "application/json",
+        url: "assignments/" + 6 + "/submissions/" + 98,
+        data : JSON.stringify(reqBody),
+        timeout: 100000,
+        success: function (response) {
+            var responseData =(JSON.parse(response));
+            document.getElementById('dropDownMenu').value = responseData["grade"]["grade"];
+            document.getElementById('teachercomments').value = responseData["feedback"];
+            document.getElementById('ifStudentPass').checked = responseData["studentPass"];
+            document.getElementById('PermissionFromStudent').checked = ["publishStudentSubmission"];
+
+            console.log("SUCCESS: ", response);
+            console.log("SUCCESS reqBody contains:", reqBody);
+            // TODO: check response with if/else, if respons is fail give error message
+
+            //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
+        }, error: function (e) {
+            console.log("ERROR: ", e);
+            console.log("ReqBody contains:", reqBody);
+        }, done: function (e) {
+            console.log("DONE");
+        }
+    });
+
 }
 
 
@@ -155,7 +186,7 @@ function submitForm() {
 function sendData () {
 
 
-    submitForm();
+    submitForm('PATCH');
 
 }
 
