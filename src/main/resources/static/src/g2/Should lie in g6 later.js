@@ -18,7 +18,6 @@ var DropDown = React.createClass({
     change: function(event) {
         dropDownGrade = event.target.value;
         this.setState({value: event.target.value});
-        console.log("hej");
     },
 
 

@@ -117,16 +117,25 @@ var AssignmentStart = React.createClass({
                 <div className="modal-dialog">
                     <div id="assignment-content" className="modal-content">
                         <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
-                        <div id="question-div">
-                            <h3>Question Video</h3>
-                            <Vid url={assignmentData.assignmentUrl} count={this.count}/><br />
-                            {questionContent}
-                        </div>
                         <div id="countdown-div">
                             {countDownContent}
                         </div>
-                        <div id="answer-div">
-                            {recordContent}
+
+                        <div className="row">
+                            <div className="six columns">
+
+                                <div id="question-div">
+                                    <h3>Question Video</h3>
+                                    <Vid url={assignmentData.assignmentUrl} count={this.count}/><br />
+                                    {questionContent}
+                                </div>
+                            </div>
+                            <div className="six columns">
+                                <div id="answer-div">
+                                    {recordContent}
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -236,7 +245,7 @@ var Vid = React.createClass({
                 </video>
                 <div>
                     <progress id="progress-bar" value={this.state.currTime} max={this.state.totalTime} />
-                    {Math.round(this.state.currTime)} / {Math.round(this.state.totalTime)}
+                    &nbsp; {this.state.currTime} / {this.state.totalTime}
                 </div>
             </div>
         );
@@ -252,11 +261,11 @@ var Vid = React.createClass({
     },
     ticker: function () {
         var vid = document.getElementById("videoPlayer");
-        this.setState({currTime: vid.currentTime});
+        this.setState({currTime: Math.ceil(vid.currentTime)});
     },
     canPlay: function () {
         var vid = document.getElementById("videoPlayer");
-        this.setState({totalTime: vid.duration});
+        this.setState({totalTime: Math.ceil(vid.duration)});
     },
     onPause : function () {
         var vid = document.getElementById("videoPlayer");
@@ -264,6 +273,7 @@ var Vid = React.createClass({
     },
     onEnded: function() {
         var vid = document.getElementById("videoPlayer");
+        this.setState({currTime: Math.ceil(vid.duration)});
         vid.removeEventListener('pause', this.onPause, false);
         vid.pause();
         clearInterval(this.interval);

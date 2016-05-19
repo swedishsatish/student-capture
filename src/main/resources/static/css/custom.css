@@ -166,7 +166,7 @@ iframe {
     margin-left:0px;
 }
 #desktopNavigation li {
-    color: gray;
+    color: #D9853B;
 }
 #desktopNavigation li.active {
     color: white;
@@ -180,5 +180,11 @@ iframe {
 	text-align: right;
     margin-right: 16px;
     margin-top: 10px;
+
+#courseInfo {
+    background-color: #076172;;
+    color:white;
+    text-align:center;
+    padding:5px;
 }
 

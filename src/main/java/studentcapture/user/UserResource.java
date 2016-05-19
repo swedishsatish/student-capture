@@ -1,9 +1,16 @@
 package studentcapture.user;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
+
+import studentcapture.login.ErrorFlags;
 
 /**
  * Created by c12ton on 5/17/16.
@@ -23,37 +30,56 @@ public class UserResource {
      *             1 for getting user details by userid.
      * @return user object with a httpStatus.OK if successful
      *         else HttpStatus.NOT_FOUND
+     * @throws URISyntaxException 
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<User> getUser(@RequestParam(value = "String")String value,
-                                        @RequestParam(value = "int") int flag) {
+                                        @RequestParam(value = "int") int flag) throws URISyntaxException {
 
         User user = userDAO.getUser(value,flag);
 
         if(user == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            URI uri = new URI("/login?failed");            
+            HttpHeaders httpHeaders = new HttpHeaders();
+            return new ResponseEntity(httpHeaders, HttpStatus.FOUND);
         }
 
         return new ResponseEntity<User>(user,HttpStatus.OK);
     }
 
     /**
-     * Add a new user with given user object details
+     * Add a new user with given user details
      * @param user
      * @return
+     * @throws URISyntaxException 
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity addUser(@RequestParam(value = "User")User user) {
+    public ResponseEntity addUser(
+            @RequestParam(value="firstname", required = true)           String firstName,
+            @RequestParam(value="lastname", required = true)            String lastName,
+            @RequestParam(value="email", required = true)               String email,
+            @RequestParam(value="username", required = true)            String username,
+            @RequestParam(value="password", required = true)            String password) throws URISyntaxException {
+       
+        User user = new User(username, firstName, lastName, email, encryptPassword(password));
+        
+        ErrorFlags status = userDAO.addUser(user);
 
-        boolean success = userDAO.addUser(user);
-
-        if(!success) {
-            return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
+        //Redirect to /login after the registration process is complete
+        URI uri;
+        HttpHeaders httpHeaders = new HttpHeaders();
+        
+        //Get the correct status message
+        if(status == ErrorFlags.NOERROR){
+            uri = new URI("/login?" + status.toString());
+        }else{
+            uri = new URI("/login?error=" + status.toString());
         }
-
-        return new ResponseEntity(HttpStatus.OK);
+        httpHeaders.setLocation(uri);
+        
+        return new ResponseEntity(httpHeaders, HttpStatus.FOUND);
     }
 
     /**
@@ -71,5 +97,15 @@ public class UserResource {
         }
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+    
+    /**
+     * Encrypts password
+     * @param password The input password
+     * @return Encrypted password
+     */
+    protected String encryptPassword(String password) {
+        String generatedPassword = BCrypt.hashpw(password, BCrypt.gensalt(11));
+        return generatedPassword;
     }
 }

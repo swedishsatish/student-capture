@@ -6,6 +6,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Grade;
 
 
@@ -21,27 +22,30 @@ public class SubmissionDAO {
 	/**
 	 * Add a new submission for an assignment
 	 *
-	 * @param assignmentID Unique identifier for the assignment we're submitting to
-	 * @param studentID    Unique identifier for the student submitting
+	 *
+	 * @param submission
 	 * @return True if everything went well, otherwise false
      * 
      * @author tfy12hsm
 	 */
-	public boolean addSubmission(String assignmentID, String studentID, Boolean studentConsent) {
+	public boolean addSubmission(Submission submission, Boolean studentConsent) {
 		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentConsent) VALUES  (?,?,?,?)";
 		java.util.Date date = new java.util.Date(System.currentTimeMillis());
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		timestamp.setNanos(0);
 
-		int rowsAffected = databaseConnection.update(sql, Integer.parseInt(assignmentID), Integer.parseInt(studentID), timestamp, studentConsent);
+		int rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(), submission.getStudentID(), timestamp, studentConsent);
+        if(submission.getStudentVideo() != null) {
+            FilesystemInterface.storeStudentVideo(submission.getCourseCode(), submission.getCourseID(), String.valueOf(submission.getAssignmentID()), String.valueOf(submission.getStudentID()), submission.getStudentVideo());
+        }
 
 		return rowsAffected == 1;
 	}
 
     /**
      * Make the feedback visible for the student
-     * @param submission
-     * @return
+     * @param submission Submission object
+     * @return True if a row was changed, otherwise false
      */
     public boolean publishFeedback(Submission submission, boolean publish) {
         /* Publishing feedback without a grade is not possible, returns false */
@@ -64,8 +68,7 @@ public class SubmissionDAO {
 	/**
 	 * Add a grade for a subsmission
 	 *
-	 * @param submission Object containing assignmentID, studentID
-	 * @param grade      Object containing grade, teacherID, date, publish
+	 * @param submission Submission object
 	 * @return True if a row was changed, otherwise false
 	 */
 	public boolean setGrade(Submission submission) {
@@ -249,11 +252,13 @@ public class SubmissionDAO {
     }
     
     /**
-     * Returns a sought submission from the database.
+     * Gets an entire submission with the name of the teacher, if the teacher
+	 * exists.
      * 
-     * @param assignmentId	assignment identifier
-     * @param userId		user identifier
-     * @return				sought submission
+     * @param assignmentId	The assignmentId that the submission is connected
+	 *                      to.
+     * @param userId		The studentId that the submission is connected to.
+     * @return				The submission with the teacher name.
      * 
      * @author tfy12hsm
      */
@@ -261,11 +266,17 @@ public class SubmissionDAO {
     	Submission result = null;
         String getStudentSubmission =
 				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
+		String getTeacherName =
+				"SELECT concat(FirstName, ' ', LastName) FROM Users WHERE UserId=?";
 
 		try {
 	        result = databaseConnection.queryForObject(
 					getStudentSubmission, new SubmissionRowMapper(), assignmentId, userId);
-
+			if (result.getGrade().getTeacherID() != null) {
+				result.setTeacherName(databaseConnection.queryForObject(getTeacherName, new Object[]{result.getGrade().getTeacherID()}, String.class));
+			} else if (result.getGrade().getTeacherID() == null) {
+				result.setTeacherName(null);
+			}
 
 	    } catch (IncorrectResultSizeDataAccessException e){
 			//TODO

@@ -26,10 +26,14 @@ window.Feedback = React.createClass({
                 )
             }, error: function (e) {
                 console.log("ERROR: ", e);
+                var obj = JSON.parse(e.responseText);
+                console.log(obj);
                 ReactDOM.render(
-                    <p style={{color: 'red',fontSize: '200px'}}>
-                        ERROR
-                    </p>,
+                    <div>
+                        <h3>Status: {obj.status}</h3>
+                        <h3>Error: {obj.error}</h3>
+                        <h3>Message: {obj.message}</h3>
+                    </div>,
                     document.getElementById('courseContent')
                 )
             }, statusCode: {
@@ -63,20 +67,21 @@ var NewFeedback = React.createClass({
         feedbackResponse.submissionDate = new Date((feedbackResponse
         .submissionDate));
 
+        var gradeColor;
+
+        if(feedbackResponse.grade.grade === 'MVG') {
+            gradeColor = 'green';
+        } else if(feedbackResponse.grade.grade === 'IG') {
+            gradeColor = 'red';
+        }
+
         return (
             <div>
-                <h5>Firstname:</h5>
-                {feedbackResponse.firstName}
-                <h5>Lastname:</h5>
-                {feedbackResponse.lastName}
-                <h5>Grade:</h5>
-                {feedbackResponse.grade}
-                <h5>Gradesign:</h5>
-                {feedbackResponse.gradeSign}
-                <h5>Submissiondate:</h5>
-                {feedbackResponse.submissionDate.toGMTString()}
-                <h5>Feedback:</h5>
-                {feedbackResponse.feedback}
+                <h5 style={{color:gradeColor}}>Grade: {feedbackResponse.grade
+                .grade}</h5>
+                <h5>Submissiondate: {feedbackResponse.submissionDate.toGMTString()}</h5>
+                <h5>Feedback: {feedbackResponse.feedback}</h5>
+                <h5>Teachername: {feedbackResponse.teacherName}</h5>
                 <br />
                 <video width="720" height="460" src={this.props.sourceInfo} preload="auto" controls/>
             </div>

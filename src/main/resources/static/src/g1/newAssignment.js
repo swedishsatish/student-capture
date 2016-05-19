@@ -178,7 +178,6 @@ var NewAssignmentVideo = React.createClass({
         var fd = new FormData();
         fd.append("video", blob);
         fd.append("courseID", this.props.courseID);
-        fd.append("assignmentID", this.props.assignmentID);
         return fd;
     },
     render: function () {
@@ -200,6 +199,14 @@ var NewAssignmentVideo = React.createClass({
                         <button id="post-video" className="recControls SCButton">Submit</button>
                     </div>
                 </div>
+                <Recorder id="recorder" playCallback={this.playVideo}
+                          postURL={"/assignments/" + this.props.assignmentID + "/video"} formDataBuilder={this.formDataBuilder}
+                          recButtonID="record-question" stopButtonID="stop-question" fileName="assignmentVideo.webm" replay="true"
+                          postButtonID="post-video"
+                />
+                <button id="record-question" className="recControls">Record</button>
+                <button id="stop-question" className="recControls" disabled>Stop</button>
+                <button id="post-video" className="recControls">Post Video</button><br/>
             </div>
         )
     }

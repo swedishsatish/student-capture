@@ -2,47 +2,49 @@
 //Simon Lundmark
 
 //Last update:
-//2016-11-05
+//2016-19-05
 
+//-----------------------showing/hiding forms-------------------------
+
+//get the forms
 var loginForm = document.getElementById('loginPage');
 var regForm = document.getElementById('registerPage');
 var lostForm = document.getElementById('lostPasswordPage');
 
-// Get the button
-var btn = document.getElementById("registerButton");
+// Get the buttons
+var regBtn = document.getElementById("registerButton");
 var cnclBtn = document.getElementById("cnclBtn");
 var cnclBtn2 = document.getElementById("cnclBtn2");
 var lostLink = document.getElementById("lostLink");
 
-// When the user clicks the button
-btn.onclick = function() {
-    loginForm.reset();
-
-    fadeIn(regForm);
-    fadeOut(loginForm);
+// When the user clicks the reg button
+regBtn.onclick = function() {
+    hideShow(loginForm, regForm);
 }
 
+// When the user clicks the lost password link
 lostLink.onclick = function() {
-    loginForm.reset();
-    fadeOut(loginForm);
-    fadeIn(lostForm);
+    hideShow(loginForm, lostForm);
 }
 
 
-// When the user clicks the button
+// When the user clicks the cancel button
 cnclBtn.onclick = function() {
-    fadeIn(loginForm);
-    fadeOut(regForm);
-    regForm.reset();
+    hideShow(regForm, loginForm);
 }
 
-// When the user clicks the button
+// When the user clicks the cancel button
 cnclBtn2.onclick = function() {
-    fadeIn(loginForm);
-    fadeOut(lostForm);
-    lostForm.reset();
+    hideShow(lostForm, loginForm);
 }
-//------------------------------------modal-------------------------------------
+
+function hideShow(toHide, toShow){
+    fadeIn(toShow);
+    fadeOut(toHide);
+    toHide.reset();
+}
+
+//------------------------------------animation-------------------------------------
 
 // fade out
 
@@ -75,6 +77,7 @@ function fadeIn(el, display){
 
 //------------------------------------modal-------------------------------------
 
+//get the modal
 var modal = document.getElementById('myModal');
 
 // Get the button that opens the modal
@@ -85,23 +88,20 @@ var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks the button, open the modal 
 btn.onclick = function() {
-    modal.style.display = "block";
+    fadeIn(modal);
 }
 
 // When the user clicks on (x), close the modal
 span.onclick = function() {
-    modal.style.display = "none";
+    fadeOut(modal);
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
     if (event.target == modal) {
-        modal.style.display = "none";
+        fadeOut(modal);
     }
 }
-
-
-//window.RegisterForm = RegisterForm;
 
 //--------------------------------error handling--------------------------------
 var urlVars = window.location.search.toLowerCase().substr(1).split("&");

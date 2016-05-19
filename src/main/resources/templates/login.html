@@ -5,7 +5,7 @@
      Filip Golles id12fgn
      
      Last update:
-     2016-05-04
+     2016-19-05
 -->
 
 <html xmlns:th="http://www.thymeleaf.org">
@@ -26,36 +26,36 @@
     	<script type="text/babel" src="src/loginScript.js"></script>
 	</head>
 	
-	<!-- body container that contains the form 
-	that the login nad registration is shown -->
+	<!-- body container that contains the form s
+	that the login, registration and lost password is shown -->
 	<body>
-		
-		<!-- forms -->
+
+        <!-- div containing all the forms.-->
 		<div id="loginDiv">
-		<form id="loginPage" class="forms four columns offset-by-four" th:action="@{/login}" method="POST">
-		
-		    <!-- div containing all the inputs.-->
+            <form id="loginPage" class="forms four columns offset-by-four" th:action="@{/login}" method="POST">
 
-                <img src="images/sc-logo.png" class="loginLogo" />
-                <input type="text" class="loginField" placeholder="username" name="username" required="required"/>
+                    <img src="images/sc-logo.png" class="loginLogo" />
+                    <input type="text" class="loginField"
+                           placeholder="username" name="username" required="required"/>
 
-                <input type="password" class="loginField" placeholder="password" name="password" required="required"/>
+                    <input type="password" class="loginField"
+                           placeholder="password" name="password" required="required"/>
 
-                <button type="submit" class="SCButton" id="loginButton">
-                    Login
-                </button>
+                    <button type="submit" class="SCButton" id="loginButton">
+                        Login
+                    </button>
 
-                <a id="lostLink">
-                    Forgot password?
-                </a>
+                    <a id="lostLink">
+                        Forgot password?
+                    </a>
 
-                <button type="button" class="SCButton" id="registerButton">
-                    Register
-                </button>
-		</form>
-		
-		<!-- forms -->
-            <form id="registerPage" class="forms four columns offset-by-four" th:action="@{/register}" method="POST">
+                    <button type="button" class="SCButton" id="registerButton">
+                        Register
+                    </button>
+            </form>
+
+            <!-- forms -->
+            <form id="registerPage" class="forms four columns offset-by-four" th:action="@{/users/}" method="POST">
                 <img src="images/sc-logo.png" class="loginLogo" />
                 <h6 class="regText">registration</h6>
 
@@ -65,38 +65,40 @@
                        name="firstname"
                        required="required"/>
 
-                <input type="text" id="lastName" class="loginField nameField" placeholder="last name" name="lastname" required="required"/>
+                <input type="text" id="lastName"
+                       class="loginField nameField"
+                       placeholder="last name"
+                       name="lastname"
+                       required="required"/>
 
                 <input type="email" class="loginField" placeholder="example@mail.com" required="required" name="email"
                        pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" />
 
-                <input type="text" pattern="^.{6,}$" class="loginField" placeholder="username" name="username" required="required"/>
+                <input type="text" pattern="^.{6,}$" class="loginField"
+                       placeholder="username" name="username" required="required"/>
 
-
-
-                <div class="tooltip" id="uNameTip">
-                    <p class="tooltipText">Username must be atleast six characters.</p>
-                    <div class="point" id="uNamePoint"></div>
-                </div>
+                    <div class="tooltip" id="uNameTip">
+                        <p class="tooltipText">Username must be atleast six characters.</p>
+                        <div class="point" id="uNamePoint"></div>
+                    </div>
 
                 <input type="password" id="firstPass" class="loginField nameField"
                        placeholder="password" name="password"
                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$"
-                       required="required">
+                       required="required" />
 
-                <div class="tooltip">
-                    <p class="tooltipText">
-                        Password must contain atleast one upper case character,
-                        one lower case character and one numeric character, minimum six characters.
-                    </p>
-                    <div class="point"></div>
-                </div>
-                </input>
+                    <div class="tooltip">
+                        <p class="tooltipText">
+                            Password must contain atleast one upper case character,
+                            one lower case character and one numeric character, minimum six characters.
+                        </p>
+                        <div class="point"></div>
+                    </div>
+
                 <input type="password" id="secondPass" class="loginField nameField"
                        placeholder="repeat password" name="confirmpassword"
                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$"
                        required="required" />
-
 
                 <button type="button" id="cnclBtn" class="SCButton bckBtn loginField nameField">
                     Cancel
@@ -105,52 +107,35 @@
                     Register
                 </button>
 
-
-
             </form>
 
-        <form id="lostPasswordPage" class="forms four columns offset-by-four" th:action="@{/lostPassword}" method="POST">
+            <form id="lostPasswordPage" class="forms four columns offset-by-four"
+                  th:action="@{/lostPassword}" method="POST">
 
-            <img src="images/sc-logo.png" class="loginLogo" />
-            <h6 class="regText">reset password</h6>
+                <img src="images/sc-logo.png" class="loginLogo" />
+                <h6 class="regText">reset password</h6>
 
-            <input type="email" class="loginField" placeholder="example@mail.com" required="required" name="email"
-                   pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" />
+                <input type="email" class="loginField" placeholder="example@mail.com" required="required" name="email"
+                       pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" />
 
-            <input type="text" pattern="^.{6,}$" class="loginField" placeholder="username" name="username" required="required"/>
+                <input type="text" pattern="^.{6,}$" class="loginField"
+                       placeholder="username" name="username" required="required"/>
 
-            <button type="button" id="cnclBtn2" class="SCButton bckBtn loginField nameField">
-                Cancel
-            </button>
-            <button type="submit" id="recoverBtn" class="SCButton nxtBtn loginField nameField">
-                Recover
-            </button>
+                <button type="button" id="cnclBtn2" class="SCButton bckBtn loginField nameField">
+                    Cancel
+                </button>
+                <button type="submit" id="recoverBtn" class="SCButton nxtBtn loginField nameField">
+                    Recover
+                </button>
 
-		</form>
+            </form>
 		</div>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	    <!-- Trigger/Open The Modal -->
         <div id="modalBtn" class="twelve columns">
-        	<p id="sysReqs">This service requires {SMALL OVERVIEW OF SYSTEM REQUIREMENTS LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM}. &nbsp;<span id="readMore">Read more.</span></p>
+        	<p id="sysReqs">This service requires {SMALL OVERVIEW OF SYSTEM REQUIREMENTS
+                LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM}. &nbsp;
+                <span id="readMore">Read more.</span></p>
         </div>
 
         <!-- The Modal -->

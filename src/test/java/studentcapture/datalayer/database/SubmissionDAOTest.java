@@ -67,10 +67,23 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         jdbcMock.update(sql10);
     }
 
+
+    /**
+     * A helpsetup-method to create the correct SQL string and create the
+     * corresponding submissionobject.
+     * @param submission The submission object that will be the same as the
+     *                   submission object that comes from the database.
+     * @param isGraded A boolean to tell the helpmethod if the submission
+     *                 in the database will be graded or not.
+     * @param studentID The student ID that has done the submission, must
+     *                  exist in the Users table in the database.
+     * @return The SQL string that can be plugged into the database.
+     */
     private String createSubmission(Submission submission, boolean isGraded, int studentID) {
         Grade grade = new Grade();
         String gradeString;
         Integer teacherId;
+        String teacherName;
 
         int assignmentID = 1;
         boolean studentPublishConsent = false;
@@ -79,18 +92,19 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         if (isGraded) {
             gradeString = "MVG";
             teacherId = 2;
+            teacherName = "abcd defg";
             grade.setTeacherID(teacherId);
             grade.setGrade(gradeString);
             gradeString = "'" + gradeString + "'";
         } else {
             gradeString = null;
             teacherId = null;
+            teacherName = null;
             grade.setTeacherID(teacherId);
             grade.setGrade(gradeString);
         }
         boolean publishStudentSubmission = false;
         boolean publishFeedback = false;
-        String teacherName = "abcd defg";
 
         submission.setAssignmentID(assignmentID);
         submission.setStudentID(studentID);
@@ -100,7 +114,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         submission.setGrade(grade);
         submission.setPublishStudentSubmission(publishStudentSubmission);
         submission.setPublishFeedback(publishFeedback);
-        //submission.setGradeSign(teacherName);
+        submission.setTeacherName(teacherName);
 
         String SQL = "INSERT INTO Submission VALUES ("  + assignmentID + ", "
                                                         + studentID + ", "

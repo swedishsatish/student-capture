@@ -1,30 +1,22 @@
 package studentcapture.datalayer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.CourseDAO;
 import studentcapture.course.HierarchyDAO;
-import studentcapture.datalayer.database.*;
-
+import studentcapture.datalayer.database.ParticipantDAO;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
-import studentcapture.model.Assignment;
 import studentcapture.model.Participant;
 import studentcapture.submission.Submission;
 import studentcapture.submission.SubmissionDAO;
 
-
 import javax.validation.Valid;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -155,14 +147,14 @@ public class DatalayerCommunicator {
      * @param publish A boolean, true represent publish and false unpublish
      * @return True if feedback could be published/unpublished, else false
      */
-    @CrossOrigin
+    /*@CrossOrigin
     @RequestMapping(value = "/publishFeedback", method = RequestMethod.POST)
     public boolean publishFeedback(@RequestParam(value = "Submission") Submission submission,
                                @RequestParam(value = "Publish") boolean publish) {
         String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID());
         submission.setCourseID(courseID);
         return submissionDAO.publishFeedback(submission, publish);
-    }
+    }*/
 
 
     /**
@@ -189,29 +181,29 @@ public class DatalayerCommunicator {
      * @param assID Unique identifier for the assignment
      * @return Array containing [course ID, assignment title, opening datetime, closing datetime, minimum video time, maximum video time, description]
      */
-    @CrossOrigin
-    @RequestMapping(value = "/getAssignmentInfo", method = RequestMethod.POST)
-    public Assignment getAssignmentInfo(@RequestParam(value = "assID") int assID){
-
-        Assignment results = assignment.getAssignmentInfo(assID);
-
-        //Need the courseCode for the path
-        //code for the filesystem
-        /*String courseCode = courseDAO.getCourseCodeFromId(results.getCourseID());
-        FileInputStream descriptionStream = fsi.getAssignmentDescription(courseCode, results.getCourseID(), assID);
-        Scanner scanner = new Scanner(descriptionStream);
-        String description = "";
-
-        //Construct description string
-        while (scanner.hasNext()){
-            description += scanner.nextLine() + "\n";
-        }*/
-
-        String description = "beskrivning";
-
-        results.setDescription(description);
-        return results;
-    }
+//    @CrossOrigin
+//    @RequestMapping(value = "/getAssignmentInfo", method = RequestMethod.POST)
+//    public Assignment getAssignmentInfo(@RequestParam(value = "assID") int assID){
+//
+//        Assignment results = assignment.getAssignmentInfo(assID);
+//
+//        //Need the courseCode for the path
+//        //code for the filesystem
+//        /*String courseCode = courseDAO.getCourseCodeFromId(results.getCourseID());
+//        FileInputStream descriptionStream = fsi.getAssignmentDescription(courseCode, results.getCourseID(), assID);
+//        Scanner scanner = new Scanner(descriptionStream);
+//        String description = "";
+//
+//        //Construct description string
+//        while (scanner.hasNext()){
+//            description += scanner.nextLine() + "\n";
+//        }*/
+//
+//        String description = "beskrivning";
+//
+//        results.setDescription(description);
+//        return results;
+//    }
 
     /**
      * Adds participant to course in database.
@@ -350,7 +342,7 @@ public class DatalayerCommunicator {
      * @param studentConsent A student allows his teacher to publish his answer to the other students
      * @return
      */
-    @CrossOrigin
+    /*@CrossOrigin
     @RequestMapping(value = "/addSubmission/{courseCode}/{courseID}/{assignmentID}/{userID}", method = RequestMethod.POST)
     public String addSubmission(@PathVariable(value = "courseCode") String courseCode,
                                 @PathVariable(value = "courseID") String courseID,
@@ -359,7 +351,7 @@ public class DatalayerCommunicator {
                                 @RequestParam(value = "studentConsent") Boolean studentConsent,
                                 @RequestParam(value = "video",required = false) MultipartFile video) {
     	if (video == null){
-    		if(submissionDAO.addSubmission(assignmentID, userID, studentConsent)){
+    		if(submissionDAO.addSubmission(, assignmentID, studentConsent)){
     			return "Student submitted an empty answer";
     		}
     		else{
@@ -368,7 +360,7 @@ public class DatalayerCommunicator {
     	}
 
         // ADD to database here
-    	if (submissionDAO.addSubmission(assignmentID, userID, studentConsent)){
+    	if (submissionDAO.addSubmission(, assignmentID, studentConsent)){
 	        if (FilesystemInterface.storeStudentVideo(courseCode, courseID, assignmentID, userID, video)) {
 	            return "OK";
 	        } else
@@ -376,6 +368,6 @@ public class DatalayerCommunicator {
     	}
 
     	return "Student has already submitted an answer.";
-    }
+    }*/
 
 }
