@@ -16,7 +16,6 @@ import studentcapture.datalayer.database.*;
 
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
-import studentcapture.model.Assignment;
 import studentcapture.model.Participant;
 import studentcapture.submission.Submission;
 import studentcapture.submission.SubmissionDAO;
@@ -189,29 +188,29 @@ public class DatalayerCommunicator {
      * @param assID Unique identifier for the assignment
      * @return Array containing [course ID, assignment title, opening datetime, closing datetime, minimum video time, maximum video time, description]
      */
-    @CrossOrigin
-    @RequestMapping(value = "/getAssignmentInfo", method = RequestMethod.POST)
-    public Assignment getAssignmentInfo(@RequestParam(value = "assID") int assID){
-
-        Assignment results = assignment.getAssignmentInfo(assID);
-
-        //Need the courseCode for the path
-        //code for the filesystem
-        /*String courseCode = courseDAO.getCourseCodeFromId(results.getCourseID());
-        FileInputStream descriptionStream = fsi.getAssignmentDescription(courseCode, results.getCourseID(), assID);
-        Scanner scanner = new Scanner(descriptionStream);
-        String description = "";
-
-        //Construct description string
-        while (scanner.hasNext()){
-            description += scanner.nextLine() + "\n";
-        }*/
-
-        String description = "beskrivning";
-
-        results.setDescription(description);
-        return results;
-    }
+//    @CrossOrigin
+//    @RequestMapping(value = "/getAssignmentInfo", method = RequestMethod.POST)
+//    public Assignment getAssignmentInfo(@RequestParam(value = "assID") int assID){
+//
+//        Assignment results = assignment.getAssignmentInfo(assID);
+//
+//        //Need the courseCode for the path
+//        //code for the filesystem
+//        /*String courseCode = courseDAO.getCourseCodeFromId(results.getCourseID());
+//        FileInputStream descriptionStream = fsi.getAssignmentDescription(courseCode, results.getCourseID(), assID);
+//        Scanner scanner = new Scanner(descriptionStream);
+//        String description = "";
+//
+//        //Construct description string
+//        while (scanner.hasNext()){
+//            description += scanner.nextLine() + "\n";
+//        }*/
+//
+//        String description = "beskrivning";
+//
+//        results.setDescription(description);
+//        return results;
+//    }
 
     /**
      * Adds participant to course in database.

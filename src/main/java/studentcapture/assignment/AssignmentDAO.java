@@ -16,7 +16,6 @@ import studentcapture.course.CourseModel;
 import studentcapture.course.CourseDAO;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
-import studentcapture.model.Assignment;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -160,43 +159,43 @@ public class AssignmentDAO {
      * @return A list containing information about the assignment.
      *      The list is on the form [course ID, assignment title, opening datetime, closing datetime, minimum video time, maximum video time]
      */
-    public Assignment getAssignmentInfo(int assignmentID){
-        ArrayList<String> returnValues = new ArrayList<>();
-
-        // Construct query
-        String columns[] = {"courseid", "title", "startdate", "enddate", "mintime", "maxtime"};
-        String tempVal;
-        String query;
-
-        // Execute query
-        try {
-            for (String c : columns) {
-                query = "SELECT " + c + " FROM assignment WHERE (assignmentid = ?);";
-                tempVal = jdbcTemplate.queryForObject(query, new Object[]{assignmentID}, String.class);
-
-                if (tempVal == null) {
-                    tempVal = "Missing value";
-                } else {
-                    tempVal = tempVal.trim();
-                }
-                returnValues.add(tempVal);
-            }
-        } catch (IncorrectResultSizeDataAccessException up) {
-            throw up;
-        } catch (DataAccessException down) {
-            throw down;
-        }
-        // Format results
-        Assignment assignment = new Assignment();
-        assignment.setCourseID(returnValues.get(0));
-        assignment.setTitle(returnValues.get(1));
-        assignment.setStartDate(new Timestamp(System.currentTimeMillis()));
-        assignment.setEndDate(new Timestamp(System.currentTimeMillis()));
-        assignment.setMinTime(Integer.parseInt(returnValues.get(4)));
-        assignment.setMaxTime(Integer.parseInt(returnValues.get(5)));
-
-        return assignment;
-    }
+//    public AssignmentModel getAssignmentInfo(int assignmentID){
+//        ArrayList<String> returnValues = new ArrayList<>();
+//
+//        // Construct query
+//        String columns[] = {"courseid", "title", "startdate", "enddate", "mintime", "maxtime"};
+//        String tempVal;
+//        String query;
+//
+//        // Execute query
+//        try {
+//            for (String c : columns) {
+//                query = "SELECT " + c + " FROM assignment WHERE (assignmentid = ?);";
+//                tempVal = jdbcTemplate.queryForObject(query, new Object[]{assignmentID}, String.class);
+//
+//                if (tempVal == null) {
+//                    tempVal = "Missing value";
+//                } else {
+//                    tempVal = tempVal.trim();
+//                }
+//                returnValues.add(tempVal);
+//            }
+//        } catch (IncorrectResultSizeDataAccessException up) {
+//            throw up;
+//        } catch (DataAccessException down) {
+//            throw down;
+//        }
+//        // Format results
+//        AssignmentModel assignment = new AssignmentModel();
+//        assignment.setCourseID(returnValues.get(0));
+//        assignment.setTitle(returnValues.get(1));
+//        assignment.setStartDate(new Timestamp(System.currentTimeMillis()));
+//        assignment.setEndDate(new Timestamp(System.currentTimeMillis()));
+//        assignment.setMinTime(Integer.parseInt(returnValues.get(4)));
+//        assignment.setMaxTime(Integer.parseInt(returnValues.get(5)));
+//
+//        return assignment;
+//    }
 
 	public String getAssignmentID(String courseID,String assignmentTitle){
     	String sql = "SELECT assignmentID from Assignment WHERE courseID = ? AND Title = ?";

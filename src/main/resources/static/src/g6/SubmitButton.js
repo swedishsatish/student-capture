@@ -114,26 +114,25 @@ function close(){
  * Submits data that will sent later, data in reqBody will be sent.
  */
 function submitForm() {
+
     var reqBody = {};
-    reqBody["TeacherComments"] = document.getElementById('teachercomments').value;
-    reqBody["Grade"] = document.getElementById('dropDownMenu').value;
-    reqBody["StudentPass"] = document.getElementById('ifStudentPass').checked;
-    reqBody["ShareData"] = document.getElementById('PermissionFromStudent').checked;
-    reqBody["AssignmentID"] = window.assignmentID;
-    reqBody["CourseID"] = window.courseID;
-    reqBody["StudentID"] = window.studentID;
+    reqBody["feedback"] = document.getElementById('teachercomments').value;
+    reqBody["grade"] = {};
+    reqBody["grade"]["grade"] = "U";
+    reqBody["grade"]["teacherID"] = "7777777"; //TODO: Fix this grade: document.getElementById('dropDownMenu').value;
+    reqBody["studentPass"] = document.getElementById('ifStudentPass').checked;
+    reqBody["shareData"] = document.getElementById('PermissionFromStudent').checked;
+    reqBody["courseID"] = window.courseID;
 
     $.ajax({
-        type: "POST",
+        type: "PUT",
         contentType: "application/json",
-        url: window.globalURL + "/assignments/" + $("#assignment").val() + "/submissions/" + $("#student").val(),
-        data: JSON.stringify(reqBody),
+        url: window.globalURL + "/assignments/" + 6 + "/submissions/" + 98,
+        data : JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
-            console.log("SUCCESS reqBody contains:", reqBody);
             // TODO: check response with if/else, if respons is fail give error message
-
           //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);

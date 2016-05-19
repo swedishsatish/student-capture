@@ -1,6 +1,6 @@
 package studentcapture.mail;
 
-import studentcapture.model.Assignment;
+import studentcapture.assignment.AssignmentModel;
 
 import java.util.ArrayList;
 
@@ -20,13 +20,13 @@ public class MailDAO {
         message = createMessage();
     }
 
-    private boolean checkTime(Assignment assignment){
+    private boolean checkTime(AssignmentModel assignment){
 
         return true;
     }
 
-    private ArrayList<Assignment> getAssignments(){
-        ArrayList<Assignment> assignmentList = new ArrayList<Assignment>();
+    private ArrayList<AssignmentModel> getAssignments(){
+        ArrayList<AssignmentModel> assignmentList = new ArrayList<AssignmentModel>();
 
         return assignmentList;
     }
