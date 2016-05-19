@@ -38,8 +38,7 @@ var HardwareTest = React.createClass({
 
         source.type = 'video/webm; codecs="vp8, vorbis"';
 
-        mediaElement.setAttribute("width", "100%");
-        mediaElement.setAttribute("height", "100%");
+        
         mediaElement.appendChild(source);
         mediaElement.controls = true;
         container.appendChild(mediaElement)
