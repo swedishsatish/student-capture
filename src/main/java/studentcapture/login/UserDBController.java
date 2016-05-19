@@ -22,6 +22,8 @@
 //import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //
+// //Old class pre-RESTful, used for reference only
+//
 //@RestController
 //@RequestMapping("/users")
 //public class UserDBController {

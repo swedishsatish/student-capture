@@ -21,7 +21,7 @@ import studentcapture.mail.MailClient;
  * @author dv11osi, c13hbd
  */
 @RestController
-public class LoginDBController {
+public class ResetPasswordController {
 	
 	private static final String dbURI = "https://localhost:8443";
     
