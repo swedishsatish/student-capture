@@ -45,7 +45,7 @@ window.EditCourse = React.createClass({
         $.ajax({
             type : "PUT",
             contentType : "application/json",
-            url : window.globalURL + "/course/" + courseID,
+            url : "course/" + courseID,
             data : JSON.stringify(course),
             timeout : 100000,
             success : function(res) {

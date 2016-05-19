@@ -46,7 +46,7 @@ window.CreateCourse = React.createClass({
         $.ajax({
             type : "POST",
             contentType : "application/json",
-            url : window.globalURL + "/course",
+            url : "course",
             data : JSON.stringify(course),
             timeout : 100000,
             success : function(res) {
