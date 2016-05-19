@@ -1,5 +1,6 @@
 package studentcapture.datalayer.filesystem;
 
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -268,6 +269,14 @@ public class FilesystemInterface {
 		}
 
 		return builder.toString().trim();
+	}
+
+
+	public static void deleteAssignmentFiles(int courseId, int assignmentId)
+			throws FileNotFoundException, IOException {
+		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/";
+		File file = new File(path);
+		FileUtils.deleteDirectory(file);
 	}
 
     /**
