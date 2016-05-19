@@ -3,6 +3,7 @@ package studentcapture.submission;
 import studentcapture.model.Grade;
 
 import javax.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 import java.sql.Timestamp;
 import java.util.Map;
 
@@ -28,6 +29,8 @@ public class Submission {
     private String lastName;
     private String status;
     private String teacherName;
+    private MultipartFile studentVideo;
+    private MultipartFile feedbackVideo;
 
     public String getStatus() {
         return status;
@@ -35,6 +38,22 @@ public class Submission {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public MultipartFile getStudentVideo() {
+        return studentVideo;
+    }
+
+    public void setStudentVideo(MultipartFile studentVideo) {
+        this.studentVideo = studentVideo;
+    }
+
+    public MultipartFile getFeedbackVideo() {
+        return feedbackVideo;
+    }
+
+    public void setFeedbackVideo(MultipartFile feedbackVideo) {
+        this.feedbackVideo = feedbackVideo;
     }
 
     //A submission must have one of these statuses
