@@ -1,11 +1,14 @@
 package studentcapture.submission;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.web.multipart.MultipartFile;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Grade;
 
@@ -340,6 +343,11 @@ public class SubmissionDAO {
 		}
 
         return Optional.of(result);
+	}
+
+	public Optional<InputStreamResource> getSubmissionVideo(int assignmentID, int studentID) {
+		String path = FilesystemInterface.generatePath(new Submission(assignmentID, studentID));
+		return Optional.of(FilesystemInterface.getVideo(path).getBody());
 	}
 }
 

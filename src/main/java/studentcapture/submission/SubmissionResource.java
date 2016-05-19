@@ -1,6 +1,7 @@
 package studentcapture.submission;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,13 @@ public class SubmissionResource {
 
         Submission body = DAO.getSubmission(assignmentID, studentID).get();
         return new ResponseEntity<>(body, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "{studentID}/video", method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> getSpecificSubmissionVideo(@PathVariable("assignmentID") int assignmentID,
+                                                                          @PathVariable("studentID") int studentID){
+        return new ResponseEntity<>(DAO.getSubmissionVideo(assignmentID, studentID).get(), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET)
