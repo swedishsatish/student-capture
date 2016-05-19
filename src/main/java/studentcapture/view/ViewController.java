@@ -39,6 +39,11 @@ public class ViewController {
         return "loggedin";
     }
     
+    @RequestMapping(value = "/changePassword")
+    public String changePasswordView() {
+        return "changePassword";
+    }
+    
     /* TODO: Remove when index works as intended */
     @RequestMapping(value = "/demo")
     public String demoView() {
