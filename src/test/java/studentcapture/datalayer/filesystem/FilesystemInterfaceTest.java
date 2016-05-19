@@ -1,5 +1,6 @@
 package studentcapture.datalayer.filesystem;
 
+import org.codehaus.groovy.tools.shell.IO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -199,6 +200,21 @@ public class FilesystemInterfaceTest {
         content = new String(buf);
 
         assertEquals("This should be in file", content);
+
+    }
+
+    @Test
+    public void shouldDeleteAssignmentDir() throws Exception {
+        String path = FilesystemConstants.FILESYSTEM_PATH + "/" + 151 + "/" + assignmentID + "/";
+        File file = new File(path);
+
+        FilesystemInterface.storeAssignmentText(151, assignmentID, "This doesn't matter",
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+        FilesystemInterface.storeAssignmentText(151, assignmentID, "This doesn't matter",
+                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+        FilesystemInterface.deleteAssignmentFiles(151, Integer.parseInt(assignmentID));
+
+        assertTrue(!file.exists());
 
     }
 

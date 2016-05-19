@@ -19,33 +19,31 @@ var lostLink = document.getElementById("lostLink");
 
 // When the user clicks the reg button
 regBtn.onclick = function() {
-    loginForm.reset();
-
-    fadeIn(regForm);
-    fadeOut(loginForm);
+    hideShow(loginForm, regForm);
 }
 
 // When the user clicks the lost password link
 lostLink.onclick = function() {
-    loginForm.reset();
-    fadeOut(loginForm);
-    fadeIn(lostForm);
+    hideShow(loginForm, lostForm);
 }
 
 
 // When the user clicks the cancel button
 cnclBtn.onclick = function() {
-    fadeIn(loginForm);
-    fadeOut(regForm);
-    regForm.reset();
+    hideShow(regForm, loginForm);
 }
 
 // When the user clicks the cancel button
 cnclBtn2.onclick = function() {
-    fadeIn(loginForm);
-    fadeOut(lostForm);
-    lostForm.reset();
+    hideShow(lostForm, loginForm);
 }
+
+function hideShow(toHide, toShow){
+    fadeIn(toShow);
+    fadeOut(toHide);
+    toHide.reset();
+}
+
 //------------------------------------animation-------------------------------------
 
 // fade out
@@ -90,18 +88,18 @@ var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks the button, open the modal 
 btn.onclick = function() {
-    modal.style.display = "block";
+    fadeIn(modal);
 }
 
 // When the user clicks on (x), close the modal
 span.onclick = function() {
-    modal.style.display = "none";
+    fadeOut(modal);
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
     if (event.target == modal) {
-        modal.style.display = "none";
+        fadeOut(modal);
     }
 }
 

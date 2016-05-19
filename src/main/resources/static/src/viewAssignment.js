@@ -117,16 +117,25 @@ var AssignmentStart = React.createClass({
                 <div className="modal-dialog">
                     <div id="assignment-content" className="modal-content">
                         <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
-                        <div id="question-div">
-                            <h3>Question Video</h3>
-                            <Vid url={assignmentData.assignmentUrl} count={this.count}/><br />
-                            {questionContent}
-                        </div>
                         <div id="countdown-div">
                             {countDownContent}
                         </div>
-                        <div id="answer-div">
-                            {recordContent}
+
+                        <div className="row">
+                            <div className="six columns">
+
+                                <div id="question-div">
+                                    <h3>Question Video</h3>
+                                    <Vid url={assignmentData.assignmentUrl} count={this.count}/><br />
+                                    {questionContent}
+                                </div>
+                            </div>
+                            <div className="six columns">
+                                <div id="answer-div">
+                                    {recordContent}
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>

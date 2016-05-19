@@ -285,9 +285,9 @@ public class AssignmentDAO {
      *
      * @author dv14oan
      */
-    public boolean removeAssignment(int assignmentID){
+    public boolean removeAssignment(int courseId, int assignmentID) throws IOException {
         int rowAffected = jdbcTemplate.update("DELETE FROM Assignment WHERE AssignmentId = ?", assignmentID);
-
+        FilesystemInterface.deleteAssignmentFiles(courseId, assignmentID);
         if (rowAffected > 0){
             return true;
         } else {

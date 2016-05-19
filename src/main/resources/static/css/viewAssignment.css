@@ -44,14 +44,12 @@
 	color: black !important;
 	background-color: #dddddd;
 	font-size: 20px;
+	overflow:auto;
+	padding:50px;
 }
 
 /* Style of assignment video, progress bar and question summary */
-#question-div
-{
-    float: left;
-    margin: 8%;
-}
+
 
 /* Style of assignment video */
 #videoPlayer
@@ -68,14 +66,9 @@
 /* Style of countdown numbers */
 #countdown-div
 {
-    float: left;
 	font-size: 100px;
+	text-align:center;
+	height:150px;
 }
 
 /* Style of student recording, buttons and time limits */
-#answer-div
-{
-    float: right;
-    margin: 8%;
-}
-

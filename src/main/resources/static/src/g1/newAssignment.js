@@ -171,14 +171,13 @@ var NewAssignmentVideo = React.createClass({
         var fd = new FormData();
         fd.append("video", blob);
         fd.append("courseID", this.props.courseID);
-        fd.append("assignmentID", this.props.assignmentID);
         return fd;
     },
     render: function () {
         return (
             <div>
                 <Recorder id="recorder" playCallback={this.playVideo}
-                          postURL="/assignments/video" formDataBuilder={this.formDataBuilder}
+                          postURL={"/assignments/" + this.props.assignmentID + "/video"} formDataBuilder={this.formDataBuilder}
                           recButtonID="record-question" stopButtonID="stop-question" fileName="assignmentVideo.webm" replay="true"
                           postButtonID="post-video"
                 />
@@ -221,5 +220,5 @@ window.CourseContent = React.createClass({
     }
 });
 
-ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
+//ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
 window.NewAssignment = NewAssignment;

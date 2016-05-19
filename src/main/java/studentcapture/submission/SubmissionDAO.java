@@ -6,6 +6,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Grade;
 
 
@@ -21,19 +22,22 @@ public class SubmissionDAO {
 	/**
 	 * Add a new submission for an assignment
 	 *
-	 * @param assignmentID Unique identifier for the assignment we're submitting to
-	 * @param studentID    Unique identifier for the student submitting
+	 *
+	 * @param submission
 	 * @return True if everything went well, otherwise false
      * 
      * @author tfy12hsm
 	 */
-	public boolean addSubmission(String assignmentID, String studentID, Boolean studentConsent) {
+	public boolean addSubmission(Submission submission, Boolean studentConsent) {
 		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentConsent) VALUES  (?,?,?,?)";
 		java.util.Date date = new java.util.Date(System.currentTimeMillis());
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		timestamp.setNanos(0);
 
-		int rowsAffected = databaseConnection.update(sql, Integer.parseInt(assignmentID), Integer.parseInt(studentID), timestamp, studentConsent);
+		int rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(), submission.getStudentID(), timestamp, studentConsent);
+        if(submission.getStudentVideo() != null) {
+            FilesystemInterface.storeStudentVideo(submission.getCourseCode(), submission.getCourseID(), String.valueOf(submission.getAssignmentID()), String.valueOf(submission.getStudentID()), submission.getStudentVideo());
+        }
 
 		return rowsAffected == 1;
 	}

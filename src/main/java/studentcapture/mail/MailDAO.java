@@ -1,9 +1,12 @@
 package studentcapture.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -18,20 +21,53 @@ public class MailDAO {
 
     }
 
-    public List<String> getAssignmentID(){
-        return jdbcTemplate.queryForList(getAssignmentIDQuery(),String.class);
+    public Optional<List<String>> getAssignmentID(){
+        List<String> assIDList;
+        try {
+            assIDList = jdbcTemplate.queryForList(getAssignmentIDQuery(),String.class);
+        }catch (IncorrectResultSizeDataAccessException e){
+            return Optional.empty();
+        } catch (DataAccessException e1){
+            return Optional.empty();
+        }
+        return Optional.of(assIDList);
     }
 
-    public String getStartDateFromAssignment(String assID){
-        return jdbcTemplate.queryForObject(getStartDateQuery(), new Object[]{assID}, String.class);
+    public Optional<String> getStartDateFromAssignment(String assID){
+        String date;
+        try {
+            date = jdbcTemplate.queryForObject(getStartDateQuery(), new Object[]{assID}, String.class);
+        } catch (IncorrectResultSizeDataAccessException e){
+            return Optional.empty();
+        } catch (DataAccessException e1){
+            return Optional.empty();
+        }
+        return Optional.of(date);
+
     }
 
-    public String getCourseIDFromAssignment(String assID){
-        return jdbcTemplate.queryForObject(getCourseIDQuery(), new Object[]{assID}, String.class);
+    public Optional<String> getCourseIDFromAssignment(String assID){
+        String courseID;
+        try {
+            courseID = jdbcTemplate.queryForObject(getCourseIDQuery(), new Object[]{assID}, String.class);
+        } catch (IncorrectResultSizeDataAccessException e){
+            return Optional.empty();
+        } catch (DataAccessException e1){
+            return Optional.empty();
+        }
+        return Optional.of(courseID);
     }
 
-    public List<String> getPraticipantsEmails(String courseID){
-        return jdbcTemplate.queryForList(getEmailsQuery(), new Object[]{courseID}, String.class);
+    public Optional<List<String>> getPraticipantsEmails(String courseID){
+        List<String> emailList;
+        try{
+            emailList = jdbcTemplate.queryForList(getEmailsQuery(), new Object[]{courseID}, String.class);
+        } catch (IncorrectResultSizeDataAccessException e){
+            return Optional.empty();
+        } catch (DataAccessException e1){
+            return Optional.empty();
+        }
+        return Optional.of(emailList);
     }
 
 
