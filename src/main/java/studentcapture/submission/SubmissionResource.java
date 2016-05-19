@@ -152,10 +152,5 @@ public class SubmissionResource {
     }
 
 
-    @RequestMapping(value = "{studentID}", method = RequestMethod.DELETE)
-    public HttpStatus deleteSubmission(@PathVariable("assignmentID") String assignment,
-                                       @PathVariable("studentID") String studentID){
-        /*Check permission*/
-        return HttpStatus.NOT_IMPLEMENTED;
-    }
+
 }
