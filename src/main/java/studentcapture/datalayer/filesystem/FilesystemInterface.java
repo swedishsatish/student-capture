@@ -234,7 +234,7 @@ public class FilesystemInterface {
 	 *                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME)
      * @throws IOException
      */
-	public static void storeAssignmentText(String courseId,
+	public static void storeAssignmentText(int courseId,
 										   String assignmentId,
 										   String contents,
 										   String fileName) throws IOException {
@@ -254,7 +254,7 @@ public class FilesystemInterface {
 		fileWriter.close();
 	}
 
-	public static String getAssignmentText(String courseId, String assignmentId, String fileName)
+	public static String getAssignmentText(int courseId, String assignmentId, String fileName)
 			throws FileNotFoundException, IOException {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/" + fileName;
 		File file = new File(path);

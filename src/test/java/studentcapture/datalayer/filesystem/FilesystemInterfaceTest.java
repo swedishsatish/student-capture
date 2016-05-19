@@ -35,7 +35,7 @@ public class FilesystemInterfaceTest {
     @After
     public void tearDown() throws Exception {
         deleteFile(new File(StudentCaptureApplication.ROOT+"/moose/"+courseCode));
-        deleteFile(new File(StudentCaptureApplication.ROOT+"/moose/"+courseID));
+        deleteFile(new File(StudentCaptureApplication.ROOT+"/moose/"+151));
     }
 
     @SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions"})
@@ -150,10 +150,10 @@ public class FilesystemInterfaceTest {
         String path;
         File file;
 
-        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "This is a test",
+        FilesystemInterface.storeAssignmentText(151, assignmentID, "This is a test",
                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
 
-        path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/" +
+        path = FilesystemConstants.FILESYSTEM_PATH + "/" + 151 + "/" + assignmentID + "/" +
             FilesystemConstants.ASSIGNMENT_RECAP_FILENAME;
         file = new File(path);
 
@@ -164,9 +164,9 @@ public class FilesystemInterfaceTest {
     public void shouldGetFileContentsAsString() throws IOException {
         String fileContents;
 
-        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "The file contains this",
+        FilesystemInterface.storeAssignmentText(151, assignmentID, "The file contains this",
                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
-        fileContents = FilesystemInterface.getAssignmentText(courseID, assignmentID,
+        fileContents = FilesystemInterface.getAssignmentText(151, assignmentID,
                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
 
         assertEquals("The file contains this", fileContents);
@@ -174,7 +174,7 @@ public class FilesystemInterfaceTest {
 
     @Test(expected = FileNotFoundException.class)
     public void shouldThrowWhenAssignmentTextDontExist() throws IOException {
-        FilesystemInterface.getAssignmentText(courseID, assignmentID, FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+        FilesystemInterface.getAssignmentText(151, assignmentID, FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
     }
 
     @Test
@@ -185,12 +185,12 @@ public class FilesystemInterfaceTest {
         char[] buf = new char[22];
         String content;
 
-        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "This should be overwritten",
+        FilesystemInterface.storeAssignmentText(151, assignmentID, "This should be overwritten",
                 FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
-        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "This should be in file",
+        FilesystemInterface.storeAssignmentText(151, assignmentID, "This should be in file",
                 FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
 
-        path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/" +
+        path = FilesystemConstants.FILESYSTEM_PATH + "/" + 151 + "/" + assignmentID + "/" +
                 FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
         file = new File(path);
         fileReader = new FileReader(file);

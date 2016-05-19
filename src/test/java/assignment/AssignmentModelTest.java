@@ -86,14 +86,14 @@ public class AssignmentModelTest {
 
     @Test
     public void CourseIDShouldBe1200() {
-        assignmentModel.setCourseID("1200");
-        assertEquals("1200", assignmentModel.getCourseID());
+        assignmentModel.setCourseID(1200);
+        assertEquals(1200, assignmentModel.getCourseID());
     }
 
     @Test
     public void CourseIDShouldBe2() {
-        assignmentModel.setCourseID("2");
-        assertEquals("2", assignmentModel.getCourseID());
+        assignmentModel.setCourseID(2);
+        assertEquals(2, assignmentModel.getCourseID());
     }
 
     @Test
