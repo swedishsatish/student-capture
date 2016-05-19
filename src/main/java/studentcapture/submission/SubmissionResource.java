@@ -90,8 +90,8 @@ public class SubmissionResource {
      */
     @CrossOrigin
     @RequestMapping(value = "/publishFeedback", method = RequestMethod.POST)
-    public HttpStatus publishFeedback(@RequestParam(value = "Submission") Submission submission,
-                                      @RequestParam(value = "Publish") boolean publish) {
+    public HttpStatus publishFeedback(@RequestBody Submission submission,
+                                      @PathVariable("Publish") boolean publish) {
         String courseID = assignmentDAO.getCourseIDForAssignment(submission.getAssignmentID());
         submission.setCourseID(courseID);
         boolean returnValue = DAO.publishFeedback(submission, publish);
@@ -110,9 +110,9 @@ public class SubmissionResource {
     */
     @CrossOrigin
     @RequestMapping(value = "/setFeedback", method = RequestMethod.POST)
-    public HttpStatus setFeedback(@RequestParam(value = "Submission") Submission submission,
-                                  @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
-                                  @RequestParam(value = "feedbackText") MultipartFile feedbackText) {
+    public HttpStatus setFeedback(@RequestBody Submission submission,
+                                  @RequestBody MultipartFile feedbackVideo,
+                                  @RequestBody MultipartFile feedbackText) {
         CourseModel courseModel = new CourseModel();
         FilesystemInterface fsi = new FilesystemInterface();
         String courseID = assignmentDAO.getCourseIDForAssignment(submission.getAssignmentID());
