@@ -216,7 +216,7 @@ var Recorder = React.createClass({
             }
 
             //call xhr with full url, data and callback function
-            xhr(window.globalURL + props.postURL, formData, props.playCallback);
+            xhr(props.postURL, formData, props.playCallback);
         }
 
         /* Function for sending XMLHttpRequests. */
