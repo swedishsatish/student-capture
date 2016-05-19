@@ -48,8 +48,11 @@
 	padding:50px;
 }
 
-/* Style of assignment video, progress bar and question summary */
-
+/* Override row style for the question div content */
+#question-div .row
+{
+    margin-left: 0px !important;
+}
 
 /* Style of assignment video */
 #videoPlayer
@@ -60,7 +63,7 @@
 /* Style of progress bar */
 #progress-bar
 {
-    width: 90%;
+    width: 100%;
 }
 
 /* Style of countdown numbers */
@@ -71,4 +74,3 @@
 	height:150px;
 }
 
-/* Style of student recording, buttons and time limits */

@@ -36,7 +36,8 @@ var Assignment = React.createClass({
         console.log(assID)
         if(this.props.role == "student"){
 
-            if(this.props.assignment.assignment.submissions == null){
+          
+            if(objToList(this.props.assignment.submissions).length == 0){
                 ReactDOM.render(<AssignmentContent course={courseID} assignment={assID} uid={uid}/>,
                     document.getElementById('courseContent'));
             }
