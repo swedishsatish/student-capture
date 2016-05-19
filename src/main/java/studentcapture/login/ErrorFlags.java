@@ -1,6 +1,8 @@
 package studentcapture.login;
 
 /**
+ * Enum for sending error flags between the db and spring.
+ * Used during login.
  * @author dv13ean
  */
 public enum ErrorFlags {
@@ -9,5 +11,6 @@ public enum ErrorFlags {
     PASSWORDMATCH,
     EMAILFORMAT,
     EMAILEXISTS,
-    USEREXISTS
+    USEREXISTS,
+    NOERROR
 }
