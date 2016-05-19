@@ -1,11 +1,13 @@
 package studentcapture.assignment;
 
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -48,6 +50,8 @@ public class AssignmentDAO {
      * @return the generated AssignmentID
      * @throws IllegalArgumentException fails if startDate or endDate is not
      *                        in the right format
+     *
+     * @author dv14oan & tfy13dbd
      */
     public int createAssignment(AssignmentModel assignmentModel)
     throws IllegalArgumentException {
@@ -56,7 +60,7 @@ public class AssignmentDAO {
         String courseCode;
 
         // Construct query, depends on if assignment has publishdate or not.
-        String insertQueryString = getQueryString(assignmentModel.getAssignmentIntervall().getPublishedDate());
+        String insertQueryString = getInsertQueryString(assignmentModel.getAssignmentIntervall().getPublishedDate());
 
         // Execute query and fetch generated AssignmentID
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -100,8 +104,7 @@ public class AssignmentDAO {
         return assignmentID;
     }
 
-
-    private String getQueryString(String published){
+    private String getInsertQueryString(String published){
         String insertQueryString;
 
         if(published == null) {
@@ -227,7 +230,65 @@ public class AssignmentDAO {
         throw new UnsupportedOperationException();
     }
 
-    public boolean removeAssignment(String assignmentID){
-        throw new UnsupportedOperationException();
+    /**
+     * Returns an AssignmentModel from the database.
+     *
+     * @param assignmentID          Assignment identifier
+     * @return The AssignmentModel
+     * @throws NotFoundException    If the assignment was not found.
+     *
+     * @author dv14oan
+     */
+    public AssignmentModel getAssignmentModel(int assignmentID) throws NotFoundException {
+
+        String getAssignmentStatement = "SELECT * FROM "
+                + "Assignment WHERE AssignmentId=?;";
+        Object[] parameters = new Object[]{new Integer(assignmentID)};
+        SqlRowSet srs = jdbcTemplate.queryForRowSet(getAssignmentStatement, parameters);
+
+        if (!srs.next()){
+            throw new NotFoundException("Assignment not found");
+        }
+
+        AssignmentVideoIntervall videoIntervall = new AssignmentVideoIntervall();
+        AssignmentDateIntervalls assignmentIntervalls = new AssignmentDateIntervalls();
+
+        videoIntervall.setMinTimeSeconds(srs.getInt("MinTime"));
+        videoIntervall.setMaxTimeSeconds(srs.getInt("MaxTime"));
+        assignmentIntervalls.setStartDate(srs.getString("StartDate").replaceAll("\\.\\d+", ""));
+        assignmentIntervalls.setEndDate(srs.getString("EndDate").replaceAll("\\.\\d+", ""));
+
+        if (srs.getString("Published") != null) {
+            assignmentIntervalls.setPublishedDate(srs.getString("Published").replaceAll("\\.\\d+", ""));
+        }
+
+        AssignmentModel am = new AssignmentModel(
+                srs.getString("Title"),     //Title
+                "",                         // Description
+                videoIntervall,             // videoIntervall
+                assignmentIntervalls,       // assignmentIntervalls
+                srs.getString("GradeScale"),// GradeScale
+                "");                        // Recap
+
+        am.setCourseID("UA502");
+        return am;
+    }
+
+    /**
+     * Removes an assignment from the database.
+     *
+     * @param assignmentID  Assignment identifier
+     * @return true if the assignment were removed, else false.
+     *
+     * @author dv14oan
+     */
+    public boolean removeAssignment(int assignmentID){
+        int rowAffected = jdbcTemplate.update("DELETE FROM Assignment WHERE AssignmentId = ?", assignmentID);
+
+        if (rowAffected > 0){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

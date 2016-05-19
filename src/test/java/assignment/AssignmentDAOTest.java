@@ -1,5 +1,6 @@
 package assignment;
 
+import javassist.NotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,8 +33,6 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
                                             "yyyy-MM-dd HH:mm:ss");
     private AssignmentModel am;
     private String courseID = "UA502";
-    private String getAssignmentStatement = "SELECT * FROM "
-            + "Assignment WHERE AssignmentId=?;";
 
     @Before
     public void setUp() {
@@ -75,29 +74,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     }
 
     @Test
-    public void shouldBeCorrectDataInRow() throws Exception {
-
-        int assID = assignmentDAO.createAssignment(am);
-
-        SqlRowSet srs = getRowSetFromAssignment(assID);
-
-        while (srs.next()) {
-            assertEquals(courseID, srs.getString("CourseID"));
-            assertEquals(am.getTitle(), srs.getString("Title"));
-            assertEquals(am.getAssignmentIntervall().getStartDate(),
-                        srs.getString("StartDate").replaceAll("\\.\\d+", ""));
-            assertEquals(am.getAssignmentIntervall().getEndDate(),
-                        srs.getString("EndDate").replaceAll("\\.\\d+", ""));
-            assertEquals(am.getVideoIntervall().getMinTimeSeconds(), srs.getInt("MinTime"));
-            assertEquals(am.getVideoIntervall().getMaxTimeSeconds(), srs.getInt("MaxTime"));
-            assertEquals(am.getAssignmentIntervall().getPublishedDate(),
-                        srs.getString("Published").replaceAll("\\.\\d+", ""));
-            assertEquals(am.getScale(), srs.getString("GradeScale"));
-        }
-    }
-
-    @Test
-    public void shouldCreateTwoAssignments(){
+    public void shouldCreateTwoAssignments() throws Exception {
         int assID1 = assignmentDAO.createAssignment(am);
         int assID2 = assignmentDAO.createAssignment(am);
 
@@ -105,35 +82,64 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     }
 
     @Test
-    public void shouldCreateAssignmentWithoutPublishdate(){
+    public void shouldCreateAssignmentWithoutPublishdate() throws Exception {
         am.getAssignmentIntervall().setPublishedDate(null);
 
         int assID = assignmentDAO.createAssignment(am);
 
-        SqlRowSet srs = getRowSetFromAssignment(assID);
+        assertEquals(am, assignmentDAO.getAssignmentModel(assID));
+    }
 
-        while (srs.next()) {
-            assertEquals(courseID, srs.getString("CourseID"));
-            assertEquals(am.getTitle(), srs.getString("Title"));
-            assertEquals(am.getAssignmentIntervall().getStartDate(),
-                        srs.getString("StartDate").replaceAll("\\.\\d+", ""));
-            assertEquals(am.getAssignmentIntervall().getEndDate(),
-                        srs.getString("EndDate").replaceAll("\\.\\d+", ""));
-            assertEquals(am.getVideoIntervall().getMinTimeSeconds(), srs.getInt("MinTime"));
-            assertEquals(am.getVideoIntervall().getMaxTimeSeconds(), srs.getInt("MaxTime"));
-            assertNull(srs.getString("Published"));
-            assertEquals(am.getScale(), srs.getString("GradeScale"));
-        }
+    @Test
+    public void shouldGetCorrectAssignment() throws Exception {
+        int assID = assignmentDAO.createAssignment(am);
+
+        assertEquals(am, assignmentDAO.getAssignmentModel(assID));
+    }
+
+    @Test
+    public void shouldNotGetCorrectAssignment() throws Exception {
+        int assID = assignmentDAO.createAssignment(am);
+
+        am.setTitle("");
+
+        assertNotEquals(am, assignmentDAO.getAssignmentModel(assID));
+    }
+
+    @Test (expected = NotFoundException.class)
+    public void shouldNotGetNonExistingAssignment() throws Exception {
+        int assID = assignmentDAO.createAssignment(am);
+        int noneAssID = assID + 500;
+
+        assignmentDAO.getAssignmentModel(noneAssID);
+    }
+
+    @Test (expected = NotFoundException.class)
+    public void shouldNotGetDeletedAssignment() throws Exception{
+        int assID = assignmentDAO.createAssignment(am);
+
+        assignmentDAO.removeAssignment(assID);
+
+        assignmentDAO.getAssignmentModel(assID);
+    }
+
+    @Test
+    public void shouldDeleteOneAnAssignment() throws Exception{
+        int assID = assignmentDAO.createAssignment(am);
+
+        assertTrue(assignmentDAO.removeAssignment(assID));
+    }
+
+    @Test
+    public void shouldNotDeleteAnAssignment() throws Exception {
+        int assID = assignmentDAO.createAssignment(am);
+        int noneAssID = assID + 500;
+
+        assertFalse(assignmentDAO.removeAssignment(noneAssID));
     }
 
     private String currentDatePlusDaysGenerator(int days){
         return LocalDateTime.now().plusDays(days).format(formatter);
-    }
-
-    private SqlRowSet getRowSetFromAssignment(int assID) {
-        Object[] parameters = new Object[]{new Integer(assID)};
-        SqlRowSet srs = jdbcMock.queryForRowSet(getAssignmentStatement, parameters);
-        return srs;
     }
 
     /*

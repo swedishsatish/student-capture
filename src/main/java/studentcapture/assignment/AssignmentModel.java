@@ -121,4 +121,41 @@ public class AssignmentModel {
     public void setRecap(String recap) {
         this.recap = recap;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssignmentModel that = (AssignmentModel) o;
+
+        if (assignmentID != null ? !assignmentID.equals(that.assignmentID) : that.assignmentID != null)
+            return false;
+        if (courseID != null ? !courseID.equals(that.courseID) : that.courseID != null)
+            return false;
+        if (title != null ? !title.equals(that.title) : that.title != null)
+            return false;
+        if (description != null ? !description.equals(that.description) : that.description != null)
+            return false;
+        if (videoIntervall != null ? !videoIntervall.equals(that.videoIntervall) : that.videoIntervall != null)
+            return false;
+        if (assignmentIntervall != null ? !assignmentIntervall.equals(that.assignmentIntervall) : that.assignmentIntervall != null)
+            return false;
+        if (scale != that.scale) return false;
+        return recap != null ? recap.equals(that.recap) : that.recap == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = assignmentID != null ? assignmentID.hashCode() : 0;
+        result = 31 * result + (courseID != null ? courseID.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (videoIntervall != null ? videoIntervall.hashCode() : 0);
+        result = 31 * result + (assignmentIntervall != null ? assignmentIntervall.hashCode() : 0);
+        result = 31 * result + (scale != null ? scale.hashCode() : 0);
+        result = 31 * result + (recap != null ? recap.hashCode() : 0);
+        return result;
+    }
 }
