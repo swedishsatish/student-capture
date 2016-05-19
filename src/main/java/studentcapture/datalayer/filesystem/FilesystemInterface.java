@@ -168,8 +168,7 @@ public class FilesystemInterface {
 	 */
 	public static boolean storeAssignmentVideo(String courseID, String assignmentID, MultipartFile source) {
 
-		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/" +
-				FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
+		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/";
 
 		try {
 			storeFile(source, path, FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME);
@@ -183,20 +182,17 @@ public class FilesystemInterface {
 
 
 	/**
-	 * Store the teacher's feedback video to a student submission.
-	 *
-	 * @param courseCode the code for the course.
-	 * @param courseId course id from the database
-	 * @param assignmentId from database
-	 * @param userId from database
+	 * Store the teacher's feedback video to a student submission
+	 * @param submission Submission object
+	 * @param source Feedback video file
 	 * @return true if video was stored successfully
 	 */
-	public static boolean storeFeedbackVideo(String courseCode, String courseId,
-											String assignmentId, String userId,
+	public static boolean storeFeedbackVideo(Submission submission,
 									  MultipartFile source) {
-
-		String path = FilesystemInterface.generatePath(courseCode, courseId,
-				assignmentId, userId);
+		String path = FilesystemInterface.generatePath(String.valueOf(submission.getCourseCode()),
+				String.valueOf(submission.getCourseID()),
+				String.valueOf(submission.getAssignmentID()),
+				String.valueOf(submission.getStudentID()));
 
 		try {
 			storeFile(source,path, FilesystemConstants.FEEDBACK_VIDEO_FILENAME);
@@ -204,43 +200,21 @@ public class FilesystemInterface {
 			e.printStackTrace();
 			return false;
 		}
-
 		return true;
 	}
 
 	/**
-	 * Store the teacher's feedback text to a student submission.
-	 *
-	 * @param courseCode the code for the course.
-	 * @param courseId course id from the database
-	 * @param assignmentId from database
-	 * @param userId from database
-	 * @return true if video was stored successfully
-	 */
-	public static boolean storeFeedbackText(Submission model, MultipartFile source) {
-		return storeFeedbackText(
-				model.getCourseCode(),
-				model.getCourseID(),
-				""+ model.getAssignmentID(),
-				""+model.getStudentID(),
-				source);
-	}
-
-	/**
-	 * Store the teacher's feedback text to a student submission.
-	 *
-	 * @param courseCode the code for the course.
-	 * @param courseId course id from the database
-	 * @param assignmentId from database
-	 * @param userId from database
-	 * @return true if video was stored successfully
-	 */
-	public static boolean storeFeedbackText(String courseCode, String courseId,
-									 String assignmentId, String userId,
+	 * Store the teacher's feedback text to a student submission
+	 * @param submission Submission object
+	 * @param source Feedback text file
+     * @return true if text was stored successfully
+     */
+	public static boolean storeFeedbackText(Submission submission,
 									 MultipartFile source) {
-
-		String path = FilesystemInterface.generatePath(courseCode, courseId,
-				assignmentId, userId);
+		String path = FilesystemInterface.generatePath(String.valueOf(submission.getCourseCode()),
+				String.valueOf(submission.getCourseID()),
+				String.valueOf(submission.getAssignmentID()),
+				String.valueOf(submission.getStudentID()));
 
 		try {
 			storeFile(source,path,FilesystemConstants.FEEDBACK_TEXT_FILENAME);
@@ -248,7 +222,6 @@ public class FilesystemInterface {
 			e.printStackTrace();
 			return false;
 		}
-
 		return true;
 	}
 
@@ -261,7 +234,7 @@ public class FilesystemInterface {
 	 *                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME)
      * @throws IOException
      */
-	public static void storeAssignmentText(String courseId,
+	public static void storeAssignmentText(int courseId,
 										   String assignmentId,
 										   String contents,
 										   String fileName) throws IOException {
@@ -279,6 +252,22 @@ public class FilesystemInterface {
 		fileWriter = new FileWriter(file);
 		fileWriter.write(contents);
 		fileWriter.close();
+	}
+
+	public static String getAssignmentText(int courseId, String assignmentId, String fileName)
+			throws FileNotFoundException, IOException {
+		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/" + fileName;
+		File file = new File(path);
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		StringBuilder builder = new StringBuilder();
+		String line;
+
+		while((line = reader.readLine()) != null) {
+			builder.append(line);
+			builder.append(System.getProperty("line.separator"));
+		}
+
+		return builder.toString().trim();
 	}
 
     /**

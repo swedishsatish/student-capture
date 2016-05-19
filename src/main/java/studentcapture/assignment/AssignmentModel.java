@@ -1,6 +1,8 @@
 package studentcapture.assignment;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.Map;
 
@@ -11,25 +13,27 @@ import java.util.Map;
  */
 public class AssignmentModel {
 	private Integer assignmentID;
-    private String courseID;
+    private int courseID;
     private String title;
-    private String info;
+    private String description;
     private AssignmentVideoIntervall videoIntervall;
     private AssignmentDateIntervalls assignmentIntervall;
     private GradeScale scale;
     private String recap;
     private Timestamp published;
-    private String description;
+    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss");
 
-    public AssignmentModel(String title,
-                           String info,
+    public AssignmentModel(int courseID,
+                           String title,
+                           String description,
                            AssignmentVideoIntervall videoIntervall,
                            AssignmentDateIntervalls assignmentIntervall,
                            String scale,
                            String recap) throws InputMismatchException {
-        this.courseID = "1200"; //should be changed.
+        this.courseID = courseID;
         this.title = title;
-        this.info = info;
+        this.description = description;
         this.videoIntervall = videoIntervall;
         this.assignmentIntervall = assignmentIntervall;
         this.scale = GradeScale.valueOf(scale);
@@ -37,16 +41,17 @@ public class AssignmentModel {
     }
 
     public AssignmentModel() {
-        this.courseID = "1200"; //should be changed.
+
+
     }
 
     public AssignmentModel(Map<String, Object> map) {
     	assignmentID = (Integer) map.get("AssignmentId");
-		courseID = (String) map.get("CourseId");
+		courseID = (int) map.get("CourseId");
 		title = (String) map.get("Title");
 		assignmentIntervall = new AssignmentDateIntervalls();
-		assignmentIntervall.setStartDate((String) map.get("StartDate"));
-		assignmentIntervall.setEndDate((String) map.get("EndDate"));
+		assignmentIntervall.setStartDate(FORMATTER.format((Timestamp) map.get("StartDate")));
+		assignmentIntervall.setEndDate(FORMATTER.format((Timestamp) map.get("EndDate")));
 		videoIntervall = new AssignmentVideoIntervall();
 		videoIntervall.setMinTimeSeconds((Integer) map.get("MinTime"));
 		videoIntervall.setMaxTimeSeconds((Integer) map.get("MaxTime"));
@@ -66,11 +71,11 @@ public class AssignmentModel {
 		}
 	}
 
-	public String getCourseID() {
+	public int getCourseID() {
         return courseID;
     }
 
-    public void setCourseID(String courseID) {
+    public void setCourseID(int courseID) {
         this.courseID = courseID;
     }
 
@@ -98,12 +103,12 @@ public class AssignmentModel {
         this.title = title;
     }
 
-    public String getInfo() {
-        return info;
+    public String getDescription() {
+        return description;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getScale() {
@@ -120,5 +125,44 @@ public class AssignmentModel {
 
     public void setRecap(String recap) {
         this.recap = recap;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssignmentModel that = (AssignmentModel) o;
+
+        if (courseID != that.courseID) return false;
+        if (assignmentID != null ? !assignmentID.equals(that.assignmentID) : that.assignmentID != null)
+            return false;
+        if (title != null ? !title.equals(that.title) : that.title != null)
+            return false;
+        if (description != null ? !description.equals(that.description) : that.description != null)
+            return false;
+        if (videoIntervall != null ? !videoIntervall.equals(that.videoIntervall) : that.videoIntervall != null)
+            return false;
+        if (assignmentIntervall != null ? !assignmentIntervall.equals(that.assignmentIntervall) : that.assignmentIntervall != null)
+            return false;
+        if (scale != that.scale) return false;
+        if (recap != null ? !recap.equals(that.recap) : that.recap != null)
+            return false;
+        return published != null ? published.equals(that.published) : that.published == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = assignmentID != null ? assignmentID.hashCode() : 0;
+        result = 31 * result + courseID;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (videoIntervall != null ? videoIntervall.hashCode() : 0);
+        result = 31 * result + (assignmentIntervall != null ? assignmentIntervall.hashCode() : 0);
+        result = 31 * result + (scale != null ? scale.hashCode() : 0);
+        result = 31 * result + (recap != null ? recap.hashCode() : 0);
+        result = 31 * result + (published != null ? published.hashCode() : 0);
+        return result;
     }
 }

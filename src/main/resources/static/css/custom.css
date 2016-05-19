@@ -19,6 +19,10 @@ input {
 	border-radius: 10px !important;
 }
 
+input[type=text]:disabled {
+	background: #dddddd;
+}
+
 #courseContent h1,
 #courseContent h2,
 #courseContent h3,
@@ -26,6 +30,10 @@ input {
 #courseContent h5,
 #courseContent h6 {
     color:#424242;
+}
+
+#popUpDiv {
+	background-colo:black;
 }
 
 .container {
@@ -157,7 +165,7 @@ iframe {
     margin-left:0px;
 }
 #desktopNavigation li {
-    color: gray;
+    color: #D9853B;
 }
 #desktopNavigation li.active {
     color: white;
@@ -165,5 +173,13 @@ iframe {
 
 #students-table tbody tr:hover{
 	background-color: #2D728F;
+}
+
+#courseInfo {
+    background-color: #076172;;
+    color:white;
+    text-align:center;
+    padding:5px;
+
 }
 
