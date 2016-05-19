@@ -16,6 +16,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import studentcapture.user.User;
@@ -36,6 +38,8 @@ public class LoginAuthentication implements AuthenticationProvider {
     //Using the same method for connecting to DB as in FeedbackController.java
     
     private static final String dbURI = "https://localhost:8443";
+    private static final String SESSION_USERNAME_TAG = "username";
+    private static final String SESSION_USERID_TAG = "userid";
     
     @Autowired
     private RestTemplate requestSender;
@@ -61,7 +65,7 @@ public class LoginAuthentication implements AuthenticationProvider {
 		            Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
 		    
 		    Authentication a = new UsernamePasswordAuthenticationToken(username, password, authorities);
-
+		    updateSession(username);
 		    return a;
 		}
 
@@ -110,5 +114,20 @@ public class LoginAuthentication implements AuthenticationProvider {
 	public boolean comparePassword(String password, String hashed) {
 		//String hashed = "";
 		return BCrypt.checkpw(password, hashed);
+	}
+	
+	private void updateSession(String username) {
+		URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
+                .path("/users")
+                .queryParam("String", username)
+                .queryParam("int", 0)
+                .build()
+                .toUri();
+		ResponseEntity<?> response = requestSender.getForEntity(targetUrl, User.class);
+		User user = (User) response.getBody();
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		attr.getRequest().getSession().setAttribute(SESSION_USERNAME_TAG, user.getUserName());
+		attr.getRequest().getSession().setAttribute(SESSION_USERID_TAG, user.getUserID());
+		attr.getRequest().getSession().setMaxInactiveInterval(60*60);
 	}
 }

@@ -4,17 +4,22 @@ import java.net.URI;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import studentcapture.mail.MailClient;
+import studentcapture.user.User;
 
 /**
  * Controller for handling HTTP requests related to the login page.
@@ -116,6 +121,24 @@ public class ResetPasswordController {
         
         return mav;
         
+    }
+    
+    @RequestMapping(value = "/sessiontest", method = RequestMethod.POST)
+    public void sessionPost(@RequestParam(value="coolString", required = true) String cool, HttpSession session) {
+    	session.setAttribute("123", cool);
+    }
+    
+    @RequestMapping(value = "/sessiontest", method = RequestMethod.GET)
+    public void sessionGet(HttpSession session) {
+    	System.out.println("USERNAME: " + session.getAttribute("username") + " ID: " + session.getAttribute("userid"));
+    	System.out.println("Put this cool string: " + session.getAttribute("123"));
+    	
+    	System.out.println("NOW WITH OTHER METHOD -----------------------------------");
+    	
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+    	HttpSession session2 = attr.getRequest().getSession();
+    	System.out.println("USERNAME: " + session2.getAttribute("username") + " ID: " + session2.getAttribute("userid"));
+    	System.out.println("Put this cool string: " + session2.getAttribute("123"));
     }
     
     /**

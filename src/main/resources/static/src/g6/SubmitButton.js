@@ -125,7 +125,7 @@ function submitForm() {
     reqBody["courseID"] = window.courseID;
 
     $.ajax({
-        type: "PUT",
+        type: "POST",
         contentType: "application/json",
         url: window.globalURL + "/assignments/" + 6 + "/submissions/" + 98,
         data : JSON.stringify(reqBody),
@@ -144,7 +144,6 @@ function submitForm() {
         }
     });
 }
-
 
 /**
  * Sending data to database.

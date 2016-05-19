@@ -46,12 +46,11 @@ var Assignment = React.createClass({
 
         }
         else if(this.props.role == "teacher"){
-           /* $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:assID},function (res) {
-
-
+           $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:assID},function (res) {
+                
                 ReactDOM.render(<StudentList students={res} courseId={courseID} assignmentId={assID}/>,
                                 document.getElementById('courseContent') );
-            });*/
+            });
 
         }
 
@@ -108,7 +107,7 @@ var Assignments = React.createClass({
         if(role=="teacher"){
             assList.push(<li className="active course menuItem navigationText">
                     <div onClick={this.handleClick.bind(this,course.course)}>
-                        + New Assignent
+                        + New Assignment
                     </div>
                 </li>
             );
@@ -131,17 +130,18 @@ var Course = React.createClass({
     
     handleClick: function(course,event) {
         $.get(window.globalURL + "/course/" + course.courseId,function (res) {
-            ReactDOM.render(<EditCourse course={res}/>,document.getElementById("courseContent"));
+            ReactDOM.render(<CourseInfo course={res}/>,document.getElementById("courseContent"));
             console.log("get")
+            
         });
 
+        
     
-    
-        //ReactDOM.render(<courseInfo />, document.getElementById("courseContent"));
+        
         this.setState({showChildren:!this.state.showChildren});
-       // ReactDOM.render(<NewAssignment courseID={course.courseId} courseCode={course.courseCode} />,document.getElementById("courseContent"))
+       
 
-        //ReactDOM.render(<FAQInfo />, document.getElementById('modal-container'));
+        
     },
     render: function (){
         var course = this.props.course;

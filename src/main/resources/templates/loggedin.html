@@ -3,15 +3,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Student-capture</title>
+    <script src="src/testScript.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 </head>
 <body>
 <h1>You are logged in!</h1>
 
 <form th:action="@{/logout}" method="POST">
 <input type="submit" value="Sign out"></input>
-
 </form>
 
+<form th:action="@{/session}" method="POST">
+			<label for="cString">Cool string</label>
+			<input id="cString" type="text" name="cString"/>
+			<input type="button" onclick="submitfunc()" value="Send"/>
+		</form>
+
+<button onclick="btn()">Click here</button>
 
 </body>
 </html>

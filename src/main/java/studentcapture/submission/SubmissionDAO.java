@@ -248,11 +248,13 @@ public class SubmissionDAO {
     }
     
     /**
-     * Returns a sought submission from the database.
+     * Gets an entire submission with the name of the teacher, if the teacher
+	 * exists.
      * 
-     * @param assignmentId	assignment identifier
-     * @param userId		user identifier
-     * @return				sought submission
+     * @param assignmentId	The assignmentId that the submission is connected
+	 *                      to.
+     * @param userId		The studentId that the submission is connected to.
+     * @return				The submission with the teacher name.
      * 
      * @author tfy12hsm
      */
