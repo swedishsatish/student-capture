@@ -1,6 +1,7 @@
 var Assignment = React.createClass({
 
     handleClick: function(assignment,event) {
+        console.log("hej");
         if(assignment["isActive"]) {
             ReactDOM.render(<CourseContent course={this.props.course} id={assignment["_id"]} type="assignment" />,
                             document.getElementById('courseContent'));
@@ -31,6 +32,7 @@ var Course = React.createClass({
         return { showChildren : false };
     },
     handleClick: function(course,event) {
+        console.log("Tjena");
         if(course["isActive"]) {
             this.setState({showChildren:!this.state.showChildren});
             ReactDOM.render(<CourseContent course={course} type="course" />,
@@ -52,6 +54,7 @@ var Course = React.createClass({
 });
 var MenuNav = React.createClass({
     render: function() {
+        console.log("heheh");
         var courses = JSON.parse(this.props.courses);
         var courseElems = [];
         for(var i = 0; i<courses.length; i++) {
