@@ -6,7 +6,9 @@
 
 
 window.CourseInfo = React.createClass({
-
+    componentDidMount: function () {
+        document.getElementById("course").innerHTML = this.props.course.courseDescription
+    },
 
     render: function () {
         var course = this.props.course;
@@ -16,11 +18,13 @@ window.CourseInfo = React.createClass({
          * recieved from the database
          */
         return (
-            <div dangerouslySetInnerHTML={course.courseDescription}>
-
+            <div id="course">
+                
             </div>
 
 
         );
     }
 });
+
+

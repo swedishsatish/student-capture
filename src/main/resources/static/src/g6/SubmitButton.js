@@ -125,7 +125,7 @@ function submitForm() {
     reqBody["courseID"] = window.courseID;
 
     $.ajax({
-        type: "POST",
+        type: "PUT",
         contentType: "application/json",
         url: window.globalURL + "/assignments/" + 6 + "/submissions/" + 98,
         data : JSON.stringify(reqBody),

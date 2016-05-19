@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
+
 import studentcapture.login.ErrorFlags;
 
 /**
@@ -64,23 +65,18 @@ public class UserResource {
        
         User user = new User(username, firstName, lastName, email, encryptPassword(password));
         
-        ErrorFlags errorFlags = userDAO.addUser(user);
+        ErrorFlags status = userDAO.addUser(user);
 
         //Redirect to /login after the registration process is complete
         URI uri;
         HttpHeaders httpHeaders = new HttpHeaders();
-
-
-        uri = new URI("/login?registrationSuccess");
-        switch(errorFlags) {
-            case USEREXISTS:
-                uri = new URI("/login?error=userexists");
-                break;
-            case EMAILEXISTS:
-                uri = new URI("/login?error=userexists");
-                break;
+        
+        //Get the correct status message
+        if(status == ErrorFlags.NOERROR){
+            uri = new URI("/login?" + status.toString());
+        }else{
+            uri = new URI("/login?error=" + status.toString());
         }
-
         httpHeaders.setLocation(uri);
         
         return new ResponseEntity(httpHeaders, HttpStatus.FOUND);
