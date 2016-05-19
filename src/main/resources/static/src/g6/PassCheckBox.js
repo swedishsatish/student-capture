@@ -42,6 +42,5 @@ var PassCheckBox = React.createClass({
 
     }
 });
-<<<<<<< Temporary merge branch 1:src/main/resources/static/src/g6/PassCheckBox.js
 
 window.PassCheckBox=PassCheckBox;
