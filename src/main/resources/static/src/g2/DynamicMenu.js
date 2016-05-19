@@ -131,10 +131,10 @@ var Course = React.createClass({
     },
     
     handleClick: function(course,event) {
-        console.log(course);
+        
         $.get(window.globalURL + "/course/" + course.course.courseId,function (res) {
             ReactDOM.render(<CourseInfo course={res}/>,document.getElementById("courseContent"));
-            console.log("get")
+            
             
         });
 
