@@ -46,11 +46,11 @@ var Assignment = React.createClass({
 
         }
         else if(this.props.role == "teacher"){
-           $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:assID},function (res) {
+          /* $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:assID},function (res) {
                 
                 ReactDOM.render(<StudentList students={res} courseId={courseID} assignmentId={assID} uid={uid}/>,
                                 document.getElementById('courseContent') );
-            });
+            });*/
 
         }
 
