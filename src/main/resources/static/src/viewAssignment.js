@@ -95,7 +95,7 @@ var AssignmentStart = React.createClass({
                                 </svg>
                                 <p id="descriptor">[REC]</p>
                                 <div><div>
-                                    <StudentRecordVideo autoRecord="true" /><br />
+                                    <StudentRecordVideo autoRecord="true" studentID={2} assignmentID={1200} /><br />
                                     Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
                                     Current video length: {this.state.time}
                                 </div></div>
@@ -107,7 +107,7 @@ var AssignmentStart = React.createClass({
                                 </svg>
                                 <p id="descriptor">[---]</p>
                                 <div>
-                                    <StudentRecordVideo autoRecord="false" /><br />
+                                    <StudentRecordVideo autoRecord="false" studentID={2} assignmentID={1200} /><br />
                                     Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
                                     Current video length: {this.state.time}
                                 </div>

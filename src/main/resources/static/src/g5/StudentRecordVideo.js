@@ -10,8 +10,8 @@ var StudentRecordVideo = React.createClass({
 
         fd.append('submission', new Blob([JSON.stringify({
             // Submission data
-            studentID: 12, // TODO change to this.props.studentID
-            assignmentID: 50 // TODO change to this.props.assignementID
+            studentID: this.props.studentID,
+            assignmentID: this.props.assignmentID
         })], {
             type: "application/json"
         }));
@@ -30,7 +30,7 @@ var StudentRecordVideo = React.createClass({
 
                     <h5 id="isRecording"></h5>
                         <Recorder playCallback={this.playVideo}
-                                  postURL="/assignments/"+this.props.assignmentID+"/submissions/"+this.props.studentID
+                                  postURL={"/assignments/"+this.props.assignmentID+"/submissions/"+this.props.studentID}
                                   formDataBuilder={this.formDataBuilder}
                                   stopButtonID="studentSubmit" autoRecord={autoRecord}
                                   siteView="submission" fileName="submission.webm"
