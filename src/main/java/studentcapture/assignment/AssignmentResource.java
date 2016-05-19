@@ -23,10 +23,10 @@ public class AssignmentResource {
         return assignmentDAO.createAssignment(assignment);
     }
 
-    @RequestMapping(value = "/video", method = RequestMethod.POST)
+    @RequestMapping(value = "/{assignmentID}/video", method = RequestMethod.POST)
     public void addAssignmentVideo(@RequestParam("video") MultipartFile video,
                                    @RequestParam("courseID") String courseID,
-                                   @RequestParam("assignmentID") String assignmentID) {
+                                   @PathVariable("assignmentID") String assignmentID) {
         assignmentDAO.addAssignmentVideo(video, courseID, assignmentID);
     }
 
