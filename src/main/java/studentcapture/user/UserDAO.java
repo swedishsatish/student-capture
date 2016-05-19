@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import studentcapture.login.ErrorFlags;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,7 +27,16 @@ public class UserDAO {
      *
      * @param user  instance that contains information of the user to be added.
      */
-    public boolean addUser(User user) {
+    public ErrorFlags addUser(User user) {
+
+        if(userNameExist(user.getUserName())) {
+            return ErrorFlags.USEREXISTS;
+        }
+
+        //check if email exists
+        if(emailExists(user.getEmail())) {
+            return ErrorFlags.EMAILEXISTS;
+        }
 
         String sql = "INSERT INTO users"
                 + " (username, firstname, lastname, email, pswd)"
@@ -42,11 +52,22 @@ public class UserDAO {
         try {
             jdbcTemplate.update(sql, args,types);
         } catch (DataIntegrityViolationException e) {
-			return false;
+			return ErrorFlags.USEREXISTS;
 		}
 
-		return true;
+		return ErrorFlags.NOERROR;
     }
+
+    private boolean emailExists(String email) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM users "
+                + "WHERE  email = ?)";
+
+        Object[] args = {email};
+        int[] types = {Types.VARCHAR};
+
+        return jdbcTemplate.queryForObject(sql,args,types,Boolean.class);
+    }
+
 
     /**
      * Get user by username.
@@ -74,7 +95,6 @@ public class UserDAO {
             types = new int[]{Types.INTEGER};
             sql = "SELECT  * FROM users WHERE userid = ?";
         } else {
-            System.out.println("WRONG FLAG!!!!!!!!!!!!!!!!!!!!!!!!!");
             //Invalid flag
             return null;
         }
@@ -84,8 +104,6 @@ public class UserDAO {
             user = (User) jdbcTemplate.queryForObject(sql, args,types,
                     new UserWrapper());
         } catch (Exception e) {
-            System.out.println(e);
-            System.out.println("FUCKING EXCEPTION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             return  null;
         }
 
@@ -141,8 +159,6 @@ public class UserDAO {
 
         return jdbcTemplate.queryForObject(sql,args,types,Boolean.class);
     }
-
-
 
 	/**
      *  Used to collect user information, and return a hashmap.
