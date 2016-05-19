@@ -40,8 +40,8 @@ public class SubmissionDAO {
 
     /**
      * Make the feedback visible for the student
-     * @param submission
-     * @return
+     * @param submission Submission object
+     * @return True if a row was changed, otherwise false
      */
     public boolean publishFeedback(Submission submission, boolean publish) {
         /* Publishing feedback without a grade is not possible, returns false */
@@ -64,8 +64,7 @@ public class SubmissionDAO {
 	/**
 	 * Add a grade for a subsmission
 	 *
-	 * @param submission Object containing assignmentID, studentID
-	 * @param grade      Object containing grade, teacherID, date, publish
+	 * @param submission Submission object
 	 * @return True if a row was changed, otherwise false
 	 */
 	public boolean setGrade(Submission submission) {
@@ -261,11 +260,17 @@ public class SubmissionDAO {
     	Submission result = null;
         String getStudentSubmission =
 				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
+		String getTeacherName =
+				"SELECT concat(FirstName, ' ', LastName) FROM Users WHERE UserId=?";
 
 		try {
 	        result = databaseConnection.queryForObject(
 					getStudentSubmission, new SubmissionRowMapper(), assignmentId, userId);
-
+			if (result.getGrade().getTeacherID() != null) {
+				result.setTeacherName(databaseConnection.queryForObject(getTeacherName, new Object[]{result.getGrade().getTeacherID()}, String.class));
+			} else if (result.getGrade().getTeacherID() == null) {
+				result.setTeacherName(null);
+			}
 
 	    } catch (IncorrectResultSizeDataAccessException e){
 			//TODO
