@@ -6,6 +6,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Grade;
 
 
@@ -34,6 +35,7 @@ public class SubmissionDAO {
 		timestamp.setNanos(0);
 
 		int rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(), submission.getStudentID(), timestamp, studentConsent);
+        FilesystemInterface.storeStudentVideo(submission.getCourseCode(), submission.getCourseID(), String.valueOf(submission.getAssignmentID()), String.valueOf(submission.getStudentID()), submission.getStudentVideo());
 
 		return rowsAffected == 1;
 	}
