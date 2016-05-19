@@ -5,14 +5,13 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.CourseDAO;
 import studentcapture.course.HierarchyDAO;
-import studentcapture.datalayer.database.ParticipantDAO;
+import studentcapture.course.participant.ParticipantDAO;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
-import studentcapture.model.Participant;
+import studentcapture.course.participant.Participant;
 import studentcapture.submission.Submission;
 import studentcapture.submission.SubmissionDAO;
 

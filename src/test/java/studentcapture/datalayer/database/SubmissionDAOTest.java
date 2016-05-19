@@ -147,6 +147,20 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         jdbcMock.update(sql1);
     }
 
+    @Test
+    public void addSubmissionReturnTrue() {
+        Submission submission= new Submission(2,1);
+        assertTrue(submissionDAO.addSubmission(submission,true));
+    }
+
+    /*
+    @Test
+    public void addSubmissionReturnFalse() {
+        Submission submission= new Submission(4,1);
+        assertFalse(submissionDAO.addSubmission(submission,true));
+    }
+    */
+
     /**
      * Tests that the insertion of test data works
      */
