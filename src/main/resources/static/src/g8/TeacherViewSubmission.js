@@ -22,7 +22,7 @@ var TeacherViewSubmission = React.createClass({
 
         // GET request to database to get all the submissions from the students.
         $.ajax({
-            url: window.globalURL + "/assignments/" + this.props.assignmentId + "/submissions/",
+            url: "assignments/" + this.props.assignmentId + "/submissions/",
             type: "GET", // Type of http
             async: false,
             success: function (data, status) { // Function to perform when ok
@@ -36,7 +36,7 @@ var TeacherViewSubmission = React.createClass({
 
         // GET request to database to get all the participants in a course.
         $.ajax({
-            url: window.globalURL + "/courses/" + this.props.courseId + "/participants", // URL to send to
+            url: "courses/" + this.props.courseId + "/participants", // URL to send to
             type: "GET", // Type of http
             async: false,
             data: {

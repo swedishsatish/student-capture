@@ -35,7 +35,7 @@ window.Settings = React.createClass({
     PUTSettings: function () {
 
         $.ajax({
-            url: window.globalURL + "/users/" + this.props.userID + "/settings",
+            url: "users/" + this.props.userID + "/settings",
             type: "PUT",
             async: false,
             contentType: "application/json; charset=utf-8",
