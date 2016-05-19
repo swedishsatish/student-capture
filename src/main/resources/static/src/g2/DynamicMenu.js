@@ -30,26 +30,25 @@ var Assignment = React.createClass({
      * @param event
      */
     handleClick: function(assignment,event) {
-
+        var uid = this.props.uid;
         var assID = this.props.assignment.assignment.assignmentId;
         var courseID = this.props.courseId;
 
         if(this.props.role == "student"){
             if(this.props.assignment.assignment.submissions == null){
-                ReactDOM.render(<AssignmentContent course={courseID} assignment={assID} uid={this.props.uid}/>,
+                ReactDOM.render(<AssignmentContent course={courseID} assignment={assID} uid={uid}/>,
                     document.getElementById('courseContent'));
             }
             else {
-                ReactDOM.render(<Feedback course={courseID} assignment={assID} user={this.props.uid}/>,
+                ReactDOM.render(<Feedback course={courseID} assignment={assID} user={uid}/>,
                     document.getElementById('courseContent'));
             }
 
         }
         else if(this.props.role == "teacher"){
-           /* $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:assID},function (res) {
-
-
-                ReactDOM.render(<StudentList students={res} courseId={courseID} assignmentId={assID}/>,
+          /* $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:assID},function (res) {
+                
+                ReactDOM.render(<StudentList students={res} courseId={courseID} assignmentId={assID} uid={uid}/>,
                                 document.getElementById('courseContent') );
             });*/
 
@@ -88,8 +87,9 @@ var Assignments = React.createClass({
      * @param event
      */
     editClick: function (course,event) {
+        var uid = this.props.uid;
         $.get(window.globalURL + "/course/" + course.courseId,function (res) {
-            ReactDOM.render(<EditCourse course={res} uid={this.props.uid}/>,document.getElementById("courseContent"));
+            ReactDOM.render(<EditCourse course={res} uid={uid}/>,document.getElementById("courseContent"));
 
         });
 
@@ -99,16 +99,17 @@ var Assignments = React.createClass({
      * @returns {XML}
      */
     render: function() {
+        var uid = this.props.uid;
         var course = this.props.course;
         var role = this.props.role;
         var assignments = objToList(course.assignments);
         var assList = assignments.map(function (ass) {
-            return <Assignment key={ass.assignment.assignmentId} courseId={course.course.courseId} assignment={ass} uid={this.props.uid} role={role}/>
+            return <Assignment key={ass.assignment.assignmentId} courseId={course.course.courseId} assignment={ass} uid={uid} role={role}/>
         });
         if(role=="teacher"){
             assList.push(<li className="active course menuItem navigationText">
                     <div onClick={this.handleClick.bind(this,course.course)}>
-                        + New Assignent
+                        + New Assignment
                     </div>
                 </li>
             );
@@ -130,18 +131,20 @@ var Course = React.createClass({
     },
     
     handleClick: function(course,event) {
-        $.get(window.globalURL + "/course/" + course.courseId,function (res) {
-            ReactDOM.render(<EditCourse course={res}/>,document.getElementById("courseContent"));
-            console.log("get")
+        
+        $.get(window.globalURL + "/course/" + course.course.courseId,function (res) {
+            ReactDOM.render(<CourseInfo course={res}/>,document.getElementById("courseContent"));
+            
+            
         });
 
+        
     
-    
-        //ReactDOM.render(<courseInfo />, document.getElementById("courseContent"));
+        
         this.setState({showChildren:!this.state.showChildren});
-       // ReactDOM.render(<NewAssignment courseID={course.courseId} courseCode={course.courseCode} />,document.getElementById("courseContent"))
+       
 
-        //ReactDOM.render(<FAQInfo />, document.getElementById('modal-container'));
+        
     },
     render: function (){
         var course = this.props.course;

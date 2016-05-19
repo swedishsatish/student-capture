@@ -145,7 +145,6 @@ function submitForm() {
     });
 }
 
-
 /**
  * Sending data to database.
  */

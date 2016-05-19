@@ -59,21 +59,31 @@ public class SubmissionResource {
     }
 
 
-    /*@RequestMapping(value = "{studentID}", method = RequestMethod.PUT)
+    @RequestMapping(value = "{studentID}", method = RequestMethod.PUT)
     public HttpStatus storeSubmission(@PathVariable("assignmentID") int assignmentID,
                                       @PathVariable("studentID") int studentID,
                                       @RequestBody Submission updatedSubmission){
 
+        HttpStatus returnStatus;
+
         updatedSubmission.setStudentID(studentID);
         updatedSubmission.setAssignmentID(assignmentID);
-        //TODO Not implemented - stores a submission in the database
+        returnStatus = DAO.addSubmission(updatedSubmission, true) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
 
         /*Validation of Submission
         * Should be sent by a student, might have to validate that the student didnt set the grade himself.
         * However this should probably be handled somewhere else
-        * validate the Submission.studentID against studentID and permissions
+        * validate the Submission.studentID against studentID and permissions*/
+
+        return returnStatus;
+    }
+
+    @RequestMapping(value = "{studentID}", method = RequestMethod.DELETE)
+    public HttpStatus deleteSubmission(@PathVariable("assignmentID") String assignment,
+                                       @PathVariable("studentID") String studentID){
+        /*Check permission*/
         return HttpStatus.NOT_IMPLEMENTED;
-    }*/
+    }
 
     /**
      * Publish feedback to the student

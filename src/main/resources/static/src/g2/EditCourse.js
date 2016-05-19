@@ -6,6 +6,7 @@
 
 window.EditCourse = React.createClass({
     componentDidMount: function () {
+
         tinymce.init({ selector:'#course-description',
             height: 350});
 
@@ -16,6 +17,19 @@ window.EditCourse = React.createClass({
         }
 
         tinymce.get('course-description').setContent(this.props.course.courseDescription);
+    },
+    componentWillReceiveProps: function (nextProps) {
+       
+        if(nextProps.course.active){
+            $('#course-active').prop('checked', 'checked');
+        }
+
+        tinymce.get('course-description').setContent(nextProps.course.courseDescription);
+    },
+    componentWillUnmount: function () {
+        console.log("leaving");
+        tinymce.get('course-description').setContent('');
+        tinymce.EditorManager.editors = [];
     },
     handleClick: function (courseID,event) {
 
@@ -53,6 +67,9 @@ window.EditCourse = React.createClass({
 
 
     },
+    changed: function () {
+
+    },
     render: function () {
         var course = this.props.course;
 
@@ -61,11 +78,11 @@ window.EditCourse = React.createClass({
             <div>
                 <h3>Edit course information</h3>
                 <form id="form">
-                    <input type="text" id="course-name" placeholder="Course Name" value={course.courseName}/>
+                    <input type="text" id="course-name" placeholder="Course Name" value={course.courseName} onChange={this.changed}/>
                     <br />
-                    <input type="text" id="course-year" placeholder="Course year" value={course.year}/>
+                    <input type="text" id="course-year" placeholder="Course year" value={course.year} onChange={this.changed}/>
                     <br />
-                    <input type="text" id="course-term" placeholder="Course term" value={course.term}/>
+                    <input type="text" id="course-term" placeholder="Course term" value={course.term} onChange={this.changed}/>
                     <br />
 
                     <input type="checkbox" id="course-active"/>Active Course

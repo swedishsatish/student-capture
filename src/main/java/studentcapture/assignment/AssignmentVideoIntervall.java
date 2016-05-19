@@ -55,4 +55,28 @@ public class AssignmentVideoIntervall {
             }
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssignmentVideoIntervall that = (AssignmentVideoIntervall) o;
+
+        if (minTimeSeconds != that.minTimeSeconds) return false;
+        if (minTimeIsSet != that.minTimeIsSet) return false;
+        if (maxTimeSeconds != that.maxTimeSeconds) return false;
+        return maxTimeIsSet == that.maxTimeIsSet;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = minTimeSeconds;
+        result = 31 * result + (minTimeIsSet ? 1 : 0);
+        result = 31 * result + maxTimeSeconds;
+        result = 31 * result + (maxTimeIsSet ? 1 : 0);
+        return result;
+    }
+
 }

@@ -3,6 +3,7 @@ package studentcapture.submission;
 import studentcapture.model.Grade;
 
 import javax.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 import java.sql.Timestamp;
 import java.util.Map;
 
@@ -28,25 +29,8 @@ public class Submission {
     private String lastName;
     private String status;
     private String teacherName;
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    //A submission must have one of these statuses
-    public enum Status {
-        ANSWER("Answer"),
-        NOANSWER("NoAnswer"),
-        BLANK("Blank");
-
-        Status(String status) {
-
-        }
-    }
+    private MultipartFile studentVideo;
+    private MultipartFile feedbackVideo;
 
     public Submission(int studentID, int assignmentID) {
         this.studentID = studentID;
@@ -95,6 +79,41 @@ public class Submission {
             publishStudentSubmission = (Boolean) map.get("PublishStudentSubmission");
         } catch (NullPointerException e) {
             publishStudentSubmission = null;
+        }
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public MultipartFile getStudentVideo() {
+        return studentVideo;
+    }
+
+    public void setStudentVideo(MultipartFile studentVideo) {
+        this.studentVideo = studentVideo;
+    }
+
+    public MultipartFile getFeedbackVideo() {
+        return feedbackVideo;
+    }
+
+    public void setFeedbackVideo(MultipartFile feedbackVideo) {
+        this.feedbackVideo = feedbackVideo;
+    }
+
+    //A submission must have one of these statuses
+    public enum Status {
+        ANSWER("Answer"),
+        NOANSWER("NoAnswer"),
+        BLANK("Blank");
+
+        Status(String status) {
+
         }
     }
 
