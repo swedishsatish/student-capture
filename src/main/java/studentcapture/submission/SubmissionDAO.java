@@ -260,11 +260,17 @@ public class SubmissionDAO {
     	Submission result = null;
         String getStudentSubmission =
 				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
+		String getTeacherName =
+				"SELECT concat(FirstName, ' ', LastName) FROM Users WHERE UserId=?";
 
 		try {
 	        result = databaseConnection.queryForObject(
 					getStudentSubmission, new SubmissionRowMapper(), assignmentId, userId);
-
+			if (result.getGrade().getTeacherID() != null) {
+				result.setTeacherName(databaseConnection.queryForObject(getTeacherName, new Object[]{result.getGrade().getTeacherID()}, String.class));
+			} else if (result.getGrade().getTeacherID() == null) {
+				result.setTeacherName(null);
+			}
 
 	    } catch (IncorrectResultSizeDataAccessException e){
 			//TODO

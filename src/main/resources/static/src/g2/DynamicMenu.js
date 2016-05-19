@@ -35,9 +35,15 @@ var Assignment = React.createClass({
         var courseID = this.props.courseId;
 
         if(this.props.role == "student"){
+            if(this.props.assignment.assignment.submissions == null){
+                ReactDOM.render(<AssignmentContent course={courseID} assignment={assID} uid={this.props.uid}/>,
+                    document.getElementById('courseContent'));
+            }
+            else {
+                ReactDOM.render(<Feedback course={courseID} assignment={assID} user={this.props.uid}/>,
+                    document.getElementById('courseContent'));
+            }
 
-            ReactDOM.render(<AssignmentContent course={courseID} assignment={assID} uid={this.props.uid}/>,
-                document.getElementById('courseContent'));
         }
         else if(this.props.role == "teacher"){
            /* $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:assID},function (res) {
