@@ -243,9 +243,13 @@ var Vid = React.createClass({
                 <video id='videoPlayer' src={this.props.url}>
                     Cannot show video, it may not be supported by your browser!
                 </video>
-                <div>
-                    <progress id="progress-bar" value={this.state.currTime} max={this.state.totalTime} />
-                    &nbsp; {this.state.currTime} / {this.state.totalTime}
+                <div className="row">
+                    <div className="eight columns">
+                        <progress id="progress-bar" value={this.state.currTime} max={this.state.totalTime} />
+                    </div>
+                    <div className="four columns">
+                        {this.state.currTime} / {this.state.totalTime}
+                    </div>
                 </div>
             </div>
         );
