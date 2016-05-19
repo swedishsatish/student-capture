@@ -118,10 +118,10 @@ function submitForm() {
     var reqBody = {};
     reqBody["feedback"] = document.getElementById('teachercomments').value;
     reqBody["grade"] = {};
-    reqBody["grade"]["grade"] = "U";
+    reqBody["grade"]["grade"] = document.getElementById('dropDownMenu').value;
     reqBody["grade"]["teacherID"] = "7777777"; //TODO: Fix this grade: document.getElementById('dropDownMenu').value;
     reqBody["studentPass"] = document.getElementById('ifStudentPass').checked;
-    reqBody["shareData"] = document.getElementById('PermissionFromStudent').checked;
+    reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
     reqBody["courseID"] = window.courseID;
 
     $.ajax({
