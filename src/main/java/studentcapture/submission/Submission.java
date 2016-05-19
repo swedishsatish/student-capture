@@ -32,41 +32,6 @@ public class Submission {
     private MultipartFile studentVideo;
     private MultipartFile feedbackVideo;
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public MultipartFile getStudentVideo() {
-        return studentVideo;
-    }
-
-    public void setStudentVideo(MultipartFile studentVideo) {
-        this.studentVideo = studentVideo;
-    }
-
-    public MultipartFile getFeedbackVideo() {
-        return feedbackVideo;
-    }
-
-    public void setFeedbackVideo(MultipartFile feedbackVideo) {
-        this.feedbackVideo = feedbackVideo;
-    }
-
-    //A submission must have one of these statuses
-    public enum Status {
-        ANSWER("Answer"),
-        NOANSWER("NoAnswer"),
-        BLANK("Blank");
-
-        Status(String status) {
-
-        }
-    }
-
     public Submission(int studentID, int assignmentID) {
         this.studentID = studentID;
         this.assignmentID = assignmentID;
@@ -114,6 +79,41 @@ public class Submission {
             publishStudentSubmission = (Boolean) map.get("PublishStudentSubmission");
         } catch (NullPointerException e) {
             publishStudentSubmission = null;
+        }
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public MultipartFile getStudentVideo() {
+        return studentVideo;
+    }
+
+    public void setStudentVideo(MultipartFile studentVideo) {
+        this.studentVideo = studentVideo;
+    }
+
+    public MultipartFile getFeedbackVideo() {
+        return feedbackVideo;
+    }
+
+    public void setFeedbackVideo(MultipartFile feedbackVideo) {
+        this.feedbackVideo = feedbackVideo;
+    }
+
+    //A submission must have one of these statuses
+    public enum Status {
+        ANSWER("Answer"),
+        NOANSWER("NoAnswer"),
+        BLANK("Blank");
+
+        Status(String status) {
+
         }
     }
 
