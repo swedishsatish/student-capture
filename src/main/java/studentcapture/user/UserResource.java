@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 
+import studentcapture.login.ErrorFlags;
+
 /**
  * Created by c12ton on 5/17/16.
  */
@@ -63,17 +65,14 @@ public class UserResource {
        
         User user = new User(username, firstName, lastName, email, encryptPassword(password));
         
-        boolean success = userDAO.addUser(user);
+        ErrorFlags status = userDAO.addUser(user);
 
         //Redirect to /login after the registration process is complete
         URI uri;
         HttpHeaders httpHeaders = new HttpHeaders();
         
-        if(!success) {      
-            uri = new URI("/login?registrationFailed");
-        }else{
-            uri = new URI("/login?registrationSuccess");
-        }
+        //Get the correct status message
+        uri = new URI("/login?" + status.toString());
         httpHeaders.setLocation(uri);
         
         return new ResponseEntity(httpHeaders, HttpStatus.FOUND);
