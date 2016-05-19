@@ -1,10 +1,14 @@
 package studentcapture.mail;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.jvnet.mock_javamail.Mailbox;
+import org.springframework.beans.factory.annotation.Autowired;
+import studentcapture.config.StudentCaptureApplicationTests;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -21,15 +25,21 @@ import static org.junit.Assert.*;
  * cs-user:     dv14iht, c13evk
  * Date:        5/12/16
  */
-public class MailClientTest {
+public class MailClientTest extends StudentCaptureApplicationTests {
 
+    @Autowired
     MailClient mail;
+
     String subject;
     String body;
 
     @Before
     public void setUp() throws Exception {
-        mail = new MailClient();
+        Mailbox.clearAll();
+    }
+
+    @After
+    public void tearDown() throws Exception {
         Mailbox.clearAll();
     }
 

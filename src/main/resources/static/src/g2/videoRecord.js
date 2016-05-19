@@ -94,10 +94,10 @@ var Recorder = React.createClass({
             stopButton.disabled = false;
 
             if(typeof props.calc !== "undefined") {
-                document.getElementById("test-rec-text").innerHTML = "Recording..";
+                document.getElementById("test-rec-text").innerHTML = "&#x1f534;";
             }
             else {
-                document.getElementById("rec-text").innerHTML = "Recording..";
+                document.getElementById("rec-text").innerHTML = "&#x1f534;";
             }
         }
 
@@ -191,10 +191,10 @@ var Recorder = React.createClass({
                 mediaStream.stop();
                 mediaStream = null;
                 if(typeof props.calc !== "undefined") {
-                    document.getElementById("test-rec-text").innerHTML = "";
+                    document.getElementById("test-rec-text").innerHTML = "&#11093;";
                 }
                 else {
-                    document.getElementById("rec-text").innerHTML = "";
+                    document.getElementById("rec-text").innerHTML = "&#11093;";
                 }
                 cameraStarted = false;
             });
@@ -258,6 +258,9 @@ var Recorder = React.createClass({
             request.open('POST', url,true);
             request.send(data);
         }
+
+        /* Showing recording-light on load (not recording) */
+        document.getElementById("rec-text").innerHTML = "&#11093;";
     },
     render: function() {
         var id;
@@ -273,10 +276,10 @@ var Recorder = React.createClass({
 
         return (
             <div>
+                <p id={pId}></p>
                 <div id="prev-container">
                     <video id={id} muted ></video>
                 </div>
-                <p id={pId}></p>
             </div>
         );
     }

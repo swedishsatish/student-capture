@@ -1,5 +1,7 @@
 package studentcapture.mail;
 
+import org.springframework.stereotype.Repository;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -18,12 +20,12 @@ import java.util.Properties;
  * cs-user:     dv14iht, c13evk
  * Date:        5/11/16
  */
+@Repository
 public class MailClient {
-    private Properties properties;
     private Session session;
 
     public MailClient() {
-        properties = new Properties();
+        Properties properties = new Properties();
         properties.put("mail.smtp.host", "mail.cs.umu.se");
         properties.put("mail.smtp.port", "587");
         session = Session.getDefaultInstance(properties);

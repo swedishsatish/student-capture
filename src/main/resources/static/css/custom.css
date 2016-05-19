@@ -15,7 +15,7 @@ h1, h2, h3, h4, h5, h6 {
 	color:#FFFFFF;
 }
 
-input {
+input, select {
 	border-radius: 10px !important;
 }
 
@@ -33,7 +33,7 @@ input[type=text]:disabled {
 }
 
 #popUpDiv {
-	background-colo:black;
+	background-color:black;
 }
 
 .container {
@@ -101,6 +101,7 @@ input[type=text]:disabled {
 }
 
 .SCButton {
+    text-align: center;
 	height:40px;
 	line-height:40px;
 	border-radius: 10px;
@@ -175,11 +176,15 @@ iframe {
 	background-color: #2D728F;
 }
 
+#rec-text {
+	text-align: right;
+    margin-right: 16px;
+    margin-top: 10px;
+
 #courseInfo {
     background-color: #076172;;
     color:white;
     text-align:center;
     padding:5px;
-
 }
 
