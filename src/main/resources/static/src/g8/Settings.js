@@ -34,7 +34,7 @@ window.Settings = React.createClass({
      */
     POSTSettings: function () {
         $.post(
-            window.globalURL + "/settings",
+            "settings",
             {
                 "userID": this.props.userID + "",
                 "language": document.getElementById("languageSelect").value + "",
@@ -64,7 +64,7 @@ window.Settings = React.createClass({
         };
         
         $.ajax({
-            url: window.globalURL + "/settings",
+            url: "settings",
             type: "GET",
             async: false,
             data: {

@@ -13,7 +13,7 @@ window.Feedback = React.createClass({
         //Skicka till assignments/{assignmentid}/submissions/{studentid}
         $.ajax({
             type: "GET",
-            url: window.globalURL + "/assignments/" + $("#assignment").val() + "/submissions/" + $("#student").val(),
+            url: "assignments/" + $("#assignment").val() + "/submissions/" + $("#student").val(),
             timeout: 100000,
             success: function (response) {
                 console.log("SUCCESS: ", response);
