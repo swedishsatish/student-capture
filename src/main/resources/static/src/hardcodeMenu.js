@@ -27,6 +27,7 @@ var CourseList = React.createClass({
                 studentName: "Lukas Lundberg",
                 submissionDate: "2010-06-23",
                 grade: "K",
+<<<<<<< Temporary merge branch 1
                 teacherID: 12,
                 withdraw: false
             },

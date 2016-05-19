@@ -3,6 +3,7 @@
  */
 
 
+
 /**
  * Checkbox that is used to determine if a student passed an assignment or not.
  * @type {number} current state of passed
@@ -41,5 +42,6 @@ var PassCheckBox = React.createClass({
 
     }
 });
+<<<<<<< Temporary merge branch 1:src/main/resources/static/src/g6/PassCheckBox.js
 
 window.PassCheckBox=PassCheckBox;

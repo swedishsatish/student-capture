@@ -132,7 +132,9 @@ function submitForm() {
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
+            console.log("SUCCESS reqBody contains:", reqBody);
             // TODO: check response with if/else, if respons is fail give error message
+
           //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);
