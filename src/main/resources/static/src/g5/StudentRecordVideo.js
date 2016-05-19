@@ -34,6 +34,7 @@ var StudentRecordVideo = React.createClass({
                                   camOnLoad="true"
                         />
 
+
                      <button id="studentSubmit" className="recControls" disabled>Submit answer</button>
                      <BlankBox/>
             </div>

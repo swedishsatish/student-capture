@@ -118,21 +118,23 @@ function submitForm() {
     var reqBody = {};
     reqBody["feedback"] = document.getElementById('teachercomments').value;
     reqBody["grade"] = {};
-    reqBody["grade"]["grade"] = "U";
+    reqBody["grade"]["grade"] = document.getElementById('dropDownMenu').value;
     reqBody["grade"]["teacherID"] = "7777777"; //TODO: Fix this grade: document.getElementById('dropDownMenu').value;
     reqBody["studentPass"] = document.getElementById('ifStudentPass').checked;
-    reqBody["shareData"] = document.getElementById('PermissionFromStudent').checked;
+    reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
     reqBody["courseID"] = window.courseID;
 
     $.ajax({
-        type: "PUT",
+        type: "POST",
         contentType: "application/json",
         url: window.globalURL + "/assignments/" + 6 + "/submissions/" + 98,
         data : JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
+            console.log("SUCCESS reqBody contains:", reqBody);
             // TODO: check response with if/else, if respons is fail give error message
+
           //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);
@@ -142,7 +144,6 @@ function submitForm() {
         }
     });
 }
-
 
 /**
  * Sending data to database.

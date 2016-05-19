@@ -3,6 +3,7 @@
  */
 
 
+
 /**
  * Checkbox that is used to determine if a student passed an assignment or not.
  * @type {number} current state of passed

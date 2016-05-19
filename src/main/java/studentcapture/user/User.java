@@ -74,8 +74,8 @@ public class User {
         this.userID = userID;
     }
 
-    public void getUserID() {
-        this.userID = userID;
+    public String getUserID() {
+        return this.userID;
     }
 
 

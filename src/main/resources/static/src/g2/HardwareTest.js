@@ -2,11 +2,16 @@
  * Created by c13lbm on 4/27/16.
  */
 
+
 var HardwareTest = React.createClass({
 
-    componentDidMount: function () {
-        //ReactDOM.render();
-    },
+
+    /**
+     * Build formdata to send to server.
+     * @param blob
+     * @param fileName
+     * @returns {*}
+     */
     formDataBuilder: function (blob, fileName) {
         var fd = new FormData();
         fd.append("videoName", fileName);
@@ -14,6 +19,10 @@ var HardwareTest = React.createClass({
         fd.append("text","dsvfdsfds");
         return fd;
     },
+    /**
+     * Callback function when video is returned from server.
+     * @param fName
+     */
     playVideo: function (fName) {
         
 
@@ -37,6 +46,12 @@ var HardwareTest = React.createClass({
         mediaElement.play();
 
     },
+
+    /**
+     * Calculate upload speed.
+     * @param blobsize
+     * @param sendTime
+     */
     calcSpeed: function (blobsize, sendTime) {
 
         $("#internet-speed").text(function () {
@@ -46,6 +61,10 @@ var HardwareTest = React.createClass({
             return "Upload speed = " + mbsec.toFixed(2) + "MB/s"
         });
     },
+    /**
+     * Render modal content.
+     * @returns {XML}
+     */
     render: function () {
 
         return (
