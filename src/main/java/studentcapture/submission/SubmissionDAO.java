@@ -36,7 +36,7 @@ public class SubmissionDAO {
 
 		int rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(), submission.getStudentID(), timestamp, studentConsent);
         if(submission.getStudentVideo() != null) {
-            FilesystemInterface.storeStudentVideo(submission.getCourseCode(), submission.getCourseID(), String.valueOf(submission.getAssignmentID()), String.valueOf(submission.getStudentID()), submission.getStudentVideo());
+            FilesystemInterface.storeStudentVideo(submission, submission.getStudentVideo());
         }
 
 		return rowsAffected == 1;
