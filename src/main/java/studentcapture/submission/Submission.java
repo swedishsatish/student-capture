@@ -18,12 +18,11 @@ public class Submission {
     private Boolean studentPublishConsent = false;
     private Timestamp submissionDate;
     private Grade grade;
-    private String gradeSign;
-    private Integer teacherID;
     private Boolean publishStudentSubmission = false;
     private String courseID;
     private String courseCode;
     private String feedback;
+    private Boolean publishFeedback;
     private Status subStatus;
     private String firstName;
     private String lastName;
@@ -54,14 +53,6 @@ public class Submission {
     }
 
     public Submission() {
-    }
-
-    public String getGradeSign() {
-        return gradeSign;
-    }
-
-    public void setGradeSign(String gradeSign) {
-        this.gradeSign = gradeSign;
     }
 
     /**
@@ -95,21 +86,9 @@ public class Submission {
         }
 
         try {
-            gradeSign = (String) map.get("Grade");
-//        grade.setGrade((String) map.get("Grade"));
-        } catch (NullPointerException e) {
-            gradeSign = null;
-        }
-
-        try {
             status = (String) map.get("Status");
         } catch (NullPointerException e) {
             status = null;
-        }
-        try {
-            teacherID = (Integer) map.get("TeacherId");
-        } catch (NullPointerException e) {
-            teacherID = null;
         }
         try {
             publishStudentSubmission = (Boolean) map.get("PublishStudentSubmission");
@@ -210,22 +189,69 @@ public class Submission {
         this.subStatus = subStatus;
     }
 
+    public void setPublishStudentSubmission(Boolean publishStudentSubmission) {
+        this.publishStudentSubmission = publishStudentSubmission;
+    }
+
+
+    public Boolean getPublishStudentSubmission() {
+        return publishStudentSubmission;
+    }
+
+    public Boolean getPublishFeedback() {
+        return publishFeedback;
+    }
+
+    public void setPublishFeedback(Boolean publishFeedback) {
+        this.publishFeedback = publishFeedback;
+    }
+
     @Override
     public String toString() {
         return "Submission{" +
-                "assignmentID=" + assignmentID +
-                ", studentID=" + studentID +
-                ", studentPublishConsent=" + studentPublishConsent +
-                ", submissionDate=" + submissionDate +
-                ", grade=" + grade +
-                ", teacherID=" + teacherID +
-                ", publishStudentSubmission=" + publishStudentSubmission +
-                ", courseID='" + courseID + '\'' +
-                ", courseCode='" + courseCode + '\'' +
-                ", feedback='" + feedback + '\'' +
-                ", subStatus=" + subStatus +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                "\n\tassignmentID=" + assignmentID +
+                ", \n\tstudentID=" + studentID +
+                ", \n\tstudentPublishConsent=" + studentPublishConsent +
+                ", \n\tsubmissionDate=" + submissionDate +
+                ", \n\tgrade=" + grade +
+                ", \n\tteacherID=" + grade.getTeacherID() +
+                ", \n\tpublishStudentSubmission=" + publishStudentSubmission +
+                ", \n\tcourseID='" + courseID + '\'' +
+                ", \n\tcourseCode='" + courseCode + '\'' +
+                ", \n\tfeedback='" + feedback + '\'' +
+                ", \n\tsubStatus=" + subStatus +
+                ", \n\tfirstName='" + firstName + '\'' +
+                ", \n\tlastName='" + lastName + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Submission that = (Submission) o;
+
+        if (assignmentID != null ? !assignmentID.equals(that.assignmentID) : that.assignmentID != null) return false;
+        if (studentID != null ? !studentID.equals(that.studentID) : that.studentID != null) return false;
+        if (studentPublishConsent != null ? !studentPublishConsent.equals(that.studentPublishConsent) : that.studentPublishConsent != null)
+            return false;
+        if (submissionDate != null ? !submissionDate.equals(that.submissionDate) : that.submissionDate != null)
+            return false;
+        if (grade.getGrade() != null ? !grade.getGrade().equals(that.grade.getGrade()) : that.grade.getGrade() != null) return false;
+        if (grade.getTeacherID() != null ? !grade.getTeacherID().equals(that.grade.getTeacherID()) : that.grade.getTeacherID() != null) return false;
+        if (publishStudentSubmission != null ? !publishStudentSubmission.equals(that.publishStudentSubmission) : that.publishStudentSubmission != null)
+            return false;
+        if (courseID != null ? !courseID.equals(that.courseID) : that.courseID != null) return false;
+        if (courseCode != null ? !courseCode.equals(that.courseCode) : that.courseCode != null) return false;
+        if (feedback != null ? !feedback.equals(that.feedback) : that.feedback != null) return false;
+        if (publishFeedback != null ? !publishFeedback.equals(that.publishFeedback) : that.publishFeedback != null)
+            return false;
+        if (subStatus != that.subStatus) return false;
+        if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
+        return status != null ? status.equals(that.status) : that.status == null;
+
+    }
+
 }

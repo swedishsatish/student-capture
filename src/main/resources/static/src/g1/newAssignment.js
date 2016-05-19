@@ -103,16 +103,43 @@ var NewAssignment = React.createClass({
                 <div id="newAssForm">
                 <input className="inputField" id="title" type="text" placeholder="title" />
 
-                <input id="startDate" type="button" value="start: yyyy-mm-dd 00:00"/>
-                <input id="endDate" type="button" value="submit by: yyyy-mm-dd 00:00"/>
-                <input id="minTimeSeconds" type="text" placeholder="minimum length of answer (sec)" />
-                <input id="maxTimeSeconds" type="text" placeholder="maximum length of answer (sec)" />
-                    <input id="publish" type="button" value="publish by: yyyy-mm-dd 00:00"/>
-                    <select id="scale">
-                        <option value="NUMBER_SCALE">1,2,3,4,5</option>
-                        <option value="U_G_VG_MVG">U,G,VG,MVG</option>
-                        <option value="U_O_K_G">U,O,K,G</option>
-                    </select>
+                    <div id="dates">
+                        <div className="DTContainer">
+                            <p className="DTText">start:</p>
+                            <input id="startDate" type="button" value="yyyy-mm-dd 00:00"/>
+                        </div>
+
+                        <div className="DTContainer">
+                            <p className="DTText">submit by:</p>
+                            <input id="endDate" type="button" value="yyyy-mm-dd 00:00"/>
+                        </div>
+
+                        <div className="DTContainer" id="rightDTContainer">
+                            <p className="DTText">publish by:</p>
+                            <input id="publish" type="button" value="yyyy-mm-dd 00:00"/>
+                        </div>
+                    </div>
+
+                    <div id="settings">
+                        <div className="DTContainer">
+                            <p className="DTText">min-ength of answer:</p>
+                            <input id="minTimeSeconds" type="text" placeholder="seconds" />
+                        </div>
+
+                        <div className="DTContainer">
+                            <p className="DTText">max-length of answer:</p>
+                            <input id="maxTimeSeconds" type="text" placeholder="seconds" />
+                        </div>
+
+                        <div className="DTContainer" id="grading">
+                            <p className="DTText">grading:</p>
+                            <select id="scale">
+                                <option value="NUMBER_SCALE">1,2,3,4,5</option>
+                                <option value="U_G_VG_MVG">U,G,VG,MVG</option>
+                                <option value="U_O_K_G">U,O,K,G</option>
+                            </select>
+                        </div>
+                    </div>
 
                     <h2>Description of the assignment</h2>
                     <textarea className="inputField" id="description" type="text" placeholder="description" /><br/>
@@ -194,5 +221,5 @@ window.CourseContent = React.createClass({
     }
 });
 
-//ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
+ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
 window.NewAssignment = NewAssignment;

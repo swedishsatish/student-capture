@@ -4,6 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import studentcapture.assignment.AssignmentDAO;
+import studentcapture.course.CourseDAO;
+import studentcapture.course.CourseModel;
+import studentcapture.datalayer.filesystem.FilesystemInterface;
 
 import java.util.List;
 
@@ -21,11 +26,14 @@ import java.util.List;
 public class SubmissionResource {
     @Autowired
     SubmissionDAO DAO;
+    AssignmentDAO assignmentDAO;
+    CourseDAO courseDAO;
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
                                                             @PathVariable("studentID") int studentID){
         //TODO fix unity in DAO API
+
         Submission body = DAO.getSubmission(assignmentID, studentID).get();
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
@@ -50,11 +58,16 @@ public class SubmissionResource {
         return HttpStatus.NOT_IMPLEMENTED;
     }
 
+
     @RequestMapping(value = "{studentID}", method = RequestMethod.PUT)
-    public HttpStatus storeSubmission(@PathVariable("assignmentID") String assignmentID,
-                                      @PathVariable("studentID") String studentID,
+    public HttpStatus storeSubmission(@PathVariable("assignmentID") int assignmentID,
+                                      @PathVariable("studentID") int studentID,
                                       @RequestBody Submission updatedSubmission){
+
+        updatedSubmission.setStudentID(studentID);
+        updatedSubmission.setAssignmentID(assignmentID);
         //TODO Not implemented - stores a submission in the database
+
         /*Validation of Submission
         * Should be sent by a student, might have to validate that the student didnt set the grade himself.
         * However this should probably be handled somewhere else
@@ -67,5 +80,54 @@ public class SubmissionResource {
                                        @PathVariable("studentID") String studentID){
         /*Check permission*/
         return HttpStatus.NOT_IMPLEMENTED;
+    }
+
+    /**
+     * Publish feedback to the student
+     * @param submission An object representing a submission
+     * @param publish A boolean, true represent publish and false unpublish
+     * @return True if feedback could be published/unpublished, else false
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/publishFeedback", method = RequestMethod.POST)
+    public HttpStatus publishFeedback(@RequestParam(value = "Submission") Submission submission,
+                                      @RequestParam(value = "Publish") boolean publish) {
+        String courseID = assignmentDAO.getCourseIDForAssignment(submission.getAssignmentID());
+        submission.setCourseID(courseID);
+        DAO.publishFeedback(submission, publish);
+        return HttpStatus.NOT_IMPLEMENTED;
+        //return submissionDAO.publishFeedback(submission, publish);
+    }
+
+/**
+ * Set feedback for a submission, video and text cannot be null
+ * @param submission An object representing a submission
+ * @param feedbackVideo Video feedback
+ * @param feedbackText Text feedback
+ * @return True if feedback was successfully saved to the database, else false
+ */
+    @CrossOrigin
+    @RequestMapping(value = "/setFeedback", method = RequestMethod.POST)
+    public boolean setFeedback(@RequestParam(value = "Submission") Submission submission,
+                               @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
+                               @RequestParam(value = "feedbackText") MultipartFile feedbackText) {
+        CourseModel courseModel = new CourseModel();
+        FilesystemInterface fsi = new FilesystemInterface();
+        String courseID = assignmentDAO.getCourseIDForAssignment(submission.getAssignmentID());
+        courseModel.setCourseId(Integer.parseInt(courseID));
+        String courseCode = courseDAO.getCourseCodeFromId(courseModel);
+        submission.setCourseCode(courseCode);
+        submission.setCourseID(courseID);
+        int feedback = 0;
+    	if(feedbackVideo != null) {
+            fsi.storeFeedbackVideo(submission, feedbackVideo);
+            feedback++;
+        }
+        if(feedbackText != null) {
+            fsi.storeFeedbackText(submission, feedbackText);
+            feedback++;
+        }
+
+        return feedback != 0;
     }
 }

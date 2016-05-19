@@ -2,16 +2,35 @@
  * Created by Ludvig on 2016-05-12.
  */
 
+/**
+ * generates random course id, ONLY TEMPORARY will be redundant
+ * @returns {number}
+ */
 var generateCourseID = function () {
     return Math.floor((Math.random() * 1000000000) + 1);
 }
 
 
 window.CreateCourse = React.createClass({
+    /**
+     * When rendered initiate tinymce.
+     */
     componentDidMount: function () {
         tinymce.init({ selector:'textarea.tinymceArea',
             height: 350});
     },
+    /**
+     * When content will unrender remove tinymce from textarea.
+     */
+    componentWillUnmount: function () {
+        tinymce.get('course-description').setContent('');
+        tinymce.EditorManager.editors = [];
+    },
+    /**
+     * Creates course object and post it as json to the server
+     * @param uid
+     * @param event
+     */
     handleClick: function (uid,event) {
 
         var course = {
@@ -49,9 +68,13 @@ window.CreateCourse = React.createClass({
 
 
     },
+    /**
+     * Render the create input forms
+     * @returns {XML}
+     */
     render: function () {
 
-        console.log(this.props);
+        
         return (
             <div>
                 <h3>Create new course</h3>

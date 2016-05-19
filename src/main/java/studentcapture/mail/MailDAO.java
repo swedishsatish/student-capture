@@ -1,44 +1,55 @@
 package studentcapture.mail;
 
-import studentcapture.model.Assignment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 
-import java.util.ArrayList;
 
 /**
  * Author C13evk
  */
+@Repository
 public class MailDAO {
-    private MailClient mailClient;
-    private String from;
-    private String subject;
-    private String message;
+    @Autowired
+    protected JdbcTemplate jdbcTemplate;
 
-    public void MailClient(){
-        mailClient = new MailClient();
-        from = "StudentCapture";
-        subject = "Assignment Reminder";
-        message = createMessage();
+    public MailDAO(){
+
     }
 
-    private boolean checkTime(Assignment assignment){
-
-        return true;
+    public List<String> getAssignmentID(){
+        return jdbcTemplate.queryForList(getAssignmentIDQuery(),String.class);
     }
 
-    private ArrayList<Assignment> getAssignments(){
-        ArrayList<Assignment> assignmentList = new ArrayList<Assignment>();
-
-        return assignmentList;
+    public String getStartDateFromAssignment(String assID){
+        return jdbcTemplate.queryForObject(getStartDateQuery(), new Object[]{assID}, String.class);
     }
 
-    private ArrayList<String> getPraticipantsEmails(){
-        ArrayList<String> emailList = new ArrayList<String>();
-
-        return emailList;
+    public String getCourseIDFromAssignment(String assID){
+        return jdbcTemplate.queryForObject(getCourseIDQuery(), new Object[]{assID}, String.class);
     }
 
-    private String createMessage(){
-        return "Test";
+    public List<String> getPraticipantsEmails(String courseID){
+        return jdbcTemplate.queryForList(getEmailsQuery(), new Object[]{courseID}, String.class);
     }
 
+
+    private String getEmailsQuery() {
+        return "SELECT Users.email "+
+                "FROM Users JOIN Participant ON Users.userID = Participant.userID "+
+                "WHERE courseID = ?;";
+    }
+
+    private String getAssignmentIDQuery(){
+        return "SELECT assignmentID FROM assignment;";
+    }
+
+    private String getStartDateQuery(){
+        return "SELECT startdate FROM assignment WHERE assignmentID=?;";
+    }
+
+    private String getCourseIDQuery(){
+        return "SELECT courseID FROM assignment WHERE assignmentID=?;";
+    }
 }

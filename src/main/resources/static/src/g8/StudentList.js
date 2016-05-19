@@ -11,6 +11,7 @@ var StudentList = React.createClass({
     // This method is called after the method "render".
     componentDidMount: function () {
         var newTableObject = document.getElementById("students-table");
+        console.log(1);
         sorttable.makeSortable(newTableObject);
         var table11_Props = {
             filters_row_index: 1,
@@ -82,8 +83,8 @@ var StudentList = React.createClass({
             );
 
             // console.log(tmp);
-        });
 
+        });
         return (
             <div className="row">
                 <div className="four columns">
