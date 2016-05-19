@@ -124,6 +124,8 @@ function submitForm() {
     reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
     reqBody["courseID"] = window.courseID;
 
+
+
     $.ajax({
         type: "PUT",
         contentType: "application/json",
@@ -145,18 +147,14 @@ function submitForm() {
     });
 }
 
+
+
 /**
  * Sending data to database.
  */
 function sendData () {
-    // answer contains true if Ok is pressed., false if cancel is pressed.
-    var passedStatus = 'No pass';
-    // alert(document.getElementById('teachercomments').value);
-    if (document.getElementById('ifStudentPass').checked) {
-        passedStatus = 'Pass';
-    } else {
-        passedStatus = 'No pass'
-    }
+
+
     submitForm();
 
 }

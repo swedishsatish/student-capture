@@ -75,6 +75,9 @@ public class SubmissionResource {
         * However this should probably be handled somewhere else
         * validate the Submission.studentID against studentID and permissions*/
 
+        System.out.println("WORKS");
+        System.out.println(updatedSubmission.toString());
+        System.out.println("DONE");
         return returnStatus;
     }
 
