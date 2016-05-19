@@ -71,6 +71,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         Grade grade = new Grade();
         String gradeString;
         Integer teacherId;
+        String teacherName;
 
         int assignmentID = 1;
         boolean studentPublishConsent = false;
@@ -79,18 +80,19 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         if (isGraded) {
             gradeString = "MVG";
             teacherId = 2;
+            teacherName = "abcd defg";
             grade.setTeacherID(teacherId);
             grade.setGrade(gradeString);
             gradeString = "'" + gradeString + "'";
         } else {
             gradeString = null;
             teacherId = null;
+            teacherName = null;
             grade.setTeacherID(teacherId);
             grade.setGrade(gradeString);
         }
         boolean publishStudentSubmission = false;
         boolean publishFeedback = false;
-        String teacherName = "abcd defg";
 
         submission.setAssignmentID(assignmentID);
         submission.setStudentID(studentID);
@@ -100,7 +102,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         submission.setGrade(grade);
         submission.setPublishStudentSubmission(publishStudentSubmission);
         submission.setPublishFeedback(publishFeedback);
-        //submission.setGradeSign(teacherName);
+        submission.setTeacherName(teacherName);
 
         String SQL = "INSERT INTO Submission VALUES ("  + assignmentID + ", "
                                                         + studentID + ", "
