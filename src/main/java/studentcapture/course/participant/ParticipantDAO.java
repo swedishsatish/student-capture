@@ -1,12 +1,10 @@
-package studentcapture.datalayer.database;
+package studentcapture.course.participant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import studentcapture.model.Participant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +79,74 @@ public class ParticipantDAO {
 
         return Optional.of(result);
     }
+
+
+
+
+    public Optional<List<Participant>> getCourseParticipants(String courseId,String userID,String userRole){
+        List<Participant> participants = new ArrayList<>();
+        String sqlQuery;
+        int CourseID = Integer.parseInt(courseId);
+        boolean manyUsers = false;
+        if(userID.compareTo("many users") == 0){
+            sqlQuery = getCourseParticipantsQuery(userRole);
+            if(sqlQuery == null){
+                return Optional.empty();
+            }
+            manyUsers = true;
+        }
+
+        else{
+
+            sqlQuery = "SELECT * FROM Participant WHERE (UserId=? AND CourseId=?);";
+        }
+        try {
+            List<Map<String, Object>> rows;
+            if(manyUsers){
+                rows = jdbcTemplate.queryForList(sqlQuery,CourseID);
+            }
+            else{
+                int UserID = Integer.parseInt(userID);
+                rows = jdbcTemplate.queryForList(sqlQuery,UserID,CourseID);
+            }
+            for (Map<String, Object> row : rows) {
+                participants.add(new Participant(row));
+            }
+        } catch (IncorrectResultSizeDataAccessException e){
+            return Optional.empty();
+        } catch (DataAccessException e1){
+            return Optional.empty();
+        }
+        return Optional.of(participants);
+    }
+
+
+    private String getCourseParticipantsQuery(String userRole){
+        String tempSql = "SELECT * FROM Participant WHERE courseID = ?";
+        String sql = ";";
+        if(userRole == null){
+            return null;
+        }
+        if(userRole.compareTo("all roles") == 0){
+            return tempSql + sql;
+        }
+        if(userRole.compareTo("student") == 0){
+            sql = " AND Function = 'student';";
+        }
+        else if(userRole.compareTo("teacher") == 0){
+            sql = " AND Function = 'teacher';";
+        }
+        else if(userRole.compareTo("assistant") == 0){
+            sql = " AND Function = 'assistant';";
+        }
+        else{
+            return null;
+        }
+        return tempSql + sql;
+    }
+
+
+
 
 
     /**

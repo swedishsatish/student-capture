@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
-import studentcapture.datalayer.database.ParticipantDAO;
+import studentcapture.course.participant.ParticipantDAO;
 
 /**
  * CourseResource is a REST controller that maps course related methods to 
