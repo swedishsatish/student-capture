@@ -14,6 +14,7 @@ import java.util.Optional;
 /**
  * Created by c13gan on 2016-04-26.
  */
+
 @Repository
 public class ParticipantDAO {
 
@@ -25,7 +26,6 @@ public class ParticipantDAO {
      * Add a new participant to a course by connecting the tables "User" and "Course" in the database.
      *
      * @param userID        unique identifier for a person
-     * @param courseId      unique identifier, registration code
      * @param function      student, teacher, ....
      * @return              true if insertion worked, else false
      * 
@@ -54,7 +54,6 @@ public class ParticipantDAO {
      * Get the role for a participant in a selected course
      *
      * @param userID        unique identifier for a person
-     * @param courseId      unique identifier, registration code
      * @return              role of a person
      * 
      * @author tfy12hsm
@@ -152,7 +151,6 @@ public class ParticipantDAO {
     /**
      * Returns a list of all participants of a course including their function
      *
-     * @param courseId      unique identifier, registration code
      * @return              List of tuples: CAS_ID - function
      * 
      * @author tfy12hsm
@@ -221,7 +219,6 @@ public class ParticipantDAO {
      * Removes the connection between a person and a course from the database
      *
      * @param userID        unique identifier for a person
-     * @param courseId      unique identifier, registration code
      * @return              true if removal worked, else false
      * 
      * @author tfy12hsm
@@ -242,6 +239,30 @@ public class ParticipantDAO {
         } catch (DataAccessException e1){
             result = false;
         }
+        return result;
+    }
+
+    /**
+     * Updates a participant's function in the database.
+     *
+     * @param participant object containing participant information
+     * @return true if insertion worked, else false
+     * @author Andreas Savva & Benjamin Björklund Squad 8
+     */
+    public boolean setParticipantFunction(Participant participant) {
+        String editParticipantFunctionStatement = "UPDATE participant SET function=? WHERE userid=? AND courseid=?";
+        boolean result;
+
+        try {
+            int rowsAffected = jdbcTemplate.update(editParticipantFunctionStatement,
+                    participant.getFunction(), participant.getUserId(), participant.getCourseId());
+            result = rowsAffected == 1;
+        } catch (IncorrectResultSizeDataAccessException e) {
+            result = false;
+        } catch (DataAccessException e1) {
+            result = false;
+        }
+
         return result;
     }
 }

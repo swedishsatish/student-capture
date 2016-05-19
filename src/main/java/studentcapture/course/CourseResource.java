@@ -7,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
-
 import studentcapture.course.participant.ParticipantDAO;
 
 /**
@@ -52,7 +51,7 @@ public class CourseResource {
     	}
     	if(course.getInitialTeacherId()!=null) {
     	   	Boolean result2 = participantDAO.addParticipant(
-    	   			course.getInitialTeacherId().toString(), result1.getCourseId().toString(), 
+    	   			course.getInitialTeacherId().toString(), result1.getCourseId().toString(),
     	   			"teacher");
     	   	if(!result2) 
     	   		throw new ResourceNotFoundException();

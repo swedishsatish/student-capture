@@ -74,6 +74,33 @@ public class ParticipantResource {
         return errorEntity;
     }
 
+    @CrossOrigin
+    @RequestMapping(method = RequestMethod.PUT)
+    private ResponseEntity<String> editParticipant(
+            @PathVariable(value = "courseID") String courseID,
+            @RequestParam(value = "userID",required = true) String userID,
+            @RequestParam(value = "userRole",required = true) String userRole) {
+
+        ResponseEntity<String> errorEntity =
+                new ResponseEntity("Participant role could not be updated",HttpStatus.INTERNAL_SERVER_ERROR);
+        if(userRole == null || userID == null){
+            return errorEntity;
+        }
+        userRole = userRole.toLowerCase();
+        if(!validRole(userRole)){
+            return new ResponseEntity<String>("Participant is neither teacher,assistant or student",HttpStatus.BAD_REQUEST);
+        }
+        Participant participant = new Participant();
+        participant.setCourseId(Integer.parseInt(courseID));
+        participant.setUserId(Integer.parseInt(userID));
+        participant.setFunction(userRole);
+
+        if(participantDAO.setParticipantFunction(participant)){
+            return new ResponseEntity("Participant role successfully updated",HttpStatus.OK);
+        }
+        return errorEntity;
+    }
+
     private boolean validRole(String role){
         return (role.compareTo("assistant") == 0 || role.compareTo("teacher") == 0 || role.compareTo("student") == 0);
     }

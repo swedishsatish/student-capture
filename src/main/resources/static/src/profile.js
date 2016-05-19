@@ -12,7 +12,6 @@ function genScripts(){
 }
 
 function reloadScripts() {
-	console.log(2);
 	var script1 = document.getElementById("script1");
 	var script2 = document.getElementById("script2");
 	document.body.removeChild(script1);
@@ -23,7 +22,6 @@ function reloadScripts() {
 
 window.NewProfile = React.createClass({
 	componentDidMount: function(){
-
 		genScripts();
 	},
 	clickHandler: function () {
@@ -43,7 +41,7 @@ window.NewProfile = React.createClass({
     },
 
 	clickSettingsHandler: function () {
-		ReactDOM.render(<Settings userID={this.props.userID}/>, document.getElementById('modal-container'));
+		ReactDOM.render(<Settings userID={this.props.uid}/>, document.getElementById('modal-container'));
 		reloadScripts();
 	},
 	clickLogoutHandler: function () {
