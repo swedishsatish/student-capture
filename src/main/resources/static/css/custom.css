@@ -178,8 +178,9 @@ iframe {
 
 #rec-text {
 	text-align: right;
-    margin-right: 16px;
-    margin-top: 10px;
+	margin-right: 16px;
+	margin-top: 10px;
+}
 
 #courseInfo {
     background-color: #076172;;

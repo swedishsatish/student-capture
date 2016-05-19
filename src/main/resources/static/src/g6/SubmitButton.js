@@ -127,7 +127,7 @@ function submitForm() {
 
 
     $.ajax({
-        type: "PUT",
+        type: "PATCH",
         contentType: "application/json",
         url: "assignments/" + 6 + "/submissions/" + 98,
         data : JSON.stringify(reqBody),
