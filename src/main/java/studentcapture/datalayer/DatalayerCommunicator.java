@@ -5,14 +5,13 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.CourseDAO;
 import studentcapture.course.HierarchyDAO;
-import studentcapture.datalayer.database.ParticipantDAO;
+import studentcapture.course.participant.ParticipantDAO;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
-import studentcapture.model.Participant;
+import studentcapture.course.participant.Participant;
 import studentcapture.submission.Submission;
 import studentcapture.submission.SubmissionDAO;
 
@@ -156,24 +155,6 @@ public class DatalayerCommunicator {
         return submissionDAO.publishFeedback(submission, publish);
     }*/
 
-
-    /**
-     * Sends the feedback video file.
-     * @param submission    Model containing the information needed to get the correct video.
-     * @return         The video file vie http.
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/getFeedbackVideo",
-            method = RequestMethod.GET, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> getAssignmentVideo(@Valid Submission submission) {
-        String path = FilesystemInterface.generatePath(
-                                            submission.getCourseCode(),
-                                            submission.getCourseID(),
-                                            Integer.toString(submission.getAssignmentID()),
-                                            Integer.toString(submission.getStudentID()));
-
-        return FilesystemInterface.getVideo(path + FilesystemConstants.FEEDBACK_VIDEO_FILENAME);
-   }
 
     /**
      * Fetches information about an assignment.

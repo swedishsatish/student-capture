@@ -29,14 +29,14 @@ public class SubmissionDAO {
      * @author tfy12hsm
 	 */
 	public boolean addSubmission(Submission submission, Boolean studentConsent) {
-		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentConsent) VALUES  (?,?,?,?)";
+		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentpublishconsent) VALUES  (?,?,?,?)";
 		java.util.Date date = new java.util.Date(System.currentTimeMillis());
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		timestamp.setNanos(0);
 
 		int rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(), submission.getStudentID(), timestamp, studentConsent);
         if(submission.getStudentVideo() != null) {
-            FilesystemInterface.storeStudentVideo(submission.getCourseCode(), submission.getCourseID(), String.valueOf(submission.getAssignmentID()), String.valueOf(submission.getStudentID()), submission.getStudentVideo());
+            FilesystemInterface.storeStudentVideo(submission, submission.getStudentVideo());
         }
 
 		return rowsAffected == 1;

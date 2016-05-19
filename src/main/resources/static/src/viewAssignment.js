@@ -89,9 +89,9 @@ var AssignmentStart = React.createClass({
                                : <div />;
         var recordContent = this.state.startRecording
                             ? <div>
-                                  <StudentRecordVideo autoRecord="true" />
+                                  <StudentRecordVideo autoRecord="true" studentID={2} assignmentID={1200} />
                               </div>
-                            : <StudentRecordVideo autoRecord="false" />;
+                            : <StudentRecordVideo autoRecord="false" studentID={2} assignmentID={1200} />;
         return (
             <div id="assignment-modal">
                 <div className="modal-dialog">

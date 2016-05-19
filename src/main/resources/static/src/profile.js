@@ -46,6 +46,15 @@ window.NewProfile = React.createClass({
 		ReactDOM.render(<Settings userID={this.props.userID}/>, document.getElementById('modal-container'));
 		reloadScripts();
 	},
+	clickLogoutHandler: function () {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+            window.location.pathname = "/login";
+        }
+        xmlHttp.open("POST", window.location.protocol+"//"+window.location.host+"/logout", true); // true for asynchronous
+        xmlHttp.send(null);
+
+	},
 	render : function() {
 		/*return <div className="three columns offset-by-nine" id="profile">
 			<h6 id="profileName" onClick={this.clickHandler} className="md-trigger md-setperspective" data-modal="modal-19">{profileData.name}</h6>
@@ -61,6 +70,7 @@ window.NewProfile = React.createClass({
 						data-modal="modal-19">FAQ</h6>
 					<h6 onClick={this.clickSettingsHandler} className="md-trigger md-setperspective dropdown-head"
 						data-modal="modal-19">Settings</h6>
+					<h6 onClick={this.clickLogoutHandler} className="dropdown-head">Log Out</h6>
 				</div>
 
 			</div>

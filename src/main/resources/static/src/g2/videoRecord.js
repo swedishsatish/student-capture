@@ -271,19 +271,22 @@ var Recorder = React.createClass({
     render: function() {
         var id;
         var pId;
+        var contId;
         if(typeof this.props.calc !== "undefined") {
             id="prev-test";
-            pId="test-rec-text"
+            pId="test-rec-text";
+            contId = "test-prev-container";
         }
         else {
             id="preview";
-            pId="rec-text"
+            pId="rec-text";
+            contId = "prev-container";
         }
 
         return (
             <div>
                 <p id={pId}></p>
-                <div id="prev-container">
+                <div id={contId}>
                     <video id={id} muted ></video>
                 </div>
             </div>
