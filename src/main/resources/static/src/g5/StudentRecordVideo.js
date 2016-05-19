@@ -26,24 +26,25 @@ var StudentRecordVideo = React.createClass({
             autoRecord = "true";
         return (
             <div>
-                <h3>Student Recording Video</h3>
-
-                    <h5 id="isRecording"></h5>
-                        <Recorder playCallback={this.playVideo}
-                                  postURL={"/assignments/"+this.props.assignmentID+"/submissions/"+this.props.studentID}
-                                  formDataBuilder={this.formDataBuilder}
-                                  stopButtonID="studentSubmit" autoRecord={autoRecord}
-                                  siteView="submission" fileName="submission.webm"
-                                  camOnLoad="true"
-                        />
-
-
-                     <button id="studentSubmit" className="recControls" disabled>Submit answer</button>
-                     <BlankBox/>
+                <div id="recorder-div">
+                    <Recorder playCallback={this.playVideo}
+                              postURL={"/assignments/"+this.props.assignmentID+"/submissions/"+this.props.studentID}
+                              formDataBuilder={this.formDataBuilder}
+                              stopButtonID="studentSubmit" autoRecord={autoRecord}
+                              siteView="submission" fileName="submission.webm"
+                              camOnLoad="true"
+                    />
+                </div>
+                <button id="studentSubmit" className="recControls" disabled>Submit answer</button>
+                <BlankBox/>
             </div>
-
         );
+    },
+    componentDidMount: function() {
+        var vid = document.getElementById("recorder-div");
+        vid.oncontextmenu = function (e) {e.preventDefault();};
     }
 });
 
 window.StudentRecordVideo = StudentRecordVideo;
+

@@ -89,41 +89,19 @@ var AssignmentStart = React.createClass({
                                : <div />;
         var recordContent = this.state.startRecording
                             ? <div>
-                                <svg width="30" height="30">
-                                    <circle cx="15" cy="15" r="11" stroke="black" stroke-width="4" fill="red" />
-                                    Red circle.
-                                </svg>
-                                <p id="descriptor">[REC]</p>
-                                <div><div>
-                                    <StudentRecordVideo autoRecord="true" studentID={2} assignmentID={1200} /><br />
-                                    Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
-                                    Current video length: {this.state.time}
-                                </div></div>
+                                  <StudentRecordVideo autoRecord="true" studentID={2} assignmentID={1200} />
                               </div>
-                            : <div>
-                                <svg width="30" height="30">
-                                    <circle cx="15" cy="15" r="11" stroke="black" stroke-width="4" fill="black" />
-                                    Black circle.
-                                </svg>
-                                <p id="descriptor">[---]</p>
-                                <div>
-                                    <StudentRecordVideo autoRecord="false" studentID={2} assignmentID={1200} /><br />
-                                    Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
-                                    Current video length: {this.state.time}
-                                </div>
-                              </div>;
+                            : <StudentRecordVideo autoRecord="false" studentID={2} assignmentID={1200} />;
         return (
             <div id="assignment-modal">
                 <div className="modal-dialog">
                     <div id="assignment-content" className="modal-content">
-                        <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
+                        <h2 id="assignment-title">{assignmentData.assignmentName}</h2>
                         <div id="countdown-div">
                             {countDownContent}
                         </div>
-
                         <div className="row">
                             <div className="six columns">
-
                                 <div id="question-div">
                                     <h3>Question Video</h3>
                                     <Vid url={assignmentData.assignmentUrl} count={this.count}/><br />
@@ -132,9 +110,19 @@ var AssignmentStart = React.createClass({
                             </div>
                             <div className="six columns">
                                 <div id="answer-div">
+                                    <h3 id="videoTitle">Answer Video</h3>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <svg width="30" height="30">
+                                        <circle cx="15" cy="15" r="11"
+                                        stroke="black" stroke-width="4"
+                                        fill="white" id="recCircle" />
+                                        Rec circle.
+                                    </svg>
+                                    <p id="descriptor">[REC]</p>
                                     {recordContent}
+                                    <br /> Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}
+                                    <br /> Current video length: {this.state.time}
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -149,6 +137,8 @@ var AssignmentStart = React.createClass({
         this.setState({startCountDown: true});
     },
     record: function() {
+        var rec = document.getElementById("recCircle");
+        rec.style.fill = "red";
         this.setState({startRecording: true});
         this.interval = setInterval(this.tick, 1000);
     }
