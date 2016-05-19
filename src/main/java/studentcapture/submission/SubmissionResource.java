@@ -70,6 +70,7 @@ public class SubmissionResource {
         updatedSubmission.setAssignmentID(assignmentID);
         returnStatus = DAO.addSubmission(updatedSubmission, true) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
 
+
         /*Validation of Submission
         * Should be sent by a student, might have to validate that the student didnt set the grade himself.
         * However this should probably be handled somewhere else

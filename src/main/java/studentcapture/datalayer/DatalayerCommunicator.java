@@ -158,24 +158,6 @@ public class DatalayerCommunicator {
 
 
     /**
-     * Sends the feedback video file.
-     * @param submission    Model containing the information needed to get the correct video.
-     * @return         The video file vie http.
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/getFeedbackVideo",
-            method = RequestMethod.GET, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> getAssignmentVideo(@Valid Submission submission) {
-        String path = FilesystemInterface.generatePath(
-                                            submission.getCourseCode(),
-                                            submission.getCourseID(),
-                                            Integer.toString(submission.getAssignmentID()),
-                                            Integer.toString(submission.getStudentID()));
-
-        return FilesystemInterface.getVideo(path + FilesystemConstants.FEEDBACK_VIDEO_FILENAME);
-   }
-
-    /**
      * Fetches information about an assignment.
      * Description is mocked at the moment due to filesystem issues.
      * @param assID Unique identifier for the assignment

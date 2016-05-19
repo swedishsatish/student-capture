@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+import studentcapture.assignment.AssignmentModel;
 import studentcapture.submission.Submission;
 
 import java.io.*;
@@ -28,47 +29,24 @@ import java.io.*;
 public class FilesystemInterface {
 
 	/**
-	 * Generates a string representing a path to an assignments directory on
-	 * the filesystem.
-	 *
-	 * @param courseCode	courses 6 character identifier
-	 * @param courseId		courses unique database id
-	 * @param assignmentId	assignments unique database id
-	 * @return				path to directory
-	 */
-	public static String generatePath(String courseCode, String courseId, String assignmentId) {
-		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseCode
-				+ "/" + courseId + "/" + assignmentId + "/";
-		
-		return path;
+	 * Generate path to a assignment
+	 * @param assignment the assignment to generate path to
+	 * @return the generated path
+     */
+	public static String generatePath(AssignmentModel assignment) {
+		return FilesystemConstants.FILESYSTEM_PATH + "/" + assignment.getCourseID()
+													+ "/" + assignment.getAssignmentID()  + "/";
 	}
 
 	/**
-	 * Generates a string representing a path to the directory of a students
-	 * submission on an assignment on the filesystem.
-	 *
-	 * @param courseCode	courses 6 character identifier
-	 * @param courseID		courses unique database id
-	 * @param assignmentID	assignments unique database id
-	 * @param studentID		students unique database id
-	 * @return				path to directory
-	 */
-	public static String generatePath(String courseCode, String courseID,
-			String assignmentID, String studentID) {
-		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseCode
-				+ "/" + courseID + "/" + studentID  + "/" + assignmentID + "/";
-		
-		return path;
-	}
-
-	public static String generatePathFromModel(Submission submission){
-		String path = generatePath(
-				submission.getCourseCode(),
-				submission.getCourseID(),
-				""+submission.getAssignmentID(),
-				""+submission.getStudentID());
-
-		return path;
+	 * Generate path to a submission
+	 * @param submission the submission to generate path to
+	 * @return the generated path
+     */
+	public static String generatePath(Submission submission) {
+		return FilesystemConstants.FILESYSTEM_PATH + "/" + submission.getCourseID()
+													+ "/" + submission.getAssignmentID()
+	   												+ "/" + submission.getStudentID() + "/";
 	}
 
 	/**
@@ -94,37 +72,29 @@ public class FilesystemInterface {
 		return responseEntity;
 	}
 
-
 	/**
-     * starts a stream to student video for a specific assignment at a course.
-     * 
-     * @parma courseCode the code for the course.
-     * @param courseID course id from the database
-     * @param userID
-     * @return video or null if it doesn't exist. 
+	 * Get a input stream to a submission video
+	 * @param submission the submission to get the video for
+	 * @return input stream to the video
      */
-	public FileInputStream getStudentVideo(String courseCode, String courseID,
-										   String assignmentID, String userID) {
-	   String path = FilesystemInterface.generatePath(courseCode, courseID,
-			   assignmentID, userID) + FilesystemConstants
-			   .SUBMISSION_VIDEO_FILENAME;
+	public FileInputStream getSubmissionVideo(Submission submission) {
+
+	   	String path = FilesystemInterface.generatePath(submission) + FilesystemConstants.SUBMISSION_VIDEO_FILENAME;
 	   
-	   try {
+	    try {
 			return new FileInputStream(path);
 		} catch (FileNotFoundException e) {
 			return null;
 		}
    	}
 
-    /**
-     * Fetches an assignment's description from the file system.
-     * @param courseCode Identifies the course associated with the assignment
-     * @param courseId Identifies the instance of the course
-     * @param assignmentId Unique code of the assignment
-     * @return
+	/**
+	 * Get assignment description
+	 * @param assignment the assignment to get the description for
+	 * @return the assignment description
      */
-    public FileInputStream getAssignmentDescription(String courseCode, String courseId, String assignmentId) {
-        String path = FilesystemInterface.generatePath(courseCode, courseId, assignmentId) + FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
+    public FileInputStream getAssignmentDescription(AssignmentModel assignment) {
+        String path = FilesystemInterface.generatePath(assignment) + FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
         try {
             return new FileInputStream(path);
         } catch (FileNotFoundException e) {
@@ -143,12 +113,9 @@ public class FilesystemInterface {
 	 * @param userID from database
 	 * @return true if video was stored successfully
 	 */
-	public static boolean storeStudentVideo(String courseCode, String courseID,
-											String assignmentID, String userID,
-											MultipartFile source) {
+	public static boolean storeStudentVideo(Submission submission, MultipartFile source) {
 
-		String path = FilesystemInterface.generatePath(courseCode, courseID,
-				assignmentID, userID);
+		String path = FilesystemInterface.generatePath(submission);
 		try {
 			storeFile(source ,path,FilesystemConstants.SUBMISSION_VIDEO_FILENAME);
 		} catch (IOException e) {
@@ -190,10 +157,7 @@ public class FilesystemInterface {
 	 */
 	public static boolean storeFeedbackVideo(Submission submission,
 									  MultipartFile source) {
-		String path = FilesystemInterface.generatePath(String.valueOf(submission.getCourseCode()),
-				String.valueOf(submission.getCourseID()),
-				String.valueOf(submission.getAssignmentID()),
-				String.valueOf(submission.getStudentID()));
+		String path = FilesystemInterface.generatePath(submission);
 
 		try {
 			storeFile(source,path, FilesystemConstants.FEEDBACK_VIDEO_FILENAME);
@@ -212,10 +176,7 @@ public class FilesystemInterface {
      */
 	public static boolean storeFeedbackText(Submission submission,
 									 MultipartFile source) {
-		String path = FilesystemInterface.generatePath(String.valueOf(submission.getCourseCode()),
-				String.valueOf(submission.getCourseID()),
-				String.valueOf(submission.getAssignmentID()),
-				String.valueOf(submission.getStudentID()));
+		String path = FilesystemInterface.generatePath(submission);
 
 		try {
 			storeFile(source,path,FilesystemConstants.FEEDBACK_TEXT_FILENAME);
@@ -285,7 +246,7 @@ public class FilesystemInterface {
      * @return the teacher's written feedback as a string.
      */
 	public static String getFeedbackText(Submission submission) {
-		String path = generatePathFromModel(submission)+FilesystemConstants.FEEDBACK_TEXT_FILENAME;
+		String path = generatePath(submission)+FilesystemConstants.FEEDBACK_TEXT_FILENAME;
 		String feedbackText = "";
 		try {
 			String line;
@@ -314,25 +275,5 @@ public class FilesystemInterface {
 		dir.mkdirs();
 		File file = new File(des +"/"+ filename);
 		source.transferTo(file);
-	}
-
-
-	/**
-	 * Returns the size of a specific video file.
-	 * 
-     * @param courseCode    courses 6 character identifier
-     * @param courseId      courses unique database id
-     * @param assignmentId  assignments unique database id
-     * @param userId        users unique database id
-	 * @return              video file size
-	 * @author              Stefan Embretsen
-	 */
-	public int getVideoFileSize(String courseCode, String courseId,
-								String assignmentId, String userId){
-	    String path = FilesystemInterface.generatePath(courseCode, courseId, 
-	               assignmentId, userId) + FilesystemConstants
-	               .SUBMISSION_VIDEO_FILENAME;
-	    File f = new File(path);
-	    return (int)f.length();
 	}
 }

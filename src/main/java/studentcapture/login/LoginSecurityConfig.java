@@ -32,18 +32,18 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
     //Allows for custom login.html
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+    	http.authorizeRequests().antMatchers("/css/**", "/src/**", "/images/**").permitAll();
+    	http.authorizeRequests().antMatchers("/users").permitAll();
+    	http.authorizeRequests().antMatchers("/login**").permitAll();
         http
         	.sessionManagement().maximumSessions(1)
         	.and().invalidSessionUrl("/login");
         http
             .authorizeRequests()
                 .antMatchers("/**").access("hasRole('USER')")
-                .antMatchers("/**").permitAll()			
                 .antMatchers("/loggedin").access("hasRole('USER') or hasRole('ADMIN')") //Users and admins can access /loggedin
                 .antMatchers("/admin").access("hasRole('ADMIN')") //Admins can access /admin
                 .antMatchers("/login").permitAll()
-                .antMatchers("/user").permitAll()
-                .antMatchers("/index").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .formLogin()

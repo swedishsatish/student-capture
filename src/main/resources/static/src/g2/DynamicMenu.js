@@ -91,7 +91,7 @@ var Assignments = React.createClass({
      */
     editClick: function (course,event) {
         var uid = this.props.uid;
-        $.get(window.globalURL + "/course/" + course.courseId,function (res) {
+        $.get("course/" + course.courseId,function (res) {
             ReactDOM.render(<EditCourse course={res} uid={uid}/>,document.getElementById("courseContent"));
 
         });
@@ -135,7 +135,7 @@ var Course = React.createClass({
     
     handleClick: function(course,event) {
         
-        $.get(window.globalURL + "/course/" + course.course.courseId,function (res) {
+        $.get("course/" + course.course.courseId,function (res) {
             ReactDOM.render(<CourseInfo course={res}/>,document.getElementById("courseContent"));
             
             
@@ -234,7 +234,7 @@ var DynamicMenu = React.createClass({
  *
  */
 window.RenderMenu = function (userID) {
-    $.get(window.globalURL + "/course", {userID}, function (res) {
+    $.get("course", {userID}, function (res) {
 
         // if(res)
         var SCList = objToList(res.studentCourses);

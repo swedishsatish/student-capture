@@ -80,7 +80,7 @@ var NewAssignment = React.createClass({
         $.ajax({
             type : "POST",
             contentType : "application/json",
-            url : "assignments",
+            url : "assignments",    
             data : JSON.stringify(reqBody),
             timeout : 100000,
             success : function(response) {
@@ -123,7 +123,7 @@ var NewAssignment = React.createClass({
 
                     <div id="settings">
                         <div className="DTContainer">
-                            <p className="DTText">min-ength of answer:</p>
+                            <p className="DTText">min-length of answer:</p>
                             <input id="minTimeSeconds" type="text" placeholder="seconds" />
                         </div>
 
@@ -187,13 +187,12 @@ var NewAssignmentVideo = React.createClass({
                     <h3 className="contentTitle">NEW ASSIGNMENT VIDEO</h3>
                     <div id="video-container" >
                         <Recorder id="recorder" playCallback={this.playVideo}
-                                  postURL="/assignments/video" formDataBuilder={this.formDataBuilder}
+                                  postURL={"assignments/" + this.props.assignmentID + "/video"} formDataBuilder={this.formDataBuilder}
                                   recButtonID="record-question" stopButtonID="stop-question" fileName="assignmentVideo.webm" replay="true"
                                   postButtonID="post-video" />
                         <button id="stop-question" className="recControls SCButton" disabled>Stop</button>
                         <button id="record-question" className="recControls SCButton">Record</button>
                     </div>
-
                     <div id="videoPageCtrls">
                         <button id="backBtn" className="recControls SCButton">Back</button>
                         <button id="post-video" className="recControls SCButton">Submit</button>

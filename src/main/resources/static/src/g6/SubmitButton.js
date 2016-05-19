@@ -129,7 +129,7 @@ function submitForm() {
     $.ajax({
         type: "PUT",
         contentType: "application/json",
-        url: window.globalURL + "/assignments/" + 6 + "/submissions/" + 98,
+        url: "assignments/" + 6 + "/submissions/" + 98,
         data : JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {

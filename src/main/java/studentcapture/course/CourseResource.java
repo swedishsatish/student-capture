@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import studentcapture.datalayer.database.ParticipantDAO;
 
 /**
+ * CourseResource is a REST controller that maps course related methods to 
+ * to REST requests. 
  * 
  * @author tfy12hsm
  *
@@ -148,10 +150,14 @@ public class CourseResource {
     		throw new ResourceNotFoundException();
     	return result;
     } 
-
+    
     /**
-    *
-    * @author tfy12hsm
+     * Returns {@link HierarchyModel} including data related to a given user.
+     * 
+     * @author tfy12hsm
+     * 
+     * @param userID	given users identification
+     * @return			hierarchy
      */
     @CrossOrigin
     @RequestMapping(
