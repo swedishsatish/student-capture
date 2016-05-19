@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import studentcapture.config.StudentCaptureApplicationTests;
+import studentcapture.login.ErrorFlags;
 
 import java.sql.Types;
 import java.util.Iterator;
@@ -82,11 +83,18 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         User user = new User("userPelle","Pelle","Jönsson","pelle@gmail.com",
                             "mypassword123");
 
-        boolean res = userDAO.addUser(user);
+        ErrorFlags res = userDAO.addUser(user);
         User userRes = userDAO.getUser("userPelle",0);
 
-        assertTrue(res);
+        assertEquals(ErrorFlags.NOERROR,res);
         assertEquals(user,userRes);
+    }
+
+    @Test
+    public void testAddingUserTwice() {
+        ErrorFlags errorFlags = userDAO.addUser(userSetup);
+
+        assertEquals(ErrorFlags.USEREXISTS,errorFlags);
     }
 
     @Test
@@ -94,8 +102,6 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         User userRes = userDAO.getUser("notExist",0);
         assertEquals(null,userRes);
     }
-
-
 
     @Test
     public void testUpdateUser() {
@@ -114,9 +120,16 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         User user = new User("testUserNotExists","newFirstName","newLname",
                 "newemai@gmail.com","new_pswd_1fdsgasda213fC");
         boolean res = userDAO.updateUser(user);
-
         assertFalse(res);
+    }
 
+    @Test
+    public void testAddingEmailTwice() {
+        User user = new User("testNewUser","newFirstName","newLname",
+                             userSetup.getEmail(),"newpswd");
+
+        ErrorFlags res = userDAO.addUser(user);
+        assertEquals(ErrorFlags.EMAILEXISTS,res);
     }
 
     /**
@@ -139,6 +152,8 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
                 System.out.println();
             }
         }
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+
     }
 
     /*

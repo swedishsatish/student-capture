@@ -2,26 +2,30 @@
 //Simon Lundmark
 
 //Last update:
-//2016-11-05
+//2016-19-05
 
+//-----------------------showing/hiding forms-------------------------
+
+//get the forms
 var loginForm = document.getElementById('loginPage');
 var regForm = document.getElementById('registerPage');
 var lostForm = document.getElementById('lostPasswordPage');
 
-// Get the button
-var btn = document.getElementById("registerButton");
+// Get the buttons
+var regBtn = document.getElementById("registerButton");
 var cnclBtn = document.getElementById("cnclBtn");
 var cnclBtn2 = document.getElementById("cnclBtn2");
 var lostLink = document.getElementById("lostLink");
 
-// When the user clicks the button
-btn.onclick = function() {
+// When the user clicks the reg button
+regBtn.onclick = function() {
     loginForm.reset();
 
     fadeIn(regForm);
     fadeOut(loginForm);
 }
 
+// When the user clicks the lost password link
 lostLink.onclick = function() {
     loginForm.reset();
     fadeOut(loginForm);
@@ -29,20 +33,20 @@ lostLink.onclick = function() {
 }
 
 
-// When the user clicks the button
+// When the user clicks the cancel button
 cnclBtn.onclick = function() {
     fadeIn(loginForm);
     fadeOut(regForm);
     regForm.reset();
 }
 
-// When the user clicks the button
+// When the user clicks the cancel button
 cnclBtn2.onclick = function() {
     fadeIn(loginForm);
     fadeOut(lostForm);
     lostForm.reset();
 }
-//------------------------------------modal-------------------------------------
+//------------------------------------animation-------------------------------------
 
 // fade out
 
@@ -75,6 +79,7 @@ function fadeIn(el, display){
 
 //------------------------------------modal-------------------------------------
 
+//get the modal
 var modal = document.getElementById('myModal');
 
 // Get the button that opens the modal
@@ -99,9 +104,6 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
-
-
-//window.RegisterForm = RegisterForm;
 
 //--------------------------------error handling--------------------------------
 var urlVars = window.location.search.toLowerCase().substr(1).split("&");

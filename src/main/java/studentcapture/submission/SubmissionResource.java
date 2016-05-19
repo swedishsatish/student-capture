@@ -86,31 +86,33 @@ public class SubmissionResource {
      * Publish feedback to the student
      * @param submission An object representing a submission
      * @param publish A boolean, true represent publish and false unpublish
-     * @return True if feedback could be published/unpublished, else false
+     * @return HttpStatus OK if feedback could be published/unpublished, else HttpStatus bad request
      */
     @CrossOrigin
     @RequestMapping(value = "/publishFeedback", method = RequestMethod.POST)
-    public HttpStatus publishFeedback(@RequestParam(value = "Submission") Submission submission,
-                                      @RequestParam(value = "Publish") boolean publish) {
+    public HttpStatus publishFeedback(@RequestBody Submission submission,
+                                      @PathVariable("Publish") boolean publish) {
         String courseID = assignmentDAO.getCourseIDForAssignment(submission.getAssignmentID());
         submission.setCourseID(courseID);
-        DAO.publishFeedback(submission, publish);
-        return HttpStatus.NOT_IMPLEMENTED;
-        //return submissionDAO.publishFeedback(submission, publish);
+        boolean returnValue = DAO.publishFeedback(submission, publish);
+        if(returnValue)
+            return HttpStatus.OK;
+        else
+            return HttpStatus.BAD_REQUEST;
     }
 
-/**
- * Set feedback for a submission, video and text cannot be null
- * @param submission An object representing a submission
- * @param feedbackVideo Video feedback
- * @param feedbackText Text feedback
- * @return True if feedback was successfully saved to the database, else false
- */
+    /**
+    * Set feedback for a submission, video and text cannot be null
+    * @param submission An object representing a submission
+    * @param feedbackVideo Video feedback
+    * @param feedbackText Text feedback
+    * @return HttpStatus OK if feedback was successfully saved to the database, else HttpStatus bad request
+    */
     @CrossOrigin
     @RequestMapping(value = "/setFeedback", method = RequestMethod.POST)
-    public boolean setFeedback(@RequestParam(value = "Submission") Submission submission,
-                               @RequestParam(value = "feedbackVideo") MultipartFile feedbackVideo,
-                               @RequestParam(value = "feedbackText") MultipartFile feedbackText) {
+    public HttpStatus setFeedback(@RequestBody Submission submission,
+                                  @RequestBody MultipartFile feedbackVideo,
+                                  @RequestBody MultipartFile feedbackText) {
         CourseModel courseModel = new CourseModel();
         FilesystemInterface fsi = new FilesystemInterface();
         String courseID = assignmentDAO.getCourseIDForAssignment(submission.getAssignmentID());
@@ -128,6 +130,24 @@ public class SubmissionResource {
             feedback++;
         }
 
-        return feedback != 0;
+        if(feedback == 0)
+            return HttpStatus.BAD_REQUEST;
+        else
+            return HttpStatus.OK;
+    }
+
+    /**
+     * Save grade for a submission
+     * @param submission An object representing a submission
+     * @return HttpStatus OK if grade was successfully saved to the database, else HttpStatus bad request
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
+    public HttpStatus setGrade(@RequestBody Submission submission) {
+        boolean returnValue = DAO.setGrade(submission);
+        if(returnValue)
+            return HttpStatus.OK;
+        else
+            return HttpStatus.BAD_REQUEST;
     }
 }
