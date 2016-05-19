@@ -12,6 +12,9 @@ window.CreateCourse = React.createClass({
         tinymce.init({ selector:'textarea.tinymceArea',
             height: 350});
     },
+    componentWillUnmount: function () {
+        tinymce.EditorManager.editors = [];
+    },
     handleClick: function (uid,event) {
 
         var course = {
