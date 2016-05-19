@@ -30,28 +30,25 @@ var Assignment = React.createClass({
      * @param event
      */
     handleClick: function(assignment,event) {
-
-        var assID = this.props.assignment.assignment.assignmentId;
+        var uid = this.props.uid;
+        var assID = this.props.assignment.assignment.assignmentID;
         var courseID = this.props.courseId;
-
         if(this.props.role == "student"){
-            if(this.props.assignment.assignment.submissions == null){
-                ReactDOM.render(<AssignmentContent course={courseID} assignment={assID} uid={this.props.uid}/>,
+
+          
+            if(objToList(this.props.assignment.submissions).length == 0){
+                ReactDOM.render(<AssignmentContent course={courseID} assignment={assID} uid={uid}/>,
                     document.getElementById('courseContent'));
             }
             else {
-                ReactDOM.render(<Feedback course={courseID} assignment={assID} user={this.props.uid}/>,
+                ReactDOM.render(<Feedback course={courseID} assignment={assID} user={uid}/>,
                     document.getElementById('courseContent'));
             }
 
         }
         else if(this.props.role == "teacher"){
-           $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:assID},function (res) {
-                
-                ReactDOM.render(<StudentList students={res} courseId={courseID} assignmentId={assID}/>,
+                ReactDOM.render(<TeacherViewSubmission courseId={courseID} assignmentId={assID}/>,
                                 document.getElementById('courseContent') );
-            });
-
         }
 
 
@@ -64,8 +61,9 @@ var Assignment = React.createClass({
         var assignment = this.props.assignment;
         var classname = "assignment menuItem navigationText";
         var now = Date.now();
-        if(assignment.assignment.startDate >= now &&
-            assignment.assignment.endDate <= now)
+
+        if(new Date(assignment.assignment.assignmentIntervall.startDate).getTime() >= now &&
+            new Date(assignment.assignment.assignmentIntervall.endDate).getTime() <= now)
             classname += " active";
 
         return <li className={classname}><div onClick={this.handleClick.bind(this,assignment)}>{assignment.assignment.title}</div></li>;
@@ -87,8 +85,9 @@ var Assignments = React.createClass({
      * @param event
      */
     editClick: function (course,event) {
-        $.get(window.globalURL + "/course/" + course.courseId,function (res) {
-            ReactDOM.render(<EditCourse course={res} uid={this.props.uid}/>,document.getElementById("courseContent"));
+        var uid = this.props.uid;
+        $.get("course/" + course.courseId,function (res) {
+            ReactDOM.render(<EditCourse course={res} uid={uid}/>,document.getElementById("courseContent"));
 
         });
 
@@ -98,11 +97,12 @@ var Assignments = React.createClass({
      * @returns {XML}
      */
     render: function() {
+        var uid = this.props.uid;
         var course = this.props.course;
         var role = this.props.role;
         var assignments = objToList(course.assignments);
         var assList = assignments.map(function (ass) {
-            return <Assignment key={ass.assignment.assignmentId} courseId={course.course.courseId} assignment={ass} uid={this.props.uid} role={role}/>
+            return <Assignment key={ass.assignment.assignmentID} courseId={course.course.courseId} assignment={ass} uid={uid} role={role}/>
         });
         if(role=="teacher"){
             assList.push(<li className="active course menuItem navigationText">
@@ -129,9 +129,10 @@ var Course = React.createClass({
     },
     
     handleClick: function(course,event) {
-        $.get(window.globalURL + "/course/" + course.courseId,function (res) {
+        
+        $.get("course/" + course.course.courseId,function (res) {
             ReactDOM.render(<CourseInfo course={res}/>,document.getElementById("courseContent"));
-            console.log("get")
+            
             
         });
 
@@ -176,7 +177,6 @@ var DynamicMenu = React.createClass({
      * @returns {XML}
      */
     render: function () {
-
 
         var teach;
         var stud;
@@ -228,7 +228,7 @@ var DynamicMenu = React.createClass({
  *
  */
 window.RenderMenu = function (userID) {
-    $.get(window.globalURL + "/course", {userID}, function (res) {
+    $.get("course", {userID}, function (res) {
 
         // if(res)
         var SCList = objToList(res.studentCourses);
@@ -237,6 +237,6 @@ window.RenderMenu = function (userID) {
         ReactDOM.render(<DynamicMenu tList={TCList} sList={SCList} uid={userID}/>, document.getElementById("desktopNavigation"));
         ReactDOM.render(<NewProfile name={name} uid={userID}/>, document.getElementById('desktopHeader'));
     });
-}
+};
 
 RenderMenu(1);

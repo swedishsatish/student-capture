@@ -28,7 +28,7 @@ var FAQInfo = React.createClass({
                         <h5>Question 4</h5>
                             <p>Hejsan</p>
                         <h5>Question 5</h5>
-                            <p>Hejsan</p>
+                            <p>Hejsasn</p>
                         <h5>Question 6</h5>
                             <p>Hejsan</p>
                         <h5>Question 7</h5>

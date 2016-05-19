@@ -3,6 +3,10 @@
     display: inline-block !important;
 }
 
+#test-prev-container {
+    min-height: 300px;
+}
+
 #faq-text{
     overflow-y: scroll;
     max-height: 500px;

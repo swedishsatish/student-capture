@@ -9,77 +9,49 @@
 
 window.Feedback = React.createClass({
 
-    handleClick: function () {
+    getInitialState: function() {
+        return { data: null };
+    },
+    componentDidMount: function() {
         //Skicka till assignments/{assignmentid}/submissions/{studentid}
         $.ajax({
             type: "GET",
-            url: window.globalURL + "/assignments/" + $("#assignment").val() + "/submissions/" + $("#student").val(),
-            timeout: 100000,
-            success: function (response) {
-                console.log("SUCCESS: ", response);
-                return (
-                    ReactDOM.render(
-                        <NewFeedback feedbackResponse={response}
-                                     sourceInfo={window.globalURL + "/feedback/video?"}/>,
-                        document.getElementById('courseContent')
-                    )
-                )
-            }, error: function (e) {
-                console.log("ERROR: ", e);
-                ReactDOM.render(
-                    <p style={{color: 'red',fontSize: '200px'}}>
-                        ERROR
-                    </p>,
-                    document.getElementById('courseContent')
-                )
-            }, statusCode: {
-                404: function () {
-                    alert("Page not found");
-                }
-            }
-        });
+            url: "assignments/" + this.props.assignment + "/submissions/" + this.props.user,
+            timeout: 100000
+        }).done(function (data) {
+            this.setState({data: data});
+        }.bind(this));
     },
     render: function () {
-        return (
-            <div>
-                <form>
-                    StudentID: <br />
-                    <input id="student" type="text" name="studentid"/> <br />
-                    AssID: <br />
-                    <input id="assignment" type="text" name="assid"/> <br />
-                    <button id="submitbutton" type="button" onClick={this.handleClick}>Submit</button>
-                </form>
-            </div>
-        )
-    }
-});
 
-var NewFeedback = React.createClass({
+        if (this.state.data) {
 
-    render: function () {
+            var response = this.state.data;
 
-        var feedbackResponse = this.props.feedbackResponse;
+            response.submissionDate = new Date((response
+                .submissionDate));
 
-        feedbackResponse.submissionDate = new Date((feedbackResponse
-        .submissionDate));
+            var gradeColor;
 
-        return (
-            <div>
-                <h5>Firstname:</h5>
-                {feedbackResponse.firstName}
-                <h5>Lastname:</h5>
-                {feedbackResponse.lastName}
-                <h5>Grade:</h5>
-                {feedbackResponse.grade}
-                <h5>Gradesign:</h5>
-                {feedbackResponse.gradeSign}
-                <h5>Submissiondate:</h5>
-                {feedbackResponse.submissionDate.toGMTString()}
-                <h5>Feedback:</h5>
-                {feedbackResponse.feedback}
-                <br />
-                <video width="720" height="460" src={this.props.sourceInfo} preload="auto" controls/>
-            </div>
-        )
+            if (response.grade.grade === 'MVG') {
+                gradeColor = 'green';
+            } else if (response.grade.grade === 'IG') {
+                gradeColor = 'red';
+            }
+
+            return (
+                <div>
+                    <h5 style={{color:gradeColor}}>Grade: {response.grade
+                        .grade}</h5>
+                    <h5>Submissiondate: {response.submissionDate.toGMTString()}</h5>
+                    <h5>Feedback: {response.feedback}</h5>
+                    <h5>Teachername: {response.teacherName}</h5>
+                    <br />
+                </div>
+            )
+        }
+
+        return <div>Loading...</div>
+
     }
 });

@@ -124,13 +124,13 @@ public class UserDAO {
         }
 
         String sql = "UPDATE users SET firstname = ?, lastname = ?, email = ?," +
-                " pswd = ? WHERE username = ?";
+                " pswd = ?, token = ? WHERE username = ?";
 
 
         Object[] args = {user.getfName(),user.getlName(),user.getEmail(),
-                         user.getPswd(),user.getUserName()};
+                         user.getPswd(),user.getToken(),user.getUserName()};
         int[] types = {Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
-                       Types.VARCHAR};
+                       Types.VARCHAR,Types.VARCHAR};
 
         try{
             jdbcTemplate.update(sql, args,types);
@@ -160,6 +160,40 @@ public class UserDAO {
         return jdbcTemplate.queryForObject(sql,args,types,Boolean.class);
     }
 
+    /**
+     * Return email for a user
+     * @author c13elt, sanna
+     *
+     * @param userID
+     * @return
+     */
+    public String getEmail(int userID) {
+        String sql = "SELECT Email FROM users WHERE userID = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sql,new Object[]{userID},String.class);
+        } catch(Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Change a user's email address
+     * @author c13elt, sanna
+     * @param userID Identifier of the user to modify
+     * @param email The new email address
+     */
+    public boolean setEmail(int userID, String email) {
+        String sql = "UPDATE Users SET Email = ? WHERE UserID = ?";
+        try {
+            jdbcTemplate.update(sql, new Object[]{email, userID});
+            return true;
+        } catch(Exception e) {
+            return false;
+        }
+    }
+
+
 	/**
      *  Used to collect user information, and return a hashmap.
      *  @author Timmy Olsson
@@ -171,7 +205,10 @@ public class UserDAO {
             User user = new User(rs.getString("username"),rs.getString("firstname"),
                                  rs.getString("lastname"),rs.getString("email"),
                                  rs.getString("pswd"));
+
             user.setUserID(rs.getString("userid"));
+            user.setToken(rs.getString("token"));
+
             return user;
         }
     }

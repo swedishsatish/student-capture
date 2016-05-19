@@ -18,7 +18,7 @@
                 <div id="blanket" style={{"display":"none"}}></div>
                 <div id="popUpDiv" style={{"display":"none"}}></div>
 
-                <TeacherRecordVideo/>
+                <TeacherRecordVideo />
 
                 <div id="feedBackContainer">
 

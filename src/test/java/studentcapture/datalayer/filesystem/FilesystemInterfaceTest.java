@@ -1,5 +1,6 @@
 package studentcapture.datalayer.filesystem;
 
+import org.codehaus.groovy.tools.shell.IO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class FilesystemInterfaceTest {
      */
     @After
     public void tearDown() throws Exception {
-        deleteFile(new File(StudentCaptureApplication.ROOT+"/moose/"+courseCode));
+        deleteFile(new File(StudentCaptureApplication.ROOT+"/moose/"+courseID));
         deleteFile(new File(StudentCaptureApplication.ROOT+"/moose/"+151));
     }
 
@@ -49,47 +50,22 @@ public class FilesystemInterfaceTest {
     }
 
     @Test
-	public void testGeneratePathWithoutStudent() {
-		String path = FilesystemInterface.generatePath("5DV151", "1", "123");
-		
-		assertEquals(path, FilesystemConstants.FILESYSTEM_PATH 
-					 + "/5DV151/1/123/");
-	}
-	
-	@Test
-	public void testGeneratePathWithStudent() {
-		String path = FilesystemInterface.generatePath("5DV151", "1", "654","123");
-		
-		assertEquals(path, FilesystemConstants.FILESYSTEM_PATH 
-					 + "/5DV151/1/123/654/");
-	}
-
-	@Test
-	public void shouldStoreFileToNewPath(){
-        createMockFile();
-		FilesystemInterface.storeStudentVideo(courseCode,courseID,assignmentID,userID,testFile);
-
-		File storedFile = new File(StudentCaptureApplication.ROOT+"/moose/"+courseCode+"/"+courseID+
-                "/"+userID+"/"+assignmentID+"/submission.webm");
-        assertTrue(storedFile.exists());
-	}
-
-    @Test
     public void shouldStoreFileToExistingPath(){
         byte[] mockBytes = {1,2,4};
         testFile = new MockMultipartFile("mockTestFile", mockBytes);
-        FilesystemInterface.storeStudentVideo(courseCode,courseID,assignmentID,userID,testFile);
+        Submission submission = createSubmissionModel();
+        FilesystemInterface.storeStudentVideo(submission, testFile);
         testFile = new MockMultipartFile("mockTestFileExists", mockBytes);
-        FilesystemInterface.storeStudentVideo(courseCode,courseID,assignmentID,userID,testFile);
-        File storedFile = new File(StudentCaptureApplication.ROOT+"/moose/"+courseCode+"/"+courseID+
-                "/"+userID+"/"+assignmentID+"/submission.webm");
+        FilesystemInterface.storeStudentVideo(submission, testFile);
+        File storedFile = new File(FilesystemInterface.generatePath(submission) + FilesystemConstants.SUBMISSION_VIDEO_FILENAME);
 
         assertTrue(storedFile.exists());
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException(){
-        FilesystemInterface.storeStudentVideo("test","5DV151","1337","user",null);
+        Submission submission = createSubmissionModel();
+        FilesystemInterface.storeStudentVideo(submission, null);
 
     }
 
@@ -98,10 +74,9 @@ public class FilesystemInterfaceTest {
         Submission submission = createSubmissionModel();
 
         createMockFile();
-        FilesystemInterface.storeFeedbackText(submission,testFile);
-        File storedFile = new File(FilesystemInterface.generatePathFromModel(submission)+FilesystemConstants.FEEDBACK_TEXT_FILENAME);
+        FilesystemInterface.storeFeedbackText(submission, testFile);
+        File storedFile = new File(FilesystemInterface.generatePath(submission)+FilesystemConstants.FEEDBACK_TEXT_FILENAME);
         assertTrue(storedFile.exists());
-        //assertNotNull(FilesystemInterface.getFeedbackText(model),"Hej");
 
     }
 
@@ -199,6 +174,21 @@ public class FilesystemInterfaceTest {
         content = new String(buf);
 
         assertEquals("This should be in file", content);
+
+    }
+
+    @Test
+    public void shouldDeleteAssignmentDir() throws Exception {
+        String path = FilesystemConstants.FILESYSTEM_PATH + "/" + 151 + "/" + assignmentID + "/";
+        File file = new File(path);
+
+        FilesystemInterface.storeAssignmentText(151, assignmentID, "This doesn't matter",
+                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+        FilesystemInterface.storeAssignmentText(151, assignmentID, "This doesn't matter",
+                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+        FilesystemInterface.deleteAssignmentFiles(151, Integer.parseInt(assignmentID));
+
+        assertTrue(!file.exists());
 
     }
 

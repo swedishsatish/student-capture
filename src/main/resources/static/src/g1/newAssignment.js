@@ -80,7 +80,7 @@ var NewAssignment = React.createClass({
         $.ajax({
             type : "POST",
             contentType : "application/json",
-            url : "assignments",
+            url : "assignments",    
             data : JSON.stringify(reqBody),
             timeout : 100000,
             success : function(response) {
@@ -100,8 +100,9 @@ var NewAssignment = React.createClass({
     },
     render : function() {
       return <div>
-                <div id="newAssForm">
-                <input className="inputField" id="title" type="text" placeholder="title" />
+                <div className="newAssForm">
+                    <h3 className="contentTitle">NEW ASSIGNMENT</h3>
+                    <input className="inputField" id="title" type="text" placeholder="title" />
 
                     <div id="dates">
                         <div className="DTContainer">
@@ -122,7 +123,7 @@ var NewAssignment = React.createClass({
 
                     <div id="settings">
                         <div className="DTContainer">
-                            <p className="DTText">min-ength of answer:</p>
+                            <p className="DTText">min-length of answer:</p>
                             <input id="minTimeSeconds" type="text" placeholder="seconds" />
                         </div>
 
@@ -141,14 +142,20 @@ var NewAssignment = React.createClass({
                         </div>
                     </div>
 
-                    <h2>Description of the assignment</h2>
-                    <textarea className="inputField" id="description" type="text" placeholder="description" /><br/>
-                    <h2>Recap of the question</h2>
-                    <p>STUDENT WILL BE ABLE TO SEE THIS DURING RECORDING</p>
-                    <textarea className="inputField" id="recap" type="text" placeholder="recap" /><br/>
-                <div className="button primary-button SCButton" onClick = {handleCancel}> CANCEL </div>
-                <div className="button primary-button SCButton" id="post-question" onClick = {this.submitAssignment}> NEXT </div>
+                    <div className="editorContainer">
+                        <h5>Description of the assignment</h5>
+                        <textarea className="inputField" id="description" type="text" placeholder="description" /><br/>
+                    </div>
 
+                    <div className="editorContainer">
+                        <h5>Recap of the question - STUDENT WILL BE ABLE TO SEE THIS DURING RECORDING</h5>
+                        <textarea className="inputField" id="recap" type="text" placeholder="recap" /><br/>
+                    </div>
+
+                    <div id="newAssButtons">
+                        <div className="button primary-button SCButton" onClick = {handleCancel}> CANCEL </div>
+                        <div className="button primary-button SCButton" id="post-question" onClick = {this.submitAssignment}> NEXT </div>
+                    </div>
             </div>
         </div>
     }
@@ -171,20 +178,26 @@ var NewAssignmentVideo = React.createClass({
         var fd = new FormData();
         fd.append("video", blob);
         fd.append("courseID", this.props.courseID);
-        fd.append("assignmentID", this.props.assignmentID);
         return fd;
     },
     render: function () {
         return (
             <div>
-                <Recorder id="recorder" playCallback={this.playVideo}
-                          postURL="/assignments/video" formDataBuilder={this.formDataBuilder}
-                          recButtonID="record-question" stopButtonID="stop-question" fileName="assignmentVideo.webm" replay="true"
-                          postButtonID="post-video"
-                />
-                <button id="record-question" className="recControls">Record</button>
-                <button id="stop-question" className="recControls" disabled>Stop</button>
-                <button id="post-video" className="recControls">Post Video</button><br/>
+                <div className="newAssForm">
+                    <h3 className="contentTitle">NEW ASSIGNMENT VIDEO</h3>
+                    <div id="video-container" >
+                        <Recorder id="recorder" playCallback={this.playVideo}
+                                  postURL={"assignments/" + this.props.assignmentID + "/video"} formDataBuilder={this.formDataBuilder}
+                                  recButtonID="record-question" stopButtonID="stop-question" fileName="assignmentVideo.webm" replay="true"
+                                  postButtonID="post-video" />
+                        <button id="stop-question" className="recControls SCButton" disabled>Stop</button>
+                        <button id="record-question" className="recControls SCButton">Record</button>
+                    </div>
+                    <div id="videoPageCtrls">
+                        <button id="backBtn" className="recControls SCButton">Back</button>
+                        <button id="post-video" className="recControls SCButton">Submit</button>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -216,10 +229,15 @@ window.CourseContent = React.createClass({
                 break;
         }
         return (
-            <div>{content}</div>
+            <div>
+                <div className="newAssForm">
+                    {content}
+                </div>
+            </div>
         );
     }
 });
 
-ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
+//ReactDOM.render(<NewAssignmentVideo />, document.getElementById('courseContent'));
+//ReactDOM.render(<NewAssignment />, document.getElementById('courseContent'));
 window.NewAssignment = NewAssignment;

@@ -1,6 +1,10 @@
 /**
  *@author Ludvig Boström <c13lbm>
- *@revision: Tobias Estefors <dv13tes>
+ *@revision: Andreas Savva <ens15asa>
+ *           Benjamin Björklund <c13bbd>
+ *           Tobias Estefors <dv13tes>
+ *
+ *@note: This class is rendered from TeacherViewSubmission.js
  */
 
 var StudentList = React.createClass({
@@ -11,7 +15,6 @@ var StudentList = React.createClass({
     // This method is called after the method "render".
     componentDidMount: function () {
         var newTableObject = document.getElementById("students-table");
-        console.log(1);
         sorttable.makeSortable(newTableObject);
         var table11_Props = {
             filters_row_index: 1,
@@ -46,13 +49,12 @@ var StudentList = React.createClass({
         $.ajax({
             type: "GET",
             contentType: "application/json",
-            url: "https://localhost:8443/feedback/get",
+            url: "feedback/get",
             data: JSON.stringify(reqBody),
             timeout: 100000,
             success: function (response) {
                 console.log("SUCCESS: ", response);
                 // TODO: check response with if/else, if respons is fail give error message
-
             }, error: function (e) {
                 console.log("ERROR: ", e);
                 console.log(reqBody);
@@ -64,7 +66,6 @@ var StudentList = React.createClass({
     },
 
     componentWillMount: function () {
-
         this.submissions = this.props.submissions;
         this.participants = this.props.participants;
     },
@@ -75,14 +76,13 @@ var StudentList = React.createClass({
             var date = new Date(user.submissionDate);
             return (
                 <tr onClick={tmp.clickhandle.bind(tmp,user)}>
-                    <video width="96" height="54" class="clip-thumbnail"> <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4"/> </video>
+                    <video width="96" height="54" class="clip-thumbnail">
+                        <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4"/> </video>
                     <td>{user.firstName + " " + user.lastName}</td>
                     <td>{date.getFullYear() + "-" + (date.getMonth()+1/*Months start from 0)*/ + "-" + date.getDate())}</td>
                     <td>{user.gradeSign}</td>
                 </tr>
             );
-
-            // console.log(tmp);
 
         });
         return (
@@ -99,7 +99,7 @@ var StudentList = React.createClass({
                         </tr>
                         </thead>
                         <tbody>
-                        {userList}
+                            {userList}
                         </tbody>
                     </table>
                 </div>

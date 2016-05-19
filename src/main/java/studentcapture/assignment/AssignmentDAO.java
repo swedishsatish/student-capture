@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -134,11 +135,15 @@ public class AssignmentDAO {
      * @return              The video and Http status OK or Http status NOT_FOUND.
      */
     public ResponseEntity<InputStreamResource> getAssignmentVideo(int assignmentID) {
-        String courseID = this.getCourseIDForAssignment(assignmentID);
-        //String path = FilesystemInterface.generatePath(courseID,assignmentID)
-        //        + FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME;
-        //TODO: uncomment and use path. generatePath needs to be refactored first.
-        return FilesystemInterface.getVideo("bugsbunny.webm");
+        Optional<AssignmentModel> assignment = getAssignment(assignmentID);
+
+        if (assignment.isPresent()) {
+            String path = FilesystemInterface.generatePath(assignment.get());
+            path = path.concat(FilesystemConstants.ASSIGNMENT_VIDEO_FILENAME);
+            return FilesystemInterface.getVideo(path);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 //    /**
@@ -237,7 +242,7 @@ public class AssignmentDAO {
      *
      * @author dv14oan
      */
-    public AssignmentModel getAssignmentModel(int assignmentID) throws NotFoundException {
+    public AssignmentModel getAssignmentModel(int assignmentID) throws NotFoundException, IOException {
 
         String getAssignmentStatement = "SELECT * FROM "
                 + "Assignment WHERE AssignmentId=?;";
@@ -260,16 +265,20 @@ public class AssignmentDAO {
             assignmentIntervalls.setPublishedDate(srs.getString("Published").replaceAll("\\.\\d+", ""));
         }
 
+        int courseId = srs.getInt("courseId");
+
+        String description = FilesystemInterface.getAssignmentText(courseId, String.valueOf(assignmentID), FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+        String recap = FilesystemInterface.getAssignmentText(courseId, String.valueOf(assignmentID), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+
         AssignmentModel am = new AssignmentModel(
-                srs.getInt("courseId"),     // CourseId
+                courseId,                   // CourseId
                 srs.getString("Title"),     // Title
-                "",                         // Description
+                description,                // Description
                 videoIntervall,             // videoIntervall
                 assignmentIntervalls,       // assignmentIntervalls
                 srs.getString("GradeScale"),// GradeScale
-                "");                        // Recap
+                recap);                     // Recap
 
-        //am.setCourseID("UA502");
         return am;
     }
 
@@ -281,9 +290,9 @@ public class AssignmentDAO {
      *
      * @author dv14oan
      */
-    public boolean removeAssignment(int assignmentID){
+    public boolean removeAssignment(int courseId, int assignmentID) throws IOException {
         int rowAffected = jdbcTemplate.update("DELETE FROM Assignment WHERE AssignmentId = ?", assignmentID);
-
+        FilesystemInterface.deleteAssignmentFiles(courseId, assignmentID);
         if (rowAffected > 0){
             return true;
         } else {

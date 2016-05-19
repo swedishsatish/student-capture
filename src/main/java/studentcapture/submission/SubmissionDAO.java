@@ -1,11 +1,14 @@
 package studentcapture.submission;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.web.multipart.MultipartFile;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Grade;
 
@@ -29,16 +32,71 @@ public class SubmissionDAO {
      * @author tfy12hsm
 	 */
 	public boolean addSubmission(Submission submission, Boolean studentConsent) {
-		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentConsent) VALUES  (?,?,?,?)";
+		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentpublishconsent) VALUES  (?,?,?,?)";
 		java.util.Date date = new java.util.Date(System.currentTimeMillis());
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		timestamp.setNanos(0);
 
 		int rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(), submission.getStudentID(), timestamp, studentConsent);
-        FilesystemInterface.storeStudentVideo(submission.getCourseCode(), submission.getCourseID(), String.valueOf(submission.getAssignmentID()), String.valueOf(submission.getStudentID()), submission.getStudentVideo());
+        if(submission.getStudentVideo() != null) {
+            FilesystemInterface.storeStudentVideo(submission, submission.getStudentVideo());
+        }
 
 		return rowsAffected == 1;
 	}
+
+    /**
+     * Patch a submission for an assignment
+     *
+     * @param submission the submission to patch
+     * @return True if everything went well, otherwise false
+     */
+    public boolean patchSubmission(Submission submission) {
+        String sql = "UPDATE Submission SET ";
+        ArrayList<Object> sqlparams = new ArrayList<>();
+        if (submission.getStudentPublishConsent() != null) {
+            sql += "studentpublishconsent = ?,";
+            sqlparams.add(submission.getStudentPublishConsent());
+        }
+        if (submission.getStatus() != null) {
+            sql += "status = ?,";
+            sqlparams.add(submission.getStatus());
+        }
+        if (submission.getGrade() != null) {
+            if  (submission.getGrade().getGrade() != null) {
+                sql += "grade = ?,";
+                sqlparams.add(submission.getGrade().getGrade());
+            }
+            if  (submission.getGrade().getTeacherID() != null) {
+                sql += "teacherid = ?,";
+                sqlparams.add(submission.getGrade().getTeacherID());
+            }
+        }
+        if (submission.getPublishFeedback() != null) {
+            sql += "publishfeedback = ?,";
+            sqlparams.add(submission.getPublishFeedback());
+        }
+        if (submission.getPublishStudentSubmission() != null) {
+            sql += "publishstudentsubmission = ?,";
+            sqlparams.add(submission.getPublishStudentSubmission());
+        }
+
+        if (sqlparams.isEmpty()) {
+            return false; // Nothing to patch
+        }
+        sql = sql.substring(0,sql.length()-1);
+
+        sql += " WHERE assignmentid = ? AND studentid = ?";
+        System.out.println("sql = " + sql);
+        sqlparams.add(submission.getAssignmentID());
+        sqlparams.add(submission.getStudentID());
+
+        try {
+            return databaseConnection.update(sql, sqlparams.toArray()) == 1;
+        } catch (DataAccessException e) {
+            return false;
+        }
+    }
 
     /**
      * Make the feedback visible for the student
@@ -285,6 +343,11 @@ public class SubmissionDAO {
 		}
 
         return Optional.of(result);
+	}
+
+	public Optional<InputStreamResource> getSubmissionVideo(int assignmentID, int studentID) {
+		String path = FilesystemInterface.generatePath(new Submission(assignmentID, studentID));
+		return Optional.of(FilesystemInterface.getVideo(path).getBody());
 	}
 }
 

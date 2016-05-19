@@ -44,13 +44,14 @@
 	color: black !important;
 	background-color: #dddddd;
 	font-size: 20px;
+	overflow: auto;
+	padding: 50px;
 }
 
-/* Style of assignment video, progress bar and question summary */
-#question-div
+/* Override row style for the question div content */
+#question-div .row
 {
-    float: left;
-    margin: 8%;
+    margin-left: 0px !important;
 }
 
 /* Style of assignment video */
@@ -62,20 +63,35 @@
 /* Style of progress bar */
 #progress-bar
 {
-    width: 90%;
+    width: 100%;
 }
 
 /* Style of countdown numbers */
 #countdown-div
 {
-    float: left;
 	font-size: 100px;
+	text-align:center;
+	height:150px;
+	color: white;
+    text-shadow:
+        -1px -1px 0px black,
+         0px -1px 0px black,
+         1px -1px 0px black,
+        -1px  0px 0px black,
+         1px  0px 0px black,
+        -1px  1px 0px black,
+         0px  1px 0px black,
+         1px  1px 0px black;
 }
 
-/* Style of student recording, buttons and time limits */
-#answer-div
+#videoTitle
 {
-    float: right;
-    margin: 8%;
+    display: inline-block;
+}
+
+#recorder-div
+{
+    position: relative;
+    padding-bottom: 0%;
 }
 

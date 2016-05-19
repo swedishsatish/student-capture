@@ -47,11 +47,11 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
         am = new AssignmentModel(
                 courseID,               // CourseId
                 "PVT",                  //Title
-                "",                     // Info
+                "Description",                     // Info
                 videoIntervall,
                 assignmentIntervalls,
                 "U_O_K_G",              // GradeScale
-                "");                    // Recap
+                "Recap");                    // Recap
         am.setCourseID(courseID);
         String sql = "INSERT INTO Course VALUES (502, 1912, 'HT12', " +
                 "'ht1212', 'Comedy','Description' , true);";
@@ -120,7 +120,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     public void shouldNotGetDeletedAssignment() throws Exception{
         int assID = assignmentDAO.createAssignment(am);
 
-        assignmentDAO.removeAssignment(assID);
+        assignmentDAO.removeAssignment(151, assID);
 
         assignmentDAO.getAssignmentModel(assID);
     }
@@ -129,7 +129,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     public void shouldDeleteOneAnAssignment() throws Exception{
         int assID = assignmentDAO.createAssignment(am);
 
-        assertTrue(assignmentDAO.removeAssignment(assID));
+        assertTrue(assignmentDAO.removeAssignment(151, assID));
     }
 
     @Test
@@ -137,7 +137,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
         int assID = assignmentDAO.createAssignment(am);
         int noneAssID = assID + 500;
 
-        assertFalse(assignmentDAO.removeAssignment(noneAssID));
+        assertFalse(assignmentDAO.removeAssignment(151, noneAssID));
     }
 
     private String currentDatePlusDaysGenerator(int days){

@@ -1,6 +1,7 @@
 package studentcapture.submission;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +27,6 @@ import java.util.List;
 public class SubmissionResource {
     @Autowired
     SubmissionDAO DAO;
-    AssignmentDAO assignmentDAO;
-    CourseDAO courseDAO;
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
@@ -38,6 +37,13 @@ public class SubmissionResource {
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
+
+    @RequestMapping(value = "{studentID}/video", method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> getSpecificSubmissionVideo(@PathVariable("assignmentID") int assignmentID,
+                                                                          @PathVariable("studentID") int studentID){
+        return new ResponseEntity<>(DAO.getSubmissionVideo(assignmentID, studentID).get(), HttpStatus.OK);
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") int assignmentID){
         //TODO check permissions
@@ -46,8 +52,8 @@ public class SubmissionResource {
     }
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.PATCH)
-    public HttpStatus markSubmission(@PathVariable("assignmentID") String assignmentID,
-                                     @PathVariable("studentID") String studentID,
+    public HttpStatus markSubmission(@PathVariable("assignmentID") int assignmentID,
+                                     @PathVariable("studentID") int studentID,
                                      @RequestBody Submission submission){
         //TODO Not implemented - updates partial information of the submission object, such as setting the grade
         /*Validation of Submission
@@ -55,24 +61,35 @@ public class SubmissionResource {
         * if sent by a teacher: send to a method which only stores the information a teacher has permission to change (i.e not the answer but the grade)
         *
         * validate the Submission.studentID against studentID and permissions*/
-        return HttpStatus.NOT_IMPLEMENTED;
+        submission.setAssignmentID(assignmentID);
+        submission.setStudentID(studentID);
+        if (DAO.patchSubmission(submission)) {
+            return HttpStatus.OK;
+        } else {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
     }
 
 
-    @RequestMapping(value = "{studentID}", method = RequestMethod.PUT)
+    @RequestMapping(value = "{studentID}", method = RequestMethod.POST)
     public HttpStatus storeSubmission(@PathVariable("assignmentID") int assignmentID,
                                       @PathVariable("studentID") int studentID,
-                                      @RequestBody Submission updatedSubmission){
+                                      @RequestPart(value = "studentVideo") MultipartFile studentVideo,
+                                      @RequestPart(value = "submission") Submission updatedSubmission){
+
+        HttpStatus returnStatus;
 
         updatedSubmission.setStudentID(studentID);
         updatedSubmission.setAssignmentID(assignmentID);
-        //TODO Not implemented - stores a submission in the database
+        updatedSubmission.setStudentVideo(studentVideo);
+        returnStatus = DAO.addSubmission(updatedSubmission, true) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
 
         /*Validation of Submission
         * Should be sent by a student, might have to validate that the student didnt set the grade himself.
         * However this should probably be handled somewhere else
         * validate the Submission.studentID against studentID and permissions*/
-        return HttpStatus.NOT_IMPLEMENTED;
+
+        return returnStatus;
     }
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.DELETE)
@@ -80,74 +97,5 @@ public class SubmissionResource {
                                        @PathVariable("studentID") String studentID){
         /*Check permission*/
         return HttpStatus.NOT_IMPLEMENTED;
-    }
-
-    /**
-     * Publish feedback to the student
-     * @param submission An object representing a submission
-     * @param publish A boolean, true represent publish and false unpublish
-     * @return HttpStatus OK if feedback could be published/unpublished, else HttpStatus bad request
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/publishFeedback", method = RequestMethod.POST)
-    public HttpStatus publishFeedback(@RequestBody Submission submission,
-                                      @PathVariable("Publish") boolean publish) {
-        String courseID = assignmentDAO.getCourseIDForAssignment(submission.getAssignmentID());
-        submission.setCourseID(courseID);
-        boolean returnValue = DAO.publishFeedback(submission, publish);
-        if(returnValue)
-            return HttpStatus.OK;
-        else
-            return HttpStatus.BAD_REQUEST;
-    }
-
-    /**
-    * Set feedback for a submission, video and text cannot be null
-    * @param submission An object representing a submission
-    * @param feedbackVideo Video feedback
-    * @param feedbackText Text feedback
-    * @return HttpStatus OK if feedback was successfully saved to the database, else HttpStatus bad request
-    */
-    @CrossOrigin
-    @RequestMapping(value = "/setFeedback", method = RequestMethod.POST)
-    public HttpStatus setFeedback(@RequestBody Submission submission,
-                                  @RequestBody MultipartFile feedbackVideo,
-                                  @RequestBody MultipartFile feedbackText) {
-        CourseModel courseModel = new CourseModel();
-        FilesystemInterface fsi = new FilesystemInterface();
-        String courseID = assignmentDAO.getCourseIDForAssignment(submission.getAssignmentID());
-        courseModel.setCourseId(Integer.parseInt(courseID));
-        String courseCode = courseDAO.getCourseCodeFromId(courseModel);
-        submission.setCourseCode(courseCode);
-        submission.setCourseID(courseID);
-        int feedback = 0;
-    	if(feedbackVideo != null) {
-            fsi.storeFeedbackVideo(submission, feedbackVideo);
-            feedback++;
-        }
-        if(feedbackText != null) {
-            fsi.storeFeedbackText(submission, feedbackText);
-            feedback++;
-        }
-
-        if(feedback == 0)
-            return HttpStatus.BAD_REQUEST;
-        else
-            return HttpStatus.OK;
-    }
-
-    /**
-     * Save grade for a submission
-     * @param submission An object representing a submission
-     * @return HttpStatus OK if grade was successfully saved to the database, else HttpStatus bad request
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
-    public HttpStatus setGrade(@RequestBody Submission submission) {
-        boolean returnValue = DAO.setGrade(submission);
-        if(returnValue)
-            return HttpStatus.OK;
-        else
-            return HttpStatus.BAD_REQUEST;
     }
 }
