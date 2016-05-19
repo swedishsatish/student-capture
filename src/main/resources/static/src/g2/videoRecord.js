@@ -272,14 +272,12 @@ var Recorder = React.createClass({
         var id;
         var pId;
         var contId;
-        console.log(this.props.contID);
-        console.log(this.props);
-        console.log(typeof this.props.contID);
+      
         if(typeof this.props.contID === "undefined"){
             contId = "prev-container";
         }
         else {
-            contId = this.prop.contID;
+            contId = this.props.contID;
         }
         if(typeof this.props.calc !== "undefined") {
             id="prev-test";
