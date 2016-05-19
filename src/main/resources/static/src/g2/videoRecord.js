@@ -260,7 +260,13 @@ var Recorder = React.createClass({
         }
 
         /* Showing recording-light on load (not recording) */
-        document.getElementById("rec-text").innerHTML = "&#11093;";
+
+        if(typeof props.calc !== "undefined") {
+            document.getElementById("test-rec-text").innerHTML = "&#11093;";
+        }
+        else {
+            document.getElementById("rec-text").innerHTML = "&#11093;";
+        }
     },
     render: function() {
         var id;

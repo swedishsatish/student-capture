@@ -27,7 +27,7 @@ function postToServer(blob, userID, courseID, assignmentID, videoLength) {
 
             console.log(xhr.responseText);
 
-            var urlPOST = "https://localhost:8443" + xhr.responseText;
+            var urlPOST = xhr.responseText;
             var methodPOST = "POST";
 
             dataPOST.append("video", blob);

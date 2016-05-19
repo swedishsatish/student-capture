@@ -55,7 +55,7 @@ var HardcodeList = React.createClass({
         $.ajax({
             type: "GET",
             contentType: "application/json",
-            url: "https://localhost:8443/feedback/get",
+            url: "feedback/get",
             data: JSON.stringify(reqBody),
             timeout: 100000,
             success: function (response) {
