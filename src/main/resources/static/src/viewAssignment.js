@@ -94,11 +94,11 @@ var AssignmentStart = React.createClass({
                                     Red circle.
                                 </svg>
                                 <p id="descriptor">[REC]</p>
-                                <div>
+                                <div><div>
                                     <StudentRecordVideo autoRecord="true" /><br />
                                     Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}<br />
                                     Current video length: {this.state.time}
-                                </div>
+                                </div></div>
                               </div>
                             : <div>
                                 <svg width="30" height="30">
