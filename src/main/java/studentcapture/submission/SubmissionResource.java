@@ -72,6 +72,9 @@ public class SubmissionResource {
         * Should be sent by a student, might have to validate that the student didnt set the grade himself.
         * However this should probably be handled somewhere else
         * validate the Submission.studentID against studentID and permissions*/
+        System.out.println("WORKS");
+        System.out.println(updatedSubmission.toString());
+        System.out.println("DONE");
         return HttpStatus.NOT_IMPLEMENTED;
     }
 
