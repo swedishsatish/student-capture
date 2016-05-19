@@ -123,7 +123,7 @@ var NewAssignment = React.createClass({
 
                     <div id="settings">
                         <div className="DTContainer">
-                            <p className="DTText">min-ength of answer:</p>
+                            <p className="DTText">min-length of answer:</p>
                             <input id="minTimeSeconds" type="text" placeholder="seconds" />
                         </div>
 
