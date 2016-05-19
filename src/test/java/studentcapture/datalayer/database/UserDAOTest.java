@@ -10,6 +10,7 @@ import studentcapture.config.StudentCaptureApplicationTests;
 
 
 import studentcapture.model.User;
+import studentcapture.usersettings.UserDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
