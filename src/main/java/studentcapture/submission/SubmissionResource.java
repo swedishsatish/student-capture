@@ -23,8 +23,6 @@ import java.util.List;
 public class SubmissionResource {
     @Autowired
     SubmissionDAO DAO;
-    AssignmentDAO assignmentDAO;
-    CourseDAO courseDAO;
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
@@ -43,16 +41,21 @@ public class SubmissionResource {
     }
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.PATCH)
-    public HttpStatus markSubmission(@PathVariable("assignmentID") String assignmentID,
-                                     @PathVariable("studentID") String studentID,
+    public HttpStatus markSubmission(@PathVariable("assignmentID") int assignmentID,
+                                     @PathVariable("studentID") int studentID,
                                      @RequestBody Submission submission){
-        //TODO Not implemented - updates partial information of the submission object, such as setting the grade
         /*Validation of Submission
         * if sent by a student: send to a method which only stores the information a student has permission to change (i.e not grade)
         * if sent by a teacher: send to a method which only stores the information a teacher has permission to change (i.e not the answer but the grade)
         *
         * validate the Submission.studentID against studentID and permissions*/
-        return HttpStatus.NOT_IMPLEMENTED;
+        submission.setAssignmentID(assignmentID);
+        submission.setStudentID(studentID);
+        if (DAO.patchSubmission(submission)) {
+            return HttpStatus.OK;
+        } else {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
     }
 
 

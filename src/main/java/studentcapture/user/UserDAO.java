@@ -124,13 +124,13 @@ public class UserDAO {
         }
 
         String sql = "UPDATE users SET firstname = ?, lastname = ?, email = ?," +
-                " pswd = ? WHERE username = ?";
+                " pswd = ?, token = ? WHERE username = ?";
 
 
         Object[] args = {user.getfName(),user.getlName(),user.getEmail(),
-                         user.getPswd(),user.getUserName()};
+                         user.getPswd(),user.getToken(),user.getUserName()};
         int[] types = {Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
-                       Types.VARCHAR};
+                       Types.VARCHAR,Types.VARCHAR};
 
         try{
             jdbcTemplate.update(sql, args,types);
@@ -205,7 +205,10 @@ public class UserDAO {
             User user = new User(rs.getString("username"),rs.getString("firstname"),
                                  rs.getString("lastname"),rs.getString("email"),
                                  rs.getString("pswd"));
+
             user.setUserID(rs.getString("userid"));
+            user.setToken(rs.getString("token"));
+
             return user;
         }
     }

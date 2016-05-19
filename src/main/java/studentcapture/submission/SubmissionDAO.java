@@ -43,6 +43,59 @@ public class SubmissionDAO {
 	}
 
     /**
+     * Patch a submission for an assignment
+     *
+     * @param submission the submission to patch
+     * @return True if everything went well, otherwise false
+     */
+    public boolean patchSubmission(Submission submission) {
+        String sql = "UPDATE Submission SET ";
+        ArrayList<Object> sqlparams = new ArrayList<>();
+        if (submission.getStudentPublishConsent() != null) {
+            sql += "studentpublishconsent = ?,";
+            sqlparams.add(submission.getStudentPublishConsent());
+        }
+        if (submission.getStatus() != null) {
+            sql += "status = ?,";
+            sqlparams.add(submission.getStatus());
+        }
+        if (submission.getGrade() != null) {
+            if  (submission.getGrade().getGrade() != null) {
+                sql += "grade = ?,";
+                sqlparams.add(submission.getGrade().getGrade());
+            }
+            if  (submission.getGrade().getTeacherID() != null) {
+                sql += "teacherid = ?,";
+                sqlparams.add(submission.getGrade().getTeacherID());
+            }
+        }
+        if (submission.getPublishFeedback() != null) {
+            sql += "publishfeedback = ?,";
+            sqlparams.add(submission.getPublishFeedback());
+        }
+        if (submission.getPublishStudentSubmission() != null) {
+            sql += "publishstudentsubmission = ?,";
+            sqlparams.add(submission.getPublishStudentSubmission());
+        }
+
+        if (sqlparams.isEmpty()) {
+            return false; // Nothing to patch
+        }
+        sql = sql.substring(0,sql.length()-1);
+
+        sql += " WHERE assignmentid = ? AND studentid = ?";
+        System.out.println("sql = " + sql);
+        sqlparams.add(submission.getAssignmentID());
+        sqlparams.add(submission.getStudentID());
+
+        try {
+            return databaseConnection.update(sql, sqlparams.toArray()) == 1;
+        } catch (DataAccessException e) {
+            return false;
+        }
+    }
+
+    /**
      * Make the feedback visible for the student
      * @param submission Submission object
      * @return True if a row was changed, otherwise false

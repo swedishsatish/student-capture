@@ -3,21 +3,31 @@ package studentcapture.mail;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.jvnet.mock_javamail.Mailbox;
+
+import javax.mail.Message;
+import javax.mail.internet.AddressException;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import studentcapture.config.StudentCaptureApplicationTests;
 
-import java.util.List;
-import java.util.Optional;
-
 import static org.junit.Assert.*;
 
 /**
- * Author c13evk
+ * @author Isak Hjelt, Emil Vannebäck
+ * cs-user:     dv14iht, c13evk
+ * Date:        5/12/16
  */
-public class MailDAOTest extends StudentCaptureApplicationTests{
+
+public class MailAssignmentReminderTest extends StudentCaptureApplicationTests {
     @Autowired
-    protected JdbcTemplate jdbcMock;
+    MailAssignmentReminder mailReminder;
+
+    @Autowired
+    JdbcTemplate jdbcMock;
 
     @Autowired
     MailDAO mailDAO;
@@ -33,7 +43,6 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
         String sql7 = "INSERT INTO Submission VALUES (1, 3, null, null, '2016-05-13 11:00:00', 'MVG', 2, null, null);";
         String sql8 = "INSERT INTO Participant VALUES (3, 'PVT', 'Student');";
         String sql9 = "INSERT INTO Participant VALUES (2, 'PVT', 'Student');";
-
         jdbcMock.update(sql1);
         jdbcMock.update(sql2);
         jdbcMock.update(sql3);
@@ -43,20 +52,16 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
         jdbcMock.update(sql7);
         jdbcMock.update(sql8);
         jdbcMock.update(sql9);
-
     }
 
-    /**
-     * Remove all content from the database
-     */
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
+        Mailbox.clearAll();
         String sql1 = "DELETE FROM Users;";
         String sql2 = "DELETE FROM Course;";
         String sql3 = "DELETE FROM Assignment;";
         String sql4 = "DELETE FROM Submission;";
         String sql5 = "DELETE FROM Participant;";
-
         jdbcMock.update(sql5);
         jdbcMock.update(sql4);
         jdbcMock.update(sql3);
@@ -64,29 +69,40 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
         jdbcMock.update(sql1);
     }
 
-
     @Test
-    public void testGetParticipantsEmails(){
+    public void testSendReminderAll() throws AddressException {
+        String courseID;
+        List<Message> inbox;
+        List<String> emailAddresses;
+        boolean gotReminderEmail = true;
+        Optional<List<String>> tempOptList;
+        Optional <String> tempOptString;
 
-        List<String> emailList = mailDAO.getPraticipantsEmails("PVT").get();
-        assertEquals(2,emailList.size());
-        assertEquals("joel@gmail.com", emailList.get(0));
+        mailReminder.sendReminderEmail("1");
+        tempOptString = mailDAO.getCourseIDFromAssignment("1");
+
+        if (tempOptString.isPresent()) {
+            courseID = tempOptString.get();
+            tempOptList = mailDAO.getPraticipantsEmails(courseID);
+
+            if (tempOptList.isPresent()) {
+                emailAddresses = tempOptList.get();
+
+                for (String emailAddress : emailAddresses) {
+
+                    inbox = Mailbox.get(emailAddress);
+                    if (inbox.size() != 1) {
+                        gotReminderEmail = false;
+                        break;
+                    }
+                }
+            }
+        }
+        assertTrue(gotReminderEmail);
     }
 
     @Test
-    public void testGetStartDateFromAssignment(){
-        assertEquals("2016-05-13 10:00:00.0",mailDAO.getStartDateFromAssignment("1").get());
+    public void testSendToBadAssignmentID() throws Exception {
+        mailReminder.sendReminderEmail("999999999");
     }
-
-    @Test
-    public void  testGetCourseIDFromAssignment(){
-        assertEquals("PVT",mailDAO.getCourseIDFromAssignment("1").get());
-    }
-
-    @Test
-    public void testWrongAssignmentID(){
-        assertEquals(Optional.empty(),mailDAO.getStartDateFromAssignment("12345"));
-    }
-
-
 }

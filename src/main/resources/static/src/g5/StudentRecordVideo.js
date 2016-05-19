@@ -28,7 +28,7 @@ var StudentRecordVideo = React.createClass({
 
                     <h5 id="isRecording"></h5>
                         <Recorder playCallback={this.playVideo}
-                                  postURL="/uploadVideo/" formDataBuilder={this.formDataBuilder}
+                                  postURL="uploadVideo/" formDataBuilder={this.formDataBuilder}
                                   stopButtonID="studentSubmit" autoRecord={autoRecord}
                                   siteView="submission" fileName="submission.webm"
                                   camOnLoad="true"
