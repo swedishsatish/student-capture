@@ -4,8 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.CourseDAO;
+import studentcapture.course.CourseModel;
+import studentcapture.datalayer.filesystem.FilesystemInterface;
 
 import java.util.List;
 
@@ -44,6 +47,7 @@ public class SubmissionResource {
     public HttpStatus markSubmission(@PathVariable("assignmentID") int assignmentID,
                                      @PathVariable("studentID") int studentID,
                                      @RequestBody Submission submission){
+        //TODO Not implemented - updates partial information of the submission object, such as setting the grade
         /*Validation of Submission
         * if sent by a student: send to a method which only stores the information a student has permission to change (i.e not grade)
         * if sent by a teacher: send to a method which only stores the information a teacher has permission to change (i.e not the answer but the grade)
@@ -59,26 +63,24 @@ public class SubmissionResource {
     }
 
 
-    @RequestMapping(value = "{studentID}", method = RequestMethod.PUT)
+    @RequestMapping(value = "{studentID}", method = RequestMethod.POST)
     public HttpStatus storeSubmission(@PathVariable("assignmentID") int assignmentID,
                                       @PathVariable("studentID") int studentID,
-                                      @RequestBody Submission updatedSubmission){
+                                      @RequestPart(value = "studentVideo") MultipartFile studentVideo,
+                                      @RequestPart(value = "submission") Submission updatedSubmission){
 
         HttpStatus returnStatus;
 
         updatedSubmission.setStudentID(studentID);
         updatedSubmission.setAssignmentID(assignmentID);
+        updatedSubmission.setStudentVideo(studentVideo);
         returnStatus = DAO.addSubmission(updatedSubmission, true) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
-
 
         /*Validation of Submission
         * Should be sent by a student, might have to validate that the student didnt set the grade himself.
         * However this should probably be handled somewhere else
         * validate the Submission.studentID against studentID and permissions*/
 
-        System.out.println("WORKS");
-        System.out.println(updatedSubmission.toString());
-        System.out.println("DONE");
         return returnStatus;
     }
 
