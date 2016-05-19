@@ -276,4 +276,22 @@ public class FilesystemInterface {
 		File file = new File(des +"/"+ filename);
 		source.transferTo(file);
 	}
+
+	/**
+	 * Prints some text to a existing or new file. The content in the file is overwritten
+	 * @param text the text to print
+	 * @param path the path to the file
+     * @return true is successful
+     */
+	public static boolean printTextToFile(String text, String path) {
+
+		try {
+			PrintWriter out = new PrintWriter(path);
+			out.println(text);
+			return true;
+		} catch (FileNotFoundException e) {
+			return false;
+		}
+
+	}
 }

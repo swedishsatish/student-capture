@@ -7,8 +7,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import org.springframework.web.multipart.MultipartFile;
+import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Grade;
 
@@ -52,6 +51,12 @@ public class SubmissionDAO {
      * @return True if everything went well, otherwise false
      */
     public boolean patchSubmission(Submission submission) {
+		String feedback = submission.getFeedback();
+		if (feedback != null && !feedback.isEmpty()) {
+			String path = FilesystemInterface.generatePath(submission) + FilesystemConstants.FEEDBACK_TEXT_FILENAME;
+			FilesystemInterface.printTextToFile(feedback, path);
+		}
+
         String sql = "UPDATE Submission SET ";
         ArrayList<Object> sqlparams = new ArrayList<>();
         if (submission.getStudentPublishConsent() != null) {
@@ -341,7 +346,7 @@ public class SubmissionDAO {
 			//TODO
 			return Optional.empty();
 		}
-
+		result.setFeedback(FilesystemInterface.getFeedbackText(result));
         return Optional.of(result);
 	}
 
@@ -349,5 +354,6 @@ public class SubmissionDAO {
 		String path = FilesystemInterface.generatePath(new Submission(assignmentID, studentID));
 		return Optional.of(FilesystemInterface.getVideo(path).getBody());
 	}
+
 }
 

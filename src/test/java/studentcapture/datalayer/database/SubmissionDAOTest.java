@@ -115,6 +115,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         submission.setPublishStudentSubmission(publishStudentSubmission);
         submission.setPublishFeedback(publishFeedback);
         submission.setTeacherName(teacherName);
+        submission.setFeedback("");
 
         String SQL = "INSERT INTO Submission VALUES ("  + assignmentID + ", "
                                                         + studentID + ", "
