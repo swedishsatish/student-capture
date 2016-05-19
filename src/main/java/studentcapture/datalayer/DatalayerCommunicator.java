@@ -147,14 +147,14 @@ public class DatalayerCommunicator {
      * @param publish A boolean, true represent publish and false unpublish
      * @return True if feedback could be published/unpublished, else false
      */
-    @CrossOrigin
+    /*@CrossOrigin
     @RequestMapping(value = "/publishFeedback", method = RequestMethod.POST)
     public boolean publishFeedback(@RequestParam(value = "Submission") Submission submission,
                                @RequestParam(value = "Publish") boolean publish) {
         String courseID = assignment.getCourseIDForAssignment(submission.getAssignmentID());
         submission.setCourseID(courseID);
         return submissionDAO.publishFeedback(submission, publish);
-    }
+    }*/
 
 
     /**
