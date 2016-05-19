@@ -160,6 +160,40 @@ public class UserDAO {
         return jdbcTemplate.queryForObject(sql,args,types,Boolean.class);
     }
 
+    /**
+     * Return email for a user
+     * @author c13elt, sanna
+     *
+     * @param userID
+     * @return
+     */
+    public String getEmail(int userID) {
+        String sql = "SELECT Email FROM users WHERE userID = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sql,new Object[]{userID},String.class);
+        } catch(Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Change a user's email address
+     * @author c13elt, sanna
+     * @param userID Identifier of the user to modify
+     * @param email The new email address
+     */
+    public boolean setEmail(int userID, String email) {
+        String sql = "UPDATE Users SET Email = ? WHERE UserID = ?";
+        try {
+            jdbcTemplate.update(sql, new Object[]{email, userID});
+            return true;
+        } catch(Exception e) {
+            return false;
+        }
+    }
+
+
 	/**
      *  Used to collect user information, and return a hashmap.
      *  @author Timmy Olsson
