@@ -27,6 +27,7 @@ public class Submission {
     private String firstName;
     private String lastName;
     private String status;
+    private String teacherName;
 
     public String getStatus() {
         return status;
@@ -206,6 +207,15 @@ public class Submission {
         this.publishFeedback = publishFeedback;
     }
 
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+
     @Override
     public String toString() {
         return "Submission{" +
@@ -250,6 +260,7 @@ public class Submission {
         if (subStatus != that.subStatus) return false;
         if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
         if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
+        if (teacherName != null ? !teacherName.equals(that.teacherName) : that.teacherName != null) return false;
         return status != null ? status.equals(that.status) : that.status == null;
 
     }
