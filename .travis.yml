@@ -24,4 +24,4 @@ after_success:
 - tar -czf package.tgz build
 - export SSHPASS=$DEPLOY_PASS
 - sshpass -e scp -o stricthostkeychecking=no package.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
-- sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST $SCRIPT_PATH
+- sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST $SCRIPT_PATH > log_output
