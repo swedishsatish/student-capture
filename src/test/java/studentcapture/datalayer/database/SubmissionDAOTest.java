@@ -104,6 +104,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         }
         boolean publishStudentSubmission = false;
         boolean publishFeedback = false;
+        grade.setFeedbackIsVisible(publishFeedback);
 
         submission.setAssignmentID(assignmentID);
         submission.setStudentID(studentID);
@@ -112,7 +113,6 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         submission.setSubmissionDate(timestamp);
         submission.setGrade(grade);
         submission.setPublishStudentSubmission(publishStudentSubmission);
-        submission.setFeedbackIsVisible(publishFeedback);
         submission.setTeacherName(teacherName);
         submission.setFeedback("");
 

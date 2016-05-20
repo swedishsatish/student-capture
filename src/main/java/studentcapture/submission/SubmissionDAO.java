@@ -77,11 +77,11 @@ public class SubmissionDAO {
                 sql += "teacherid = ?,";
                 sqlparams.add(submission.getGrade().getTeacherID());
             }
-        }
-        if (submission.getFeedbackIsVisible() != null) {
-            sql += "publishfeedback = ?,";
-            sqlparams.add(submission.getFeedbackIsVisible());
-        }
+			if (submission.getGrade().getFeedbackIsVisible() != null) {
+				sql += "publishfeedback = ?,";
+				sqlparams.add(submission.getGrade().getFeedbackIsVisible());
+			}
+		}
         if (submission.getPublishStudentSubmission() != null) {
             sql += "publishstudentsubmission = ?,";
             sqlparams.add(submission.getPublishStudentSubmission());
@@ -318,8 +318,7 @@ public class SubmissionDAO {
 
 	/**
 	 * Get a teacher's submitted feedback video for a specific student.
-	 * @param assignmentID
-	 * @param studentID
+	 * @param submission
      * @return
      */
 	public ResponseEntity<InputStreamResource> getFeedbackVideo(Submission submission) {

@@ -40,9 +40,10 @@ public class SubmissionRowMapper implements RowMapper<Submission> {
         if (resultSet.getInt("TeacherID") != 0) {
             grade.setTeacherID(resultSet.getInt("TeacherID"));
         }
+        grade.setFeedbackIsVisible(resultSet.getBoolean("PublishFeedback"));
         submission.setGrade(grade);
         submission.setPublishStudentSubmission(resultSet.getBoolean("PublishStudentSubmission"));
-        submission.setFeedbackIsVisible(resultSet.getBoolean("PublishFeedback"));
+
 
         return submission;
     }
