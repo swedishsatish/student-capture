@@ -22,14 +22,12 @@ var TeacherViewSubmission = React.createClass({
         this.nWithdrawals = 0;
         this.nDone = 0;
         this.nParticipants = 0;
-        console.log(this.props.assignmentId);
         // GET request to database to get all the submissions from the students.
         $.ajax({
             url: "assignments/" + this.props.assignmentId + "/submissions/",
             type: "GET", // Type of http
             async: false,
             success: function (data, status) { // Function to perform when ok
-                console.log(data);
                 this.submissionsArray = data;
             }.bind(this),
             error: function (xhr, status, err) {
@@ -38,7 +36,6 @@ var TeacherViewSubmission = React.createClass({
                 console.log("TeacherViewSubmission: Error Submissions");
             }.bind(this)
         });
-        console.log(this.submissionsArray);
         // GET request to database to get all the participants in a course.
         $.ajax({
             url: "courses/" + this.props.courseId + "/participants", // URL to send to
@@ -55,13 +52,12 @@ var TeacherViewSubmission = React.createClass({
                 console.log("TeacherViewSubmission: Error Participants");
             }.bind(this)
         });
-        console.log(this.participantsArray);
 
     },
 
     calculateSubmissions: function () {
         this.nParticipants = this.participantsArray.length;
-
+        console.log(this.submissionsArray);
         for (var i=0;i<this.submissionsArray.length;i++) {
             if (this.submissionsArray[i].status.toLowerCase() == "answer") {
                 this.nSubmissions++;
