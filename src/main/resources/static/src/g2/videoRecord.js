@@ -216,7 +216,7 @@ var Recorder = React.createClass({
             }
 
             //call xhr with full url, data and callback function
-            xhr(window.globalURL + props.postURL, formData, props.playCallback);
+            xhr(props.postURL, formData, props.playCallback);
         }
 
         /* Function for sending XMLHttpRequests. */
@@ -260,24 +260,40 @@ var Recorder = React.createClass({
         }
 
         /* Showing recording-light on load (not recording) */
-        document.getElementById("rec-text").innerHTML = "&#11093;";
+
+        if(typeof props.calc !== "undefined") {
+            document.getElementById("test-rec-text").innerHTML = "&#11093;";
+        }
+        else {
+            document.getElementById("rec-text").innerHTML = "&#11093;";
+        }
     },
     render: function() {
         var id;
         var pId;
+        var contId;
+      
+        if(typeof this.props.contID === "undefined"){
+            contId = "prev-container";
+        }
+        else {
+            contId = this.props.contID;
+        }
         if(typeof this.props.calc !== "undefined") {
             id="prev-test";
-            pId="test-rec-text"
+            pId="test-rec-text";
+            
         }
         else {
             id="preview";
-            pId="rec-text"
+            pId="rec-text";
+            
         }
 
         return (
             <div>
                 <p id={pId}></p>
-                <div id="prev-container">
+                <div id={contId}>
                     <video id={id} muted ></video>
                 </div>
             </div>

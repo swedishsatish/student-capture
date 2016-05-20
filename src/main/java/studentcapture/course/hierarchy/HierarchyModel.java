@@ -1,6 +1,7 @@
-package studentcapture.course;
+package studentcapture.course.hierarchy;
 
 import studentcapture.assignment.AssignmentModel;
+import studentcapture.course.CourseModel;
 import studentcapture.submission.Submission;
 
 import java.util.ArrayList;

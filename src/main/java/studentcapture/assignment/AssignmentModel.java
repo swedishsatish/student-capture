@@ -50,8 +50,8 @@ public class AssignmentModel {
 		courseID = (int) map.get("CourseId");
 		title = (String) map.get("Title");
 		assignmentIntervall = new AssignmentDateIntervalls();
-		assignmentIntervall.setStartDate(FORMATTER.format((Timestamp) map.get("StartDate")));
-		assignmentIntervall.setEndDate(FORMATTER.format((Timestamp) map.get("EndDate")));
+		assignmentIntervall.setStartDateHard(FORMATTER.format((Timestamp) map.get("StartDate")));
+		assignmentIntervall.setEndDateHard(FORMATTER.format((Timestamp) map.get("EndDate")));
 		videoIntervall = new AssignmentVideoIntervall();
 		videoIntervall.setMinTimeSeconds((Integer) map.get("MinTime"));
 		videoIntervall.setMaxTimeSeconds((Integer) map.get("MaxTime"));

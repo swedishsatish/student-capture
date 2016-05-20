@@ -8,9 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
-import studentcapture.datalayer.database.ParticipantDAO;
+import studentcapture.course.hierarchy.HierarchyDAO;
+import studentcapture.course.hierarchy.HierarchyModel;
+import studentcapture.course.participant.ParticipantDAO;
 
 /**
+ * CourseResource is a REST controller that maps course related methods to 
+ * to REST requests. 
  * 
  * @author tfy12hsm
  *
@@ -50,7 +54,7 @@ public class CourseResource {
     	}
     	if(course.getInitialTeacherId()!=null) {
     	   	Boolean result2 = participantDAO.addParticipant(
-    	   			course.getInitialTeacherId().toString(), result1.getCourseId().toString(), 
+    	   			course.getInitialTeacherId().toString(), result1.getCourseId().toString(),
     	   			"teacher");
     	   	if(!result2) 
     	   		throw new ResourceNotFoundException();
@@ -148,10 +152,14 @@ public class CourseResource {
     		throw new ResourceNotFoundException();
     	return result;
     } 
-
+    
     /**
-    *
-    * @author tfy12hsm
+     * Returns {@link HierarchyModel} including data related to a given user.
+     * 
+     * @author tfy12hsm
+     * 
+     * @param userID	given users identification
+     * @return			hierarchy
      */
     @CrossOrigin
     @RequestMapping(

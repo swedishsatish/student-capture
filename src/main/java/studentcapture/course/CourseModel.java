@@ -3,9 +3,11 @@ package studentcapture.course;
 import java.util.Map;
 
 /**
+ * CourseModel contains information related to a course stored on the database.
+ * It is used to transport this information between the front end and the 
+ * database.
  * 
  * @author tfy12hsm
- *
  */
 public class CourseModel {
 	private Integer courseId;
@@ -17,10 +19,18 @@ public class CourseModel {
 	private Integer initialTeacherId;
 	private Integer errorCode;
 	
+	/**
+	 * Constructor. Creates an empty CourseModel.
+	 */
 	public CourseModel() {
-		
 	}
 	
+	/**
+	 * Constructor. Creates a CourseModel using data from a jdbcTemplate 
+	 * query.
+	 * 
+	 * @param map		map of data gotten from query
+	 */
 	public CourseModel(Map<String, Object> map) {
 		parseMap(map);
 	}
@@ -116,7 +126,7 @@ public class CourseModel {
 		return active;
 	}
 	/**
-	 * @param active the active to set
+	 * @param active the active to set :^)
 	 */
 	public void setActive(Boolean active) {
 		this.active = active;
@@ -132,5 +142,17 @@ public class CourseModel {
 	
 	public Integer getErrorCode() {
 		return errorCode;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		CourseModel course = (CourseModel) other;
+		
+		return ((getActive().equals(course.getActive()))&&
+				(course.getCourseDescription().equals(getCourseDescription()))&&
+				(course.getCourseId().equals(getCourseId()))&&
+				(course.getCourseName().equals(getCourseName()))&&
+				(course.getTerm().equals(getTerm()))&&
+				(course.getYear().equals(getYear())));
 	}
 }

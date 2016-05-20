@@ -113,7 +113,7 @@ function close(){
 /**
  * Submits data that will sent later, data in reqBody will be sent.
  */
-function submitForm() {
+function submitForm(method) {
 
     var reqBody = {};
     reqBody["feedback"] = document.getElementById('teachercomments').value;
@@ -124,10 +124,13 @@ function submitForm() {
     reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
     reqBody["courseID"] = window.courseID;
 
+
+
+
     $.ajax({
-        type: "PUT",
+        type: method,
         contentType: "application/json",
-        url: window.globalURL + "/assignments/" + 6 + "/submissions/" + 98,
+        url: "assignments/" + 6 + "/submissions/" + 98,
         data : JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {
@@ -143,21 +146,57 @@ function submitForm() {
             console.log("DONE");
         }
     });
+
 }
+function  getForm(method) {
+
+
+    var reqBody = {};
+    reqBody["feedback"] = document.getElementById('teachercomments').value;
+    reqBody["grade"] = {};
+    reqBody["grade"]["grade"] = document.getElementById('dropDownMenu').value;
+    reqBody["grade"]["teacherID"] = "7777777"; //TODO: Fix this grade: document.getElementById('dropDownMenu').value;
+    reqBody["studentPass"] = document.getElementById('ifStudentPass').checked;
+    reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
+    reqBody["courseID"] = window.courseID;
+
+    $.ajax({
+        type: method,
+        contentType: "application/json",
+        url: "assignments/" + 6 + "/submissions/" + 98,
+        data : JSON.stringify(reqBody),
+        timeout: 100000,
+        success: function (response) {
+            var responseData =(JSON.parse(response));
+            document.getElementById('dropDownMenu').value = responseData["grade"]["grade"];
+            document.getElementById('teachercomments').value = responseData["feedback"];
+            document.getElementById('ifStudentPass').checked = responseData["studentPass"];
+            document.getElementById('PermissionFromStudent').checked = ["publishStudentSubmission"];
+
+            console.log("SUCCESS: ", response);
+            console.log("SUCCESS reqBody contains:", reqBody);
+            // TODO: check response with if/else, if respons is fail give error message
+
+            //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
+        }, error: function (e) {
+            console.log("ERROR: ", e);
+            console.log("ReqBody contains:", reqBody);
+        }, done: function (e) {
+            console.log("DONE");
+        }
+    });
+
+}
+
+
 
 /**
  * Sending data to database.
  */
 function sendData () {
-    // answer contains true if Ok is pressed., false if cancel is pressed.
-    var passedStatus = 'No pass';
-    // alert(document.getElementById('teachercomments').value);
-    if (document.getElementById('ifStudentPass').checked) {
-        passedStatus = 'Pass';
-    } else {
-        passedStatus = 'No pass'
-    }
-    submitForm();
+
+
+    submitForm('PATCH');
 
 }
 

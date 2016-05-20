@@ -1,11 +1,13 @@
 package studentcapture.submission;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
+import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Grade;
 
@@ -29,14 +31,14 @@ public class SubmissionDAO {
      * @author tfy12hsm
 	 */
 	public boolean addSubmission(Submission submission, Boolean studentConsent) {
-		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentConsent) VALUES  (?,?,?,?)";
+		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentpublishconsent) VALUES  (?,?,?,?)";
 		java.util.Date date = new java.util.Date(System.currentTimeMillis());
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		timestamp.setNanos(0);
 
 		int rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(), submission.getStudentID(), timestamp, studentConsent);
         if(submission.getStudentVideo() != null) {
-            FilesystemInterface.storeStudentVideo(submission.getCourseCode(), submission.getCourseID(), String.valueOf(submission.getAssignmentID()), String.valueOf(submission.getStudentID()), submission.getStudentVideo());
+            FilesystemInterface.storeStudentVideo(submission, submission.getStudentVideo());
         }
 
 		return rowsAffected == 1;
@@ -49,6 +51,12 @@ public class SubmissionDAO {
      * @return True if everything went well, otherwise false
      */
     public boolean patchSubmission(Submission submission) {
+		String feedback = submission.getFeedback();
+		if (feedback != null && !feedback.isEmpty()) {
+			String path = FilesystemInterface.generatePath(submission) + FilesystemConstants.FEEDBACK_TEXT_FILENAME;
+			FilesystemInterface.printTextToFile(feedback, path);
+		}
+
         String sql = "UPDATE Submission SET ";
         ArrayList<Object> sqlparams = new ArrayList<>();
         if (submission.getStudentPublishConsent() != null) {
@@ -338,8 +346,14 @@ public class SubmissionDAO {
 			//TODO
 			return Optional.empty();
 		}
-
+		result.setFeedback(FilesystemInterface.getFeedbackText(result));
         return Optional.of(result);
 	}
+
+	public Optional<InputStreamResource> getSubmissionVideo(int assignmentID, int studentID) {
+		String path = FilesystemInterface.generatePath(new Submission(assignmentID, studentID));
+		return Optional.of(FilesystemInterface.getVideo(path).getBody());
+	}
+
 }
 

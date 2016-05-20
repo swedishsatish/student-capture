@@ -32,8 +32,9 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
     //Allows for custom login.html
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/src/**", "/css/**", "/images/**").permitAll();
-        http.authorizeRequests().antMatchers("/users").permitAll();
+    	http.authorizeRequests().antMatchers("/css/**", "/src/**", "/images/**").permitAll();
+    	http.authorizeRequests().antMatchers("/users").permitAll();
+    	http.authorizeRequests().antMatchers("/login**").permitAll();
         http
         	.sessionManagement().maximumSessions(1)
         	.and().invalidSessionUrl("/login");

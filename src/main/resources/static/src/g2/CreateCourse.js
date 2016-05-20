@@ -46,17 +46,19 @@ window.CreateCourse = React.createClass({
         $.ajax({
             type : "POST",
             contentType : "application/json",
-            url : window.globalURL + "/course",
+            url : "course",
             data : JSON.stringify(course),
             timeout : 100000,
             success : function(res) {
-                if(res){
-                    alert("Course Added");
-                    RenderMenu(uid);
-                }
-                else {
-                    alert("Failed to add course");
-                }
+                RenderMenu(uid);
+                $.get("course/" + res.courseId,function (res2) {
+
+                    ReactDOM.render(<CourseInfo course={res2}/>,document.getElementById("courseContent"));
+
+
+                });
+
+
             }, error : function(e) {
                 console.log("ERROR: ", e);
             }, done : function(e) {
