@@ -148,6 +148,11 @@ var Recorder = React.createClass({
 
         /* Closes the webcam stream and post to server if auto recording is on. */
         function stopRecording() {
+
+            if(!confirm("Are you sure you want to submitt your answer?")) {
+                return;
+            }
+
             if(!shouldAutoRecord){
                 recordButton.disabled = false;
             }
