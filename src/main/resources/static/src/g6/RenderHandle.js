@@ -39,10 +39,10 @@
                     </div>
                     <div id="buttonContainer">
                         <div id="backButton">
-                            <BackButton />
+                            <BackButton idArray={this.props.idArray} />
                         </div>
                         <div id="submitButton">
-                            <SubmitButton studentArray={this.props.studentArray} />
+                            <SubmitButton studentArray={this.props.studentArray} idArray={this.props.idArray} />
                         </div>
 
                     </div>

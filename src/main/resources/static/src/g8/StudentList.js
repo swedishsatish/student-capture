@@ -48,7 +48,7 @@ var StudentList = React.createClass({
 
         //TODO: REMOVE JEBANE
         document.getElementById("courseContent").innerHTML = ""; //TODO: find better solution.
-        ReactDOM.render(<RenderHandle studentArray={student} />, document.getElementById("courseContent"));
+        ReactDOM.render(<RenderHandle studentArray={student} idArray={this.props.idArray} />, document.getElementById("courseContent"));
         //   this.getData();
         //TODO: render other user story.
     },
