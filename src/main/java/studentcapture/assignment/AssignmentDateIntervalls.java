@@ -29,6 +29,12 @@ public class AssignmentDateIntervalls {
         this.startDate = LocalDateTime.parse(startDate, FORMATTER);
         validate();
     }
+    
+    public void setStartDateHard(String startDate) throws DateTimeParseException, IllegalArgumentException {
+        startDateIsSet = true;
+        this.startDate = LocalDateTime.parse(startDate, FORMATTER);
+        //validate();
+    }
 
     public String getStartDate() {
         return FORMATTER.format(startDate);
@@ -40,6 +46,12 @@ public class AssignmentDateIntervalls {
         validate();
     }
 
+    public void setEndDateHard(String endDate) throws DateTimeParseException, IllegalArgumentException {
+        endDateIsSet = true;
+        this.endDate = LocalDateTime.parse(endDate, FORMATTER);
+        //validate();
+    }
+    
     public String getEndDate() {
         return FORMATTER.format(endDate);
     }
