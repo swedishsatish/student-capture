@@ -353,9 +353,8 @@ public class SubmissionDAO {
 	 * @param studentID
      * @return
      */
-	public ResponseEntity<InputStreamResource> getTeachersFeedbackVideo(int assignmentID, int studentID) {
-		Submission submission = new Submission(assignmentID, studentID);
-		Integer courseID = getCourseIDFromAssignmentID(assignmentID);
+	public ResponseEntity<InputStreamResource> getFeedbackVideo(Submission submission) {
+		Integer courseID = getCourseIDFromAssignmentID(submission.getAssignmentID());
 		if(courseID == null){
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else{

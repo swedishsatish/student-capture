@@ -38,7 +38,7 @@ public class SubmissionResource {
     public ResponseEntity<InputStreamResource> getSpecificSubmissionVideo(@PathVariable("assignmentID") int assignmentID,
                                                                           @PathVariable("studentID") int studentID)
     {
-        return DAO.getTeachersFeedbackVideo(assignmentID, studentID);
+        return DAO.getFeedbackVideo(new Submission(assignmentID, studentID));
     }
 
     @RequestMapping(method = RequestMethod.GET)
