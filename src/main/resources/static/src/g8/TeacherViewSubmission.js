@@ -71,15 +71,16 @@ var TeacherViewSubmission = React.createClass({
     },
 
 
-
     render: function () {
+        var idArray=[{courseID:this.props.courseID,
+                     assignmentID:this.props.assignmentId}];
         this.calculateSubmissions();
         return (
             <div class="row">
                 <div className="four columns offset-by-one">
 
                     <div id="studentContainer">
-                        <StudentList submissions={this.submissionsArray} participants={this.participantsArray} />
+                        <StudentList submissions={this.submissionsArray} idArray={idArray} participants={this.participantsArray} />
                         <div id="textList">
                             <p>Submissions: {this.nSubmissions}/{this.nParticipants}</p>
                             <p>Withdrawals: {this.nWithdrawals}</p>
