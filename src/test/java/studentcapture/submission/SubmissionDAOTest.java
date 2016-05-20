@@ -192,7 +192,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      */
     @Test
     @SuppressWarnings("unchecked")
-    public void setGradeValues() {
+    public void setGradeValues() throws IllegalAccessException {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 3);
         submission.setCourseID("PVT");
@@ -216,7 +216,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      * Checks the returnvalue from an insertion with correct values
      */
     @Test
-    public void gradeExistingAssignment() {
+    public void gradeExistingAssignment() throws IllegalAccessException {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 3);
         submission.setCourseID("PVT");
@@ -231,7 +231,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      * Checks the returnvalue from an insertion with incorrect values
      */
     @Test
-    public void gradeNonExistingAssignment() {
+    public void gradeNonExistingAssignment() throws IllegalAccessException {
         Submission submission = new Submission(2,1);
         Grade grade = new Grade("vg", 3);
         submission.setCourseID("PVT");
@@ -245,23 +245,21 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     /**
      * Checks if the teacher trying to set a grade exists in the table, in this test the teacher does not exist and the test should return false
      */
-    @Test
-    public void nonExistingTeacherSetsGrade() {
+    @Test (expected = IllegalAccessException.class)
+    public void nonExistingTeacherSetsGrade() throws IllegalAccessException {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 2);
         submission.setCourseID("PVT");
         submission.setGrade(grade);
 
         boolean returnValue = submissionDAO.setGrade(submission);
-
-        assertFalse(returnValue);
     }
 
     /**
      * Teacher cannot publish non-graded feedback
      */
     @Test
-    public void publishNonGradedFeedback() {
+    public void publishNonGradedFeedback() throws IllegalAccessException {
         Submission submission = new Submission(1,1);
         submission.setCourseID("PVT");
         boolean returnValue = submissionDAO.publishFeedback(submission, true);
@@ -273,7 +271,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      * Teacher publishes feedback
      */
     @Test
-    public void publishFeedback() {
+    public void publishFeedback() throws IllegalAccessException {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 3);
         submission.setCourseID("PVT");
