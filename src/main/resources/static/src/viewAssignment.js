@@ -14,7 +14,7 @@ var assignmentData = {
     minTime: '',
     maxTime: '',
     assignmentName: '',
-    assignmentUrl: ''
+    assignmentID: ''
 }
 
 /*
@@ -30,21 +30,19 @@ window.AssignmentContent = React.createClass({
     },
     jsonReady: function(data) {
         var json = JSON.parse(data);
-        assignmentData.minTime = json["MinTime"];
-        assignmentData.maxTime = json["MaxTime"];
-        assignmentData.assignmentName = json["AssignmentName"];
-        assignmentData.assignmentUrl = json["AssignmentUrl"];
+        assignmentData.minTime = json["videoIntervall"]["minTimeSeconds"];
+        assignmentData.maxTime = json["videoIntervall"]["maxTimeSeconds"];
+        assignmentData.assignmentName = json["title"];
         this.setState({loaded: true,
-                       startsAt: json["startsAt"],
-                       endsAt: json["endsAt"],
-                       assignmentInformation: json["AssignmentInformation"]
+                       startsAt: json["assignmentIntervall"]["startDate"],
+                       endsAt: json["assignmentIntervall"]["endDate"],
+                       assignmentInformation: json["description"]
                        });
     },
     render: function () {
-        var assignment = this.props.assignment;
-        var course = this.props.course;
+        assignmentData.assignmentID = this.props.assignment;
         if(!this.state.loaded) {
-            getJson("test/assignmentdata.json", this.jsonReady);
+            getJson("assignments/" + assignmentData.assignmentID, this.jsonReady);
         }
         return (
             <div id="assignment-div">
@@ -60,7 +58,8 @@ window.AssignmentContent = React.createClass({
                     </h5>
                 </div>
                 <div id="assignment-interaction">
-                    <But /><br />
+                    <But user={this.props.uid} assignment={this.props
+                    .assignment}/><br />
                     NOTE: Once the assignment starts it cannot be interrupted or paused,<br />
                     remember to test your hardware before you begin!
                 </div>
@@ -89,22 +88,23 @@ var AssignmentStart = React.createClass({
                                : <div />;
         var recordContent = this.state.startRecording
                             ? <div>
-                                  <StudentRecordVideo autoRecord="true" studentID={2} assignmentID={1200} />
+                                  <StudentRecordVideo autoRecord="true"
+                                  studentID={this.props.user}
+                                  assignmentID={this.props.assignment} />
                               </div>
-                            : <StudentRecordVideo autoRecord="false" studentID={2} assignmentID={1200} />;
+                            : <StudentRecordVideo autoRecord="false"
+                            studentID={this.props.user} assignmentID={this
+                            .props.assignment} />;
         return (
             <div id="assignment-modal">
                 <div className="modal-dialog">
                     <div id="assignment-content" className="modal-content">
                         <h2 id="assignment-title">{assignmentData.assignmentName}</h2>
-                        <div id="countdown-div">
-                            {countDownContent}
-                        </div>
                         <div className="row">
                             <div className="six columns">
                                 <div id="question-div">
                                     <h3>Question Video</h3>
-                                    <Vid url={assignmentData.assignmentUrl} count={this.count}/><br />
+                                    <Vid count={this.count}/><br />
                                     {questionContent}
                                 </div>
                             </div>
@@ -119,7 +119,12 @@ var AssignmentStart = React.createClass({
                                         Rec circle.
                                     </svg>
                                     <p id="descriptor">[REC]</p>
-                                    {recordContent}
+                                    <div id="countDownContainer">
+                                        <div id="countdown-div">
+                                            {countDownContent}
+                                        </div>
+                                        {recordContent}
+                                    </div>
                                     <br /> Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}
                                     <br /> Current video length: {this.state.time}
                                 </div>
@@ -159,7 +164,8 @@ var But = React.createClass({
     },
     render: function() {
         var content = this.state.disabled
-                      ? <AssignmentStart />
+                      ? <AssignmentStart user={this.props.user}
+                      assignment={this.props.assignment} />
                       : <input
                             disabled = {this.state.disabled}
                             type="submit"
@@ -186,9 +192,9 @@ var Question = React.createClass({
         );
     },
     componentDidMount: function() {
-        this.serverRequest = getJson("test/assignmentdata.json", function (data) {
+        this.serverRequest = getJson("assignments/" + assignmentData.assignmentID, function (data) {
             var json = JSON.parse(data);
-            this.setState({question: json["AssignmentQuestion"]});
+            this.setState({question: json["recap"]});
         }.bind(this));
     }
 });
@@ -230,7 +236,7 @@ var Vid = React.createClass({
     render: function() {
         return (
             <div>
-                <video id='videoPlayer' src={this.props.url}>
+                <video id="videoPlayer" src={"assignments/" + assignmentData.assignmentID + "/video"}>
                     Cannot show video, it may not be supported by your browser!
                 </video>
                 <div className="row">
@@ -246,10 +252,10 @@ var Vid = React.createClass({
     },
     componentDidMount: function() {
         var vid = document.getElementById("videoPlayer");
-        vid.oncontextmenu = function (e) {e.preventDefault();};
-        vid.addEventListener('canplay', this.canPlay, false);
-        vid.addEventListener('pause', this.onPause, false);
-        vid.addEventListener('ended', this.onEnded, false);
+        //vid.oncontextmenu = function (e) {e.preventDefault();};
+        vid.addEventListener("canplay", this.canPlay, false);
+        vid.addEventListener("pause", this.onPause, false);
+        vid.addEventListener("ended", this.onEnded, false);
         vid.play();
         this.interval = setInterval(this.ticker, 1000);
     },
@@ -268,7 +274,7 @@ var Vid = React.createClass({
     onEnded: function() {
         var vid = document.getElementById("videoPlayer");
         this.setState({currTime: Math.ceil(vid.duration)});
-        vid.removeEventListener('pause', this.onPause, false);
+        vid.removeEventListener("pause", this.onPause, false);
         vid.pause();
         clearInterval(this.interval);
         this.props.count();
@@ -288,3 +294,4 @@ function getJson(URL, callback) {
     xmlHttp.open("GET", URL, true);
     xmlHttp.send();
 }
+

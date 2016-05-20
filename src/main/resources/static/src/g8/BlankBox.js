@@ -1,6 +1,7 @@
 /**
  This class is a button that is used to leave a blank answer for a question.
- @author dv13tes, c13bbd
+ @author Tobias Estefors <dv13tes>,
+         Benjamin Björklund <c13bbn>
  */
 window.BlankBox = React.createClass({
 

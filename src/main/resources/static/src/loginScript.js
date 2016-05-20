@@ -117,6 +117,8 @@ for(var i=0; i<urlVars.length; i++) {
         }
         err = true;
         break;
+    } else if(varSplit[0]==="success") {
+    	alert("Registration success!");
     }
 }
 /*
@@ -151,9 +153,12 @@ if(err){
         case "loginerror":
             msg = "Invalid username or password";
             break;
+        case "badtoken":
+        	msg = "Invalid or missing token";
+        	break;
         default:
             msg = "Unknown Error";
             break;
     }
-    alert("TERRIBLE ERROR\n"+msg);
+    alert("Error:\n"+msg);
 }

@@ -7,6 +7,12 @@
 /**
  * Cancel button for popup window, closes popup.
  */
+
+
+
+
+var student;
+var IDs;
 var PopUpCancelButton = React.createClass({
     onclick: function () {
         close();
@@ -26,7 +32,7 @@ var PopUpConfirmButton = React.createClass({
         sendVideo(this.props.getVideo);
         sendData();
         close();
-        ReactDOM.render(<TeacherViewSubmission/>,document.getElementById('courseContent'));
+        ReactDOM.render(<TeacherViewSubmission courseId={IDs[0].courseID} assignmentId={IDs[0].assignmentID}/>,document.getElementById('courseContent'));
 
     },
     render: function () {
@@ -76,7 +82,7 @@ var PopUpGrade = React.createClass({
 var PopUpStudentName = React.createClass({
     render: function () {
         return(
-            <p id="smallLetter">{window.studentName}</p>
+            <p id="smallLetter">{student[0].studentName}</p>
         )
 
     }
@@ -123,13 +129,13 @@ function submitForm(method) {
     reqBody["grade"]["teacherID"] = "7777777"; //TODO: Fix this grade: document.getElementById('dropDownMenu').value;
     reqBody["studentPass"] = document.getElementById('ifStudentPass').checked;
     reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
-    reqBody["courseID"] = window.courseID;
+    reqBody["courseID"] = IDs[0].courseID;
 
     $.ajax({
         type: method,
-        url: "assignments/" + 6 + "/submissions/" + 98 ,
-        data : JSON.stringify(reqBody),
         contentType: "application/json",
+        url: "assignments/" + IDs[0].assignmentID + "/submissions/" + 98,//98 byts til student[0].studentID senare
+        data : JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
@@ -192,16 +198,18 @@ function  getForm(method) {
     reqBody["grade"]["teacherID"] = "7777777"; //TODO: Fix this grade: document.getElementById('dropDownMenu').value;
     reqBody["studentPass"] = document.getElementById('ifStudentPass').checked;
     reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
-    reqBody["courseID"] = window.courseID;
+    reqBody["courseID"] = IDs[0].courseID;
 
     $.ajax({
         type: method,
         contentType: "application/json",
-        url: "assignments/" + 6 + "/submissions/" + 98,
+        url: "assignments/" + IDs[0].assignmentID + "/submissions/" + 98,
         data : JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {
             var responseData =(JSON.parse(response));
+            consol.log("HEJ");
+            consol.log(responseData);
             document.getElementById('dropDownMenu').value = responseData["grade"]["grade"];
             document.getElementById('teachercomments').value = responseData["feedback"];
             document.getElementById('ifStudentPass').checked = responseData["studentPass"];
@@ -229,7 +237,6 @@ function  getForm(method) {
 function sendData () {
 
     submitForm('PATCH');
-
 }
 
 /* Sends the recorded video */
@@ -246,6 +253,12 @@ function sendVideo(getVideoFunc) {
  */
 var SubmitButton = React.createClass({
 
+
+    componentWillMount: function(){
+        student=this.props.studentArray;
+        getForm('GET');
+        IDs=this.props.idArray;
+    },
     /**
      * Used to toggle on divs, make them visable.
      * @param div_id div that will be toggled.
