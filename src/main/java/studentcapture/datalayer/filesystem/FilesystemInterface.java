@@ -288,10 +288,12 @@ public class FilesystemInterface {
      * @return true is successful
      */
 	public static boolean printTextToFile(String text, String path) {
-
+		File file = new File(path);
+		file.getParentFile().mkdirs();
 		try {
-			PrintWriter out = new PrintWriter(path);
-			out.println(text);
+			PrintWriter out = new PrintWriter(file);
+			out.print(text);
+			out.close();
 			return true;
 		} catch (FileNotFoundException e) {
 			return false;
