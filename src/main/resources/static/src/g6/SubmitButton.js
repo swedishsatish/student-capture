@@ -173,6 +173,8 @@ function  getForm(method) {
         timeout: 100000,
         success: function (response) {
             var responseData =(JSON.parse(response));
+            consol.log("HEJ");
+            consol.log(responseData);
             document.getElementById('dropDownMenu').value = responseData["grade"]["grade"];
             document.getElementById('teachercomments').value = responseData["feedback"];
             document.getElementById('ifStudentPass').checked = responseData["studentPass"];
@@ -199,10 +201,7 @@ function  getForm(method) {
  * Sending data to database.
  */
 function sendData () {
-
-
     submitForm('PATCH');
-
 }
 
 
@@ -214,6 +213,7 @@ var SubmitButton = React.createClass({
 
     componentWillMount: function(){
         student=this.props.studentArray;
+        getForm('GET');
     },
     /**
      * Used to toggle on divs, make them visable.
