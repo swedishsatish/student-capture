@@ -28,6 +28,7 @@ import java.util.HashMap;
  * @version 0.3 05/02/16 Ongoing - Fixed db-request on set.
  * @since 0.2, 04/29/16 Fixed model.
  * @since 0.1, 04/28/16 Added "set"-mapping method.
+ * @deprecated 
  */
 
 @RestController

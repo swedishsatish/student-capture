@@ -42,8 +42,8 @@ public class UserDAO {
                 + " (username, firstname, lastname, email, pswd)"
                 + " VALUES (?, ?, ?, ?, ?)";
         //Preparing statement
-        Object[] args = new Object[] {user.getUserName(),user.getfName(),
-                                      user.getlName(),user.getEmail(),
+        Object[] args = new Object[] {user.getUserName(),user.getFirstName(),
+                                      user.getLastName(),user.getEmail(),
                                       user.getPswd()};
 
         int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
@@ -127,7 +127,7 @@ public class UserDAO {
                 " pswd = ?, token = ? WHERE username = ?";
 
 
-        Object[] args = {user.getfName(),user.getlName(),user.getEmail(),
+        Object[] args = {user.getFirstName(),user.getLastName(),user.getEmail(),
                          user.getPswd(),user.getToken(),user.getUserName()};
         int[] types = {Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
                        Types.VARCHAR,Types.VARCHAR};
