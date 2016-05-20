@@ -93,7 +93,6 @@ public class SubmissionDAO {
         sql = sql.substring(0,sql.length()-1);
 
         sql += " WHERE assignmentid = ? AND studentid = ?";
-        System.out.println("sql = " + sql);
         sqlparams.add(submission.getAssignmentID());
         sqlparams.add(submission.getStudentID());
 
