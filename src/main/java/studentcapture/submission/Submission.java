@@ -23,7 +23,6 @@ public class Submission {
     private String courseID;
     private String courseCode;
     private String feedback;
-    private Boolean publishFeedback;
     private Status subStatus;
     private String firstName;
     private String lastName;
@@ -218,12 +217,12 @@ public class Submission {
         return publishStudentSubmission;
     }
 
-    public Boolean getPublishFeedback() {
-        return publishFeedback;
+    public Boolean getFeedbackIsVisible() {
+        return grade.getFeedbackIsVisible();
     }
 
-    public void setPublishFeedback(Boolean publishFeedback) {
-        this.publishFeedback = publishFeedback;
+    public void setFeedbackIsVisible(Boolean publishFeedback) {
+        grade.setFeedbackIsVisible(publishFeedback);
     }
 
     public String getTeacherName() {
@@ -274,8 +273,7 @@ public class Submission {
         if (courseID != null ? !courseID.equals(that.courseID) : that.courseID != null) return false;
         if (courseCode != null ? !courseCode.equals(that.courseCode) : that.courseCode != null) return false;
         if (feedback != null ? !feedback.equals(that.feedback) : that.feedback != null) return false;
-        if (publishFeedback != null ? !publishFeedback.equals(that.publishFeedback) : that.publishFeedback != null)
-            return false;
+
         if (subStatus != that.subStatus) return false;
         if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
         if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;

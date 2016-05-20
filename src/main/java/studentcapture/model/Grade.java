@@ -9,8 +9,7 @@ public class Grade {
     private String grade;
     private Integer teacherID;
     private Date date;
-    private boolean publishStudentSubmission = false;
-    private boolean publishFeedback = false;
+    private boolean feedbackIsVisible = false;
 
     public Grade(String grade, Integer teacherID) {
         this.grade = grade;
@@ -20,17 +19,11 @@ public class Grade {
 
     public Grade() {}
 
-    public boolean getPublishFeedback() { return publishFeedback; }
-
-    public void setPublishFeedback(boolean publishFeedback) { this.publishFeedback = publishFeedback; }
-
-    public boolean getPublishStudentSubmission() {
-        return publishStudentSubmission;
+    public void setFeedbackIsVisible(boolean feedbackIsVisible){
+        this.feedbackIsVisible = feedbackIsVisible;
     }
 
-    public void setPublishStudentSubmission(boolean publishStudentSubmission) {
-        this.publishStudentSubmission = publishStudentSubmission;
-    }
+    public boolean getFeedbackIsVisible() { return feedbackIsVisible; }
 
     public String getGrade() {
         return grade;
@@ -52,18 +45,13 @@ public class Grade {
         return date;
     }
 
-    public void setDate() {
-        this.date = new Date();
-    }
-
     @java.lang.Override
     public java.lang.String toString() {
         return "Grade{" +
                 "grade='" + grade + '\'' +
                 ", teacherID=" + teacherID +
                 ", date=" + date +
-                ", publishStudentSubmission=" + publishStudentSubmission +
-                ", publishFeedback=" + publishFeedback +
+                ", feedbackIsVisible=" + feedbackIsVisible +
                 '}';
     }
 }
