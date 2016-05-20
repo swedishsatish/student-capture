@@ -228,7 +228,7 @@ var DynamicMenu = React.createClass({
  *
  */
 window.RenderMenu = function (userID) {
-    $.get("course", {userID}, function (res) {
+    $.get("course", function (res) {
 
         // if(res)
         var SCList = objToList(res.studentCourses);
@@ -239,4 +239,4 @@ window.RenderMenu = function (userID) {
     });
 };
 
-RenderMenu(1);
+RenderMenu();
