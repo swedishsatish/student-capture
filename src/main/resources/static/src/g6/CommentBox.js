@@ -19,14 +19,14 @@ var CommentBox = React.createClass({
         return {currentValue: this.props.children};
     },
     /**
-     * Set value to submitted text in textarea
+     * Set value to submitted text in text area
      * @param event text that is entered will set value to this.
      */
     handleChange: function(event) {
         this.setState({value: event.target.value});
     },
     /**
-     * onclick function for commentbox.
+     * onclick function for comment box.
      * @param event text areas event.
      */
     onClick: function (event) {
@@ -36,16 +36,14 @@ var CommentBox = React.createClass({
         }
     },
     /**
-     * Render function for commentbox.
-     * @returns {XML} A textarea.
+     * Render function for comment box.
+     * @returns {XML} A text area.
      */
     render: function () {
         return (
             <textarea placeholder="Write comments regarding feedback here..." id="teachercomments"
                       value={this.state.value} onChange={this.handleChange} onClick={this.onClick} />
-
         );
     }
-
 });
 window.CommentBox=CommentBox;

@@ -15,7 +15,7 @@ var BackButton = React.createClass({
      * Rerender the studentList
      */
     onClick: function() {
-        ReactDOM.render(<HardcodeTeacher/>,document.getElementById('courseContent'));
+        ReactDOM.render(<TeacherViewSubmission/>,document.getElementById('courseContent'));
 
     },
     // Render function for BackButton
