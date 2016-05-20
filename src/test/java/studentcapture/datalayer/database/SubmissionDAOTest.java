@@ -237,7 +237,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     /**
      * Checks if the teacher trying to set a grade exists in the table, in this test the teacher does not exist and the test should return false
      */
-    @Test
+    @Test (expected = IllegalAccessException.class)
     public void nonExistingTeacherSetsGrade() throws IllegalAccessException {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 2);
@@ -245,8 +245,6 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         submission.setGrade(grade);
 
         boolean returnValue = submissionDAO.setGrade(submission);
-
-        assertFalse(returnValue);
     }
 
     /**
