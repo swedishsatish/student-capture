@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -177,6 +178,13 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         assertEquals("1",info.get("StudentId"));
         assertEquals(null,info.get("StudentPublishConsent"));
         assertEquals("2016-05-13 11:00:00.0",info.get("SubmissionDate"));
+    }
+
+    @Test
+    public void shouldGetCorrectNumberOfSubmissions() throws Exception {
+        List<Submission> submissions = submissionDAO.getAllSubmissions(1);
+
+        assertEquals(3 ,submissions.size());
     }
 
     /**
