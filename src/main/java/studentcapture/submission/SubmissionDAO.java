@@ -33,13 +33,23 @@ public class SubmissionDAO {
      * @author tfy12hsm
 	 */
 	public boolean addSubmission(Submission submission, Boolean studentConsent) {
-		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentpublishconsent) VALUES  (?,?,?,?)";
+		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentpublishconsent, status)" +
+					" VALUES  (?,?,?,?,?)";
 		java.util.Date date = new java.util.Date(System.currentTimeMillis());
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		timestamp.setNanos(0);
 
-		int rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(), submission.getStudentID(), timestamp, studentConsent);
-        if(submission.getStudentVideo() != null) {
+		int rowsAffected = 0;
+		try {
+			rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(),
+                                                            submission.getStudentID(),
+                                                            timestamp,
+                                                            studentConsent,
+                                                            submission.getStatus());
+		} catch (DataAccessException e) {
+			return false;
+		}
+		if(submission.getStudentVideo() != null) {
             FilesystemInterface.storeStudentVideo(submission, submission.getStudentVideo());
         }
 
