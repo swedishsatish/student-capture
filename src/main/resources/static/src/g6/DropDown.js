@@ -2,14 +2,9 @@
  * Drop down menu that will be used to select student grade.
  * @author: dv13trm, c14gls, group 6
  */
-
-/**
- * Drop down menu that lets the teacher choose the grade for the student.
- *
- */
 var DropDown = React.createClass({
     /**
-     * Set initialstate for drop down to U
+     * Set initial state for drop down to grade U
      * @returns {{value: string}} value U to dropdown.
      */
     getInitialState: function() {
@@ -19,7 +14,7 @@ var DropDown = React.createClass({
     },
     /**
      * Set value to entered event.
-     * @param event change that happend to drop down, ex. if changed from U to G.
+     * @param event change that happened to drop down, ex. if changed from grade U to G.
      */
     change: function(event) {
         this.setState({value: event.target.value})
