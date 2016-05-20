@@ -22,6 +22,21 @@ window.Feedback = React.createClass({
             this.setState({data: data});
         }.bind(this));
     },
+    handleVideoClick: function () {
+        $.ajax({
+            type: "GET",
+            url: "assignments/" + this.props.assignment + "/submissions/" + this.props.user + "/video",
+            timeout: 100000,
+            success: function (data) {
+                render(
+                    <div>loading...</div>
+                )
+            },
+            error: function (err) {
+
+            }
+        });
+    },
     render: function () {
 
         if (this.state.data) {
@@ -47,6 +62,7 @@ window.Feedback = React.createClass({
                     <h5>Feedback: {response.feedback}</h5>
                     <h5>Teachername: {response.teacherName}</h5>
                     <br />
+                    <button onClick={this.handleVideoClick}>Get Video</button>
                 </div>
             )
         }
