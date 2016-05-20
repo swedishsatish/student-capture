@@ -123,18 +123,22 @@ public class ResetPasswordController {
             @RequestParam(value="password", required = true) String password
             ){
         
-        //System.out.println("Received username: " + username + ", token: " + token + ", password: " + password);
+        System.out.println("Received username: " + username + ", token: " + token + ", password: " + password);
         
         User user = getUserFromDB(username);
+        
                 
         ModelAndView mav = new ModelAndView(); 
         
         //If the token does not exist, return
-        if(user.getToken() == null){
-            mav.setViewName("redirect:login?error=badToken");
+        if(user == null){
+            mav.setViewName("redirect:login?error=badtoken");
+        }
+        else if(user.getToken() == null){
+            mav.setViewName("redirect:login?error=badtoken");
         }
         else if(user.getToken().compareTo("") == 0){
-            mav.setViewName("redirect:login?error=badToken");
+            mav.setViewName("redirect:login?error=badtoken");
             
         }else if(user.getToken().compareTo(token) == 0){
             //Tokens match
