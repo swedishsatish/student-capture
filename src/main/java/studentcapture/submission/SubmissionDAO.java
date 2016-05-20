@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
@@ -77,9 +76,9 @@ public class SubmissionDAO {
                 sqlparams.add(submission.getGrade().getTeacherID());
             }
         }
-        if (submission.getPublishFeedback() != null) {
+        if (submission.getFeedbackIsVisible() != null) {
             sql += "publishfeedback = ?,";
-            sqlparams.add(submission.getPublishFeedback());
+            sqlparams.add(submission.getFeedbackIsVisible());
         }
         if (submission.getPublishStudentSubmission() != null) {
             sql += "publishstudentsubmission = ?,";
@@ -145,7 +144,7 @@ public class SubmissionDAO {
 				" WHERE (AssignmentID = ?) AND (StudentID = ?);";
 		int updatedRows = databaseConnection.update(setGrade, grade.getGrade(),
 																grade.getTeacherID(),
-																grade.getPublishStudentSubmission(),
+																submission.getPublishStudentSubmission(),
 																submission.getAssignmentID(),
 																submission.getStudentID());
 

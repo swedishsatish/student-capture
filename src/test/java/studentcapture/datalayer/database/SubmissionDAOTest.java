@@ -15,7 +15,6 @@ import studentcapture.submission.SubmissionDAO;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -113,7 +112,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         submission.setSubmissionDate(timestamp);
         submission.setGrade(grade);
         submission.setPublishStudentSubmission(publishStudentSubmission);
-        submission.setPublishFeedback(publishFeedback);
+        submission.setFeedbackIsVisible(publishFeedback);
         submission.setTeacherName(teacherName);
         submission.setFeedback("");
 

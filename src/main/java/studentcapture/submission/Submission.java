@@ -23,7 +23,6 @@ public class Submission {
     private String courseID;
     private String courseCode;
     private String feedback;
-    private Boolean publishFeedback;
     private Status subStatus;
     private String firstName;
     private String lastName;
@@ -218,12 +217,12 @@ public class Submission {
         return publishStudentSubmission;
     }
 
-    public Boolean getPublishFeedback() {
-        return publishFeedback;
+    public Boolean getFeedbackIsVisible() {
+        return grade.getFeedbackIsVisible();
     }
 
-    public void setPublishFeedback(Boolean publishFeedback) {
-        this.publishFeedback = publishFeedback;
+    public void setFeedbackIsVisible(Boolean publishFeedback) {
+        grade.setFeedbackIsVisible(publishFeedback);
     }
 
     public String getTeacherName() {
@@ -257,31 +256,40 @@ public class Submission {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Submission)) return false;
 
         Submission that = (Submission) o;
 
-        if (assignmentID != null ? !assignmentID.equals(that.assignmentID) : that.assignmentID != null) return false;
-        if (studentID != null ? !studentID.equals(that.studentID) : that.studentID != null) return false;
+        if (assignmentID != null ? !assignmentID.equals(that.assignmentID) : that.assignmentID != null)
+            return false;
+        if (studentID != null ? !studentID.equals(that.studentID) : that.studentID != null)
+            return false;
         if (studentPublishConsent != null ? !studentPublishConsent.equals(that.studentPublishConsent) : that.studentPublishConsent != null)
             return false;
         if (submissionDate != null ? !submissionDate.equals(that.submissionDate) : that.submissionDate != null)
             return false;
-        if (grade.getGrade() != null ? !grade.getGrade().equals(that.grade.getGrade()) : that.grade.getGrade() != null) return false;
-        if (grade.getTeacherID() != null ? !grade.getTeacherID().equals(that.grade.getTeacherID()) : that.grade.getTeacherID() != null) return false;
+        if (grade != null ? !grade.equals(that.grade) : that.grade != null)
+            return false;
         if (publishStudentSubmission != null ? !publishStudentSubmission.equals(that.publishStudentSubmission) : that.publishStudentSubmission != null)
             return false;
-        if (courseID != null ? !courseID.equals(that.courseID) : that.courseID != null) return false;
-        if (courseCode != null ? !courseCode.equals(that.courseCode) : that.courseCode != null) return false;
-        if (feedback != null ? !feedback.equals(that.feedback) : that.feedback != null) return false;
-        if (publishFeedback != null ? !publishFeedback.equals(that.publishFeedback) : that.publishFeedback != null)
+        if (courseID != null ? !courseID.equals(that.courseID) : that.courseID != null)
+            return false;
+        if (courseCode != null ? !courseCode.equals(that.courseCode) : that.courseCode != null)
+            return false;
+        if (feedback != null ? !feedback.equals(that.feedback) : that.feedback != null)
             return false;
         if (subStatus != that.subStatus) return false;
-        if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
-        if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
-        if (teacherName != null ? !teacherName.equals(that.teacherName) : that.teacherName != null) return false;
-        return status != null ? status.equals(that.status) : that.status == null;
+        if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null)
+            return false;
+        if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null)
+            return false;
+        if (status != null ? !status.equals(that.status) : that.status != null)
+            return false;
+        if (teacherName != null ? !teacherName.equals(that.teacherName) : that.teacherName != null)
+            return false;
+        if (studentVideo != null ? !studentVideo.equals(that.studentVideo) : that.studentVideo != null)
+            return false;
+        return feedbackVideo != null ? feedbackVideo.equals(that.feedbackVideo) : that.feedbackVideo == null;
 
     }
-
 }

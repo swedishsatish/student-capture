@@ -42,7 +42,7 @@ public class SubmissionRowMapper implements RowMapper<Submission> {
         }
         submission.setGrade(grade);
         submission.setPublishStudentSubmission(resultSet.getBoolean("PublishStudentSubmission"));
-        submission.setPublishFeedback(resultSet.getBoolean("PublishFeedback"));
+        submission.setFeedbackIsVisible(resultSet.getBoolean("PublishFeedback"));
 
         return submission;
     }
