@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.submission;
 
 import org.junit.After;
 import org.junit.Before;
