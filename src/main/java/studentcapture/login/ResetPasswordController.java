@@ -143,14 +143,12 @@ public class ResetPasswordController {
             @RequestParam(value="password", required = true) String password
             ){
         
-        System.out.println("Received username: " + username + ", token: " + token + ", password: " + password);
-        //System.out.println("Received token: " + token);
+        //System.out.println("Received username: " + username + ", token: " + token + ", password: " + password);
         
         User user = getUserFromDB(username);
-        
-        //System.out.println(user.getEmail());
-        
+                
         ModelAndView mav = new ModelAndView(); 
+        
         //If the token does not exist, return
         if(user.getToken() == null){
             mav.setViewName("redirect:login?error=badToken");
