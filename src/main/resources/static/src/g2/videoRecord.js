@@ -225,6 +225,7 @@ var Recorder = React.createClass({
             request.onreadystatechange = function () {
                 if (request.readyState == 4 && request.status == 200) {
                     callback(request.responseText);
+                    alert("Your answer has been submitted successfully!");
                 } else if(request.readyState == 4 && request.status !== 200) {
                     alert(request.responseText);
                 }
