@@ -27,37 +27,44 @@ public class SubmissionResource {
     @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
                                                             @PathVariable("studentID") int studentID){
-        //TODO fix unity in DAO API
-
         Submission body = DAO.getSubmission(assignmentID, studentID).get();
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
 
+    /**
+     * Gets the feedback video for a student
+     * @param assignmentID
+     * @param studentID
+     * @return
+     */
     @RequestMapping(value = "{studentID}/video", method = RequestMethod.GET, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> getSpecificSubmissionVideo(@PathVariable("assignmentID") int assignmentID,
-                                                                          @PathVariable("studentID") int studentID)
-    {
+    public ResponseEntity<InputStreamResource> getFeedbackVideo(@PathVariable("assignmentID") int assignmentID,
+                                                                @PathVariable("studentID") int studentID) {
         return DAO.getFeedbackVideo(new Submission(assignmentID, studentID));
     }
 
+    /**
+     * Gets all submissions for an assignment
+     * @param assignmentID
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") int assignmentID){
-        //TODO check permissions
-        List<Submission> body = DAO.getAllSubmissions(assignmentID).get();
-        return new ResponseEntity<>(body, HttpStatus.OK);
+        return new ResponseEntity<>(DAO.getAllSubmissions(assignmentID).get(), HttpStatus.OK);
     }
 
+    /**
+     * Edits a submission, is used to set the grade when the teacher marks the assignment.
+     * @param assignmentID
+     * @param studentID
+     * @param submission
+     * @return
+     */
     @RequestMapping(value = "{studentID}", method = RequestMethod.PATCH)
     public HttpStatus markSubmission(@PathVariable("assignmentID") int assignmentID,
                                      @PathVariable("studentID") int studentID,
                                      @RequestBody Submission submission){
-        //TODO Not implemented - updates partial information of the submission object, such as setting the grade
-        /*Validation of Submission
-        * if sent by a student: send to a method which only stores the information a student has permission to change (i.e not grade)
-        * if sent by a teacher: send to a method which only stores the information a teacher has permission to change (i.e not the answer but the grade)
-        *
-        * validate the Submission.studentID against studentID and permissions*/
         submission.setAssignmentID(assignmentID);
         submission.setStudentID(studentID);
         if (DAO.patchSubmission(submission)) {
@@ -68,6 +75,14 @@ public class SubmissionResource {
     }
 
 
+    /**
+     * Stores a submission
+     * @param assignmentID
+     * @param studentID
+     * @param studentVideo
+     * @param updatedSubmission
+     * @return
+     */
     @RequestMapping(value = "{studentID}", method = RequestMethod.POST)
     public HttpStatus storeSubmission(@PathVariable("assignmentID") int assignmentID,
                                       @PathVariable("studentID") int studentID,
