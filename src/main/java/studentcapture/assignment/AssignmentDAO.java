@@ -13,25 +13,17 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
-import studentcapture.assignment.AssignmentModel;
-import studentcapture.course.CourseModel;
-import studentcapture.course.CourseDAO;
+
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
@@ -144,6 +136,44 @@ public class AssignmentDAO {
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     *
+     * !!!!
+     * THIS METHOD IS NOT IN USE
+     *
+     * WILL BE USED AFTER DEMO
+     * !!!!
+     *
+     * Method for checking that the user is enrolled on the course where the video is received.
+     *
+     * @param assignmentModel the assignment model
+     * @return true or false
+     * @author c13bll
+     */
+    public boolean hasAccess(AssignmentModel assignmentModel){
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = attr.getRequest().getSession();
+
+        String userID = session.getAttribute("userid").toString();
+        String accessQuery = "SELECT userid FROM participants WHERE userid = ? AND courseid = ? LIMIT 1;";
+
+
+        //Needs more testing probably...
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(
+                connection -> {
+                    PreparedStatement ps =
+                            connection.prepareStatement(accessQuery,
+                                    Statement.RETURN_GENERATED_KEYS);
+                    ps.setInt(1, Integer.getInteger(userID));
+                    ps.setInt(2, assignmentModel.getCourseID());
+                    return ps;
+                },
+                keyHolder);
+
+        return (Integer.getInteger(userID) == keyHolder.getKeys().get("userid"));
     }
 
 //    /**

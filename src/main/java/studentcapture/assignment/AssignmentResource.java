@@ -39,11 +39,9 @@ public class AssignmentResource {
      * @return              The video and Http status OK
      *                      or Http status NOT_FOUND.
      */
-    @RequestMapping(value = "/{assignmentID}/video",
-                    method = RequestMethod.GET,
-                    produces = "video/webm")
+    @RequestMapping(value = "/{assignmentID}/video", method = RequestMethod.GET, produces = "video/webm")
     public ResponseEntity<InputStreamResource> getAssignmentVideo(
-            @PathVariable("assignmentID") int assignmentID) {
+                                        @PathVariable("assignmentID") int assignmentID) {
         return assignmentDAO.getAssignmentVideo(assignmentID);
     }
 

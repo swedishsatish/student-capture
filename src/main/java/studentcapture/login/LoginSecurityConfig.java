@@ -41,9 +41,12 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
         http
             .authorizeRequests()
                 .antMatchers("/**").access("hasRole('USER')")
+                .antMatchers("/**").permitAll()			
                 .antMatchers("/loggedin").access("hasRole('USER') or hasRole('ADMIN')") //Users and admins can access /loggedin
                 .antMatchers("/admin").access("hasRole('ADMIN')") //Admins can access /admin
                 .antMatchers("/login").permitAll()
+                .antMatchers("/user").permitAll()
+                .antMatchers("/index").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .formLogin()

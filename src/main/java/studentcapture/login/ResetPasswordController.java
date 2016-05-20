@@ -7,7 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,23 +36,18 @@ public class ResetPasswordController {
     @Autowired
     private RestTemplate requestSender;
     
-    @RequestMapping(value = "/testResetPassword", method = RequestMethod.POST)
-    public String resetPassword(
-            HttpServletRequest request, @RequestParam("email") String userEmail) {
-        
-        String token = UUID.randomUUID().toString();
-        System.out.println("Email: " + userEmail + ", Token: " + token);
-        
-        String url = 
-                "https://" + request.getServerName() + 
-                ":" + request.getServerPort() + 
-                request.getContextPath();   
-        
-        System.out.println("Url: " + url);
-        
-        return token;
-    }
-    
+    /**
+     * Generates a link for resetting username's password, and emails the link
+     * to the users email.
+     * 
+     * The link contains a randomly generated token, 
+     *  which is also stored in the database.
+     * 
+     * @param email
+     * @param username
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/lostPassword", method = RequestMethod.POST)
     public ModelAndView lostPassword(
             @RequestParam(value="email", required = true)    String email,
@@ -57,68 +55,101 @@ public class ResetPasswordController {
             HttpServletRequest request
             ){
         
-        String token = UUID.randomUUID().toString();
-        System.out.println("Email: " + email + ", Token: " + token);
-        
-        String url = 
-                "http://" + request.getServerName() + 
-                ":" + request.getServerPort() + 
-                request.getContextPath();
-        
-        
-        System.out.println("Url: " + url);
-        
-        String tokenUrl = url + "/lostPassword?token=" + token;
-        
         ModelAndView mav = new ModelAndView(); 
-        mav.setViewName("redirect:login");
 
         
-        //Validate credentials
-        //Check if email and username match
-        if(checkEmailExistsWithUserName(email,username)){
-            System.out.println("success!");
+        User user = getUserFromDB(username);
         
-        
-        //Generate link
-        //Spring generate token http://www.baeldung.com/spring-security-registration-i-forgot-my-password
-        
-        //Store token in db ?
-        
-        
-        //Email link
-        //Spring or custom mail?
-        
-        
-        MailClient mailClient = new MailClient();
-        //mailClient.send(String to, String from, String subject, String msg)
-        mailClient.send("receiver", "sender", "Reset Password", tokenUrl);
-        
-        
-        //Compare header token with db token <-- another method?
-        
+        //Return if user does not exist
+        if(user.getUserName() == null){
+            mav.setViewName("redirect:login?error=invalidUser");
         }else{
-            System.out.println("fail...");
-            mav.setViewName("redirect:login?error=invaliduser");
+            
+            //Spring generate token http://www.baeldung.com/spring-security-registration-i-forgot-my-password
+            String token = UUID.randomUUID().toString();
+            
+            String url = 
+                    "https://" + request.getServerName() + 
+                    ":" + request.getServerPort() + 
+                    request.getContextPath();
+                        
+            //Generate link
+            //Url syntax: /changePassword?username=123&token=456
+            String tokenUrl = url + "/changePassword?username=" + user.getUserName() + "&token=" + token;
+            
+            mav.setViewName("redirect:login");
+    
+            //Set token for the user           
+            user.setToken(token);
+            
+            String targetUrl = "https://localhost:8443/users";
+            HttpEntity<User> userEntity = new HttpEntity<User>(user);
+            
+            //Update user
+            requestSender.put(targetUrl, userEntity, "User");
+                        
+            //Email link
+            MailClient mailClient = new MailClient();
+            String receiver = user.getEmail();
+            //mailClient.send(String to, String from, String subject, String msg)
+            mailClient.send(receiver, "no-reply@studentcapture.com", "Reset Password", tokenUrl);
 
         }
 
-        
         return mav;
     }
     
-    //How should this even work?
-    @RequestMapping(value = "/lostPassword", method = RequestMethod.GET)
+
+    /**
+     * Changes password for the user username, 
+     * if token matches the token stored in the users database entry.
+     * 
+     * @param username
+     * @param token
+     * @param password
+     * @return
+     */
+    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
     public ModelAndView resetPassword(
-            //@RequestParam(value="email", required = true) String email,
-            @RequestParam(value="token", required = true) String token
+            @RequestParam(value="username", required = true) String username,
+            @RequestParam(value="token", required = true) String token,
+            @RequestParam(value="password", required = true) String password
             ){
+                
+        User user = getUserFromDB(username);
         
-        //System.out.println("Received email: " + email + ", token: " + token);
-        System.out.println("Received token: " + token);
+                
         ModelAndView mav = new ModelAndView(); 
-        mav.setViewName("redirect:login?error=passwordRecoveryNotImplemented");
         
+        //If the token does not exist, return
+        if(user == null){
+            mav.setViewName("redirect:login?error=badtoken");
+        }
+        else if(user.getToken() == null){
+            mav.setViewName("redirect:login?error=badtoken");
+        }
+        else if(user.getToken().compareTo("") == 0){
+            mav.setViewName("redirect:login?error=badtoken");
+            
+        }else if(user.getToken().compareTo(token) == 0){
+            //Tokens match
+            
+            //Encrypt the password, set password and token
+            user.setPswd(encryptPassword(password));
+            user.setToken("");
+            
+            mav.setViewName("redirect:login?success");
+            
+            String targetUrl = "https://localhost:8443/users";
+            HttpEntity<User> userEntity = new HttpEntity<User>(user);
+            
+            //Update user
+            requestSender.put(targetUrl, userEntity, "User");
+            
+        }else{
+            mav.setViewName("redirect:login?error=badToken");
+        }
+
         return mav;
         
     }
@@ -147,6 +178,7 @@ public class ResetPasswordController {
      * @param userName Username to check
      * @return True if Email and Username belong to the same user.
      */
+    /*//Old method, should probably be removed
     protected boolean checkEmailExistsWithUserName(String email, String userName) {
         URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
                 .path("DB/userEmailExistWithUserName")
@@ -161,6 +193,36 @@ public class ResetPasswordController {
         System.out.println(answer);
         //Send request to DB and get the boolean answer
         return requestSender.getForObject(targetUrl, Boolean.class);
+    }
+    */
+    
+    private User getUserFromDB(String username){
+        
+        int flag = 0;
+        //Get user from DB
+        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
+                .path("/users")
+                .queryParam("String", username)
+                .queryParam("int", flag)
+                .build()
+                .toUri();
+                        
+        //Get response from database
+        ResponseEntity<?> response = requestSender.getForEntity(targetUrl, User.class);
+
+        //Check if NOT_FOUND was received
+        if(response.getStatusCode().compareTo(HttpStatus.FOUND) == 0){
+            //Return error?
+            return null;
+        }
+        
+        //Get the user object    
+        return (User) response.getBody();
+    }
+    
+    protected String encryptPassword(String password) {
+        String generatedPassword = BCrypt.hashpw(password, BCrypt.gensalt(11));
+        return generatedPassword;
     }
     
     

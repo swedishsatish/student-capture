@@ -1,6 +1,6 @@
 /**
  Class that asks for the start- and end-time of a task/assignment and displays them, also time left
- @author dv13tes, c13bbn
+ @author Tobias Estefors <dv13tes>, Benjamin Björklund <c13bbn>
  */
 window.TimeBoxWithArray = React.createClass({
 
