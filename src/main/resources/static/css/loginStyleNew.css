@@ -117,6 +117,10 @@ body {
 	bottom:100px;
 }
 
+#firstPassTip {
+	bottom:74px;
+}
+
 #uNamePoint {
 	top:6px;
 	border-top: 20px solid transparent;
