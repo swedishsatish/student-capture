@@ -68,7 +68,7 @@ public class ResetPasswordController {
         System.out.println("Email: " + email + ", Token: " + token);
         
         String url = 
-                "http://" + request.getServerName() + 
+                "https://" + request.getServerName() + 
                 ":" + request.getServerPort() + 
                 request.getContextPath();
         
@@ -129,7 +129,13 @@ public class ResetPasswordController {
         return mav;
     }
     
-    //How should this even work? //old password $2a$11$mG8HMjEx2J8pYPEEAScEM.jzSbMAQlNJChwh895Hr5D8J/sOE5YnW
+    //TESTING:
+    //old password: $2a$11$mG8HMjEx2J8pYPEEAScEM.jzSbMAQlNJChwh895Hr5D8J/sOE5YnW
+    //old token: b88fa657-8520-4cf2-a41a-5bc2e1f1fccf
+    
+    //new token: 9c6ab112-53f0-4478-8bd6-58b333abe47c
+    //new password: $2a$11$/yFKd1aVSMIsbJ9gfMwMvOMFmkPCK59J4u6iUjPjwAzl6baJ.fsMi
+    //new token: ""
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
     public ModelAndView resetPassword(
             @RequestParam(value="username", required = true) String username,
@@ -137,14 +143,19 @@ public class ResetPasswordController {
             @RequestParam(value="password", required = true) String password
             ){
         
-        //System.out.println("Received email: " + email + ", token: " + token);
-        System.out.println("Received token: " + token);
+        System.out.println("Received username: " + username + ", token: " + token + ", password: " + password);
+        //System.out.println("Received token: " + token);
         
         User user = getUserFromDB(username);
         
+        //System.out.println(user.getEmail());
+        
         ModelAndView mav = new ModelAndView(); 
         //If the token does not exist, return
-        if(user.getToken().compareTo("") == 0){
+        if(user.getToken() == null){
+            mav.setViewName("redirect:login?error=badToken");
+        }
+        else if(user.getToken().compareTo("") == 0){
             mav.setViewName("redirect:login?error=badToken");
             
         }else if(user.getToken().compareTo(token) == 0){
