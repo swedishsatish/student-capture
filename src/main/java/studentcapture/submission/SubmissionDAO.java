@@ -183,40 +183,6 @@ public class SubmissionDAO {
 		return result;
 	}
 
-	/**
-	 * Get information about the grade of a submission
-	 *
-	 * @param submission Unique identifier for the assignment submission grade bra
-	 * @return A list containing the grade, date, and grader
-	 */
-	public Map<String, Object> getGrade(Submission submission) {
-		String queryForGrade = "SELECT grade, submissiondate as time, " +
-				"teacherid FROM submission " +
-				"WHERE (studentid = ? AND assignmentid = ?)";
-		String queryForTeacher = "SELECT concat(firstname,' ', lastname)" +
-				" as teacher FROM users WHERE (userid = ?)";
-		Map<String, Object> response;
-		try {
-			response = databaseConnection.queryForMap(queryForGrade,
-					new Object[]{submission.getStudentID(), submission.getAssignmentID()});
-			if (response.get("teacherid") != null) {
-				String teacherName = databaseConnection.queryForObject(queryForTeacher,
-						new Object[]{response.get("teacherid")}, String.class);
-				response.put("teacher", teacherName);
-			}
-			response.put("time", response.get("time").toString());
-		} catch(IncorrectResultSizeDataAccessException e) {
-			response = new HashMap<>();
-			response.put("error", "The given parameters does not have an" +
-				" entry in the database");
-		} catch(DataAccessException e) {
-			response = new HashMap<>();
-			response.put("error", "Could not connect to the database");
-		}
-
-		return response;
-	}
-
     /**
      * Get all ungraded submissions for an assignment
      *
