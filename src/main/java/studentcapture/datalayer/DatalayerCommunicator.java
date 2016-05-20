@@ -6,9 +6,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import student.course.hierarchy.HierarchyDAO;
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.CourseDAO;
+import studentcapture.course.hierarchy.HierarchyDAO;
 import studentcapture.course.participant.ParticipantDAO;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;

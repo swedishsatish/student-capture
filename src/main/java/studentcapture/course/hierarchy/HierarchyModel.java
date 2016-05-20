@@ -1,4 +1,4 @@
-package student.course.hierarchy;
+package studentcapture.course.hierarchy;
 
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.course.CourseModel;

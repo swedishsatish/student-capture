@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
-import student.course.hierarchy.HierarchyDAO;
-import student.course.hierarchy.HierarchyModel;
+import studentcapture.course.hierarchy.HierarchyDAO;
+import studentcapture.course.hierarchy.HierarchyModel;
 import studentcapture.course.participant.ParticipantDAO;
 
 /**
