@@ -5,9 +5,10 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import student.course.hierarchy.HierarchyDAO;
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.CourseDAO;
-import studentcapture.course.HierarchyDAO;
 import studentcapture.course.participant.ParticipantDAO;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
@@ -16,6 +17,7 @@ import studentcapture.submission.Submission;
 import studentcapture.submission.SubmissionDAO;
 
 import javax.validation.Valid;
+
 import java.util.List;
 import java.util.Optional;
 

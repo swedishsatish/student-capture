@@ -1,4 +1,4 @@
-package studentcapture.course;
+package student.course.hierarchy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -6,12 +6,16 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import student.course.hierarchy.HierarchyModel.AssignmentPackage;
+import student.course.hierarchy.HierarchyModel.CoursePackage;
 import studentcapture.assignment.AssignmentDAO;
-import studentcapture.course.HierarchyModel.AssignmentPackage;
-import studentcapture.course.HierarchyModel.CoursePackage;
+import studentcapture.course.CourseDAO;
+import studentcapture.course.CourseModel;
 import studentcapture.user.UserDAO;
 import studentcapture.submission.Submission;
 import studentcapture.submission.SubmissionDAO;
+
+
 
 
 import java.sql.Timestamp;
