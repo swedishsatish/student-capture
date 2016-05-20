@@ -6,10 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import studentcapture.assignment.AssignmentDAO;
-import studentcapture.course.CourseDAO;
-import studentcapture.course.CourseModel;
-import studentcapture.datalayer.filesystem.FilesystemInterface;
 
 import java.util.List;
 
@@ -42,7 +38,7 @@ public class SubmissionResource {
     public ResponseEntity<InputStreamResource> getSpecificSubmissionVideo(@PathVariable("assignmentID") int assignmentID,
                                                                           @PathVariable("studentID") int studentID)
     {
-        return DAO.getSubmissionVideo(assignmentID, studentID);
+        return DAO.getTeachersFeedbackVideo(assignmentID, studentID);
     }
 
     @RequestMapping(method = RequestMethod.GET)

@@ -266,15 +266,12 @@ public class SubmissionDAO {
 
 	/**
 	 * Get all submissions for an assignment
-	 * @param assId The assignment to get submissions for
+	 * @param assignmentID The assignment to get submissions for
 	 * @return A list of submissions for the assignment
      * 
      * @author tfy12hsm
 	 */
-    public Optional<List<Submission>> getAllSubmissions(int assId) {
-    	List<Submission> submissions = new ArrayList<>();
-    	int assignmentId = assId;
-
+    public Optional<List<Submission>> getAllSubmissions(int assignmentID) {
 		String getAllSubmissionsStatement = "SELECT "
 				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
 				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId,"
@@ -282,7 +279,7 @@ public class SubmissionDAO {
 				+ " Submission AS sub LEFT JOIN Users AS stu ON "
 				+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
 
-    	return getSubmissionsFromStatement(getAllSubmissionsStatement, assignmentId);
+    	return getSubmissionsFromStatement(getAllSubmissionsStatement, assignmentID);
     }
 
 	/**
@@ -351,12 +348,12 @@ public class SubmissionDAO {
 	}
 
 	/**
-	 *
+	 * Get a teacher's submitted feedback video for a specific student.
 	 * @param assignmentID
 	 * @param studentID
      * @return
      */
-	public ResponseEntity<InputStreamResource> getSubmissionVideo(int assignmentID, int studentID) {
+	public ResponseEntity<InputStreamResource> getTeachersFeedbackVideo(int assignmentID, int studentID) {
 		Submission submission = new Submission(assignmentID, studentID);
 		Integer courseID = getCourseIDFromAssignmentID(assignmentID);
 		if(courseID == null){
@@ -369,7 +366,7 @@ public class SubmissionDAO {
 	}
 
 	/**
-	 * Retrieves the course id from an assignment by querying the database.
+	 * Retrieves the course id from an assignment by querying the database. Returns null if something went wrong.
 	 * @param assignmentID
 	 * @return
      */
