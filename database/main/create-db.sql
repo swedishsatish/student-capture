@@ -4,8 +4,8 @@ CREATE TABLE IF NOT EXISTS Users (
     FirstName    VARCHAR(64)    NOT NULL,
     LastName     VARCHAR(64)    NOT NULL,
     Email        VARCHAR(128)   NOT NULL,
-    Pswd         VARCHAR(64)    NOT NULL
-    token        VARCHAR(40)
+    Pswd         VARCHAR(64)    NOT NULL,
+    Token        VARCHAR(40)
     );
 
 CREATE TABLE IF NOT EXISTS Course (
