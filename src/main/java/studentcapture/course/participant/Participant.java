@@ -1,4 +1,4 @@
-package studentcapture.model;
+package studentcapture.course.participant;
 
 import java.util.Map;
 
@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class Participant {
     private Integer userId;
-    private Integer courseId;
+    private int courseId;
     private String function;
     
     public Participant() {
@@ -26,7 +26,7 @@ public class Participant {
      */
     public void parseMap(Map<String, Object> map) {
     	userId = (Integer) map.get("UserId");
-		courseId = (Integer) map.get("CourseId");
+		courseId = (int) map.get("CourseId");
 		function = (String) map.get("Function");
     }
     

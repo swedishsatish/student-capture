@@ -38,8 +38,7 @@ var HardwareTest = React.createClass({
 
         source.type = 'video/webm; codecs="vp8, vorbis"';
 
-        mediaElement.setAttribute("width", "100%");
-        mediaElement.setAttribute("height", "100%");
+
         mediaElement.appendChild(source);
         mediaElement.controls = true;
         container.appendChild(mediaElement)
@@ -75,6 +74,7 @@ var HardwareTest = React.createClass({
                         <Recorder playCallback={this.playVideo} calc={this.calcSpeed}
                                   postURL="equipmenttest" formDataBuilder={this.formDataBuilder}
                                   recButtonID="record-test" stopButtonID="stop-test" fileName="testVid.webm"
+                                  contID="test-prev-container"
                         />
 
                     </div>

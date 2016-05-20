@@ -1,6 +1,8 @@
 /**
  *
- *@author: Tobias Estefors <dv13tes>
+ *@author: Andreas Savva <ens15asa>, Benjamin Björklund <c13bbd>, Tobias Estefors <dv13tes>
+ *     
+ *@note: This react-class is rendered from DynamicMenu.js
  **/
 
 var TeacherViewSubmission = React.createClass({
@@ -20,41 +22,44 @@ var TeacherViewSubmission = React.createClass({
 
         // GET request to database to get all the submissions from the students.
         $.ajax({
-            url: "DB/getAllSubmissions", // URL to send to
+            url: "assignments/" + this.props.assignmentId + "/submissions/",
             type: "GET", // Type of http
             async: false,
-            data: {assignmentID: 1200},
             success: function (data, status) { // Function to perform when ok
                 this.submissionsArray = data;
             }.bind(this),
             error: function (xhr, status, err) {
                 // Handle the error
-                console.log("Error Submissions");
+                console.log("TeacherViewSubmission: Error Submissions");
             }.bind(this)
         });
 
         // GET request to database to get all the participants in a course.
         $.ajax({
-            url: "DB/getAllParticipantsFromCourse", // URL to send to
+            url: "courses/" + this.props.courseId + "/participants", // URL to send to
             type: "GET", // Type of http
             async: false,
-            data: {courseID: 1200},
+            data: {
+                "userRole": "student"
+            },
             success: function (data, status) { // Function to perform when ok
                 this.participantsArray = data;
             }.bind(this),
             error: function (xhr, status, err) {
                 // Handle the error
-                console.log("Error Participants");
+                console.log("TeacherViewSubmission: Error Participants");
             }.bind(this)
         });
+
     },
+
     calculateSubmissions: function () {
         this.nParticipants = this.participantsArray.length;
 
         for (var i=0;i<this.submissionsArray.length;i++) {
-            if (this.submissionsArray[i].status == "Answer") {
+            if (this.submissionsArray[i].status.toLowerCase() == "answer") {
                 this.nSubmissions++;
-            } else if (this.submissionsArray[i].status == "Blank") {
+            } else if (this.submissionsArray[i].status.toLowerCase() == "blank") {
                 this.nWithdrawals++;
             }
         }
@@ -66,7 +71,6 @@ var TeacherViewSubmission = React.createClass({
 
     render: function () {
         this.calculateSubmissions();
-        console.log("eliashej")
         return (
             <div class="row">
                 <div className="four columns offset-by-one">

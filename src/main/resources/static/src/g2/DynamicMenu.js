@@ -33,7 +33,6 @@ var Assignment = React.createClass({
         var uid = this.props.uid;
         var assID = this.props.assignment.assignment.assignmentID;
         var courseID = this.props.courseId;
-        console.log(assID)
         if(this.props.role == "student"){
 
           
@@ -48,12 +47,8 @@ var Assignment = React.createClass({
 
         }
         else if(this.props.role == "teacher"){
-          /* $.get(window.globalURL + "/DB/getAllSubmissions",{assignmentID:assID},function (res) {
-                
-                ReactDOM.render(<StudentList students={res} courseId={courseID} assignmentId={assID} uid={uid}/>,
+                ReactDOM.render(<TeacherViewSubmission courseId={courseID} assignmentId={assID}/>,
                                 document.getElementById('courseContent') );
-            });*/
-
         }
 
 
@@ -183,7 +178,6 @@ var DynamicMenu = React.createClass({
      */
     render: function () {
 
-
         var teach;
         var stud;
         var uid = this.props.uid;
@@ -243,6 +237,6 @@ window.RenderMenu = function (userID) {
         ReactDOM.render(<DynamicMenu tList={TCList} sList={SCList} uid={userID}/>, document.getElementById("desktopNavigation"));
         ReactDOM.render(<NewProfile name={name} uid={userID}/>, document.getElementById('desktopHeader'));
     });
-}
+};
 
 RenderMenu(1);
