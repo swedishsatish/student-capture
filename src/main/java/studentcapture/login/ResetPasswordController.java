@@ -36,25 +36,18 @@ public class ResetPasswordController {
     @Autowired
     private RestTemplate requestSender;
     
-    /*
-    @RequestMapping(value = "/testResetPassword", method = RequestMethod.POST)
-    public String resetPassword(
-            HttpServletRequest request, @RequestParam("email") String userEmail) {
-        
-        String token = UUID.randomUUID().toString();
-        System.out.println("Email: " + userEmail + ", Token: " + token);
-        
-        String url = 
-                "https://" + request.getServerName() + 
-                ":" + request.getServerPort() + 
-                request.getContextPath();   
-        
-        System.out.println("Url: " + url);
-        
-        return token;
-    }
-    */
-    
+    /**
+     * Generates a link for resetting username's password, and emails the link
+     * to the users email.
+     * 
+     * The link contains a randomly generated token, 
+     *  which is also stored in the database.
+     * 
+     * @param email
+     * @param username
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/lostPassword", method = RequestMethod.POST)
     public ModelAndView lostPassword(
             @RequestParam(value="email", required = true)    String email,
@@ -62,80 +55,67 @@ public class ResetPasswordController {
             HttpServletRequest request
             ){
         
+        ModelAndView mav = new ModelAndView(); 
+
+        
         User user = getUserFromDB(username);
         
-        String token = UUID.randomUUID().toString();
-        System.out.println("Email: " + email + ", Token: " + token);
-        
-        String url = 
-                "https://" + request.getServerName() + 
-                ":" + request.getServerPort() + 
-                request.getContextPath();
-        
-        
-        System.out.println("Url: " + url);
-        
-        //Url syntax: /changePassword?username=123&token=456
-        String tokenUrl = url + "/changePassword?username=" + user.getUserName() + "&token=" + token;
-        System.out.println("Generated token url: " + tokenUrl);
-        
-        ModelAndView mav = new ModelAndView(); 
-        mav.setViewName("redirect:login");
-
-        
-        //Validate credentials
-        //Check if email and username match
-        /*
-        if(checkEmailExistsWithUserName(email,username)){
-            System.out.println("success!");
-        */
-        
-        //Generate link
-        //Spring generate token http://www.baeldung.com/spring-security-registration-i-forgot-my-password
-        
-        //Store token in db ?
-        System.out.println("Storing token: " + token + " for username: " + username);
-       
-        user.setToken(token);
-        
-        String targetUrl = "https://localhost:8443/users";
-        HttpEntity<User> userEntity = new HttpEntity<User>(user);
-        
-        //Update user
-        requestSender.put(targetUrl, userEntity, "User");
-        
-        System.out.println("Token stored!");
-
-        
-        //Email link
-        //Spring or custom mail?
-        
-        /*
-        MailClient mailClient = new MailClient();
-        //mailClient.send(String to, String from, String subject, String msg)
-        mailClient.send("receiver", "sender", "Reset Password", tokenUrl);
-        */
-        
-        //Compare header token with db token <-- another method?
-        
-        /*
+        //Return if user does not exist
+        if(user.getUserName() == null){
+            mav.setViewName("redirect:login?error=invalidUser");
         }else{
-            System.out.println("fail...");
-            mav.setViewName("redirect:login?error=invaliduser");
+            
+            //Spring generate token http://www.baeldung.com/spring-security-registration-i-forgot-my-password
+            String token = UUID.randomUUID().toString();
+            System.out.println("Email: " + email + ", Token: " + token);
+            
+            String url = 
+                    "https://" + request.getServerName() + 
+                    ":" + request.getServerPort() + 
+                    request.getContextPath();
+                        
+            //Generate link
+            //Url syntax: /changePassword?username=123&token=456
+            String tokenUrl = url + "/changePassword?username=" + user.getUserName() + "&token=" + token;
+            System.out.println("Generated token url: " + tokenUrl);
+            
+            mav.setViewName("redirect:login");
+    
+            
+            //Set token for the user
+            System.out.println("Storing token: " + token + " for username: " + username);
+           
+            user.setToken(token);
+            
+            String targetUrl = "https://localhost:8443/users";
+            HttpEntity<User> userEntity = new HttpEntity<User>(user);
+            
+            //Update user
+            requestSender.put(targetUrl, userEntity, "User");
+            
+            System.out.println("Token stored!");
+            
+            //Email link
+            MailClient mailClient = new MailClient();
+            String receiver = user.getEmail();
+            //mailClient.send(String to, String from, String subject, String msg)
+            mailClient.send(receiver, "no-reply@studentcapture.com", "Reset Password", tokenUrl);
 
-        }*/
+        }
 
-        
         return mav;
     }
     
-    //TESTING:
-    //old password: $2a$11$mG8HMjEx2J8pYPEEAScEM.jzSbMAQlNJChwh895Hr5D8J/sOE5YnW
-    //old token: b88fa657-8520-4cf2-a41a-5bc2e1f1fccf
-    
-    //new token: 9c6ab112-53f0-4478-8bd6-58b333abe47c
-    //new password: $2a$11$/yFKd1aVSMIsbJ9gfMwMvOMFmkPCK59J4u6iUjPjwAzl6baJ.fsMi
-    //new token: ""
+
+    /**
+     * Changes password for the user username, 
+     * if token matches the token stored in the users database entry.
+     * 
+     * @param username
+     * @param token
+     * @param password
+     * @return
+     */
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
     public ModelAndView resetPassword(
             @RequestParam(value="username", required = true) String username,
@@ -176,11 +156,7 @@ public class ResetPasswordController {
         }else{
             mav.setViewName("redirect:login?error=badToken");
         }
-        
-        /*
-        ModelAndView mav = new ModelAndView(); 
-        mav.setViewName("redirect:login?error=passwordRecoveryNotImplemented");
-        */
+
         return mav;
         
     }
