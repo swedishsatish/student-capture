@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
@@ -349,23 +351,38 @@ public class SubmissionDAO {
         return Optional.of(result);
 	}
 
-	public Optional<InputStreamResource> getSubmissionVideo(int assignmentID, int studentID) {
-		Integer courseID;
-		String getCourseId = "SELECT CourseId FROM Assignment WHERE AssignmentId=?";
-		try {
-			courseID = databaseConnection.queryForObject(getCourseId, new Object[]{assignmentID}, Integer.class);
-		} catch (IncorrectResultSizeDataAccessException e){
-			System.out.println("\nIncorrectSize: " + e);
-			return Optional.empty();
-		} catch (DataAccessException e1){
-			System.out.println("\nDataAccess: " + e1);
-			return Optional.empty();
-		}
+	/**
+	 *
+	 * @param assignmentID
+	 * @param studentID
+     * @return
+     */
+	public ResponseEntity<InputStreamResource> getSubmissionVideo(int assignmentID, int studentID) {
 		Submission submission = new Submission(assignmentID, studentID);
-		submission.setCourseID(Integer.toString(courseID));
-		String path = FilesystemInterface.generatePath(submission)+FilesystemConstants.FEEDBACK_VIDEO_FILENAME;
-		return Optional.of(FilesystemInterface.getVideo(path).getBody());
+		Integer courseID = getCourseIDFromAssignmentID(assignmentID);
+		if(courseID == null){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else{
+			submission.setCourseID(Integer.toString(courseID));
+			String path = FilesystemInterface.generatePath(submission) + FilesystemConstants.FEEDBACK_VIDEO_FILENAME;
+			return FilesystemInterface.getVideo(path);
+		}
 	}
+
+	/**
+	 * Retrieves the course id from an assignment by querying the database.
+	 * @param assignmentID
+	 * @return
+     */
+	private Integer getCourseIDFromAssignmentID(int assignmentID){
+		try{
+			String getCourseId = "SELECT CourseId FROM Assignment WHERE AssignmentId=?";
+			return databaseConnection.queryForObject(getCourseId, new Object[]{assignmentID}, Integer.class);
+		}catch(Exception e){
+			return null;
+		}
+	}
+
 
 }
 
