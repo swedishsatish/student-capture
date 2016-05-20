@@ -48,7 +48,6 @@ public class RegistrationController {
         if(status == ErrorFlags.NOERROR){
             uri = new URI("/login?" + status.toString());
         }else{
-        	System.out.println("ERRRRRORRRRR");
             uri = new URI("/login?error=" + status.toString());
         }
         httpHeaders.setLocation(uri);

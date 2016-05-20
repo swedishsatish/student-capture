@@ -98,7 +98,6 @@ public class LoginAuthentication implements AuthenticationProvider {
         if (user == null) {
         	return false;
         }
-        System.out.println(user.getEmail());
         return comparePassword(password, user.getPswd());
            
     }
