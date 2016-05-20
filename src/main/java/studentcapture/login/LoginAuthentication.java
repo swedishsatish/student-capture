@@ -1,12 +1,16 @@
 package studentcapture.login;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,11 +19,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import org.springframework.core.io.*;
 import studentcapture.user.User;
 
 /**
@@ -37,9 +43,11 @@ public class LoginAuthentication implements AuthenticationProvider {
     
     //Using the same method for connecting to DB as in FeedbackController.java
     
-    private static final String dbURI = "https://localhost:8443";
     private static final String SESSION_USERNAME_TAG = "username";
     private static final String SESSION_USERID_TAG = "userid";
+    
+    @Autowired
+    private LoginDAO loginDao;
     
     @Autowired
     private RestTemplate requestSender;
@@ -56,8 +64,6 @@ public class LoginAuthentication implements AuthenticationProvider {
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
 		String username = auth.getName().trim();
 		String password = auth.getCredentials().toString();
-		
-		//userDBController = new UserDBController();
 
 		if(checkUser(username, password)){
 		    //Set role
@@ -85,30 +91,16 @@ public class LoginAuthentication implements AuthenticationProvider {
 	 */
 	
 	public boolean checkUser(String username, String password) {
-                
-        //Get user from DB
-        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
-                .path("/users")
-                .queryParam("String", username)
-                .queryParam("int", 0)
-                .build()
-                .toUri();
-                
-        //Get response from database
-        ResponseEntity<?> response = requestSender.getForEntity(targetUrl, User.class);
-        //System.out.println("Received status code: " + response.getStatusCode());
-
-        //Check if NOT_FOUND was received
-        if(response.getStatusCode().compareTo(HttpStatus.FOUND) == 0){
-            //Return error?
-            return false;
-        }
-        
+		
+		        
         //Get the user object and check that the password is valid
-        User user = (User) response.getBody();
-
+        User user = loginDao.getUser(username, 0);
+        if (user == null) {
+        	return false;
+        }
+        System.out.println(user.getEmail());
         return comparePassword(password, user.getPswd());
-                
+           
     }
 
 	public boolean comparePassword(String password, String hashed) {
@@ -117,14 +109,7 @@ public class LoginAuthentication implements AuthenticationProvider {
 	}
 	
 	private void updateSession(String username) {
-		URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
-                .path("/users")
-                .queryParam("String", username)
-                .queryParam("int", 0)
-                .build()
-                .toUri();
-		ResponseEntity<?> response = requestSender.getForEntity(targetUrl, User.class);
-		User user = (User) response.getBody();
+		User user = loginDao.getUser(username, 0);
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		attr.getRequest().getSession().setAttribute(SESSION_USERNAME_TAG, user.getUserName());
 		attr.getRequest().getSession().setAttribute(SESSION_USERID_TAG, user.getUserID());
