@@ -27,7 +27,8 @@ var StudentRecordVideo = React.createClass({
         return (
             <div>
                 <div id="recorder-div">
-                    <Recorder playCallback={this.playVideo}
+                    <Recorder contID="studentPreview"
+                              playCallback={this.playVideo}
                               postURL={"/assignments/"+this.props.assignmentID+"/submissions/"+this.props.studentID}
                               formDataBuilder={this.formDataBuilder}
                               stopButtonID="studentSubmit" autoRecord={autoRecord}
