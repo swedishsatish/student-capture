@@ -350,7 +350,20 @@ public class SubmissionDAO {
 	}
 
 	public Optional<InputStreamResource> getSubmissionVideo(int assignmentID, int studentID) {
-		String path = FilesystemInterface.generatePath(new Submission(assignmentID, studentID));
+		Integer courseID;
+		String getCourseId = "SELECT CourseId FROM Assignment WHERE AssignmentId=?";
+		try {
+			courseID = databaseConnection.queryForObject(getCourseId, new Object[]{assignmentID}, Integer.class);
+		} catch (IncorrectResultSizeDataAccessException e){
+			System.out.println("\nIncorrectSize: " + e);
+			return Optional.empty();
+		} catch (DataAccessException e1){
+			System.out.println("\nDataAccess: " + e1);
+			return Optional.empty();
+		}
+		Submission submission = new Submission(assignmentID, studentID);
+		submission.setCourseID(Integer.toString(courseID));
+		String path = FilesystemInterface.generatePath(submission)+FilesystemConstants.FEEDBACK_VIDEO_FILENAME;
 		return Optional.of(FilesystemInterface.getVideo(path).getBody());
 	}
 

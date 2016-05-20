@@ -56,6 +56,10 @@ public class FilesystemInterface {
      */
 	public static ResponseEntity<InputStreamResource> getVideo(String path) {
 		ResponseEntity<InputStreamResource> responseEntity;
+		if(path == null){
+			System.out.println("path was null");
+		}
+		System.out.println("path : "+path);
 		File video = new File(path);
 
 		try {
