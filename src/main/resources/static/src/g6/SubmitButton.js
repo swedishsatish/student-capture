@@ -168,7 +168,7 @@ function submitVideo(method, getVideoFunc) {
 
     $.ajax({
         type: method,
-        url: "assignments/" + 6 + "/submissions/" + 98 ,
+        url: "assignments/" + IDs[0].assignmentID + "/submissions/" + 98 ,
         data : fd,
         contentType: false,
         processData: false,
