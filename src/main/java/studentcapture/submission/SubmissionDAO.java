@@ -271,15 +271,18 @@ public class SubmissionDAO {
      * 
      * @author tfy12hsm
 	 */
-    public Optional<List<Submission>> getAllSubmissions(int assignmentID) {
-		String getAllSubmissionsStatement = "SELECT "
-				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
-				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId,"
-				+ "sub.StudentPublishConsent,sub.PublishStudentSubmission, sub.Status FROM"
-				+ " Submission AS sub LEFT JOIN Users AS stu ON "
-				+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
+    public List<Submission> getAllSubmissions(int assignmentID) {
+    	List<Submission> submissions;
 
-    	return getSubmissionsFromStatement(getAllSubmissionsStatement, assignmentID);
+		String getAllSubmissionsStatement = "SELECT * FROM Submission WHERE AssignmentId = ?";
+		try {
+			submissions = databaseConnection.query(getAllSubmissionsStatement, new SubmissionRowMapper(), assignmentID);
+		} catch (IncorrectResultSizeDataAccessException e) {
+			return new ArrayList<>();
+		} catch (DataAccessException e1) {
+			return new ArrayList<>();
+		}
+    	return submissions;
     }
 
 	/**
