@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -77,9 +78,9 @@ public class SubmissionDAO {
                 sqlparams.add(submission.getGrade().getTeacherID());
             }
         }
-        if (submission.getPublishFeedback() != null) {
+        if (submission.getFeedbackIsVisible() != null) {
             sql += "publishfeedback = ?,";
-            sqlparams.add(submission.getPublishFeedback());
+            sqlparams.add(submission.getFeedbackIsVisible());
         }
         if (submission.getPublishStudentSubmission() != null) {
             sql += "publishstudentsubmission = ?,";
@@ -92,7 +93,6 @@ public class SubmissionDAO {
         sql = sql.substring(0,sql.length()-1);
 
         sql += " WHERE assignmentid = ? AND studentid = ?";
-        System.out.println("sql = " + sql);
         sqlparams.add(submission.getAssignmentID());
         sqlparams.add(submission.getStudentID());
 
@@ -145,7 +145,7 @@ public class SubmissionDAO {
 				" WHERE (AssignmentID = ?) AND (StudentID = ?);";
 		int updatedRows = databaseConnection.update(setGrade, grade.getGrade(),
 																grade.getTeacherID(),
-																grade.getPublishStudentSubmission(),
+																submission.getPublishStudentSubmission(),
 																submission.getAssignmentID(),
 																submission.getStudentID());
 
@@ -266,23 +266,23 @@ public class SubmissionDAO {
 
 	/**
 	 * Get all submissions for an assignment
-	 * @param assId The assignment to get submissions for
+	 * @param assignmentID The assignment to get submissions for
 	 * @return A list of submissions for the assignment
      * 
      * @author tfy12hsm
 	 */
-    public Optional<List<Submission>> getAllSubmissions(int assId) {
-    	List<Submission> submissions = new ArrayList<>();
-    	int assignmentId = assId;
+    public List<Submission> getAllSubmissions(int assignmentID) {
+    	List<Submission> submissions;
 
-		String getAllSubmissionsStatement = "SELECT "
-				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
-				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId,"
-				+ "sub.StudentPublishConsent,sub.PublishStudentSubmission, sub.Status FROM"
-				+ " Submission AS sub LEFT JOIN Users AS stu ON "
-				+ "sub.studentId=stu.userId WHERE (AssignmentId=?)";
-
-    	return getSubmissionsFromStatement(getAllSubmissionsStatement, assignmentId);
+		String getAllSubmissionsStatement = "SELECT * FROM Submission WHERE AssignmentId = ?";
+		try {
+			submissions = databaseConnection.query(getAllSubmissionsStatement, new SubmissionRowMapper(), assignmentID);
+		} catch (IncorrectResultSizeDataAccessException e) {
+			return new ArrayList<>();
+		} catch (DataAccessException e1) {
+			return new ArrayList<>();
+		}
+    	return submissions;
     }
 
 	/**
@@ -350,10 +350,37 @@ public class SubmissionDAO {
         return Optional.of(result);
 	}
 
-	public Optional<InputStreamResource> getSubmissionVideo(int assignmentID, int studentID) {
-		String path = FilesystemInterface.generatePath(new Submission(assignmentID, studentID));
-		return Optional.of(FilesystemInterface.getVideo(path).getBody());
+	/**
+	 * Get a teacher's submitted feedback video for a specific student.
+	 * @param assignmentID
+	 * @param studentID
+     * @return
+     */
+	public ResponseEntity<InputStreamResource> getFeedbackVideo(Submission submission) {
+		Integer courseID = getCourseIDFromAssignmentID(submission.getAssignmentID());
+		if(courseID == null){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else{
+			submission.setCourseID(Integer.toString(courseID));
+			String path = FilesystemInterface.generatePath(submission) + FilesystemConstants.FEEDBACK_VIDEO_FILENAME;
+			return FilesystemInterface.getVideo(path);
+		}
 	}
+
+	/**
+	 * Retrieves the course id from an assignment by querying the database. Returns null if something went wrong.
+	 * @param assignmentID
+	 * @return
+     */
+	private Integer getCourseIDFromAssignmentID(int assignmentID){
+		try{
+			String getCourseId = "SELECT CourseId FROM Assignment WHERE AssignmentId=?";
+			return databaseConnection.queryForObject(getCourseId, new Object[]{assignmentID}, Integer.class);
+		}catch(Exception e){
+			return null;
+		}
+	}
+
 
 }
 

@@ -227,10 +227,10 @@ var DynamicMenu = React.createClass({
  * and then render the menus.
  *
  */
-window.RenderMenu = function (userID) {
-    $.get("course", {userID}, function (res) {
-
+window.RenderMenu = function () {
+    $.get("course", function (res) {
         // if(res)
+        var userID = res.userId;
         var SCList = objToList(res.studentCourses);
         var TCList = objToList(res.teacherCourses);
         var name = res.firstName + " " + res.lastName;
@@ -239,4 +239,4 @@ window.RenderMenu = function (userID) {
     });
 };
 
-RenderMenu(1);
+RenderMenu();
