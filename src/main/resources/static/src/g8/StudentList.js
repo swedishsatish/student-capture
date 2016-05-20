@@ -25,44 +25,32 @@ var StudentList = React.createClass({
 
     // Method that is called when a user clicks on a submission (a table row).
     // It creates a new interface for submission grading..
+    /**TODO:
+     * StudentID
+     * studentNamn
+     * AssignementID
+     * tEACHERID(teachername temporärt)
+     * courseID
+     * FIXA INFO BACKKNAPP
+     * */
     clickhandle: function (user, event) {
-        window.studentName = user.firstName + " " + user.lastName;
+        window.studentName =
         window.assignmentID = user.assignmentID;
         window.courseID = user.courseID;
         window.teacherID = user.teacherID;
+        var student = [{
+            "studentID":user.studentID,
+            "studentName":user.firstName + " " + user.lastName,
+            "courseID":user.courseID,
+            "assignmentID":user.assignmentID,
+            "teacherName":user.teacherName}];
+     //   var jebane=[user.studentID,user.firstName + " " + user.lastName,user.courseID,user.assignmentID,user.teacherName];
+
         //TODO: REMOVE JEBANE
         document.getElementById("courseContent").innerHTML = ""; //TODO: find better solution.
-        ReactDOM.render(<RenderHandle />, document.getElementById("courseContent"));
+        ReactDOM.render(<RenderHandle studentArray={student} />, document.getElementById("courseContent"));
         //   this.getData();
         //TODO: render other user story.
-    },
-
-    getData: function () {
-
-        var reqBody = {};
-
-        reqBody["AssignmentID"] = window.assignmentID;
-        reqBody["CourseID"] = window.courseID;
-        reqBody["TeacherID"] = window.teacherID;
-        reqBody["StudentID"] = window.studentID;
-
-        $.ajax({
-            type: "GET",
-            contentType: "application/json",
-            url: "feedback/get",
-            data: JSON.stringify(reqBody),
-            timeout: 100000,
-            success: function (response) {
-                console.log("SUCCESS: ", response);
-                // TODO: check response with if/else, if respons is fail give error message
-            }, error: function (e) {
-                console.log("ERROR: ", e);
-                console.log(reqBody);
-            }, done: function (e) {
-                console.log("DONE");
-            }
-        });
-
     },
 
     componentWillMount: function () {
