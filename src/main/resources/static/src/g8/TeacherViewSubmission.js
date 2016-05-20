@@ -1,6 +1,8 @@
 /**
  *
- *@author: Andreas Savva <ens15asa>, Benjamin Björklund <c13bbd>, Tobias Estefors <dv13tes>
+ *@author: Andreas Savva <ens15asa>,
+ *         Benjamin Björklund <c13bbd>,
+ *         Tobias Estefors <dv13tes>
  *     
  *@note: This react-class is rendered from DynamicMenu.js
  **/
@@ -13,6 +15,7 @@ var TeacherViewSubmission = React.createClass({
 
     submissionsArray: null, //Alla som har submittat
     participantsArray: null, //Hela kurslistan
+
 
     componentWillMount: function () {
         this.nSubmissions = 0;

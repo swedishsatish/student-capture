@@ -7,6 +7,11 @@
 /**
  * Cancel button for popup window, closes popup.
  */
+
+
+
+
+var student;
 var PopUpCancelButton = React.createClass({
     onclick: function () {
         close();
@@ -75,7 +80,7 @@ var PopUpGrade = React.createClass({
 var PopUpStudentName = React.createClass({
     render: function () {
         return(
-            <p id="smallLetter">{window.studentName}</p>
+            <p id="smallLetter">{student[0].studentName}</p>
         )
 
     }
@@ -122,7 +127,7 @@ function submitForm(method) {
     reqBody["grade"]["teacherID"] = "7777777"; //TODO: Fix this grade: document.getElementById('dropDownMenu').value;
     reqBody["studentPass"] = document.getElementById('ifStudentPass').checked;
     reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
-    reqBody["courseID"] = window.courseID;
+    reqBody["courseID"] = student[0].courseID;
 
 
 
@@ -130,7 +135,7 @@ function submitForm(method) {
     $.ajax({
         type: method,
         contentType: "application/json",
-        url: "assignments/" + 6 + "/submissions/" + 98,
+        url: "assignments/" + student[0].assignmentID + "/submissions/" + 98,//98 byts til student[0].studentID senare
         data : JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {
@@ -158,12 +163,12 @@ function  getForm(method) {
     reqBody["grade"]["teacherID"] = "7777777"; //TODO: Fix this grade: document.getElementById('dropDownMenu').value;
     reqBody["studentPass"] = document.getElementById('ifStudentPass').checked;
     reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
-    reqBody["courseID"] = window.courseID;
+    reqBody["courseID"] = student[0].courseID;
 
     $.ajax({
         type: method,
         contentType: "application/json",
-        url: "assignments/" + 6 + "/submissions/" + 98,
+        url: "assignments/" + student[0].assignmentID + "/submissions/" + 98,
         data : JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {
@@ -206,6 +211,10 @@ function sendData () {
  * Upon clicking on the button it sends the feedback information to the student.
  */
 var SubmitButton = React.createClass({
+
+    componentWillMount: function(){
+        student=this.props.studentArray;
+    },
     /**
      * Used to toggle on divs, make them visable.
      * @param div_id div that will be toggled.
