@@ -54,4 +54,29 @@ public class Grade {
                 ", feedbackIsVisible=" + feedbackIsVisible +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Grade)) return false;
+
+        Grade grade1 = (Grade) o;
+
+        if (feedbackIsVisible != grade1.feedbackIsVisible) return false;
+        if (grade != null ? !grade.equals(grade1.grade) : grade1.grade != null)
+            return false;
+        if (teacherID != null ? !teacherID.equals(grade1.teacherID) : grade1.teacherID != null)
+            return false;
+        return date != null ? date.equals(grade1.date) : grade1.date == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = grade != null ? grade.hashCode() : 0;
+        result = 31 * result + (teacherID != null ? teacherID.hashCode() : 0);
+        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (feedbackIsVisible ? 1 : 0);
+        return result;
+    }
 }
