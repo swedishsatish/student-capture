@@ -8,8 +8,8 @@ public class User {
 
 
     private String userName;
-    private String fName;
-    private String lName;
+    private String firstName;
+    private String lastName;
     private String email;
     private String pswd;
     private String userID;
@@ -23,8 +23,8 @@ public class User {
                 String email,String pswd) {
 
         this.userName = userName;
-        this.fName = fName;
-        this.lName = lName;
+        this.firstName = fName;
+        this.lastName = lName;
         this.email = email;
         this.pswd = pswd;
 
@@ -38,20 +38,20 @@ public class User {
         this.userName = userName;
     }
 
-    public String getfName() {
-        return fName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setfName(String fName) {
-        this.fName = fName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getlName() {
-        return lName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setlName(String lName) {
-        this.lName = lName;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -91,8 +91,8 @@ public class User {
         User that = (User) other;
 
         return (that.getUserName() == this.getUserName())
-                && (that.getfName() == this.fName)
-                && (that.getlName() == this.lName)
+                && (that.getFirstName() == this.firstName)
+                && (that.getLastName() == this.lastName)
                 && (that.getEmail() == this.email)
                 && (that.getPswd()  == this.pswd)
                 && (that.getToken() == this.token);

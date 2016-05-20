@@ -6,8 +6,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import studentcapture.lti.*;
+import studentcapture.model.Grade;
 
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Class:       SubmissionResource
@@ -22,13 +30,16 @@ import java.util.List;
 @RequestMapping(value = "assignments/{assignmentID}/submissions/")
 public class SubmissionResource {
     @Autowired
-    SubmissionDAO DAO;
+    private SubmissionDAO DAO;
+    @Autowired
+    private HttpSession session;
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
                                                             @PathVariable("studentID") int studentID){
         Submission body = DAO.getSubmission(assignmentID, studentID).get();
         return new ResponseEntity<>(body, HttpStatus.OK);
+
     }
 
 
@@ -62,16 +73,67 @@ public class SubmissionResource {
      * @return
      */
     @RequestMapping(value = "{studentID}", method = RequestMethod.PATCH)
-    public HttpStatus markSubmission(@PathVariable("assignmentID") int assignmentID,
+    public ResponseEntity markSubmission(@PathVariable("assignmentID") int assignmentID,
                                      @PathVariable("studentID") int studentID,
                                      @RequestBody Submission submission){
+        //TODO: VIDEO-POST
+
         submission.setAssignmentID(assignmentID);
         submission.setStudentID(studentID);
+        //TODO: Set by inRequest variable
+        boolean publishFeedback = true;
+
+        Map<String, String> response = new HashMap<>();
+        HttpStatus httpStatus = OK;
+
         if (DAO.patchSubmission(submission)) {
-            return HttpStatus.OK;
+            response.put("Save data", "Success");
         } else {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
+            response.put("Save data", "ERROR: Couldn't save the feedback to database/filesystem.");
+            httpStatus = INTERNAL_SERVER_ERROR;
+            return new ResponseEntity(response, httpStatus);
         }
+
+        try {
+            DAO.setGrade(submission);
+            response.put("Save grade", "Success");
+        } catch (IllegalAccessException e) {
+            response.put("Save grade", "ERROR: "+e.getMessage());
+            httpStatus = INTERNAL_SERVER_ERROR;
+            return new ResponseEntity(response, httpStatus);
+        }
+
+        /*if (DAO.setFeedbackVideo(submission, feedbackVideo)) {
+            response.put("Save video", "Success");
+        } else {
+            response.put("Save video", "ERROR: Couldn't save the feedbackVideo to filesystem.");
+            httpStatus = INTERNAL_SERVER_ERROR;
+            return new ResponseEntity(response, httpStatus);
+        }*/
+
+        try {
+            DAO.publishFeedback(submission, publishFeedback);
+            response.put("Publish feedback", "Success");
+        } catch (IllegalAccessException e) {
+            response.put("Publish feedback", "ERROR: "+e.getMessage());
+            httpStatus = INTERNAL_SERVER_ERROR;
+            return new ResponseEntity(response, httpStatus);
+        }
+
+
+        try {
+            LTICommunicator.setGrade(submission);
+            response.put("LTI", "Success");
+        } catch (LTINullPointerException e) {
+            response.put("LTI", "No LTI exists for this assignment");
+        } catch (LTIInvalidGradeException e) {
+            response.put("LTI", "ERROR: Invalid grade: "+e.getMessage());
+        } catch (LTISignatureException e) {
+            response.put("LTI", "ERROR: "+e.getMessage());
+        }
+
+        response.put("Submission", submission.toString());
+        return new ResponseEntity(response, httpStatus);
     }
 
 
@@ -94,7 +156,7 @@ public class SubmissionResource {
         updatedSubmission.setStudentID(studentID);
         updatedSubmission.setAssignmentID(assignmentID);
         updatedSubmission.setStudentVideo(studentVideo);
-        returnStatus = DAO.addSubmission(updatedSubmission, true) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
+        returnStatus = DAO.addSubmission(updatedSubmission, true) ? OK : INTERNAL_SERVER_ERROR;
 
         /*Validation of Submission
         * Should be sent by a student, might have to validate that the student didnt set the grade himself.
