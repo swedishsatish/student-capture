@@ -9,24 +9,25 @@ CREATE TABLE IF NOT EXISTS Users (
     );
 
 CREATE TABLE IF NOT EXISTS Course (
-    CourseId             SERIAL         PRIMARY KEY,
+    CourseId             VARCHAR(10)    PRIMARY KEY,
     Year                 INT            NOT NULL,
     Term                 VARCHAR(8)     NOT NULL,
-    CourseName           VARCHAR(64)    NOT NULL,
+    CourseCode           VARCHAR(8)     NOT NULL,
+    CourseName           VARCHAR(64),
     CourseDescription    VARCHAR(1024),
     Active               BOOLEAN        NOT NULL
     );
 
 CREATE TABLE IF NOT EXISTS Participant (
     UserId       INT           references Users(UserId),
-    CourseId     INT           references Course(CourseId),
+    CourseId     VARCHAR(10)   references Course(CourseId),
     Function     VARCHAR(64)   NOT NULL,
     PRIMARY KEY (UserId, CourseId)
     );
 
 CREATE TABLE IF NOT EXISTS Assignment (
     AssignmentId      SERIAL         PRIMARY KEY,
-    CourseId                    INT            references Course(CourseId),
+    CourseId          VARCHAR(10)    references Course(CourseId),
     Title             VARCHAR(64)    NOT NULL,
     StartDate         timestamp      NOT NULL,
     EndDate           timestamp      NOT NULL,
