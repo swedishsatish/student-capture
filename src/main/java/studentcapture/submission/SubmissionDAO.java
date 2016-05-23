@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Grade;
@@ -32,13 +33,23 @@ public class SubmissionDAO {
      * @author tfy12hsm
 	 */
 	public boolean addSubmission(Submission submission, Boolean studentConsent) {
-		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentpublishconsent) VALUES  (?,?,?,?)";
+		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentpublishconsent, status)" +
+					" VALUES  (?,?,?,?,?)";
 		java.util.Date date = new java.util.Date(System.currentTimeMillis());
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		timestamp.setNanos(0);
 
-		int rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(), submission.getStudentID(), timestamp, studentConsent);
-        if(submission.getStudentVideo() != null) {
+		int rowsAffected = 0;
+		try {
+			rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(),
+                                                            submission.getStudentID(),
+                                                            timestamp,
+                                                            studentConsent,
+                                                            submission.getStatus());
+		} catch (DataAccessException e) {
+			return false;
+		}
+		if(submission.getStudentVideo() != null) {
             FilesystemInterface.storeStudentVideo(submission, submission.getStudentVideo());
         }
 
@@ -68,7 +79,7 @@ public class SubmissionDAO {
             sql += "status = ?,";
             sqlparams.add(submission.getStatus());
         }
-        if (submission.getGrade() != null) {
+        /*if (submission.getGrade() != null) {
             if  (submission.getGrade().getGrade() != null) {
                 sql += "grade = ?,";
                 sqlparams.add(submission.getGrade().getGrade());
@@ -77,16 +88,16 @@ public class SubmissionDAO {
                 sql += "teacherid = ?,";
                 sqlparams.add(submission.getGrade().getTeacherID());
             }
-        }
-        if (submission.getFeedbackIsVisible() != null) {
-            sql += "publishfeedback = ?,";
-            sqlparams.add(submission.getFeedbackIsVisible());
-        }
+			if (submission.getGrade().getFeedbackIsVisible() != null) {
+				sql += "publishfeedback = ?,";
+				sqlparams.add(submission.getGrade().getFeedbackIsVisible());
+			}
+		}
         if (submission.getPublishStudentSubmission() != null) {
             sql += "publishstudentsubmission = ?,";
             sqlparams.add(submission.getPublishStudentSubmission());
         }
-
+		*/
         if (sqlparams.isEmpty()) {
             return false; // Nothing to patch
         }
@@ -107,18 +118,22 @@ public class SubmissionDAO {
      * Make the feedback visible for the student
      * @param submission Submission object
      * @return True if a row was changed, otherwise false
+	 * @throws IllegalAccessError Cant publish feedback if not a teacher.
      */
-    public boolean publishFeedback(Submission submission, boolean publish) {
+    public boolean publishFeedback(Submission submission, boolean publish)
+														throws IllegalAccessException {
         /* Publishing feedback without a grade is not possible, returns false */
         Grade grade = submission.getGrade();
         System.out.println("GRADE: " + grade);
-        if (grade == null)
-            return false;
+        if (grade == null) {
+			return false;
+		}
         /* If a person that is not a teacher tries to set a grade, return false */
         String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
         int rows = databaseConnection.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
-        if(rows != 1)
-            return false;
+        if(rows != 1) {
+			throw new IllegalAccessException("Cant set grade, user not a teacher");
+		}
 
         String publishFeedback  = "UPDATE Submission SET publishFeedback = ? WHERE (AssignmentID = ?) AND (StudentID = ?);";
         int updatedRows = databaseConnection.update(publishFeedback, publish, submission.getAssignmentID(), submission.getStudentID());
@@ -131,15 +146,17 @@ public class SubmissionDAO {
 	 *
 	 * @param submission Submission object
 	 * @return True if a row was changed, otherwise false
+	 * @throws IllegalAccessError Cant set grade if not a teacher.
 	 */
-	public boolean setGrade(Submission submission) {
+	public boolean setGrade(Submission submission) throws IllegalAccessException {
 		Grade grade = submission.getGrade();
         /* If a person that is not a teacher tries to set a grade, return false */
         String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE" +
 				" (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
         int rows = databaseConnection.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
-        if(rows != 1)
-            return false;
+        if(rows != 1) {
+			throw new IllegalAccessException("Cant set grade, user not a teacher");
+		}
 
 		String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, PublishStudentSubmission = ?" +
 				" WHERE (AssignmentID = ?) AND (StudentID = ?);";
@@ -181,40 +198,6 @@ public class SubmissionDAO {
 		}
 
 		return result;
-	}
-
-	/**
-	 * Get information about the grade of a submission
-	 *
-	 * @param submission Unique identifier for the assignment submission grade bra
-	 * @return A list containing the grade, date, and grader
-	 */
-	public Map<String, Object> getGrade(Submission submission) {
-		String queryForGrade = "SELECT grade, submissiondate as time, " +
-				"teacherid FROM submission " +
-				"WHERE (studentid = ? AND assignmentid = ?)";
-		String queryForTeacher = "SELECT concat(firstname,' ', lastname)" +
-				" as teacher FROM users WHERE (userid = ?)";
-		Map<String, Object> response;
-		try {
-			response = databaseConnection.queryForMap(queryForGrade,
-					new Object[]{submission.getStudentID(), submission.getAssignmentID()});
-			if (response.get("teacherid") != null) {
-				String teacherName = databaseConnection.queryForObject(queryForTeacher,
-						new Object[]{response.get("teacherid")}, String.class);
-				response.put("teacher", teacherName);
-			}
-			response.put("time", response.get("time").toString());
-		} catch(IncorrectResultSizeDataAccessException e) {
-			response = new HashMap<>();
-			response.put("error", "The given parameters does not have an" +
-				" entry in the database");
-		} catch(DataAccessException e) {
-			response = new HashMap<>();
-			response.put("error", "Could not connect to the database");
-		}
-
-		return response;
 	}
 
     /**
@@ -352,8 +335,7 @@ public class SubmissionDAO {
 
 	/**
 	 * Get a teacher's submitted feedback video for a specific student.
-	 * @param assignmentID
-	 * @param studentID
+	 * @param submission
      * @return
      */
 	public ResponseEntity<InputStreamResource> getFeedbackVideo(Submission submission) {
@@ -365,6 +347,20 @@ public class SubmissionDAO {
 			String path = FilesystemInterface.generatePath(submission) + FilesystemConstants.FEEDBACK_VIDEO_FILENAME;
 			return FilesystemInterface.getVideo(path);
 		}
+	}
+
+
+	/**
+	 *
+	 * @param assignmentID
+	 * @param studentID
+	 * @return
+	 */
+	public boolean setFeedbackVideo(Submission submission, MultipartFile feedbackVideo) {
+
+		return FilesystemInterface.storeFeedbackVideo(submission, feedbackVideo);
+
+
 	}
 
 	/**

@@ -9,7 +9,7 @@ public class Grade {
     private String grade;
     private Integer teacherID;
     private Date date;
-    private boolean feedbackIsVisible = false;
+    private Boolean feedbackIsVisible;
 
     public Grade(String grade, Integer teacherID) {
         this.grade = grade;
@@ -23,7 +23,7 @@ public class Grade {
         this.feedbackIsVisible = feedbackIsVisible;
     }
 
-    public boolean getFeedbackIsVisible() { return feedbackIsVisible; }
+    public Boolean getFeedbackIsVisible() { return feedbackIsVisible; }
 
     public String getGrade() {
         return grade;

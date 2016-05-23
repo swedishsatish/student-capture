@@ -108,12 +108,12 @@ public class DatalayerCommunicator {
      * @param submission An object representing a submission
      * @return True if the grade was successfully saved to the database, else false
      */
-    @CrossOrigin
+    /*@CrossOrigin
     @RequestMapping(value = "/setGrade", method = RequestMethod.POST)
     public boolean setGrade(@RequestBody Submission submission) {
         return submissionDAO.setGrade(submission);
     }
-
+*/
     /**
      * Set feedback for a submission, video and text cannot be null
      * @param submission An object representing a submission

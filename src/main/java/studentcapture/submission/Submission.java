@@ -16,10 +16,10 @@ public class Submission {
     private Integer assignmentID;
     @NotNull
     private Integer studentID;
-    private Boolean studentPublishConsent = false;
+    private Boolean studentPublishConsent;
     private Timestamp submissionDate;
     private Grade grade;
-    private Boolean publishStudentSubmission = false;
+    private Boolean publishStudentSubmission;
     private String courseID;
     private String courseCode;
     private String feedback;
@@ -215,14 +215,6 @@ public class Submission {
 
     public Boolean getPublishStudentSubmission() {
         return publishStudentSubmission;
-    }
-
-    public Boolean getFeedbackIsVisible() {
-        return grade.getFeedbackIsVisible();
-    }
-
-    public void setFeedbackIsVisible(Boolean publishFeedback) {
-        grade.setFeedbackIsVisible(publishFeedback);
     }
 
     public String getTeacherName() {

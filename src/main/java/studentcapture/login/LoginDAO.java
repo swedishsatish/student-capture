@@ -1,17 +1,19 @@
-package studentcapture.user;
+package studentcapture.login;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 import studentcapture.login.ErrorFlags;
+import studentcapture.user.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
 @Repository
-public class UserDAO {
+public class LoginDAO {
 
     private final int GET_USER_BY_USERNAME = 0;
     private final int GET_USER_BY_ID = 1;

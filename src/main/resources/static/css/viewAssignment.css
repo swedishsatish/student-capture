@@ -66,11 +66,18 @@
     width: 100%;
 }
 
+#countDownContainer
+{
+    position: relative;
+}
+
 /* Style of countdown numbers */
 #countdown-div
 {
 	font-size: 100px;
 	text-align:center;
+	top: 50%;
+ 	left: 50%;
 	height:150px;
 	color: white;
     text-shadow:
@@ -82,6 +89,9 @@
         -1px  1px 0px black,
          0px  1px 0px black,
          1px  1px 0px black;
+    position: absolute;
+	transform: translate(-50%, -100%);
+	z-index: 2;
 }
 
 #videoTitle
@@ -89,9 +99,14 @@
     display: inline-block;
 }
 
-#recorder-div
+#recorder-div > div > #rec-text
+{
+	display: none;
+}
+
+#studentPreview > #preview
 {
     position: relative;
-    padding-bottom: 0%;
+    top: 0px;
 }
 

@@ -42,8 +42,8 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         userSetup = new User("testUser","testFName","testLName",
                              "testEmail@example.com","testPassword123");
 
-        Object[] args = new Object[] {userSetup.getUserName(), userSetup.getfName(),
-                            userSetup.getlName(),userSetup.getEmail(),
+        Object[] args = new Object[] {userSetup.getUserName(), userSetup.getFirstName(),
+                            userSetup.getLastName(),userSetup.getEmail(),
                             userSetup.getPswd()};
 
         int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
@@ -107,7 +107,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @Test
     public void testUpdateUser() {
 
-        userSetup.setfName("new username");
+        userSetup.setFirstName("new username");
         userSetup.setPswd("new password");
 
         boolean res = userDAO.updateUser(userSetup);
