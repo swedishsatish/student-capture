@@ -13,7 +13,14 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 /**
- * Author c13evk
+ * Class:       MailDAOTest
+ * <p/>
+ *
+ * A class for testing mailDAO.
+ *
+ * Author:      Isak Hjelt, Emil Vannebäck
+ * cs-user:     dv14iht, c13evk
+ * Date:        5/18/16
  */
 public class MailDAOTest extends StudentCaptureApplicationTests{
     @Autowired
@@ -22,6 +29,10 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
     @Autowired
     MailDAO mailDAO;
 
+    /**
+     * initiates test database
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         String sql1 = "INSERT INTO Users VALUES (1, 'mkyong', 'abcd', 'defg', 'mkyong@gmail.com', 'MyPassword',null);";
