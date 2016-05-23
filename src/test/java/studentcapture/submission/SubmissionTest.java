@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.submission;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -143,4 +143,16 @@ public class CourseModel {
 	public Integer getErrorCode() {
 		return errorCode;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		CourseModel course = (CourseModel) other;
+		
+		return ((getActive().equals(course.getActive()))&&
+				(course.getCourseDescription().equals(getCourseDescription()))&&
+				(course.getCourseId().equals(getCourseId()))&&
+				(course.getCourseName().equals(getCourseName()))&&
+				(course.getTerm().equals(getTerm()))&&
+				(course.getYear().equals(getYear())));
+	}
 }

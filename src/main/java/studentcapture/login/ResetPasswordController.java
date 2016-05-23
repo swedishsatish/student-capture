@@ -1,22 +1,16 @@
 package studentcapture.login;
 
-import java.net.URI;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import studentcapture.mail.MailClient;
 import studentcapture.user.User;
@@ -27,29 +21,22 @@ import studentcapture.user.User;
  */
 @RestController
 public class ResetPasswordController {
-	
-	private static final String dbURI = "https://localhost:8443";
     
     @Autowired
-    private RestTemplate requestSender;
+    private LoginDAO loginDao;
     
-    @RequestMapping(value = "/testResetPassword", method = RequestMethod.POST)
-    public String resetPassword(
-            HttpServletRequest request, @RequestParam("email") String userEmail) {
-        
-        String token = UUID.randomUUID().toString();
-        System.out.println("Email: " + userEmail + ", Token: " + token);
-        
-        String url = 
-                "https://" + request.getServerName() + 
-                ":" + request.getServerPort() + 
-                request.getContextPath();   
-        
-        System.out.println("Url: " + url);
-        
-        return token;
-    }
-    
+    /**
+     * Generates a link for resetting username's password, and emails the link
+     * to the users email.
+     * 
+     * The link contains a randomly generated token, 
+     *  which is also stored in the database.
+     * 
+     * @param email
+     * @param username
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/lostPassword", method = RequestMethod.POST)
     public ModelAndView lostPassword(
             @RequestParam(value="email", required = true)    String email,
@@ -57,111 +44,110 @@ public class ResetPasswordController {
             HttpServletRequest request
             ){
         
-        String token = UUID.randomUUID().toString();
-        System.out.println("Email: " + email + ", Token: " + token);
-        
-        String url = 
-                "http://" + request.getServerName() + 
-                ":" + request.getServerPort() + 
-                request.getContextPath();
-        
-        
-        System.out.println("Url: " + url);
-        
-        String tokenUrl = url + "/lostPassword?token=" + token;
-        
         ModelAndView mav = new ModelAndView(); 
-        mav.setViewName("redirect:login");
-
         
-        //Validate credentials
-        //Check if email and username match
-        if(checkEmailExistsWithUserName(email,username)){
-            System.out.println("success!");
+        //flag = 0 for username, flag = 1 for userID
+        int flag = 0;
+        User user = loginDao.getUser(username, flag);
         
-        
-        //Generate link
-        //Spring generate token http://www.baeldung.com/spring-security-registration-i-forgot-my-password
-        
-        //Store token in db ?
-        
-        
-        //Email link
-        //Spring or custom mail?
-        
-        
-        MailClient mailClient = new MailClient();
-        //mailClient.send(String to, String from, String subject, String msg)
-        mailClient.send("receiver", "sender", "Reset Password", tokenUrl);
-        
-        
-        //Compare header token with db token <-- another method?
-        
+        //Return if user does not exist
+        if(user.getUserName() == null){
+            mav.setViewName("redirect:login?error=invalidUser");
         }else{
-            System.out.println("fail...");
-            mav.setViewName("redirect:login?error=invaliduser");
+            
+            //Spring generate token http://www.baeldung.com/spring-security-registration-i-forgot-my-password
+            String token = UUID.randomUUID().toString();
+            
+            String url = 
+                    "https://" + request.getServerName() + 
+                    ":" + request.getServerPort() + 
+                    request.getContextPath();
+                        
+            //Generate link
+            //Url syntax: /changePassword?username=123&token=456
+            String tokenUrl = url + "/changePassword?username=" + user.getUserName() + "&token=" + token;
+                
+            //Set token for the user           
+            user.setToken(token);
+            
+            //Update user
+            loginDao.updateUser(user);
+                        
+            //Email link
+            MailClient mailClient = new MailClient();
+            String receiver = user.getEmail();
+            //mailClient.send(String to, String from, String subject, String msg)
+            mailClient.send(receiver, "no-reply@studentcapture.com", "Reset Password", tokenUrl);
 
+            mav.setViewName("redirect:login?passwordemail");
+            
         }
 
-        
         return mav;
     }
     
-    //How should this even work?
-    @RequestMapping(value = "/lostPassword", method = RequestMethod.GET)
+
+    /**
+     * Changes password for the user username, 
+     * if token matches the token stored in the users database entry.
+     * 
+     * @param username
+     * @param token
+     * @param password
+     * @return
+     */
+    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
     public ModelAndView resetPassword(
-            //@RequestParam(value="email", required = true) String email,
-            @RequestParam(value="token", required = true) String token
+            @RequestParam(value="username", required = true) String username,
+            @RequestParam(value="token", required = true) String token,
+            @RequestParam(value="password", required = true) String password
             ){
-        
-        //System.out.println("Received email: " + email + ", token: " + token);
-        System.out.println("Received token: " + token);
+                
+        //flag = 0 for username, flag = 1 for userID
+        int flag = 0;
+        User user = loginDao.getUser(username, flag);
+                
         ModelAndView mav = new ModelAndView(); 
-        mav.setViewName("redirect:login?error=passwordRecoveryNotImplemented");
         
+        //If the token does not exist, return
+        if(user == null){
+            mav.setViewName("redirect:login?error=badtoken");
+        }
+        else if(user.getToken() == null){
+            mav.setViewName("redirect:login?error=badtoken");
+        }
+        else if(user.getToken().compareTo("") == 0){
+            mav.setViewName("redirect:login?error=badtoken");
+            
+        }else if(user.getToken().compareTo(token) == 0){
+            //Tokens match
+            
+            //Encrypt the password, set password and token
+            user.setPswd(encryptPassword(password));
+            user.setToken("");
+            
+            mav.setViewName("redirect:login?passwordchanged");
+            
+            //Update user
+            loginDao.updateUser(user);
+            
+        }else{
+            mav.setViewName("redirect:login?error=badToken");
+        }
+
         return mav;
         
-    }
-    
-    @RequestMapping(value = "/sessiontest", method = RequestMethod.POST)
-    public void sessionPost(@RequestParam(value="coolString", required = true) String cool, HttpSession session) {
-    	session.setAttribute("123", cool);
-    }
-    
-    @RequestMapping(value = "/sessiontest", method = RequestMethod.GET)
-    public void sessionGet(HttpSession session) {
-    	System.out.println("USERNAME: " + session.getAttribute("username") + " ID: " + session.getAttribute("userid"));
-    	System.out.println("Put this cool string: " + session.getAttribute("123"));
-    	
-    	System.out.println("NOW WITH OTHER METHOD -----------------------------------");
-    	
-		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-    	HttpSession session2 = attr.getRequest().getSession();
-    	System.out.println("USERNAME: " + session2.getAttribute("username") + " ID: " + session2.getAttribute("userid"));
-    	System.out.println("Put this cool string: " + session2.getAttribute("123"));
     }
     
     /**
-     * Checks if email and user exist in the same user.
-     * @param email Email address to check
-     * @param userName Username to check
-     * @return True if Email and Username belong to the same user.
+     * Encrypts a password string with BCrypt.
+     * 
+     * @param password
+     * @return the encrypted password
      */
-    protected boolean checkEmailExistsWithUserName(String email, String userName) {
-        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
-                .path("DB/userEmailExistWithUserName")
-                .queryParam("email", email)
-                .queryParam("username", userName)
-                .build()
-                .toUri();
-        
-        System.out.println("Target: " + targetUrl);
-        
-        Boolean answer = requestSender.getForObject(targetUrl, Boolean.class);
-        System.out.println(answer);
-        //Send request to DB and get the boolean answer
-        return requestSender.getForObject(targetUrl, Boolean.class);
-    }
-    
+    protected String encryptPassword(String password) {
+        String generatedPassword = BCrypt.hashpw(password, BCrypt.gensalt(11));
+        return generatedPassword;
+    }    
     
 }

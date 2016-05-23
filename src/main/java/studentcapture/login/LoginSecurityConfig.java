@@ -33,23 +33,23 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception {
     	http.authorizeRequests().antMatchers("/css/**", "/src/**", "/images/**").permitAll();
-    	http.authorizeRequests().antMatchers("/users").permitAll();
     	http.authorizeRequests().antMatchers("/login**").permitAll();
+    	http.authorizeRequests().antMatchers("/register").permitAll();
+    	http.authorizeRequests().antMatchers("/lostPassword").permitAll();
+    	http.authorizeRequests().antMatchers("/changePassword").permitAll();
         http
         	.sessionManagement().maximumSessions(1)
         	.and().invalidSessionUrl("/login");
         http
             .authorizeRequests()
-                .antMatchers("/**").access("hasRole('USER')")
+                .antMatchers("/**").access("hasRole('USER')")	
                 .antMatchers("/loggedin").access("hasRole('USER') or hasRole('ADMIN')") //Users and admins can access /loggedin
                 .antMatchers("/admin").access("hasRole('ADMIN')") //Admins can access /admin
-                .antMatchers("/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
                 .loginPage("/login")
                 .permitAll()
-                //.successHandler(customLoginHandler) //Custom redirection based on role
                 .defaultSuccessUrl("/index", true) //always redirect to "/index"
                 .failureUrl("/login?error=loginerror")
                 .and()

@@ -148,6 +148,11 @@ var Recorder = React.createClass({
 
         /* Closes the webcam stream and post to server if auto recording is on. */
         function stopRecording() {
+
+            if(!confirm("Are you sure you want to submitt your answer?")) {
+                return;
+            }
+
             if(!shouldAutoRecord){
                 recordButton.disabled = false;
             }
@@ -225,6 +230,7 @@ var Recorder = React.createClass({
             request.onreadystatechange = function () {
                 if (request.readyState == 4 && request.status == 200) {
                     callback(request.responseText);
+                    alert("Your answer has been submitted successfully!");
                 } else if(request.readyState == 4 && request.status !== 200) {
                     alert(request.responseText);
                 }

@@ -89,7 +89,7 @@ public class UserResource {
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity updateUser(@RequestParam(value = "User")User user) {
+    public ResponseEntity updateUser(@RequestBody User user) {
         boolean success = userDAO.updateUser(user);
 
         if(!success) {

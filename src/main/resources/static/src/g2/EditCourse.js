@@ -49,13 +49,11 @@ window.EditCourse = React.createClass({
             data : JSON.stringify(course),
             timeout : 100000,
             success : function(res) {
-                if(res){
-                    alert("Course edited");
-                    //goto course content.
-                }
-                else {
-                    alert("Failed to edit course");
-                }
+                $.get("course/" + courseID,function (res2) {
+                    ReactDOM.render(<CourseInfo course={res2}/>,document.getElementById("courseContent"));
+
+
+                });
             }, error : function(e) {
                 console.log("ERROR: ", e);
             }, done : function(e) {

@@ -13,6 +13,7 @@
      * @returns {XML} components.
      */
     render: function () {
+        console.log(this.props.studentArray);
         return(
             <div class="row">
                 <div id="blanket" style={{"display":"none"}}></div>
@@ -38,10 +39,10 @@
                     </div>
                     <div id="buttonContainer">
                         <div id="backButton">
-                            <BackButton />
+                            <BackButton idArray={this.props.idArray} />
                         </div>
                         <div id="submitButton">
-                            <SubmitButton />
+                            <SubmitButton studentArray={this.props.studentArray} idArray={this.props.idArray} />
                         </div>
 
                     </div>

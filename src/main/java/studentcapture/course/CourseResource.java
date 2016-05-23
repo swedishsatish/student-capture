@@ -7,7 +7,12 @@ import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+
+import studentcapture.course.hierarchy.HierarchyDAO;
+import studentcapture.course.hierarchy.HierarchyModel;
 import studentcapture.course.participant.ParticipantDAO;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * CourseResource is a REST controller that maps course related methods to 
@@ -155,7 +160,7 @@ public class CourseResource {
      * 
      * @author tfy12hsm
      * 
-     * @param userID	given users identification
+     * given users identification
      * @return			hierarchy
      */
     @CrossOrigin
@@ -164,10 +169,9 @@ public class CourseResource {
     method = RequestMethod.GET,
     value = "")
     @ResponseBody
-    public HierarchyModel getHierarchy(
-    		@RequestParam(value="userID") Integer userID) {
+    public HierarchyModel getHierarchy(HttpSession session) {
     	Optional<HierarchyModel> hierarchy = 
-    			hierarchyDAO.getCourseAssignmentHierarchy(userID);
+    			hierarchyDAO.getCourseAssignmentHierarchy(Integer.parseInt(session.getAttribute("userid").toString()));
     	if(hierarchy.isPresent()) 
     		return hierarchy.get();
     	throw new ResourceNotFoundException();

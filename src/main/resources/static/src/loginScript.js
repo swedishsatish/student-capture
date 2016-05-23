@@ -117,7 +117,14 @@ for(var i=0; i<urlVars.length; i++) {
         }
         err = true;
         break;
-    }
+    } else if(varSplit[0]==="success") {
+    	alert("Registration success!");
+    } else if(varSplit[0]==="passwordemail") {
+    	alert("Check your inbox for an email with the link to reset your password!");
+    } else if(varSplit[0]==="passwordchanged") {
+    	alert("Password changed!");
+    } 
+    
 }
 /*
 error=usernamelength
@@ -151,9 +158,12 @@ if(err){
         case "loginerror":
             msg = "Invalid username or password";
             break;
+        case "badtoken":
+        	msg = "Invalid or missing token";
+        	break;
         default:
             msg = "Unknown Error";
             break;
     }
-    alert("TERRIBLE ERROR\n"+msg);
+    alert("Error:\n"+msg);
 }

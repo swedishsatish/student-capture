@@ -10,10 +10,12 @@
 window.Feedback = React.createClass({
 
     getInitialState: function() {
-        return { data: null };
+        return {
+            data: null,
+            source: null
+        };
     },
     componentDidMount: function() {
-        //Skicka till assignments/{assignmentid}/submissions/{studentid}
         $.ajax({
             type: "GET",
             url: "assignments/" + this.props.assignment + "/submissions/" + this.props.user,
@@ -21,6 +23,12 @@ window.Feedback = React.createClass({
         }).done(function (data) {
             this.setState({data: data});
         }.bind(this));
+    },
+    handleVideoClick: function () {
+        var assignement = this.props.assignment;
+        var user = this.props.user;
+        var sour = "assignments/" + assignement + "/submissions/" + user + "/video";
+        this.setState({source: sour});
     },
     render: function () {
 
@@ -39,6 +47,14 @@ window.Feedback = React.createClass({
                 gradeColor = 'red';
             }
 
+            var videoButContent;
+
+            if(!this.state.source) {
+                videoButContent = <button onClick={this.handleVideoClick}>Get Video</button>;
+            } else {
+                videoButContent = <div><video width="720" height="460" src={this.state.source} preload="auto" controls/></div>;
+            }
+
             return (
                 <div>
                     <h5 style={{color:gradeColor}}>Grade: {response.grade
@@ -47,6 +63,7 @@ window.Feedback = React.createClass({
                     <h5>Feedback: {response.feedback}</h5>
                     <h5>Teachername: {response.teacherName}</h5>
                     <br />
+                    {videoButContent}
                 </div>
             )
         }

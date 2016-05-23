@@ -1,6 +1,8 @@
 /**
  *
- *@author: Andreas Savva <ens15asa>, Benjamin Björklund <c13bbd>, Tobias Estefors <dv13tes>
+ *@author: Andreas Savva <ens15asa>,
+ *         Benjamin Björklund <c13bbd>,
+ *         Tobias Estefors <dv13tes>
  *     
  *@note: This react-class is rendered from DynamicMenu.js
  **/
@@ -14,11 +16,8 @@ var TeacherViewSubmission = React.createClass({
     submissionsArray: null, //Alla som har submittat
     participantsArray: null, //Hela kurslistan
 
+
     componentWillMount: function () {
-        this.nSubmissions = 0;
-        this.nWithdrawals = 0;
-        this.nDone = 0;
-        this.nParticipants = 0;
 
         // GET request to database to get all the submissions from the students.
         $.ajax({
@@ -30,10 +29,10 @@ var TeacherViewSubmission = React.createClass({
             }.bind(this),
             error: function (xhr, status, err) {
                 // Handle the error
+                console.log(xhr + " "+ status+" " + err);
                 console.log("TeacherViewSubmission: Error Submissions");
             }.bind(this)
         });
-
         // GET request to database to get all the participants in a course.
         $.ajax({
             url: "courses/" + this.props.courseId + "/participants", // URL to send to
@@ -54,13 +53,19 @@ var TeacherViewSubmission = React.createClass({
     },
 
     calculateSubmissions: function () {
+        this.nSubmissions = 0;
+        this.nWithdrawals = 0;
+        this.nDone = 0;
+        this.nParticipants = 0;
         this.nParticipants = this.participantsArray.length;
-
+        console.log(this.submissionsArray);
         for (var i=0;i<this.submissionsArray.length;i++) {
-            if (this.submissionsArray[i].status.toLowerCase() == "answer") {
-                this.nSubmissions++;
-            } else if (this.submissionsArray[i].status.toLowerCase() == "blank") {
-                this.nWithdrawals++;
+            if(this.submissionsArray[i].status) {
+                if (this.submissionsArray[i].status.toLowerCase() == "answer") {
+                    this.nSubmissions++;
+                } else if (this.submissionsArray[i].status.toLowerCase() == "blank") {
+                    this.nWithdrawals++;
+                }
             }
         }
 
@@ -68,15 +73,16 @@ var TeacherViewSubmission = React.createClass({
     },
 
 
-
     render: function () {
+        var idArray=[{courseID:this.props.courseID,
+                     assignmentID:this.props.assignmentId}];
         this.calculateSubmissions();
         return (
             <div class="row">
                 <div className="four columns offset-by-one">
 
                     <div id="studentContainer">
-                        <StudentList submissions={this.submissionsArray} participants={this.participantsArray} />
+                        <StudentList submissions={this.submissionsArray} idArray={idArray} participants={this.participantsArray} />
                         <div id="textList">
                             <p>Submissions: {this.nSubmissions}/{this.nParticipants}</p>
                             <p>Withdrawals: {this.nWithdrawals}</p>
