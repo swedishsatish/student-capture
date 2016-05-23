@@ -72,7 +72,6 @@ public class ResetPasswordController {
             
             //Update user
             loginDao.updateUser(user);
-            System.out.println("Sending email to: " + user.getEmail());
                         
             //Email link
             MailClient mailClient = new MailClient();
