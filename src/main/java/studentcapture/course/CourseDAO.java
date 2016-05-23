@@ -200,30 +200,30 @@ public class CourseDAO {
     	return errorCourse;
     }
 
-    /**
-     * Fetches the code for a course.
-     * Useful when constructing a file path.
-     * @param courseId Unique identifier for the course
-     * @return course code
-     */
-    public String getCourseCodeFromId(CourseModel course){
-        String query = "SELECT coursecode FROM Course WHERE courseid = ?;";
-        String courseCode;
-
-        try {
-            courseCode = jdbcTemplate.queryForObject(query, new Object[]{course.getCourseId()}, String.class);
-            	
-            if (courseCode == null) {
-                courseCode = "Missing value";
-            } else {
-                courseCode = courseCode.trim();
-            }
-        } catch (IncorrectResultSizeDataAccessException up) {
-            throw up;
-        } catch (DataAccessException down) {
-            throw down;
-        }
-
-        return courseCode;
-    }
+//    /**
+//     * Fetches the code for a course.
+//     * Useful when constructing a file path.
+//     * @param courseId Unique identifier for the course
+//     * @return course code
+//     */
+//    public String getCourseCodeFromId(CourseModel course){
+//        String query = "SELECT coursecode FROM Course WHERE courseid = ?;";
+//        String courseCode;
+//
+//        try {
+//            courseCode = jdbcTemplate.queryForObject(query, new Object[]{course.getCourseId()}, String.class);
+//            	
+//            if (courseCode == null) {
+//                courseCode = "Missing value";
+//            } else {
+//                courseCode = courseCode.trim();
+//            }
+//        } catch (IncorrectResultSizeDataAccessException up) {
+//            throw up;
+//        } catch (DataAccessException down) {
+//            throw down;
+//        }
+//
+//        return courseCode;
+//    }
 }
