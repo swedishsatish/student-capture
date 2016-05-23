@@ -18,10 +18,7 @@ var TeacherViewSubmission = React.createClass({
 
 
     componentWillMount: function () {
-        this.nSubmissions = 0;
-        this.nWithdrawals = 0;
-        this.nDone = 0;
-        this.nParticipants = 0;
+
         // GET request to database to get all the submissions from the students.
         $.ajax({
             url: "assignments/" + this.props.assignmentId + "/submissions/",
@@ -56,6 +53,10 @@ var TeacherViewSubmission = React.createClass({
     },
 
     calculateSubmissions: function () {
+        this.nSubmissions = 0;
+        this.nWithdrawals = 0;
+        this.nDone = 0;
+        this.nParticipants = 0;
         this.nParticipants = this.participantsArray.length;
         console.log(this.submissionsArray);
         for (var i=0;i<this.submissionsArray.length;i++) {
