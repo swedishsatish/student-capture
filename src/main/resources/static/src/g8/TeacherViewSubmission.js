@@ -59,10 +59,12 @@ var TeacherViewSubmission = React.createClass({
         this.nParticipants = this.participantsArray.length;
         console.log(this.submissionsArray);
         for (var i=0;i<this.submissionsArray.length;i++) {
-            if (this.submissionsArray[i].status.toLowerCase() == "answer") {
-                this.nSubmissions++;
-            } else if (this.submissionsArray[i].status.toLowerCase() == "blank") {
-                this.nWithdrawals++;
+            if(this.submissionsArray[i].status) {
+                if (this.submissionsArray[i].status.toLowerCase() == "answer") {
+                    this.nSubmissions++;
+                } else if (this.submissionsArray[i].status.toLowerCase() == "blank") {
+                    this.nWithdrawals++;
+                }
             }
         }
 
