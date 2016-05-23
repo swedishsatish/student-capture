@@ -34,6 +34,10 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
 
     @Before
     public void setup() {
+
+
+        //
+
         //Add one user
         String sql = "INSERT INTO users"
                 +" (username, firstname, lastname, email, pswd)"
