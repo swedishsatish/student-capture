@@ -119,7 +119,12 @@ for(var i=0; i<urlVars.length; i++) {
         break;
     } else if(varSplit[0]==="success") {
     	alert("Registration success!");
-    }
+    } else if(varSplit[0]==="passwordemail") {
+    	alert("Check your inbox for an email with the link to reset your password!");
+    } else if(varSplit[0]==="passwordchanged") {
+    	alert("Password changed!");
+    } 
+    
 }
 /*
 error=usernamelength
