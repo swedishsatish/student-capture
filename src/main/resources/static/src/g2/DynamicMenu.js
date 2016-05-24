@@ -47,6 +47,7 @@ var Assignment = React.createClass({
 
         }
         else if(this.props.role == "teacher"){
+            console.log(courseID + " " +assID);
                 ReactDOM.render(<TeacherViewSubmission courseId={courseID} assignmentId={assID}/>,
                                 document.getElementById('courseContent') );
         }

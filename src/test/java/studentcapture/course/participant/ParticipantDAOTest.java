@@ -37,7 +37,7 @@ public class ParticipantDAOTest extends StudentCaptureApplicationTests {
     public void setUp() {
         String sql1 = "INSERT INTO Users VALUES (1, 'mudd', 'abcd', 'defg', 'mkyong@gmail.com', 'MyPassword',null);";
         String sql2 = "INSERT INTO Users VALUES (5, 'madd', 'defg','hej', 'mkyong@gmail.com', 'MyPassword',null);";
-        String sql3 = "INSERT INTO Course VALUES (2,2016,'VT', '1234', 'ABC', null, true);";
+        String sql3 = "INSERT INTO Course VALUES (2,2016,'VT', '1234', null, true);";
         String sql4 = "INSERT INTO Participant VALUES (1,2, 'student');";
         String sql5 = "INSERT INTO Participant VALUES (5,2, 'teacher');";
         String sql10 = "INSERT INTO Users VALUES (10, 'mudda', 'abcd', 'defg', 'mkyong@gmail.com', 'MyPassword',null);";

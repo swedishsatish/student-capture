@@ -1,25 +1,16 @@
 package studentcapture.login;
 
-import java.net.URI;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import studentcapture.mail.MailClient;
 import studentcapture.user.User;
@@ -30,11 +21,9 @@ import studentcapture.user.User;
  */
 @RestController
 public class ResetPasswordController {
-	
-	private static final String dbURI = "https://localhost:8443";
     
     @Autowired
-    private RestTemplate requestSender;
+    private LoginDAO loginDao;
     
     /**
      * Generates a link for resetting username's password, and emails the link
@@ -56,9 +45,10 @@ public class ResetPasswordController {
             ){
         
         ModelAndView mav = new ModelAndView(); 
-
         
-        User user = getUserFromDB(username);
+        //flag = 0 for username, flag = 1 for userID
+        int flag = 0;
+        User user = loginDao.getUser(username, flag);
         
         //Return if user does not exist
         if(user.getUserName() == null){
@@ -76,17 +66,12 @@ public class ResetPasswordController {
             //Generate link
             //Url syntax: /changePassword?username=123&token=456
             String tokenUrl = url + "/changePassword?username=" + user.getUserName() + "&token=" + token;
-            
-            mav.setViewName("redirect:login");
-    
+                
             //Set token for the user           
             user.setToken(token);
             
-            String targetUrl = "https://localhost:8443/users";
-            HttpEntity<User> userEntity = new HttpEntity<User>(user);
-            
             //Update user
-            requestSender.put(targetUrl, userEntity, "User");
+            loginDao.updateUser(user);
                         
             //Email link
             MailClient mailClient = new MailClient();
@@ -94,6 +79,8 @@ public class ResetPasswordController {
             //mailClient.send(String to, String from, String subject, String msg)
             mailClient.send(receiver, "no-reply@studentcapture.com", "Reset Password", tokenUrl);
 
+            mav.setViewName("redirect:login?passwordemail");
+            
         }
 
         return mav;
@@ -116,8 +103,9 @@ public class ResetPasswordController {
             @RequestParam(value="password", required = true) String password
             ){
                 
-        User user = getUserFromDB(username);
-        
+        //flag = 0 for username, flag = 1 for userID
+        int flag = 0;
+        User user = loginDao.getUser(username, flag);
                 
         ModelAndView mav = new ModelAndView(); 
         
@@ -138,13 +126,10 @@ public class ResetPasswordController {
             user.setPswd(encryptPassword(password));
             user.setToken("");
             
-            mav.setViewName("redirect:login?success");
-            
-            String targetUrl = "https://localhost:8443/users";
-            HttpEntity<User> userEntity = new HttpEntity<User>(user);
+            mav.setViewName("redirect:login?passwordchanged");
             
             //Update user
-            requestSender.put(targetUrl, userEntity, "User");
+            loginDao.updateUser(user);
             
         }else{
             mav.setViewName("redirect:login?error=badToken");
@@ -154,76 +139,15 @@ public class ResetPasswordController {
         
     }
     
-    @RequestMapping(value = "/sessiontest", method = RequestMethod.POST)
-    public void sessionPost(@RequestParam(value="coolString", required = true) String cool, HttpSession session) {
-    	session.setAttribute("123", cool);
-    }
-    
-    @RequestMapping(value = "/sessiontest", method = RequestMethod.GET)
-    public void sessionGet(HttpSession session) {
-    	System.out.println("USERNAME: " + session.getAttribute("username") + " ID: " + session.getAttribute("userid"));
-    	System.out.println("Put this cool string: " + session.getAttribute("123"));
-    	
-    	System.out.println("NOW WITH OTHER METHOD -----------------------------------");
-    	
-		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-    	HttpSession session2 = attr.getRequest().getSession();
-    	System.out.println("USERNAME: " + session2.getAttribute("username") + " ID: " + session2.getAttribute("userid"));
-    	System.out.println("Put this cool string: " + session2.getAttribute("123"));
-    }
-    
     /**
-     * Checks if email and user exist in the same user.
-     * @param email Email address to check
-     * @param userName Username to check
-     * @return True if Email and Username belong to the same user.
+     * Encrypts a password string with BCrypt.
+     * 
+     * @param password
+     * @return the encrypted password
      */
-    /*//Old method, should probably be removed
-    protected boolean checkEmailExistsWithUserName(String email, String userName) {
-        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
-                .path("DB/userEmailExistWithUserName")
-                .queryParam("email", email)
-                .queryParam("username", userName)
-                .build()
-                .toUri();
-        
-        System.out.println("Target: " + targetUrl);
-        
-        Boolean answer = requestSender.getForObject(targetUrl, Boolean.class);
-        System.out.println(answer);
-        //Send request to DB and get the boolean answer
-        return requestSender.getForObject(targetUrl, Boolean.class);
-    }
-    */
-    
-    private User getUserFromDB(String username){
-        
-        int flag = 0;
-        //Get user from DB
-        URI targetUrl = UriComponentsBuilder.fromUriString(dbURI)
-                .path("/users")
-                .queryParam("String", username)
-                .queryParam("int", flag)
-                .build()
-                .toUri();
-                        
-        //Get response from database
-        ResponseEntity<?> response = requestSender.getForEntity(targetUrl, User.class);
-
-        //Check if NOT_FOUND was received
-        if(response.getStatusCode().compareTo(HttpStatus.FOUND) == 0){
-            //Return error?
-            return null;
-        }
-        
-        //Get the user object    
-        return (User) response.getBody();
-    }
-    
     protected String encryptPassword(String password) {
         String generatedPassword = BCrypt.hashpw(password, BCrypt.gensalt(11));
         return generatedPassword;
-    }
-    
+    }    
     
 }

@@ -17,23 +17,23 @@ import studentcapture.user.UserDAO;
 
 public class CourseDAOTest extends StudentCaptureApplicationTests {
 
-	@Autowired
-    private WebApplicationContext webApplicationContext;
-
-    @Autowired
-    private CourseDAO courseDAO;
-
-    @Autowired
-    private JdbcTemplate jdbcMock;
-
-    private CourseModel courseSetup;
-	
+//	@Autowired
+//    private WebApplicationContext webApplicationContext;
+//
+//    @Autowired
+//    private CourseDAO courseDAO;
+//
+//    @Autowired
+//    private JdbcTemplate jdbcMock;
+//
+//    private CourseModel courseSetup;
+//	
 //	@Before
 //	public void setUp() throws Exception {
 //		//Add one course
 //        String sql = "INSERT INTO course"
-//                +" (year, term, coursename, coursedescription, active)"
-//                +" VALUES (?, ?, ?, ?, ?)";
+//                +" (courseid, year, term, coursename, coursedescription, active)"
+//                +" VALUES (DEFAULT, ?, ?, ?, ?, ?)";
 //
 //        courseSetup = new CourseModel();
 //        courseSetup.setYear(2016);
@@ -63,7 +63,7 @@ public class CourseDAOTest extends StudentCaptureApplicationTests {
 //        jdbcMock.update(sql1);
 //        jdbcMock.update(sql2);
 //	}
-//
+
 //	@Test
 //	public void testAddCourse() {
 //		CourseModel course = new CourseModel();
@@ -75,23 +75,47 @@ public class CourseDAOTest extends StudentCaptureApplicationTests {
 //		
 //        CourseModel result = courseDAO.addCourse(course);
 //        
-//        assertEquals(result.getCourseId(),new Integer(2));
+//        course.setCourseId(2);
+//        assertEquals(result,course);
 //	}
 //
 //	@Test
 //	public void testGetCourseWithoutID() {
+//		CourseModel course = new CourseModel();
+//		course.setYear(courseSetup.getYear());
+//        course.setTerm(courseSetup.getTerm());
+//        course.setCourseName(courseSetup.getCourseName());
+//        course.setCourseDescription(courseSetup.getCourseDescription());
+//        course.setActive(courseSetup.getActive());
+//		
+//        CourseModel result = courseDAO.getCourseWithoutID(course);
+//        
+//        assertTrue(result.getCourseId()!=null);
+//        assertEquals(course.getYear(), result.getYear());
+//        assertEquals(course.getTerm(), result.getTerm());
+//        assertEquals(course.getCourseName(), result.getCourseName());
 //	}
 //
 //	@Test
 //	public void testGetCourseCourseModel() {
+//		CourseModel course = new CourseModel();
+//		course.setCourseId(1);
+//		CourseModel result = courseDAO.getCourse(course);
+//		
+//		result.setCourseId(courseSetup.getCourseId());
+//		assertEquals(result, courseSetup);
 //	}
-//
+
 //	@Test
 //	public void testGetCourseInteger() {
+//		CourseModel result = courseDAO.getCourse(1);
+//		result.setCourseId(courseSetup.getCourseId());
+//		assertEquals(result, courseSetup);
 //	}
 //
 //	@Test
 //	public void testUpdateCourse() {
+//		
 //	}
 //
 //	@Test

@@ -226,6 +226,7 @@ var CountDown = React.createClass({
 /*
  * Shows the assignment video (which autoplays), progress bar and time passed.
  * Then signals parent to start countdown and show question summary.
+ * TODO: fix infinity for short video.
  */
 var Vid = React.createClass({
     getInitialState: function() {
@@ -252,7 +253,7 @@ var Vid = React.createClass({
     },
     componentDidMount: function() {
         var vid = document.getElementById("videoPlayer");
-        //vid.oncontextmenu = function (e) {e.preventDefault();};
+        vid.oncontextmenu = function (e) {e.preventDefault();};
         vid.addEventListener("canplay", this.canPlay, false);
         vid.addEventListener("pause", this.onPause, false);
         vid.addEventListener("ended", this.onEnded, false);

@@ -46,9 +46,8 @@ var Recorder = React.createClass({
 
         if(startRecordButtonExists) {
             var recordButton = document.getElementById(props.recButtonID);
-            if(cameraStarted) {
+            if(!cameraStartOnLoad)
                 recordButton.disabled = true;
-            }
         }
 
         if(typeof props.calc !== "undefined")
@@ -148,6 +147,12 @@ var Recorder = React.createClass({
 
         /* Closes the webcam stream and post to server if auto recording is on. */
         function stopRecording() {
+            if(props.siteView == "submission") {
+                if(!confirm("Are you sure you want to submit your answer?")) {
+                    return;
+                }
+            }
+
             if(!shouldAutoRecord){
                 recordButton.disabled = false;
             }
@@ -228,8 +233,17 @@ var Recorder = React.createClass({
             request.onreadystatechange = function () {
                 if (request.readyState == 4 && request.status == 200) {
                     callback(request.responseText);
+                    alert("Your video has been uploaded successfully!");
                 } else if(request.readyState == 4 && request.status !== 200) {
-                    alert(request.responseText);
+                    if(request.responseText.length < 5) {
+                        // Error message should be longer than 5 characters
+                        alert("Failed to upload video.");
+                    } else if(request.responseText.includes("Exception")) {
+                        // Do not print out exception (should not occur....)
+                        alert("Failed to upload video.");
+                    } else {
+                        alert(request.responseText);
+                    }
                 }
             };
 
