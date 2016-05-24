@@ -78,8 +78,8 @@ public class LoginAuthentication implements AuthenticationProvider {
 	 * @param password User input password
 	 * @return true if user name and password match in the database, else false
 	 */
-	
-	public boolean checkUser(String username, String password) {
+
+	private boolean checkUser(String username, String password) {
 		
 		        
         //Get the user object and check that the password is valid
@@ -91,7 +91,7 @@ public class LoginAuthentication implements AuthenticationProvider {
            
     }
 
-	public boolean comparePassword(String password, String hashed) {
+	private boolean comparePassword(String password, String hashed) {
 		//String hashed = "";
 		return BCrypt.checkpw(password, hashed);
 	}
