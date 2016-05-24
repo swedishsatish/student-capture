@@ -133,6 +133,7 @@ error=passwordmatch
 error=emailformat
 error=emailexists
 error=userexists
+error=emailusernamemismatch
 */
 if(err){
     var msg;
@@ -161,6 +162,9 @@ if(err){
         case "badtoken":
         	msg = "Invalid or missing token";
         	break;
+        case "emailusernamemismatch":
+            msg = "Username and Email do not belong to the same user."
+            break;
         default:
             msg = "Unknown Error";
             break;
