@@ -79,25 +79,6 @@ public class SubmissionDAO {
             sql += "status = ?,";
             sqlparams.add(submission.getStatus());
         }
-        /*if (submission.getGrade() != null) {
-            if  (submission.getGrade().getGrade() != null) {
-                sql += "grade = ?,";
-                sqlparams.add(submission.getGrade().getGrade());
-            }
-            if  (submission.getGrade().getTeacherID() != null) {
-                sql += "teacherid = ?,";
-                sqlparams.add(submission.getGrade().getTeacherID());
-            }
-			if (submission.getGrade().getFeedbackIsVisible() != null) {
-				sql += "publishfeedback = ?,";
-				sqlparams.add(submission.getGrade().getFeedbackIsVisible());
-			}
-		}
-        if (submission.getPublishStudentSubmission() != null) {
-            sql += "publishstudentsubmission = ?,";
-            sqlparams.add(submission.getPublishStudentSubmission());
-        }
-		*/
         if (sqlparams.isEmpty()) {
             return false; // Nothing to patch
         }
