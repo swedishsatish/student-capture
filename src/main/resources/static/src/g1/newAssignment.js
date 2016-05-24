@@ -84,9 +84,9 @@ var NewAssignment = React.createClass({
                 tinymce.get('recap').setContent(response.recap);
 
                 if (response.scale == "NUMBER_SCALE") {
-                    document.getELementById("scale").value = "NUMBER_SCALE";
+                    document.getElementById("scale").value = "NUMBER_SCALE";
                 } else if (response.scale == "U_G_VG_MVG") {
-                    document.getELementById("scale").value = "U_G_VG_MVG";
+                    document.getElementById("scale").value = "U_G_VG_MVG";
                 } else {
                     document.getElementById("scale").value = "U_O_K_G";
                 }
@@ -105,6 +105,13 @@ var NewAssignment = React.createClass({
         var videoIntervall = {};
         var assignmentIntervall = {};
 
+        if (this.props.edit) {
+            var type = "PUT";
+            reqBody["assignmentID"] = this.props.assID;
+        } else {
+            var type = "POST";
+        }
+
         videoIntervall["minTimeSeconds"] = $("#minTimeSeconds").val();
         videoIntervall["maxTimeSeconds"] = $("#maxTimeSeconds").val();
         assignmentIntervall["startDate"] = $("#startDate").val();
@@ -118,7 +125,7 @@ var NewAssignment = React.createClass({
         reqBody["recap"] = tinymce.get('recap').getContent();
         reqBody["scale"] = $("#scale").val();
         $.ajax({
-            type : "POST",
+            type : type,
             contentType : "application/json",
             url : "assignments",    
             data : JSON.stringify(reqBody),
