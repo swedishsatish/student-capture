@@ -36,7 +36,7 @@ public class RegistrationController {
 		if (!password.equals(confirmpassword)) {
 			uri = new URI("/login?error=passwordmatch");
 			httpHeaders.setLocation(uri);
-			return new ResponseEntity<Object>(httpHeaders, HttpStatus.FOUND);
+			return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
 		}
 		
 		User user = new User(username, firstName, lastName, email, encryptPassword(password));
@@ -50,7 +50,7 @@ public class RegistrationController {
             uri = new URI("/login?error=" + status.toString());
         }
         httpHeaders.setLocation(uri);
-        return new ResponseEntity<Object>(httpHeaders, HttpStatus.FOUND);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
 	}
 	
     /**
@@ -59,7 +59,6 @@ public class RegistrationController {
      * @return Encrypted password
      */
     protected String encryptPassword(String password) {
-        String generatedPassword = BCrypt.hashpw(password, BCrypt.gensalt(11));
-        return generatedPassword;
+		return BCrypt.hashpw(password, BCrypt.gensalt(11));
     }
 }
