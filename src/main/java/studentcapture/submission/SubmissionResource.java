@@ -162,8 +162,13 @@ class SubmissionResource {
 
         updatedSubmission.setStudentID(studentID);
         updatedSubmission.setAssignmentID(assignmentID);
-        updatedSubmission.setStudentVideo(studentVideo);
-        returnStatus = DAO.addSubmission(updatedSubmission, true) ? OK : INTERNAL_SERVER_ERROR;
+        if(studentVideo != null) {
+            updatedSubmission.setStudentVideo(studentVideo);
+            updatedSubmission.setStatus("answer");
+        } else {
+            updatedSubmission.setStatus("blank");
+        }
+        returnStatus = DAO.addSubmission(updatedSubmission, true) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
 
         /*Validation of Submission
         * Should be sent by a student, might have to validate that the student didnt set the grade himself.

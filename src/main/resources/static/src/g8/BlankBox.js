@@ -22,7 +22,6 @@ window.BlankBox = React.createClass({
                      courseID: this.props.courseID,
                      assignmentID: this.props.assignmentID,
                      studentID: this.props.studentID,
-                     subStatus: "BLANK"
                  })], {
                     type: "application/json"
                  }));

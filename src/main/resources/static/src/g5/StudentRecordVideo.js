@@ -13,7 +13,6 @@ var StudentRecordVideo = React.createClass({
             studentID: this.props.studentID,
             assignmentID: this.props.assignmentID,
             courseID: this.props.courseID,
-            subStatus: "ANSWER"
         })], {
             type: "application/json"
         }));
