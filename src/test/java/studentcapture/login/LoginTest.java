@@ -1,8 +1,5 @@
 package studentcapture.login;
 
-import java.net.URISyntaxException;
-import java.sql.Types;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,14 +11,9 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.WebApplicationContext;
-
-import scala.annotation.meta.param;
 import studentcapture.config.StudentCaptureApplicationTests;
-import studentcapture.user.User;
-import studentcapture.user.UserResource;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
