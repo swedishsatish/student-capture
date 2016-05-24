@@ -15,18 +15,20 @@ import java.security.cert.X509Certificate;
 public class StudentCaptureApplication {
 	public static String ROOT = System.getProperty("user.dir");
 	public static void main(String[] args) {
-		disable();
+		enableSelfSignedHTTPSCertificate();
 		SpringApplication.run(StudentCaptureApplication.class, args);
 	}
 
+
+	//TODO Group 4: Philip Pålsson Why is this method here?
 	@Bean
 	public RestTemplate createTemplateMock(){
 		return new RestTemplate();
 	}
 
-	//The below method and classes is used to temporarily disable https/ssl verification to allow https
+	//The below method and classes is used to temporarily enableSelfSignedHTTPSCertificate https/ssl verification to allow https
 	// request with untrusted certificate.
-	public static void disable() {
+	public static void enableSelfSignedHTTPSCertificate() {
 		try {
 			SSLContext sslc = SSLContext.getInstance("TLS");
 			TrustManager[] trustManagerArray = { new NullX509TrustManager() };

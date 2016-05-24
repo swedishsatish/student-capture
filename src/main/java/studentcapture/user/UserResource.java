@@ -1,7 +1,5 @@
 package studentcapture.user;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +9,9 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 
 import studentcapture.login.ErrorFlags;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Created by c12ton on 5/17/16.
@@ -34,33 +35,25 @@ public class UserResource {
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getUser(@RequestParam(value = "String")String value,
-                                  @RequestParam(value = "int") int flag) throws URISyntaxException {
+    public ResponseEntity<User> getUser(@RequestParam(value = "String")String value,
+                                        @RequestParam(value = "int") int flag) throws URISyntaxException {
 
         User user = userDAO.getUser(value,flag);
 
         if(user == null) {
             URI uri = new URI("/login?failed");            
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(uri);
             return new ResponseEntity(httpHeaders, HttpStatus.FOUND);
         }
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-
     /**
      * Add a new user with given user details
-     *
-     * @param firstName first name
-     * @param lastName last name
-     * @param email email
-     * @param username username
-     * @param password password
-     * @return if successful return redirection to login page,
-     * else to login page with error
-     * @throws URISyntaxException
+     * @param user
+     * @return
+     * @throws URISyntaxException 
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST)
@@ -71,7 +64,7 @@ public class UserResource {
             @RequestParam(value="username", required = true)            String username,
             @RequestParam(value="password", required = true)            String password) throws URISyntaxException {
        
-        User user = new User(username, firstName, lastName, email, BCrypt.hashpw(password, BCrypt.gensalt(11)));
+        User user = new User(username, firstName, lastName, email, encryptPassword(password));
         
         ErrorFlags status = userDAO.addUser(user);
 
@@ -105,5 +98,14 @@ public class UserResource {
         }
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+    
+    /**
+     * Encrypts password
+     * @param password The input password
+     * @return Encrypted password
+     */
+    protected String encryptPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt(11));
     }
 }

@@ -21,7 +21,7 @@ window.CourseInfo = React.createClass({
          * recieved from the database
          */
         return (
-            <div id="course">
+            <div id="course" className="courseInfo">
                 
             </div>
 
