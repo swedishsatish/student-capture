@@ -83,15 +83,34 @@ public class CourseInviteResource {
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
     method = RequestMethod.GET,
-    value = "/{Hex}")
+    value = "/{CourseId}")
     @ResponseBody
     public InviteModel getCourseInviteThroughHex(
-    		@PathVariable(value = "Hex") InviteModel invite) {
-    	InviteModel result = courseInviteDAO.getCourseThroughInvite(invite.getHex());
-    	if(result.getCourse().getCourseId()==null)
-    		throw new ResourceNotFoundException();
-    	return result;
+    		@PathVariable(value = "CourseId") Integer courseId) {
+		CourseModel course = new CourseModel();
+		course.setCourseId(courseId);
+		InviteModel result = courseInviteDAO.addCourseInvite(course);
+    	if(result.getHex()!=null) {
+    		return result;
+    	} else {
+    		throw new ResourceConflictException(); 
+    	}
     }
+
+	
+//	@CrossOrigin
+//    @RequestMapping(
+//    produces = MediaType.APPLICATION_JSON_VALUE,
+//    method = RequestMethod.GET,
+//    value = "/{Hex}")
+//    @ResponseBody
+//    public InviteModel getCourseInviteThroughHex(
+//    		@PathVariable(value = "Hex") InviteModel invite) {
+//    	InviteModel result = courseInviteDAO.getCourseThroughInvite(invite.getHex());
+//    	if(result.getCourse().getCourseId()==null)
+//    		throw new ResourceNotFoundException();
+//    	return result;
+//    }
 	
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public static class ResourceNotFoundException extends RuntimeException {
