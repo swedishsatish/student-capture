@@ -20,9 +20,56 @@ var objToList = function (obj) {
 
 }
 
+
+var Options = React.createClass({
+
+    studentClick: function () {
+        var assID = this.props.assignment.assignment.assignmentID;
+        var courseID = this.props.courseId;
+
+        console.log(this.props.assignment.assignment.assignmentIntervall.endDate)
+        var now = Date.now();
+        if(objToList(this.props.assignment.submissions).length == 0 &&
+            new Date(this.props.assignment.assignment.assignmentIntervall.endDate).getTime() >= now){
+
+            ReactDOM.render(<AssignmentContent course={courseID} assignment={assID}/>,
+                document.getElementById('courseContent'));
+        }
+        else {
+            ReactDOM.render(<Feedback course={courseID} assignment={assID}/>,
+                document.getElementById('courseContent'));
+        }
+
+
+    },
+    editClick: function () {
+
+    },
+    render: function () {
+        return (
+            <ul>
+                <li className="active course menuItem navigationText">
+                    <div onClick={this.studentClick}>
+                        Student view
+                    </div>
+                </li>
+                <li className="active course menuItem navigationText">
+                    <div onClick={this.editClick}>
+                        Edit Assignment
+                    </div>
+                </li>
+            </ul>
+        );
+    }
+});
+
 /*  Here assignment information is displayed.
  */
 var Assignment = React.createClass({
+
+    getInitialState : function() {
+        return { showChildren : false };
+    },
 
     /**
      * Render different views depending on user role on course.
@@ -35,8 +82,9 @@ var Assignment = React.createClass({
         var courseID = this.props.courseId;
         if(this.props.role == "student"){
 
-          
-            if(objToList(this.props.assignment.submissions).length == 0){
+            var now = Date.now();
+            if(objToList(this.props.assignment.submissions).length == 0 &&
+                new Date(this.props.assignment.assignment.assignmentIntervall.endDate).getTime() >= now){
                 ReactDOM.render(<AssignmentContent course={courseID} assignment={assID} uid={uid}/>,
                     document.getElementById('courseContent'));
             }
@@ -52,6 +100,7 @@ var Assignment = React.createClass({
             ReactDOM.render(<TeacherViewSubmission courseId={courseID} assignmentId={assID}/>,
                                 document.getElementById('courseContent') );
         }
+        this.setState({showChildren:!this.state.showChildren});
 
 
     },
@@ -63,12 +112,15 @@ var Assignment = React.createClass({
         var assignment = this.props.assignment;
         var classname = "assignment menuItem navigationText";
         var now = Date.now();
-
-        if(new Date(assignment.assignment.assignmentIntervall.startDate).getTime() >= now &&
-            new Date(assignment.assignment.assignmentIntervall.endDate).getTime() <= now)
+        var options = "";
+        if(this.state.showChildren && this.props.role == "teacher"){
+            options = <Options assignment={assignment} courseId={this.props.courseId}/>;
+        }
+        if(new Date(assignment.assignment.assignmentIntervall.startDate).getTime() <= now &&
+            new Date(assignment.assignment.assignmentIntervall.endDate).getTime() >= now)
             classname += " active";
 
-        return <li className={classname}><div onClick={this.handleClick.bind(this,assignment)}>{assignment.assignment.title}</div></li>;
+        return <li className={classname}><div onClick={this.handleClick.bind(this,assignment)}>{assignment.assignment.title}</div>{options}</li>;
     }
 });
 
@@ -115,7 +167,7 @@ var Assignments = React.createClass({
             );
             assList.push(<li className="active course menuItem navigationText">
                     <div onClick={this.editClick.bind(this,course.course)}>
-                        Edit course
+                        Edit Course
                     </div>
                 </li>
             );
@@ -174,6 +226,9 @@ var DynamicMenu = React.createClass({
         ReactDOM.render(<CreateCourse uid={userID}/>,document.getElementById("courseContent"));
     },
 
+    searchClick: function (userID,event) {
+        ReactDOM.render(<SearchCourse/>,document.getElementById("courseContent"))
+    },
     /**
      * Makes separate lists for student/teacher courses.
      * @returns {XML}
