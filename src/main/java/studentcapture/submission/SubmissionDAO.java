@@ -28,12 +28,10 @@ public class SubmissionDAO {
 	/**
 	 * Add a new submission for an assignment
 	 *
-	 *
-	 * @param submission
-	 * @return True if everything went well, otherwise false
-     * 
-     * @author tfy12hsm
-	 */
+	 * @param submission the submission to be added
+	 * @param studentConsent
+     * @return True if everything went well, otherwise false.
+     */
 	public boolean addSubmission(Submission submission, Boolean studentConsent) {
 		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentpublishconsent, status)" +
 					" VALUES  (?,?,?,?,?)";
@@ -41,7 +39,7 @@ public class SubmissionDAO {
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		timestamp.setNanos(0);
 
-		int rowsAffected = 0;
+		int rowsAffected;
 		try {
 			rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(),
                                                             submission.getStudentID(),
@@ -144,7 +142,7 @@ public class SubmissionDAO {
     }
 
 	/**
-	 * Add a grade for a subsmission
+	 * Add a grade for a submission
 	 *
 	 * @param submission Submission object
 	 * @return True if a row was changed, otherwise false
@@ -194,8 +192,6 @@ public class SubmissionDAO {
 					assignmentId, studentId);
 			result = rowsAffected == 1;
 		} catch (IncorrectResultSizeDataAccessException e) {
-			result = false;
-		} catch (DataAccessException e1) {
 			result = false;
 		}
 
@@ -282,7 +278,6 @@ public class SubmissionDAO {
 	 */
     public Optional<List<Submission>> getAllSubmissionsWithStudents
     		(String assId) {
-    	List<Submission> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
 
 		String getAllSubmissionsWithStudentsStatement =
@@ -309,7 +304,7 @@ public class SubmissionDAO {
      * @author tfy12hsm
      */
     public Optional<Submission> getSubmission(int assignmentId, int userId) {
-    	Submission result = null;
+    	Submission result;
         String getStudentSubmission =
 				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
 		String getTeacherName =
@@ -337,8 +332,8 @@ public class SubmissionDAO {
 
 	/**
 	 * Get a teacher's submitted feedback video for a specific student.
-	 * @param submission
-     * @return
+	 * @param submission the submission which the video should be linked to.
+     * @return An input stream contained within a HTTP response entity.
      */
 	public ResponseEntity<InputStreamResource> getFeedbackVideo(Submission submission) {
 		Integer courseID = getCourseIDFromAssignmentID(submission.getAssignmentID());
@@ -352,12 +347,13 @@ public class SubmissionDAO {
 	}
 
 
-	/**
-	 *
-	 * @param assignmentID
-	 * @param studentID
-	 * @return
-	 */
+    /**
+     * Adds a feedback video to a submission.
+     *
+     * @param submission the submission which to add the video to.
+     * @param feedbackVideo the feedback video.
+     * @return true if it succeeds, otherwise false.
+     */
 	public boolean setFeedbackVideo(Submission submission, MultipartFile feedbackVideo) {
 
 		return FilesystemInterface.storeFeedbackVideo(submission, feedbackVideo);
@@ -366,9 +362,11 @@ public class SubmissionDAO {
 	}
 
 	/**
-	 * Retrieves the course id from an assignment by querying the database. Returns null if something went wrong.
-	 * @param assignmentID
-	 * @return
+	 * Retrieves the course id from an assignment by querying the database.
+     * Returns null if something went wrong.
+     *
+	 * @param assignmentID the id of the assignment.
+	 * @return the course id.
      */
 	private Integer getCourseIDFromAssignmentID(int assignmentID){
 		try{
