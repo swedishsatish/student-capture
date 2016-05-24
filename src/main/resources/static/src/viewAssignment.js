@@ -99,7 +99,10 @@ var AssignmentStart = React.createClass({
                                   maxRecordTime={assignmentData.maxTime}
                                   />
                               </div>
-                            : <StudentRecordVideo autoRecord="false" />;
+                            : <StudentRecordVideo autoRecord="false"
+                                courseID={assignmentData.courseID}
+                                assignmentID={assignmentData.assignmentID}
+                                studentID={assignmentData.studentID} />;
         return (
             <div id="assignment-modal">
                 <div className="modal-dialog">

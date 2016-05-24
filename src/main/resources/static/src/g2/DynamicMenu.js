@@ -87,7 +87,7 @@ var Assignment = React.createClass({
             var now = Date.now();
             if(objToList(this.props.assignment.submissions).length == 0 &&
                 new Date(this.props.assignment.assignment.assignmentIntervall.endDate).getTime() >= now){
-                ReactDOM.render(<AssignmentContent course={courseID} assignment={assID}/>,
+                ReactDOM.render(<AssignmentContent uid={uid} course={courseID} assignment={assID}/>,
                     document.getElementById('courseContent'));
             }
             else {
@@ -185,14 +185,14 @@ var Course = React.createClass({
     },
     
     handleClick: function(course,event) {
-        
+        var role = this.props.role;
         $.get("course/" + course.course.courseId,function (res) {
-            ReactDOM.render(<CourseInfo course={res}/>,document.getElementById("courseContent"));
+            ReactDOM.render(<CourseInfo course={res} role={role}/>,document.getElementById("courseContent"));
             
             
         });
 
-        
+       
     
         
         this.setState({showChildren:!this.state.showChildren});
