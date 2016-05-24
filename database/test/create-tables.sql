@@ -62,7 +62,6 @@ CREATE TABLE IF NOT EXISTS Submission (
     TeacherId                   INT             references Users(UserId),
     PublishStudentSubmission    Boolean,
     PublishFeedback             Boolean,
-    StartDate                   timestamp,
     PRIMARY KEY (AssignmentId, StudentId)
     );
 CREATE TABLE IF NOT EXISTS Config (
