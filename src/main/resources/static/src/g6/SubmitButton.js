@@ -136,7 +136,7 @@ function submitForm(method) {
     $.ajax({
         type: method,
         contentType: "application/json",
-        url: "assignments/" + IDs[0].assignmentID + "/submissions/" + 98,//98 byts til student[0].studentID senare
+        url: "assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID,//98 byts til student[0].studentID senare
         data : JSON.stringify(reqBody),
         timeout: 100000,
         success: function (response) {
@@ -157,35 +157,41 @@ function submitForm(method) {
 function  getForm(method) {
 
 
-    var reqBody = {};
+   /* var reqBody = {};
     reqBody["feedback"] = document.getElementById('teachercomments').value;
     reqBody["grade"] = {};
     reqBody["grade"]["grade"] = document.getElementById('dropDownMenu').value;
     reqBody["grade"]["teacherID"] = "7777777"; //TODO: Fix this grade: document.getElementById('dropDownMenu').value;
     reqBody["studentPass"] = document.getElementById('ifStudentPass').checked;
     reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
-    reqBody["courseID"] = IDs[0].courseID;
+    reqBody["courseID"] = IDs[0].courseID; */
+    console.log("start");
+
 
     $.ajax({
         type: method,
         contentType: "application/json",
-        url: "assignments/" + IDs[0].assignmentID + "/submissions/" + 98,
-        data : JSON.stringify(reqBody),
+        url: "assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID,
+        data : null,
         timeout: 100000,
         success: function (response) {
             var responseData =(JSON.parse(response));
-            consol.log("HEJ");
-            consol.log(responseData);
-            document.getElementById('dropDownMenu').value = responseData["grade"]["grade"];
+            console.log("HEJ");
+            console.log(responseData);
             document.getElementById('teachercomments').value = responseData["feedback"];
+            console.log("HEJ2");
+            document.getElementById('dropDownMenu').value = responseData["grade"]["grade"];
+            console.log("HEJ4");
             document.getElementById('ifStudentPass').checked = responseData["studentPass"];
+            console.log("HEJ5");
             document.getElementById('PermissionFromStudent').checked = ["publishStudentSubmission"];
-
+            
             console.log("SUCCESS: ", response);
             console.log("SUCCESS reqBody contains:", reqBody);
             // TODO: check response with if/else, if respons is fail give error message
 
         }, error: function (e) {
+            console.log("FAIL HUE");
             console.log("ERROR: ", e);
             console.log("ReqBody contains:", reqBody);
         }, done: function (e) {
@@ -215,8 +221,9 @@ var SubmitButton = React.createClass({
         student=this.props.studentArray;
         IDs=this.props.idArray;
         if(student[0].studentID){
-            console.log("JAOJA");
-           // getForm('GET'); // retunerar null??? så kanske inte nått i databas??
+            console.log("före get");
+            getForm('GET'); // retunerar null??? så kanske inte nått i databas??
+            console.log("efter get");
         }
     },
     /**
