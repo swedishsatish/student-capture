@@ -298,7 +298,7 @@ public class AssignmentDAO {
      *
      * @author dv14oan
      */
-    public AssignmentModel getAssignmentModel(int assignmentID) throws NotFoundException, IOException {
+    public Optional<AssignmentModel> getAssignmentModel(int assignmentID) throws NotFoundException, IOException {
 
         String getAssignmentStatement = "SELECT * FROM "
                 + "Assignment WHERE AssignmentId=?;";
@@ -335,7 +335,7 @@ public class AssignmentDAO {
                 srs.getString("GradeScale"),// GradeScale
                 recap);                     // Recap
 
-        return am;
+        return Optional.of(am);
     }
 
     /**

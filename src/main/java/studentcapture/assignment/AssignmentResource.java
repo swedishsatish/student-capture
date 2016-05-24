@@ -1,6 +1,7 @@
 package studentcapture.assignment;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -61,8 +63,9 @@ public class AssignmentResource {
      *                      or Http status NOT_FOUND.
      */
     @RequestMapping(value = "/{assignmentID}", method = RequestMethod.GET)
-    public ResponseEntity<AssignmentModel> getAssignment(@PathVariable("assignmentID") int assignmentID) {
-        Optional<AssignmentModel> assignment = assignmentDAO.getAssignment(assignmentID);
+    public ResponseEntity<AssignmentModel> getAssignment(@PathVariable("assignmentID") int assignmentID)
+            throws NotFoundException, IOException {
+        Optional<AssignmentModel> assignment = assignmentDAO.getAssignmentModel(assignmentID);
         if (assignment.isPresent()) {
             return new ResponseEntity<>(assignment.get(), HttpStatus.OK);
         }
