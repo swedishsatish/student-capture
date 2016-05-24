@@ -13,20 +13,26 @@ window.BlankBox = React.createClass({
      * Sends a http-post with a blank answer when button is clicked
      */
     handleClick: function () {
-        if (confirm("You will leave a blank for this question")) { // if user really wants to leave blank
+
+        /* TODO Will freeze all timers so no confirm until solution found. */
+        //if (confirm("You will leave a blank for this question")) { // if user really wants to leave blank
             // send an http ajax post
+            var fd = new FormData();
+            fd.append('submission', new Blob([JSON.stringify({ // Data that is sent
+                     courseID: this.props.courseID,
+                     assignmentID: this.props.assignmentID,
+                     studentID: this.props.studentID,
+                     subStatus: "BLANK"
+                 })], {
+                    type: "application/json"
+                 }));
+
             $.ajax({
-                url: "emptyAnswer", // URL to send to
+                url: this.props.postURL, // URL to send to
                 type: "POST", // Type of http
-                dataType: "json", // Type of data
-                async: false,
-                contentType: "application/json; charset=utf-8", // Also type of data
-                data: JSON.stringify({ // Data that is sent
-                    courseID: 1,
-                    assignmentID: 1,
-                    studentID: 1,
-                    video: "video"
-                }),
+                data: fd,
+                processData: false,
+                contentType: false,
                 success: function (data, status, xhr) { // Function to perform when success
                     this.result = data.result;
                     this.withdrew = 1;
@@ -39,7 +45,7 @@ window.BlankBox = React.createClass({
                 }.bind(this)
             });
             this.forceUpdate();
-        }
+        //}
     },
     /**
      * Renderfunction for studentlist, renders the list on a div
@@ -70,7 +76,7 @@ window.BlankBox = React.createClass({
         } else { // the button to render
             return (
                 <div>
-                    <button onClick={this.handleClick}>Withdraw</button>
+                    <button id="withrawbutton" onClick={this.handleClick}>Withdraw</button>
                 </div>
             );
         }

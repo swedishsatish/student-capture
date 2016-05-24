@@ -155,7 +155,7 @@ class SubmissionResource {
     @RequestMapping(value = "{studentID}", method = RequestMethod.POST)
     public HttpStatus storeSubmission(@PathVariable("assignmentID") int assignmentID,
                                       @PathVariable("studentID") int studentID,
-                                      @RequestPart(value = "studentVideo") MultipartFile studentVideo,
+                                      @RequestPart(value = "studentVideo", required = false) MultipartFile studentVideo,
                                       @RequestPart(value = "submission") Submission updatedSubmission){
 
         HttpStatus returnStatus;
