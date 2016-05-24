@@ -305,6 +305,34 @@ public class AssignmentDAO {
 	}
 
     /**
+     * Returns a sought, published assignment from the database.
+     *
+     * @param assignmentId		assignments identifier
+     * @return					sought assignment
+     *
+     * @author tfy12hsm
+     */
+    public Optional<AssignmentModel> getPublishedAssignment(int assignmentId) {
+        try {
+            String getPublishedAssignmentStatement = "SELECT * FROM "
+                    + "Assignment WHERE AssignmentId=? AND "
+                    + "ass.published < current_timestamp";
+
+            Map<String, Object> map = jdbcTemplate.queryForMap(
+                    getPublishedAssignmentStatement, assignmentId);
+            AssignmentModel result = new AssignmentModel(map);
+
+            return Optional.of(result);
+        } catch (IncorrectResultSizeDataAccessException e){
+            //TODO
+            return Optional.empty();
+        } catch (DataAccessException e1){
+            //TODO
+            return Optional.empty();
+        }
+    }
+
+    /**
      * Returns an AssignmentModel from the database.
      *
      * @param assignmentID          Assignment identifier

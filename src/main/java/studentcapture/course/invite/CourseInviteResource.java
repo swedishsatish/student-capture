@@ -70,11 +70,11 @@ public class CourseInviteResource {
     	InviteModel result = courseInviteDAO.joinCourseThroughInvite(
     			LoginDAO.getUserIdFromSession(session), hex);
     	if(result.getCourse().getCourseId()==null) {
-    		if(result.getCourse().getErrorCode()==HttpStatus.CONFLICT.value()) {
-    			throw new ResourceConflictException();
-    		} else {
-    			throw new ResourceNotFoundException();
-    		}
+//    		if(result.getCourse().getErrorCode()==HttpStatus.CONFLICT.value()) {
+//    			throw new ResourceConflictException();
+//    		} else {
+//    			throw new ResourceNotFoundException();
+//    		}
     	}
     	return result;
     }
