@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import studentcapture.config.StudentCaptureApplicationTests;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,7 +88,7 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
 
     @Test
     public void testGetStartDateFromAssignment(){
-        assertEquals("2016-05-13 10:00:00.0",mailDAO.getStartDateFromAssignment("1").get());
+        assertEquals("2016-05-13 10:00:00.0",mailDAO.getStartDateFromAssignment("1").get().toString());
     }
 
     @Test

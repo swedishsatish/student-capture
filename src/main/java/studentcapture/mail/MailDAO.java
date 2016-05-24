@@ -6,6 +6,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,10 +47,10 @@ public class MailDAO {
      * @param assID AssignmentID ass String
      * @return Start date as String
      */
-    public Optional<String> getStartDateFromAssignment(String assID){
-        String date;
+    public Optional<Date> getStartDateFromAssignment(String assID){
+        Date date;
         try {
-            date = jdbcTemplate.queryForObject(getStartDateQuery(), new Object[]{assID}, String.class);
+            date = jdbcTemplate.queryForObject(getStartDateQuery(), new Object[]{assID}, Date.class);
         } catch (IncorrectResultSizeDataAccessException e){
             return Optional.empty();
         } catch (DataAccessException e1){
