@@ -30,15 +30,15 @@ public class ResetPasswordController {
      * The link contains a randomly generated token, 
      *  which is also stored in the database.
      * 
-     * @param email
-     * @param username
-     * @param request
-     * @return
+     * @param email Email of the user trying to reset their password.
+     * @param username Username of the user trying to reset their password
+     * @param request Origin of the HTTP request
+     * @return A ModelAndView Object defining the redirect to the login page.
      */
     @RequestMapping(value = "/lostPassword", method = RequestMethod.POST)
     public ModelAndView lostPassword(
-            @RequestParam(value="email", required = true)    String email,
-            @RequestParam(value="username", required = true) String username,
+            @RequestParam(value="email")    String email,
+            @RequestParam(value="username") String username,
             HttpServletRequest request
             ){
         
@@ -47,13 +47,16 @@ public class ResetPasswordController {
         //flag = 0 for username, flag = 1 for userID
         int flag = 0;
         User user = loginDao.getUser(username, flag);
+
         
         //Return if user does not exist
-        if(user.getUserName() == null){
+        if(user == null){
             mav.setViewName("redirect:login?error=invalidUser");
-        }else{
+        } else if(!user.getEmail().equals(email)) {
+            mav.setViewName("redirect:login?passwordemail");
+        } else {
             
-            //Spring generate token http://www.baeldung.com/spring-security-registration-i-forgot-my-password
+            //Spring generate token
             String token = UUID.randomUUID().toString();
             
             String url = 
@@ -62,8 +65,9 @@ public class ResetPasswordController {
                     request.getContextPath();
                         
             //Generate link
-            //Url syntax: /changePassword?username=123&token=456
-            String tokenUrl = url + "/changePassword?username=" + user.getUserName() + "&token=" + token;
+            //Url syntax: /changePassword?username=abc&token=123
+            String tokenUrl = url + "/changePassword?username=" +
+                    user.getUserName() + "&token=" + token;
                 
             //Set token for the user           
             user.setToken(token);
@@ -74,8 +78,11 @@ public class ResetPasswordController {
             //Email link
             MailClient mailClient = new MailClient();
             String receiver = user.getEmail();
-            //mailClient.send(String to, String from, String subject, String msg)
-            mailClient.send(receiver, "no-reply@studentcapture.com", "Reset Password", tokenUrl);
+            String msg = "To reset your password on Student Capture, please " +
+                    "follow this link:\n"+tokenUrl;
+            //mailClient.send(String to, String from, String subj, String msg)
+            mailClient.send(receiver, "studentcapture@cs.umu.se",
+                    "Reset Password", msg);
 
             mav.setViewName("redirect:login?passwordemail");
             
@@ -89,16 +96,18 @@ public class ResetPasswordController {
      * Changes password for the user username, 
      * if token matches the token stored in the users database entry.
      * 
-     * @param username
-     * @param token
-     * @param password
-     * @return
+     * @param username User trying to change their password.
+     * @param token Token used to verify the user is who they say they are.
+     * @param password The new password that the user is attempting to switch
+     *                 to.
+     * @return ModelAndView Object redirecting to the login page with message
+     * about whether the change succeeded or not.
      */
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
     public ModelAndView resetPassword(
-            @RequestParam(value="username", required = true) String username,
-            @RequestParam(value="token", required = true) String token,
-            @RequestParam(value="password", required = true) String password
+            @RequestParam(value="username") String username,
+            @RequestParam(value="token") String token,
+            @RequestParam(value="password") String password
             ){
                 
         //flag = 0 for username, flag = 1 for userID
@@ -108,29 +117,23 @@ public class ResetPasswordController {
         ModelAndView mav = new ModelAndView(); 
         
         //If the token does not exist, return
-        if(user == null){
+        if (user == null || user.getToken() == null ||
+                user.getToken().compareTo("") == 0) {
             mav.setViewName("redirect:login?error=badtoken");
-        }
-        else if(user.getToken() == null){
-            mav.setViewName("redirect:login?error=badtoken");
-        }
-        else if(user.getToken().compareTo("") == 0){
-            mav.setViewName("redirect:login?error=badtoken");
-            
-        }else if(user.getToken().compareTo(token) == 0){
+        } else if (user.getToken().compareTo(token) == 0) {
             //Tokens match
-            
+
             //Encrypt the password, set password and token
             user.setPswd(encryptPassword(password));
             user.setToken("");
-            
+
             mav.setViewName("redirect:login?passwordchanged");
-            
+
             //Update user
             loginDao.updateUser(user);
-            
-        }else{
-            mav.setViewName("redirect:login?error=badToken");
+
+        } else {
+            mav.setViewName("redirect:login?error=badtoken");
         }
 
         return mav;
@@ -140,12 +143,11 @@ public class ResetPasswordController {
     /**
      * Encrypts a password string with BCrypt.
      * 
-     * @param password
+     * @param password Unencrypted password to encrypt
      * @return the encrypted password
      */
-    protected String encryptPassword(String password) {
-        String generatedPassword = BCrypt.hashpw(password, BCrypt.gensalt(11));
-        return generatedPassword;
+    private String encryptPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt(11));
     }    
     
 }
