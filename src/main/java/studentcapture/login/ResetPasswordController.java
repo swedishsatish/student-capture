@@ -15,7 +15,7 @@ import java.util.UUID;
 
 /**
  * Controller for handling HTTP requests related to the login page.
- * @author dv11osi, c13hbd
+ * @author c13hbd
  */
 @RestController
 public class ResetPasswordController {
