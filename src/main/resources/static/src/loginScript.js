@@ -113,6 +113,18 @@ btn.onclick = function() {
                         "<tr><td>microphone found</td><td>" + DetectRTC.hasMicrophone + "</td></tr>"+
                         "<tr><td>speakers found</td><td>" + DetectRTC.hasSpeakers + "</td></tr>";
 
+    var tds = testTable.getElementsByTagName("td");
+
+    for(var i = 0, j = tds.length; i < j; ++i){
+        if(tds[i].innerHTML == "true")
+            tds[i].style.color = "green";
+
+        if(tds[i].innerHTML == "false")
+            tds[i].style.color = "red";
+    }
+
+
+
     fadeIn(modal);
 }
 
