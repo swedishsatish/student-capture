@@ -34,25 +34,33 @@ public class UserResource {
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<User> getUser(@RequestParam(value = "String")String value,
-                                        @RequestParam(value = "int") int flag) throws URISyntaxException {
+    public ResponseEntity getUser(@RequestParam(value = "String")String value,
+                                  @RequestParam(value = "int") int flag) throws URISyntaxException {
 
         User user = userDAO.getUser(value,flag);
 
         if(user == null) {
             URI uri = new URI("/login?failed");            
             HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(uri);
             return new ResponseEntity(httpHeaders, HttpStatus.FOUND);
         }
 
-        return new ResponseEntity<User>(user,HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
 
     /**
      * Add a new user with given user details
-     * @param user
-     * @return
-     * @throws URISyntaxException 
+     *
+     * @param firstName first name
+     * @param lastName last name
+     * @param email email
+     * @param username username
+     * @param password password
+     * @return if successful return redirection to login page,
+     * else to login page with error
+     * @throws URISyntaxException
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST)
@@ -63,7 +71,7 @@ public class UserResource {
             @RequestParam(value="username", required = true)            String username,
             @RequestParam(value="password", required = true)            String password) throws URISyntaxException {
        
-        User user = new User(username, firstName, lastName, email, encryptPassword(password));
+        User user = new User(username, firstName, lastName, email, BCrypt.hashpw(password, BCrypt.gensalt(11)));
         
         ErrorFlags status = userDAO.addUser(user);
 
@@ -97,15 +105,5 @@ public class UserResource {
         }
 
         return new ResponseEntity(HttpStatus.OK);
-    }
-    
-    /**
-     * Encrypts password
-     * @param password The input password
-     * @return Encrypted password
-     */
-    protected String encryptPassword(String password) {
-        String generatedPassword = BCrypt.hashpw(password, BCrypt.gensalt(11));
-        return generatedPassword;
     }
 }
