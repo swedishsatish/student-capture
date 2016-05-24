@@ -1,7 +1,5 @@
 package studentcapture.assignment;
 
-import javax.validation.Valid;
-
 /**
  * Created by David Björkstrand on 5/17/16.
  */

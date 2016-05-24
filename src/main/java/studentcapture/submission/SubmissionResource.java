@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import studentcapture.lti.*;
-import studentcapture.model.Grade;
+import studentcapture.lti.LTICommunicator;
+import studentcapture.lti.LTIInvalidGradeException;
+import studentcapture.lti.LTINullPointerException;
+import studentcapture.lti.LTISignatureException;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
