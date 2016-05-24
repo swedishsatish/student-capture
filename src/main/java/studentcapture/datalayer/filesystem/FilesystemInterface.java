@@ -55,12 +55,12 @@ public class FilesystemInterface {
 	 * @return		The video, in the form of an responseentity.
      */
 	public static ResponseEntity<InputStreamResource> getVideo(String path) {
-		ResponseEntity<InputStreamResource> responseEntity;
-		if(path == null){
-			System.out.println("path was null");
-		}
-		System.out.println("path : "+path);
-		File video = new File(path);
+        if(path == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        ResponseEntity<InputStreamResource> responseEntity;
+        File video = new File(path);
 
 		try {
 			byte[] out = FileCopyUtils.copyToByteArray(video);
