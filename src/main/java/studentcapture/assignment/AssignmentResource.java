@@ -1,12 +1,15 @@
 package studentcapture.assignment;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 /**
@@ -43,6 +46,12 @@ public class AssignmentResource {
                                         @PathVariable("assignmentID") int assignmentID) {
         return assignmentDAO.getAssignmentVideo(assignmentID);
     }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseBody AssignmentErrorInfo handleFailedRequest(HttpServletRequest req, Exception ex) {
+        return new AssignmentErrorInfo(ex.getCause().getCause().getMessage());
+    }
+
 
     /**
      * Gets the assignment model corresponding to the specified assignment.
