@@ -18,46 +18,64 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private LoginAuthentication loginAuth;
 	
-    //Set username, password and role
-    //The role can be used to allow role-specific actions
-    //Current roles are "USER" and "ADMIN".
+    /**
+	 * Configures the authentication manager for login page.
+	 * Uses the custom made LoginAuthentication.java 
+	 * <p> 
+	 * @see LoginAuthentication
+	 * @param auth
+	 * @throws Exception
+	 */
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    public void configureGlobal(AuthenticationManagerBuilder auth) 
+            throws Exception {
         auth.authenticationProvider(loginAuth).eraseCredentials(false);
     }
     
-    
-    
-    //Custom login configuration. Currently redirects to "/login" when not logged in
-    //Allows for custom login.html
+    /**
+     * Configure access to different resources.
+     * Sets default login page and handles access for different users. 
+     * 
+     * <p>
+     * CSRF provides additional security,
+     * CSRF is disabled for now because of compatibility issues.
+     * <p>
+     * @param http, a https request from a potential user.
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-    	http.authorizeRequests().antMatchers("/css/**", "/src/**", "/images/**").permitAll();
-    	http.authorizeRequests().antMatchers("/login**").permitAll();
-    	http.authorizeRequests().antMatchers("/register").permitAll();
-    	http.authorizeRequests().antMatchers("/lostPassword").permitAll();
-    	http.authorizeRequests().antMatchers("/changePassword").permitAll();
-        http
+        //Global access required for fonts/images/style and login services.
+    	http
+    	    .authorizeRequests()
+        	    .antMatchers("/css/**", "/src/**", "/images/**").permitAll()
+        	    .antMatchers("/login**").permitAll()
+        	    .antMatchers("/register").permitAll()
+        	    .antMatchers("/lostPassword").permitAll()
+        	    .antMatchers("/changePassword").permitAll();
+    	
+        //Add session management.
+    	http
         	.sessionManagement().maximumSessions(1)
         	.and().invalidSessionUrl("/login");
-        http
+        
+    	//Configure spring security login accessibility.
+    	http
             .authorizeRequests()
-                .antMatchers("/**").access("hasRole('USER')")	
-                .antMatchers("/loggedin").access("hasRole('USER') or hasRole('ADMIN')") //Users and admins can access /loggedin
-                .antMatchers("/admin").access("hasRole('ADMIN')") //Admins can access /admin
+                .antMatchers("/**").access("hasRole('USER')")
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
                 .loginPage("/login")
                 .permitAll()
-                .defaultSuccessUrl("/index", true) //always redirect to "/index"
+                .defaultSuccessUrl("/index", true)//always redirect to "/index"
                 .failureUrl("/login?error=loginerror")
                 .and()
             .logout()
                 .logoutUrl("/logout")
                 .permitAll()
                 .and()
-            .csrf().disable(); //CSRF Disabled for now
+            .csrf().disable(); //CSRF Disabled for now.
+    	                        
     }
 
 }
