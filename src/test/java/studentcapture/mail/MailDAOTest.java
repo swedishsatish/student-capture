@@ -100,4 +100,6 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
     public void testWrongAssignmentID(){
         assertEquals(Optional.empty(),mailDAO.getStartDateFromAssignment("12345"));
     }
+
+
 }
