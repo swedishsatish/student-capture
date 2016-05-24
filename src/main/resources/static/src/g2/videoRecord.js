@@ -29,7 +29,7 @@ var Recorder = React.createClass({
         //used for hw testing
         var blobsize;
         var sendTime;
-
+        var forceSubmit = false;
         var cameraStartOnLoad = (typeof props.camOnLoad === "undefined") ?
                         false : props.camOnLoad == "true";
         var cameraStarted = false;
@@ -90,7 +90,21 @@ var Recorder = React.createClass({
             if(startRecordButtonExists) {
                 recordButton.disabled = true;
             }
-            stopButton.disabled = false;
+            if(props.siteView == "submission") {
+                if(props.minRecordTime != null) {
+                    window.setTimeout(function() {
+                                    stopButton.disabled = false;
+                                }, 1000*parseInt(props.minRecordTime));
+                }
+                if(props.maxRecordTime != null) {
+                    window.setTimeout(function() {
+                                    forceSubmit = true;
+                                    stopRecording();
+                                }, 1000*parseInt(props.maxRecordTime));
+                }
+            } else {
+                stopButton.disabled = false;
+            }
 
             if(typeof props.calc !== "undefined") {
                 document.getElementById("test-rec-text").innerHTML = "&#x1f534;";
@@ -147,10 +161,11 @@ var Recorder = React.createClass({
 
         /* Closes the webcam stream and post to server if auto recording is on. */
         function stopRecording() {
-            if(props.siteView == "submission") {
-                if(!confirm("Are you sure you want to submit your answer?")) {
+            if(props.siteView == "submission" && forceSubmit == false) {
+                /* TODO We want confirm on submit but it blocks the timer so no confirm for now until a solution is found. */
+                /*if(!confirm("Are you sure you want to submit your answer?")) {
                     return;
-                }
+                }*/
             }
 
             if(!shouldAutoRecord){

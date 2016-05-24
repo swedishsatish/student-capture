@@ -11,7 +11,8 @@ var StudentRecordVideo = React.createClass({
         fd.append('submission', new Blob([JSON.stringify({
             // Submission data
             studentID: this.props.studentID,
-            assignmentID: this.props.assignmentID
+            assignmentID: this.props.assignmentID,
+            courseID: this.props.courseID
         })], {
             type: "application/json"
         }));
@@ -33,7 +34,8 @@ var StudentRecordVideo = React.createClass({
                               formDataBuilder={this.formDataBuilder}
                               stopButtonID="studentSubmit" autoRecord={autoRecord}
                               siteView="submission" fileName="submission.webm"
-                              camOnLoad="true"
+                              camOnLoad="true" maxRecordTime={this.props.maxRecordTime}
+                              minRecordTime={this.props.minRecordTime}
                     />
                 </div>
                 <button id="studentSubmit" className="recControls" disabled>Submit answer</button>
