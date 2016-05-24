@@ -36,7 +36,7 @@ var Options = React.createClass({
                 document.getElementById('courseContent'));
         }
         else {
-            ReactDOM.render(<Feedback course={courseID} assignment={assID}/>,
+            ReactDOM.render(<Feedback course={courseID} assignment={assID} user={this.props.uid}/>,
                 document.getElementById('courseContent'));
         }
 
@@ -85,7 +85,7 @@ var Assignment = React.createClass({
             var now = Date.now();
             if(objToList(this.props.assignment.submissions).length == 0 &&
                 new Date(this.props.assignment.assignment.assignmentIntervall.endDate).getTime() >= now){
-                ReactDOM.render(<AssignmentContent course={courseID} assignment={assID} uid={uid}/>,
+                ReactDOM.render(<AssignmentContent course={courseID} assignment={assID}/>,
                     document.getElementById('courseContent'));
             }
             else {
@@ -95,7 +95,7 @@ var Assignment = React.createClass({
 
         }
         else if(this.props.role == "teacher"){
-            console.log(courseID + " " +assID);
+
             document.getElementById("courseContent").innerHTML = "";
             ReactDOM.render(<TeacherViewSubmission courseId={courseID} assignmentId={assID}/>,
                                 document.getElementById('courseContent') );
@@ -114,7 +114,7 @@ var Assignment = React.createClass({
         var now = Date.now();
         var options = "";
         if(this.state.showChildren && this.props.role == "teacher"){
-            options = <Options assignment={assignment} courseId={this.props.courseId}/>;
+            options = <Options assignment={assignment} courseId={this.props.courseId} uid={this.props.uid}/>;
         }
         if(new Date(assignment.assignment.assignmentIntervall.startDate).getTime() <= now &&
             new Date(assignment.assignment.assignmentIntervall.endDate).getTime() >= now)
@@ -288,6 +288,7 @@ window.RenderMenu = function () {
     $.get("course", function (res) {
         // if(res)
         var userID = res.userId;
+
         var SCList = objToList(res.studentCourses);
         var TCList = objToList(res.teacherCourses);
         var name = res.firstName + " " + res.lastName;
