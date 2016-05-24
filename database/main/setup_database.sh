@@ -38,4 +38,4 @@ while getopts ":s:u:w:h:p:n:" opt; do
 done
 
 psql -U $db_superuser -W -c "CREATE USER $db_username WITH PASSWORD '$db_userpswd';"
-psql -U $db_superuser -W -c "CREATE DATABASE $db_test WITH OWNER $db_username TEMPLATE template0 ENODING 'SQL_ASCII' TABLESPACE pg_default LC_COLLATE 'C' LC_CTYPE 'C' CONNECTION LIMIT -1"
+psql -U $db_superuser -W -c "CREATE DATABASE $db_test WITH OWNER $db_username TEMPLATE template0 ENODING 'UTF8' TABLESPACE pg_default LC_COLLATE 'C' LC_CTYPE 'C' CONNECTION LIMIT -1"
