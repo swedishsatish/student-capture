@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import javax.servlet.http.HttpSession;
+
 @Repository
 public class LoginDAO {
 
@@ -193,6 +195,10 @@ public class LoginDAO {
         } catch(Exception e) {
             return false;
         }
+    }
+    
+    public static Integer getUserIdFromSession(HttpSession session) {
+    	return Integer.parseInt(session.getAttribute("userid").toString());
     }
 
 
