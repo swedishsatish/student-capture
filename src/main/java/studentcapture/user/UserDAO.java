@@ -13,21 +13,23 @@ import java.sql.Types;
 @Repository
 public class UserDAO {
 
-    private final int GET_USER_BY_USERNAME = 0;
-    private final int GET_USER_BY_ID = 1;
-
-
     // This template should be used to send queries to the database
     @Autowired
-    protected JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * Add a new user to the User-table in the database.
      * @author Timmy Olsson, c12ton
      *
      * @param user  instance that contains information of the user to be added.
+     * @return If an error has occurred a appropriate flag will be returned,
+     * else a no error flag
      */
     public ErrorFlags addUser(User user) {
+
+        if(!user.areUserParamsValid()){
+            return ErrorFlags.USERCONTAINNULL;
+        }
 
         if(userNameExist(user.getUserName())) {
             return ErrorFlags.USEREXISTS;
@@ -57,8 +59,6 @@ public class UserDAO {
 		return ErrorFlags.NOERROR;
     }
 
-
-
     /**
      * Get user by username.
      * @author Timmy Olsson, c12ton
@@ -72,9 +72,12 @@ public class UserDAO {
      */
     public User getUser(String value, int flag) {
 
-        String sql=null;
+        String sql;
         Object[] args;
         int[] types;
+
+        int GET_USER_BY_ID = 1;
+        int GET_USER_BY_USERNAME = 0;
 
         if(flag == GET_USER_BY_USERNAME) {
             args = new Object[]{value};
@@ -89,14 +92,13 @@ public class UserDAO {
             return null;
         }
 
-        User user = null;
+        User user;
         try {
             user = (User) jdbcTemplate.queryForObject(sql, args,types,
                     new UserWrapper());
         } catch (Exception e) {
-            return  null;
+            return null;
         }
-
         return user;
     }
 
@@ -104,10 +106,12 @@ public class UserDAO {
      * Updates user with given user object. This is with respect to username
      * @author Timmy Olsson, c12ton
      *
-     * @param user
+     * @param user user object to be updated
      * @return true if update was successfull else false
      */
     public boolean updateUser(User user) {
+
+
 
         if(!userNameExist(user.getUserName())) {
             return false;
@@ -134,13 +138,13 @@ public class UserDAO {
 
 
     /**
-     * Checks if given username already exists.
+     * Checks if given username already exists in the database.
      * @author Timmy Olsson, c12ton
      *
      * @param userName user name for user.
      * @return true if it exists else false
      */
-    public boolean userNameExist(String userName) {
+    private boolean userNameExist(String userName) {
         String sql = "SELECT EXISTS (SELECT 1 FROM users "
                 + "WHERE  UserName = ?)";
 
@@ -151,11 +155,11 @@ public class UserDAO {
     }
 
     /**
-     * Checks if given email already  exists.
+     * Checks if given email already  exists in the database.
      * @author Timmy Olsson, c12ton
      *
-     * @param email
-     * @return
+     * @param email email to be checked if it exist
+     * @return  boolean if the email exist or not
      */
     private boolean emailExists(String email) {
         String sql = "SELECT EXISTS (SELECT 1 FROM users "
@@ -193,19 +197,18 @@ public class UserDAO {
     public boolean setEmail(int userID, String email) {
         String sql = "UPDATE Users SET Email = ? WHERE UserID = ?";
         try {
-            jdbcTemplate.update(sql, new Object[]{email, userID});
+            jdbcTemplate.update(sql, email, userID);
             return true;
         } catch(Exception e) {
             return false;
         }
     }
 
-
 	/**
      *  Used to collect user information, and return a hashmap.
      *  @author Timmy Olsson
      */
-    protected class UserWrapper implements org.springframework.jdbc.core.RowMapper {
+    private class UserWrapper implements org.springframework.jdbc.core.RowMapper {
 
         @Override
         public Object mapRow(ResultSet rs, int i) throws SQLException {

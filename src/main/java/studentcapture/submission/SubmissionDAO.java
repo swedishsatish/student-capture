@@ -158,8 +158,6 @@ public class SubmissionDAO {
 	 * @param assID     Unique identifier for the assignment with the submission being removed
 	 * @param studentID Unique identifier for the student whose submission is removed
 	 * @return True if everything went well, otherwise false
-     * 
-     * @author tfy12hsm
 	 */
 	public boolean removeSubmission(String assID, String studentID) {
 		String removeSubmissionStatement = "DELETE FROM "
@@ -184,8 +182,6 @@ public class SubmissionDAO {
      *
      * @param assId The assignment to get submissions for
      * @return A list of ungraded submissions for the assignment
-     * 
-     * @author tfy12hsm
      */
     public Optional<List<Submission>> getAllUngraded(String assId) {
 
@@ -230,8 +226,6 @@ public class SubmissionDAO {
 	 * Get all submissions for an assignment
 	 * @param assignmentID The assignment to get submissions for
 	 * @return A list of submissions for the assignment
-     * 
-     * @author tfy12hsm
 	 */
     public List<Submission> getAllSubmissions(int assignmentID) {
     	List<Submission> submissions;
@@ -254,8 +248,6 @@ public class SubmissionDAO {
 	 *
 	 * @param assId The assignment to get submissions for
 	 * @return A list of submissions for the assignment
-     * 
-     * @author tfy12hsm
 	 */
     public Optional<List<Submission>> getAllSubmissionsWithStudents
     		(String assId) {
@@ -281,8 +273,6 @@ public class SubmissionDAO {
 	 *                      to.
      * @param userId		The studentId that the submission is connected to.
      * @return				The submission with the teacher name.
-     * 
-     * @author tfy12hsm
      */
     public Optional<Submission> getSubmission(int assignmentId, int userId) {
     	Submission result;

@@ -42,7 +42,7 @@ public class CourseModel {
      * 
      * @author tfy12hsm
 	 */
-	public void parseMap(Map<String, Object> map) {
+	private void parseMap(Map<String, Object> map) {
 		courseId = (Integer) map.get("CourseId");
 		year = (Integer) map.get("Year");
 		term = (String) map.get("Term");
