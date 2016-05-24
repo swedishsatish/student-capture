@@ -44,7 +44,7 @@ public class UserResource {
             return new ResponseEntity(httpHeaders, HttpStatus.FOUND);
         }
 
-        return new ResponseEntity<User>(user,HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     /**
@@ -104,7 +104,6 @@ public class UserResource {
      * @return Encrypted password
      */
     protected String encryptPassword(String password) {
-        String generatedPassword = BCrypt.hashpw(password, BCrypt.gensalt(11));
-        return generatedPassword;
+        return BCrypt.hashpw(password, BCrypt.gensalt(11));
     }
 }
