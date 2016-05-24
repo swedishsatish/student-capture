@@ -1,6 +1,7 @@
 package studentcapture.course;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * CourseModel contains information related to a course stored on the database.
@@ -147,12 +148,11 @@ public class CourseModel {
 	@Override
 	public boolean equals(Object other) {
 		CourseModel course = (CourseModel) other;
-		
-		return ((getActive().equals(course.getActive()))&&
-				(course.getCourseDescription().equals(getCourseDescription()))&&
-				(course.getCourseId().equals(getCourseId()))&&
-				(course.getCourseName().equals(getCourseName()))&&
-				(course.getTerm().equals(getTerm()))&&
-				(course.getYear().equals(getYear())));
+		return (Objects.equals(getActive(), course.getActive())&&
+				(Objects.equals(course.getCourseDescription(), getCourseDescription()))&&
+				(Objects.equals(course.getCourseId(), getCourseId()))&&
+				(Objects.equals(getCourseName(), getCourseName()))&&
+				(Objects.equals(course.getTerm(), getTerm()))&&
+				(Objects.equals(course.getYear(), getYear())));
 	}
 }

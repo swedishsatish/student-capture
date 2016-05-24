@@ -166,29 +166,33 @@ function  getForm(method) {
     reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
     reqBody["courseID"] = IDs[0].courseID; */
     console.log("start");
+    console.log("assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID);
 
 
     $.ajax({
-        type: method,
-        contentType: "application/json",
         url: "assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID,
-        data : null,
         timeout: 100000,
         success: function (response) {
-            var responseData =(JSON.parse(response));
-            console.log("HEJ");
-            console.log(responseData);
-            document.getElementById('teachercomments').value = responseData["feedback"];
+            console.log("HEJ Sucsess");
+            console.log(response);
+            console.log("HEJ ");
+            //console.log(response);
+            //document.setElementById("Course") = response["course"] == null ? "" : response["course"];
+            document.getElementById('teachercomments').value = response["status"] == null ? "" : response["feedback"];
             console.log("HEJ2");
-            document.getElementById('dropDownMenu').value = responseData["grade"]["grade"];
+            document.getElementById('dropDownMenu').value = response["grade"]["grade"] == null ? "U" : response["grade"]["grade"];
+            //document.getElementById('dropDownMenu').value = responseData["grade"]["grade"];
             console.log("HEJ4");
-            document.getElementById('ifStudentPass').checked = responseData["studentPass"];
-            console.log("HEJ5");
-            document.getElementById('PermissionFromStudent').checked = ["publishStudentSubmission"];
-            
-            console.log("SUCCESS: ", response);
-            console.log("SUCCESS reqBody contains:", reqBody);
-            // TODO: check response with if/else, if respons is fail give error message
+            //document.getElementById('ifStudentPass').checked = response["studentPass"] == null "false" : response["studentPass"];
+            //document.getElementById('ifStudentPass').checked = responseData["studentPass"];
+            //console.log("response[publishStudentSubmission] :"+response["publishStudentSubmission"]);
+            console.log("response[studentPublishConsent] :"+response["studentPublishConsent"]);
+            console.log("1CheckIf:"+response["studentPublishConsent"] ? "false" : "true");
+            console.log("2CheckIf:"+response["studentPublishConsent"] ? "1" : "2");
+
+            document.getElementById('PermissionFromStudent').disabled = response["studentPublishConsent"] ? false : true;
+            document.getElementById('PermissionFromStudent').checked = response["publishStudentSubmission"] ? true : false;
+            //document.getElementById('PermissionFromStudent').checked = ["publishStudentSubmission"];
 
         }, error: function (e) {
             console.log("FAIL HUE");
