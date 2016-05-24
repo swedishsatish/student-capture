@@ -57,7 +57,7 @@ var TeacherViewSubmission = React.createClass({
         this.nWithdrawals = 0;
         this.nDone = 0;
         this.nParticipants = 0;
-        this.nParticipants = this.participantsArray.length;
+        this.nParticipants = this.submissionsArray.length;
         console.log(this.submissionsArray);
         for (var i=0;i<this.submissionsArray.length;i++) {
             if(this.submissionsArray[i].status) {
@@ -74,8 +74,10 @@ var TeacherViewSubmission = React.createClass({
 
 
     render: function () {
-        var idArray=[{courseID:this.props.courseID,
+        console.log(this.participantsArray.length);
+        var idArray=[{courseID:this.props.courseId,
                      assignmentID:this.props.assignmentId}];
+        console.log("JEBANE "+ this.props.courseId);
         this.calculateSubmissions();
         return (
             <div class="row">
