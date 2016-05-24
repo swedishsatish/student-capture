@@ -153,13 +153,14 @@ class SubmissionResource {
      * @return
      */
     @RequestMapping(value = "{studentID}", method = RequestMethod.POST)
-    public HttpStatus storeSubmission(@PathVariable("assignmentID") int assignmentID,
+    public ResponseEntity<String> storeSubmission(@PathVariable("assignmentID") int assignmentID,
                                       @PathVariable("studentID") int studentID,
                                       @RequestPart(value = "studentVideo", required = false) MultipartFile studentVideo,
                                       @RequestPart(value = "submission") Submission updatedSubmission){
-
+        String responseText = "OK";
         HttpStatus returnStatus;
-
+        // TODO User from session
+        // TODO check if submission can be submitted (begin/end date)
         updatedSubmission.setStudentID(studentID);
         updatedSubmission.setAssignmentID(assignmentID);
         if(studentVideo != null) {
@@ -168,14 +169,19 @@ class SubmissionResource {
         } else {
             updatedSubmission.setStatus("blank");
         }
-        returnStatus = DAO.addSubmission(updatedSubmission, true) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
+        if(DAO.addSubmission(updatedSubmission, true)) {
+            returnStatus = HttpStatus.OK;
+        } else {
+            returnStatus = HttpStatus.FORBIDDEN;
+            responseText = "Student has already submitted an answer.";
+        }
 
         /*Validation of Submission
         * Should be sent by a student, might have to validate that the student didnt set the grade himself.
         * However this should probably be handled somewhere else
         * validate the Submission.studentID against studentID and permissions*/
 
-        return returnStatus;
+        return new ResponseEntity<>(responseText, returnStatus);
     }
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.DELETE)
