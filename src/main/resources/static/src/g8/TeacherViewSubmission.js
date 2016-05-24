@@ -77,7 +77,6 @@ var TeacherViewSubmission = React.createClass({
         console.log(this.participantsArray.length);
         var idArray=[{courseID:this.props.courseId,
                      assignmentID:this.props.assignmentId}];
-        console.log("JEBANE "+ this.props.courseId);
         this.calculateSubmissions();
         return (
             <div class="row">
