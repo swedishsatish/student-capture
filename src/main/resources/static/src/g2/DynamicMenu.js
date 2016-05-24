@@ -183,14 +183,14 @@ var Course = React.createClass({
     },
     
     handleClick: function(course,event) {
-        
+        var role = this.props.role;
         $.get("course/" + course.course.courseId,function (res) {
-            ReactDOM.render(<CourseInfo course={res}/>,document.getElementById("courseContent"));
+            ReactDOM.render(<CourseInfo course={res} role={role}/>,document.getElementById("courseContent"));
             
             
         });
 
-        
+       
     
         
         this.setState({showChildren:!this.state.showChildren});

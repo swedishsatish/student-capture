@@ -8,12 +8,18 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
 import studentcapture.user.User;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -41,14 +47,11 @@ public class LoginAuthentication implements AuthenticationProvider {
     @Autowired
     private RestTemplate requestSender;
     
-    //private UserDBController userDBController;
+    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
-    /*
-    Login only works with users in the database. 
-    If the username and password matches with the database, 
-        the user will be given the role "ROLE_USER". 
-    The role prevents authenticate() from being called more than once.
-    */
+    /**
+     * 
+     */
 	@Override
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
 		String username = auth.getName().trim();
@@ -60,7 +63,8 @@ public class LoginAuthentication implements AuthenticationProvider {
 		            Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
 		    
 		    Authentication a = new UsernamePasswordAuthenticationToken(username, password, authorities);
-		    updateSession(username);
+		    updateSession(username);	   
+		    redirection();
 		    return a;
 		}
 
@@ -102,5 +106,24 @@ public class LoginAuthentication implements AuthenticationProvider {
 		attr.getRequest().getSession().setAttribute(SESSION_USERNAME_TAG, user.getUserName());
 		attr.getRequest().getSession().setAttribute(SESSION_USERID_TAG, user.getUserID());
 		attr.getRequest().getSession().setMaxInactiveInterval(60*60);
+	}
+	
+	/**
+	 * Redirects to a index url if it includes ?param=
+	 * Does not work with /login
+	 */
+	private void redirection() {
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+	    SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(attr.getRequest(), attr.getResponse());
+	    if(savedRequest != null) {
+	    	String redirURL = savedRequest.getRedirectUrl();
+	    	if(redirURL.contains("?param=")) {
+	    		try {
+					redirectStrategy.sendRedirect(attr.getRequest(), attr.getResponse(), redirURL);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
 	}
 }
