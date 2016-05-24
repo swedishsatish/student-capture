@@ -1,6 +1,6 @@
 var NewAssignment = React.createClass({
     getInitialState: function() {
-        return {courseID : 0};
+        return {courseID : 0, errorMessage : ""};
     },
     componentDidMount: function () {
         $("#startDate").datetimepicker(
@@ -60,6 +60,11 @@ var NewAssignment = React.createClass({
             ]
         });
     },
+
+    componentDidUpdate() {
+        window.scrollTo(0, 0);
+    },
+
     submitAssignment: function() {
         var reqBody = {};
         var videoIntervall = {};
@@ -72,10 +77,10 @@ var NewAssignment = React.createClass({
         assignmentIntervall["publishedDate"] = $("#publish").val();
         reqBody["courseID"] = this.props.courseID;
         reqBody["title"] = $("#title").val();
-        reqBody["description"] = tinymce.get('description').getContent()
+        reqBody["description"] = tinymce.get('description').getContent();
         reqBody["videoIntervall"] = videoIntervall;
         reqBody["assignmentIntervall"] = assignmentIntervall;
-        reqBody["recap"] = tinymce.get('recap').getContent()
+        reqBody["recap"] = tinymce.get('recap').getContent();
         reqBody["scale"] = $("#scale").val();
         $.ajax({
             type : "POST",
@@ -89,7 +94,9 @@ var NewAssignment = React.createClass({
             }.bind(this), 
             error : function(e) {
                 console.log("ERROR: ", e);
-            }, 
+                /*this.setState({errorMessage : e.errorMessage});*/
+                this.setState({errorMessage : "TESTARRRRR"});
+            }.bind(this),
             done : function(e) {
                 console.log("DONE");
             }
@@ -98,10 +105,12 @@ var NewAssignment = React.createClass({
     renderChild : function (assignmentID) {
         ReactDOM.render(<NewAssignmentVideo courseID={this.props.courseID} assignmentID={assignmentID}/>, document.getElementById('courseContent'));
     },
+
     render : function() {
       return <div>
                 <div className="newAssForm">
                     <h3 className="contentTitle">NEW ASSIGNMENT</h3>
+                    <h3 className="errorMsg">{this.state.errorMessage}</h3>
                     <input className="inputField" id="title" type="text" placeholder="title" />
 
                     <div id="dates">
