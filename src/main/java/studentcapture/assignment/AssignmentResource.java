@@ -23,6 +23,12 @@ public class AssignmentResource {
     @Autowired
     private AssignmentDAO assignmentDAO;
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseBody AssignmentErrorInfo handleFailedRequest(HttpServletRequest req, Exception ex) {
+        //Nested exceptions. The exception thrown by this app is in the third level.
+        return new AssignmentErrorInfo(ex.getCause().getCause().getMessage());
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public int createAssignment(@RequestBody AssignmentModel assignment) {
         return assignmentDAO.createAssignment(assignment);
@@ -46,12 +52,6 @@ public class AssignmentResource {
                                         @PathVariable("assignmentID") int assignmentID) {
         return assignmentDAO.getAssignmentVideo(assignmentID);
     }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    @ResponseBody AssignmentErrorInfo handleFailedRequest(HttpServletRequest req, Exception ex) {
-        return new AssignmentErrorInfo(ex.getCause().getCause().getMessage());
-    }
-
 
     /**
      * Gets the assignment model corresponding to the specified assignment.
