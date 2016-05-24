@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.WebApplicationContext;
 
-import scala.annotation.meta.param;
 import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.user.User;
 import studentcapture.user.UserResource;
