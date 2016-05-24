@@ -13,8 +13,10 @@ import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 import studentcapture.model.Grade;
 
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class SubmissionDAO {
@@ -26,12 +28,10 @@ public class SubmissionDAO {
 	/**
 	 * Add a new submission for an assignment
 	 *
-	 *
-	 * @param submission
-	 * @return True if everything went well, otherwise false
-     * 
-     * @author tfy12hsm
-	 */
+	 * @param submission the submission to be added
+	 * @param studentConsent
+     * @return True if everything went well, otherwise false.
+     */
 	public boolean addSubmission(Submission submission, Boolean studentConsent) {
 		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentpublishconsent, status)" +
 					" VALUES  (?,?,?,?,?)";
@@ -39,7 +39,7 @@ public class SubmissionDAO {
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		timestamp.setNanos(0);
 
-		int rowsAffected = 0;
+		int rowsAffected;
 		try {
 			rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(),
                                                             submission.getStudentID(),
@@ -79,25 +79,6 @@ public class SubmissionDAO {
             sql += "status = ?,";
             sqlparams.add(submission.getStatus());
         }
-        /*if (submission.getGrade() != null) {
-            if  (submission.getGrade().getGrade() != null) {
-                sql += "grade = ?,";
-                sqlparams.add(submission.getGrade().getGrade());
-            }
-            if  (submission.getGrade().getTeacherID() != null) {
-                sql += "teacherid = ?,";
-                sqlparams.add(submission.getGrade().getTeacherID());
-            }
-			if (submission.getGrade().getFeedbackIsVisible() != null) {
-				sql += "publishfeedback = ?,";
-				sqlparams.add(submission.getGrade().getFeedbackIsVisible());
-			}
-		}
-        if (submission.getPublishStudentSubmission() != null) {
-            sql += "publishstudentsubmission = ?,";
-            sqlparams.add(submission.getPublishStudentSubmission());
-        }
-		*/
         if (sqlparams.isEmpty()) {
             return false; // Nothing to patch
         }
@@ -142,7 +123,7 @@ public class SubmissionDAO {
     }
 
 	/**
-	 * Add a grade for a subsmission
+	 * Add a grade for a submission
 	 *
 	 * @param submission Submission object
 	 * @return True if a row was changed, otherwise false
@@ -177,8 +158,6 @@ public class SubmissionDAO {
 	 * @param assID     Unique identifier for the assignment with the submission being removed
 	 * @param studentID Unique identifier for the student whose submission is removed
 	 * @return True if everything went well, otherwise false
-     * 
-     * @author tfy12hsm
 	 */
 	public boolean removeSubmission(String assID, String studentID) {
 		String removeSubmissionStatement = "DELETE FROM "
@@ -193,8 +172,6 @@ public class SubmissionDAO {
 			result = rowsAffected == 1;
 		} catch (IncorrectResultSizeDataAccessException e) {
 			result = false;
-		} catch (DataAccessException e1) {
-			result = false;
 		}
 
 		return result;
@@ -205,8 +182,6 @@ public class SubmissionDAO {
      *
      * @param assId The assignment to get submissions for
      * @return A list of ungraded submissions for the assignment
-     * 
-     * @author tfy12hsm
      */
     public Optional<List<Submission>> getAllUngraded(String assId) {
 
@@ -251,8 +226,6 @@ public class SubmissionDAO {
 	 * Get all submissions for an assignment
 	 * @param assignmentID The assignment to get submissions for
 	 * @return A list of submissions for the assignment
-     * 
-     * @author tfy12hsm
 	 */
     public List<Submission> getAllSubmissions(int assignmentID) {
     	List<Submission> submissions;
@@ -275,12 +248,9 @@ public class SubmissionDAO {
 	 *
 	 * @param assId The assignment to get submissions for
 	 * @return A list of submissions for the assignment
-     * 
-     * @author tfy12hsm
 	 */
     public Optional<List<Submission>> getAllSubmissionsWithStudents
     		(String assId) {
-    	List<Submission> submissions = new ArrayList<>();
     	int assignmentId = Integer.parseInt(assId);
 
 		String getAllSubmissionsWithStudentsStatement =
@@ -303,11 +273,9 @@ public class SubmissionDAO {
 	 *                      to.
      * @param userId		The studentId that the submission is connected to.
      * @return				The submission with the teacher name.
-     * 
-     * @author tfy12hsm
      */
     public Optional<Submission> getSubmission(int assignmentId, int userId) {
-    	Submission result = null;
+    	Submission result;
         String getStudentSubmission =
 				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
 		String getTeacherName =
@@ -335,8 +303,8 @@ public class SubmissionDAO {
 
 	/**
 	 * Get a teacher's submitted feedback video for a specific student.
-	 * @param submission
-     * @return
+	 * @param submission the submission which the video should be linked to.
+     * @return An input stream contained within a HTTP response entity.
      */
 	public ResponseEntity<InputStreamResource> getFeedbackVideo(Submission submission) {
 		Integer courseID = getCourseIDFromAssignmentID(submission.getAssignmentID());
@@ -350,12 +318,13 @@ public class SubmissionDAO {
 	}
 
 
-	/**
-	 *
-	 * @param assignmentID
-	 * @param studentID
-	 * @return
-	 */
+    /**
+     * Adds a feedback video to a submission.
+     *
+     * @param submission the submission which to add the video to.
+     * @param feedbackVideo the feedback video.
+     * @return true if it succeeds, otherwise false.
+     */
 	public boolean setFeedbackVideo(Submission submission, MultipartFile feedbackVideo) {
 
 		return FilesystemInterface.storeFeedbackVideo(submission, feedbackVideo);
@@ -364,9 +333,11 @@ public class SubmissionDAO {
 	}
 
 	/**
-	 * Retrieves the course id from an assignment by querying the database. Returns null if something went wrong.
-	 * @param assignmentID
-	 * @return
+	 * Retrieves the course id from an assignment by querying the database.
+     * Returns null if something went wrong.
+     *
+	 * @param assignmentID the id of the assignment.
+	 * @return the course id.
      */
 	private Integer getCourseIDFromAssignmentID(int assignmentID){
 		try{

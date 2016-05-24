@@ -1,9 +1,9 @@
 package studentcapture.submission;
 
+import org.springframework.web.multipart.MultipartFile;
 import studentcapture.model.Grade;
 
 import javax.validation.constraints.NotNull;
-import org.springframework.web.multipart.MultipartFile;
 import java.sql.Timestamp;
 import java.util.Map;
 

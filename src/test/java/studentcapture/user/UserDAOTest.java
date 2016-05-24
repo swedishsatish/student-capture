@@ -34,6 +34,10 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
 
     @Before
     public void setup() {
+
+
+        //
+
         //Add one user
         String sql = "INSERT INTO users"
                 +" (username, firstname, lastname, email, pswd)"
@@ -96,6 +100,15 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         ErrorFlags errorFlags = userDAO.addUser(userSetup);
 
         assertEquals(ErrorFlags.USEREXISTS,errorFlags);
+    }
+
+    @Test
+    public void testAddingNullUser() {
+        User user = new User("userPelle","Pelle","Jönsson",null,
+                             "mypassword123");
+        ErrorFlags errorFlag = userDAO.addUser(user);
+
+        assertEquals(errorFlag.USERCONTAINNULL, errorFlag);
     }
 
     @Test

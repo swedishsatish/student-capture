@@ -1,18 +1,17 @@
 package studentcapture.course;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
-
 import studentcapture.course.hierarchy.HierarchyDAO;
 import studentcapture.course.hierarchy.HierarchyModel;
 import studentcapture.course.participant.ParticipantDAO;
+import studentcapture.login.LoginDAO;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 /**
  * CourseResource is a REST controller that maps course related methods to 
@@ -171,7 +170,7 @@ public class CourseResource {
     @ResponseBody
     public HierarchyModel getHierarchy(HttpSession session) {
     	Optional<HierarchyModel> hierarchy = 
-    			hierarchyDAO.getCourseAssignmentHierarchy(Integer.parseInt(session.getAttribute("userid").toString()));
+    			hierarchyDAO.getCourseAssignmentHierarchy(LoginDAO.getUserIdFromSession(session));
     	if(hierarchy.isPresent()) 
     		return hierarchy.get();
     	throw new ResourceNotFoundException();
@@ -179,9 +178,11 @@ public class CourseResource {
     
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public static class ResourceNotFoundException extends RuntimeException {
+		private static final long serialVersionUID = 5132715904141343691L;
     }
     
     @ResponseStatus(value = HttpStatus.CONFLICT)
     public static class ResourceConflictException extends RuntimeException {
+		private static final long serialVersionUID = 1L;
     }
 }

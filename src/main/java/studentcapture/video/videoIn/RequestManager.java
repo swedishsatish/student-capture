@@ -40,10 +40,8 @@ public class RequestManager {
              //   throw new Exception("Request not valid.");
         }
 
-        String uploadURL = HashCodeGenerator.generateHash(userID);
 
-
-        return uploadURL;
+        return HashCodeGenerator.generateHash(userID);
     }
 
     /**

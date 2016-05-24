@@ -24,7 +24,7 @@ public class Participant {
      * 
      * @param map		map of database elements
      */
-    public void parseMap(Map<String, Object> map) {
+	private void parseMap(Map<String, Object> map) {
     	userId = (Integer) map.get("UserId");
 		courseId = (int) map.get("CourseId");
 		function = (String) map.get("Function");

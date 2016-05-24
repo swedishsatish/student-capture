@@ -1,16 +1,6 @@
 package studentcapture.login;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Properties;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,14 +9,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import org.springframework.core.io.*;
 import studentcapture.user.User;
+
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Custom login authentication for Spring Security
@@ -89,8 +78,8 @@ public class LoginAuthentication implements AuthenticationProvider {
 	 * @param password User input password
 	 * @return true if user name and password match in the database, else false
 	 */
-	
-	public boolean checkUser(String username, String password) {
+
+	private boolean checkUser(String username, String password) {
 		
 		        
         //Get the user object and check that the password is valid
@@ -102,7 +91,7 @@ public class LoginAuthentication implements AuthenticationProvider {
            
     }
 
-	public boolean comparePassword(String password, String hashed) {
+	private boolean comparePassword(String password, String hashed) {
 		//String hashed = "";
 		return BCrypt.checkpw(password, hashed);
 	}

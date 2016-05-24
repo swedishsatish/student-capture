@@ -1,8 +1,5 @@
 package studentcapture.login;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import studentcapture.user.User;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @RestController
 public class RegistrationController {
@@ -37,7 +36,7 @@ public class RegistrationController {
 		if (!password.equals(confirmpassword)) {
 			uri = new URI("/login?error=passwordmatch");
 			httpHeaders.setLocation(uri);
-			return new ResponseEntity<Object>(httpHeaders, HttpStatus.FOUND);
+			return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
 		}
 		
 		User user = new User(username, firstName, lastName, email, encryptPassword(password));
@@ -51,7 +50,7 @@ public class RegistrationController {
             uri = new URI("/login?error=" + status.toString());
         }
         httpHeaders.setLocation(uri);
-        return new ResponseEntity<Object>(httpHeaders, HttpStatus.FOUND);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
 	}
 	
     /**
@@ -60,7 +59,6 @@ public class RegistrationController {
      * @return Encrypted password
      */
     protected String encryptPassword(String password) {
-        String generatedPassword = BCrypt.hashpw(password, BCrypt.gensalt(11));
-        return generatedPassword;
+		return BCrypt.hashpw(password, BCrypt.gensalt(11));
     }
 }

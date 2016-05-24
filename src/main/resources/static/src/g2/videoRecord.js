@@ -29,7 +29,7 @@ var Recorder = React.createClass({
         //used for hw testing
         var blobsize;
         var sendTime;
-
+        var forceSubmit = false;
         var cameraStartOnLoad = (typeof props.camOnLoad === "undefined") ?
                         false : props.camOnLoad == "true";
         var cameraStarted = false;
@@ -46,9 +46,8 @@ var Recorder = React.createClass({
 
         if(startRecordButtonExists) {
             var recordButton = document.getElementById(props.recButtonID);
-            if(cameraStarted) {
+            if(!cameraStartOnLoad)
                 recordButton.disabled = true;
-            }
         }
 
         if(typeof props.calc !== "undefined")
@@ -91,7 +90,21 @@ var Recorder = React.createClass({
             if(startRecordButtonExists) {
                 recordButton.disabled = true;
             }
-            stopButton.disabled = false;
+            if(props.siteView == "submission") {
+                if(props.minRecordTime != null) {
+                    window.setTimeout(function() {
+                                    stopButton.disabled = false;
+                                }, 1000*parseInt(props.minRecordTime));
+                }
+                if(props.maxRecordTime != null) {
+                    window.setTimeout(function() {
+                                    forceSubmit = true;
+                                    stopRecording();
+                                }, 1000*parseInt(props.maxRecordTime));
+                }
+            } else {
+                stopButton.disabled = false;
+            }
 
             if(typeof props.calc !== "undefined") {
                 document.getElementById("test-rec-text").innerHTML = "&#x1f534;";
@@ -148,9 +161,11 @@ var Recorder = React.createClass({
 
         /* Closes the webcam stream and post to server if auto recording is on. */
         function stopRecording() {
-
-            if(!confirm("Are you sure you want to submitt your answer?")) {
-                return;
+            if(props.siteView == "submission" && forceSubmit == false) {
+                /* TODO We want confirm on submit but it blocks the timer so no confirm for now until a solution is found. */
+                /*if(!confirm("Are you sure you want to submit your answer?")) {
+                    return;
+                }*/
             }
 
             if(!shouldAutoRecord){
@@ -230,9 +245,17 @@ var Recorder = React.createClass({
             request.onreadystatechange = function () {
                 if (request.readyState == 4 && request.status == 200) {
                     callback(request.responseText);
-                    alert("Your answer has been submitted successfully!");
+                    alert("Your video has been uploaded successfully!");
                 } else if(request.readyState == 4 && request.status !== 200) {
-                    alert(request.responseText);
+                    if(request.responseText.length < 5) {
+                        // Error message should be longer than 5 characters
+                        alert("Failed to upload video.");
+                    } else if(request.responseText.includes("Exception")) {
+                        // Do not print out exception (should not occur....)
+                        alert("Failed to upload video.");
+                    } else {
+                        alert(request.responseText);
+                    }
                 }
             };
 

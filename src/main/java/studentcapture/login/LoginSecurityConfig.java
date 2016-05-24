@@ -35,6 +35,8 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
     	http.authorizeRequests().antMatchers("/css/**", "/src/**", "/images/**").permitAll();
     	http.authorizeRequests().antMatchers("/login**").permitAll();
     	http.authorizeRequests().antMatchers("/register").permitAll();
+    	http.authorizeRequests().antMatchers("/lostPassword").permitAll();
+    	http.authorizeRequests().antMatchers("/changePassword").permitAll();
         http
         	.sessionManagement().maximumSessions(1)
         	.and().invalidSessionUrl("/login");

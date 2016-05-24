@@ -4,10 +4,20 @@ var StartPage = React.createClass({
         return <div>
             <h3>Welcome to Student Capture!</h3>
             <p>A video examination platform</p>
+            Enter course link: <input type='text' id='courseLinkInput' />
+            <button type="submit" id="enterHashbutt" onclick="clicker()">Enter</button>
+            <p id="testfield">Hejsan</p>
         </div>
     }
 
 });
+
+ function clicker() {
+
+
+    console.log("Inne her");
+
+}
 
 function submitAssignment() {
     var reqBody = {}

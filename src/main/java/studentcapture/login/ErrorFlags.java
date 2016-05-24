@@ -1,32 +1,22 @@
 package studentcapture.login;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import studentcapture.user.User;
-
 /**
  * Enum for sending error flags between the db and spring.
  * Used during login.
  * @author dv13ean
  */
 public enum ErrorFlags {
-    USERNAMELENGTH,
-    PASSWORDFORMAT,
-    PASSWORDMATCH,
-    EMAILFORMAT,
-    EMAILEXISTS,
-    USEREXISTS,
-    NOERROR;
-    
+    USERNAMELENGTH, //when username is too short
+    PASSWORDFORMAT, //when password is incorrectly formatted
+    PASSWORDMATCH, //when non matching passwords
+    EMAILFORMAT, //when email format is incorrect
+    EMAILEXISTS, //when email exists in the database
+    USEREXISTS, //when username exist in the database
+    USERCONTAINNULL, //when user parameters has null values
+    NOERROR; //if ok
+
+    //used in loginScript.js If any changes made,
+    // make sure to update loginScript.js Okay?
     @Override
     public String toString(){
         
@@ -48,6 +38,9 @@ public enum ErrorFlags {
             
         case USEREXISTS:
             return "userexists";
+
+        case USERCONTAINNULL:
+            return "success";
             
         case NOERROR:
             return "success";
@@ -56,8 +49,6 @@ public enum ErrorFlags {
             return "success";
 
         }
-        
     }
-    
 }
 

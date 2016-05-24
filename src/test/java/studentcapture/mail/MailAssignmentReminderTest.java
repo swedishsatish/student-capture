@@ -37,12 +37,12 @@ public class MailAssignmentReminderTest extends StudentCaptureApplicationTests {
         String sql1 = "INSERT INTO Users VALUES (1, 'mkyong', 'abcd', 'defg', 'mkyong@gmail.com', 'MyPassword',null);";
         String sql2 = "INSERT INTO Users VALUES (2, 'alex', 'abcd', 'defg', 'alex@yahoo.com', 'SecretPassword', null);";
         String sql3 = "INSERT INTO Users VALUES (3, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword', null);";
-        String sql4 = "INSERT INTO Course VALUES ('PVT', 2016, 'VT', '1234', 'ABC', null, true);";
-        String sql5 = "INSERT INTO Assignment VALUES (1, 'PVT', 'OU1', '2016-05-13 10:00:00', '2016-05-13 12:00:00', 60, 180, null, 'XYZ');";
+        String sql4 = "INSERT INTO Course VALUES (1, 2016, 'VT', 'ABC', null, true);";
+        String sql5 = "INSERT INTO Assignment VALUES (1, 1, 'OU1', '2016-05-13 10:00:00', '2016-05-13 12:00:00', 60, 180, null, 'XYZ');";
         String sql6 = "INSERT INTO Submission VALUES (1, 1, null, null, '2016-05-13 11:00:00', null, null, null, null);";
         String sql7 = "INSERT INTO Submission VALUES (1, 3, null, null, '2016-05-13 11:00:00', 'MVG', 2, null, null);";
-        String sql8 = "INSERT INTO Participant VALUES (3, 'PVT', 'Student');";
-        String sql9 = "INSERT INTO Participant VALUES (2, 'PVT', 'Student');";
+        String sql8 = "INSERT INTO Participant VALUES (3, 1, 'Student');";
+        String sql9 = "INSERT INTO Participant VALUES (2, 1, 'Student');";
         jdbcMock.update(sql1);
         jdbcMock.update(sql2);
         jdbcMock.update(sql3);

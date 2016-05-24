@@ -12,11 +12,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
-
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
-
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 
@@ -323,10 +321,6 @@ public class AssignmentDAO {
     public boolean removeAssignment(int courseId, int assignmentID) throws IOException {
         int rowAffected = jdbcTemplate.update("DELETE FROM Assignment WHERE AssignmentId = ?", assignmentID);
         FilesystemInterface.deleteAssignmentFiles(courseId, assignmentID);
-        if (rowAffected > 0){
-            return true;
-        } else {
-            return false;
-        }
+        return rowAffected > 0;
     }
 }

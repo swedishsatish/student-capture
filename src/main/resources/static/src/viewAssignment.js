@@ -14,7 +14,9 @@ var assignmentData = {
     minTime: '',
     maxTime: '',
     assignmentName: '',
-    assignmentID: ''
+    assignmentID: '',
+    courseID: '',
+    studentID: ''
 }
 
 /*
@@ -41,6 +43,8 @@ window.AssignmentContent = React.createClass({
     },
     render: function () {
         assignmentData.assignmentID = this.props.assignment;
+        assignmentData.courseID = this.props.course;
+        assignmentData.studentID = this.props.uid;
         if(!this.state.loaded) {
             getJson("assignments/" + assignmentData.assignmentID, this.jsonReady);
         }
@@ -58,8 +62,7 @@ window.AssignmentContent = React.createClass({
                     </h5>
                 </div>
                 <div id="assignment-interaction">
-                    <But user={this.props.uid} assignment={this.props
-                    .assignment}/><br />
+                    <But /><br />
                     NOTE: Once the assignment starts it cannot be interrupted or paused,<br />
                     remember to test your hardware before you begin!
                 </div>
@@ -89,12 +92,14 @@ var AssignmentStart = React.createClass({
         var recordContent = this.state.startRecording
                             ? <div>
                                   <StudentRecordVideo autoRecord="true"
-                                  studentID={this.props.user}
-                                  assignmentID={this.props.assignment} />
+                                  courseID={assignmentData.courseID}
+                                  assignmentID={assignmentData.assignmentID}
+                                  studentID={assignmentData.studentID}
+                                  minRecordTime={assignmentData.minTime}
+                                  maxRecordTime={assignmentData.maxTime}
+                                  />
                               </div>
-                            : <StudentRecordVideo autoRecord="false"
-                            studentID={this.props.user} assignmentID={this
-                            .props.assignment} />;
+                            : <StudentRecordVideo autoRecord="false" />;
         return (
             <div id="assignment-modal">
                 <div className="modal-dialog">
@@ -164,8 +169,7 @@ var But = React.createClass({
     },
     render: function() {
         var content = this.state.disabled
-                      ? <AssignmentStart user={this.props.user}
-                      assignment={this.props.assignment} />
+                      ? <AssignmentStart />
                       : <input
                             disabled = {this.state.disabled}
                             type="submit"

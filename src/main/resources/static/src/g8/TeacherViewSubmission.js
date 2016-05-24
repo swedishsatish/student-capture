@@ -18,10 +18,7 @@ var TeacherViewSubmission = React.createClass({
 
 
     componentWillMount: function () {
-        this.nSubmissions = 0;
-        this.nWithdrawals = 0;
-        this.nDone = 0;
-        this.nParticipants = 0;
+
         // GET request to database to get all the submissions from the students.
         $.ajax({
             url: "assignments/" + this.props.assignmentId + "/submissions/",
@@ -56,13 +53,19 @@ var TeacherViewSubmission = React.createClass({
     },
 
     calculateSubmissions: function () {
-        this.nParticipants = this.participantsArray.length;
+        this.nSubmissions = 0;
+        this.nWithdrawals = 0;
+        this.nDone = 0;
+        this.nParticipants = 0;
+        this.nParticipants = this.submissionsArray.length;
         console.log(this.submissionsArray);
         for (var i=0;i<this.submissionsArray.length;i++) {
-            if (this.submissionsArray[i].status.toLowerCase() == "answer") {
-                this.nSubmissions++;
-            } else if (this.submissionsArray[i].status.toLowerCase() == "blank") {
-                this.nWithdrawals++;
+            if(this.submissionsArray[i].status) {
+                if (this.submissionsArray[i].status.toLowerCase() == "answer") {
+                    this.nSubmissions++;
+                } else if (this.submissionsArray[i].status.toLowerCase() == "blank") {
+                    this.nWithdrawals++;
+                }
             }
         }
 
@@ -71,7 +74,8 @@ var TeacherViewSubmission = React.createClass({
 
 
     render: function () {
-        var idArray=[{courseID:this.props.courseID,
+        console.log(this.participantsArray.length);
+        var idArray=[{courseID:this.props.courseId,
                      assignmentID:this.props.assignmentId}];
         this.calculateSubmissions();
         return (
