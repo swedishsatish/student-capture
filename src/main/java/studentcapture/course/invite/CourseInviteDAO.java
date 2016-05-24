@@ -158,8 +158,7 @@ public class CourseInviteDAO {
             if(rowsAffected == 1) {
             	return true;
             }
-        } catch (IncorrectResultSizeDataAccessException e){
-        } catch (DataAccessException e1){
+        } catch (DataAccessException ignored){
         }
         return false;
 	}
@@ -173,8 +172,7 @@ public class CourseInviteDAO {
             if(rowsAffected == 1) {
             	return true;
             }
-        } catch (IncorrectResultSizeDataAccessException e){
-        } catch (DataAccessException e1){
+        } catch (DataAccessException ignored){
         }
         return false;
 	}
