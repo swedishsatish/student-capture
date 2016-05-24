@@ -185,7 +185,6 @@ function  getForm(method) {
             console.log("SUCCESS reqBody contains:", reqBody);
             // TODO: check response with if/else, if respons is fail give error message
 
-            //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);
             console.log("ReqBody contains:", reqBody);
@@ -214,8 +213,11 @@ var SubmitButton = React.createClass({
 
     componentWillMount: function(){
         student=this.props.studentArray;
-        getForm('GET');
         IDs=this.props.idArray;
+        if(student[0].studentID){
+            console.log("JAOJA");
+           // getForm('GET'); // retunerar null??? så kanske inte nått i databas??
+        }
     },
     /**
      * Used to toggle on divs, make them visable.

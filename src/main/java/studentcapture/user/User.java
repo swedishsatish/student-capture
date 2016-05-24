@@ -1,5 +1,10 @@
 package studentcapture.user;
 
+import javax.servlet.http.HttpSession;
+
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 /**
  * Created by c12ton on 5/12/16.
  * Will act as a container for information of a user
@@ -96,5 +101,45 @@ public class User {
                 && (that.getEmail() == this.email)
                 && (that.getPswd()  == this.pswd)
                 && (that.getToken() == this.token);
+    }
+    
+    /**
+     * Use this method to extract user id from a session
+     * @param session The current session
+     * @return 
+     */
+    public static int getSessionUserId(HttpSession session) {
+    	String userid = (String) session.getAttribute("userid");
+    	return Integer.parseInt(userid);
+    }
+    
+    /**
+     * Gets the username from session
+     * @param session The session
+     * @return Username
+     */
+    public static String getSessionUserName(HttpSession session) {
+    	return (String) session.getAttribute("username");
+    }
+    
+    /**
+     * Gets the UserID based on context session.
+     * @return The current context session userid
+     */
+    public static int getContextUserId() {
+    	ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+    	HttpSession session = attr.getRequest().getSession();
+    	String userid = (String) session.getAttribute("userid");
+    	return Integer.parseInt(userid);
+    }
+    
+    /**
+     * Gets the username based on context session.
+     * @return The current context session username
+     */
+    public static String getContextUserName() {
+    	ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+    	HttpSession session = attr.getRequest().getSession();
+    	return (String)session.getAttribute("username");
     }
 }
