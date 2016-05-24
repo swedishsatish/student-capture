@@ -3,7 +3,6 @@ package studentcapture.course.invite;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import studentcapture.course.CourseModel;
 import studentcapture.login.LoginDAO;
 
 /**
@@ -27,6 +28,19 @@ import studentcapture.login.LoginDAO;
 public class CourseInviteResource {
 	@Autowired
     private CourseInviteDAO courseInviteDAO;
+	
+	@CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.GET,
+    value = "")
+    @ResponseBody
+    public InviteModel postCourseInvite() {
+		InviteModel result = new InviteModel();
+		result.setCourse(new CourseModel());
+		
+		return result;
+    }
 	
 	@CrossOrigin
     @RequestMapping(
