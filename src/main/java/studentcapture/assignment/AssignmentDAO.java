@@ -102,15 +102,15 @@ public class AssignmentDAO {
             insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
                     "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
                     "Published, GradeScale) VALUES (DEFAULT ,?,?, " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?,?,?);";
+                    "to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'), " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'),?,?,?,?);";
         } else {
             insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
                     "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
                     "Published, GradeScale) VALUES (DEFAULT ,?,?, " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?," +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?);";
+                    "to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'), " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'),?,?," +
+                    "to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'),?);";
         }
         return insertQueryString;
     }

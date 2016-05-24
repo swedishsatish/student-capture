@@ -12,6 +12,11 @@
     text-align: center;
 }
 
+.errorMsg {
+    text-align: center;
+    color: #EC7E15 !important;
+}
+
 #title {
     width: 100%;
 }
