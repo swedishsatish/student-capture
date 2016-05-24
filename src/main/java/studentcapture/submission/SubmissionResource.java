@@ -69,7 +69,7 @@ class SubmissionResource {
      */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") int assignmentID){
-        return new ResponseEntity<>(DAO.getAllSubmissions(assignmentID), HttpStatus.OK);
+        return new ResponseEntity<>(DAO.getAllSubmissionsWithStudents(Integer.toString(assignmentID)).get(), HttpStatus.OK);
     }
 
     /**
