@@ -94,7 +94,12 @@ var NewAssignment = React.createClass({
             }.bind(this), 
             error : function(e) {
                 console.log("ERROR: ", e);
-                this.setState({errorMessage : e.responseJSON.errorMessage});
+
+                if (e.status == 500) {
+                    this.setState({errorMessage: "Failed to create assignment. Contact support or try again later."});
+                } else {
+                    this.setState({errorMessage: e.responseJSON.errorMessage});
+                }
             }.bind(this),
             done : function(e) {
                 console.log("DONE");
