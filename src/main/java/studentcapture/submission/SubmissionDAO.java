@@ -50,11 +50,8 @@ public class SubmissionDAO {
 			return false;
 		}
 		if(submission.getStudentVideo() != null) {
-			if(submission.getStudentVideo() != null) {
 				FilesystemInterface.storeStudentVideo(submission, submission.getStudentVideo());
-			}
         }
-
 		return rowsAffected == 1;
 	}
 
@@ -138,7 +135,7 @@ public class SubmissionDAO {
 
         int rows = databaseConnection.queryForInt(checkIfTeacherExist, userId, submission.getCourseID());
         if(rows != 1) {
-			throw new IllegalAccessException("Cant set grade, user not a teacher");
+			throw new IllegalAccessException("Cant set grade, user is not a teacher");
 		}
 		String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, PublishStudentSubmission = ?" +
 				" WHERE (AssignmentID = ?) AND (StudentID = ?);";
@@ -147,7 +144,6 @@ public class SubmissionDAO {
 																submission.getPublishStudentSubmission(),
 																submission.getAssignmentID(),
 																submission.getStudentID());
-
 		return updatedRows == 1;
 	}
 
@@ -307,13 +303,14 @@ public class SubmissionDAO {
 	 * @param submission the submission which the video should be linked to.
      * @return An input stream contained within a HTTP response entity.
      */
-	public ResponseEntity<InputStreamResource> getFeedbackVideo(Submission submission) {
+	public ResponseEntity<InputStreamResource> getVideo(Submission submission, String fileName) {
 		Integer courseID = getCourseIDFromAssignmentID(submission.getAssignmentID());
 		if(courseID == null){
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else{
 			submission.setCourseID(Integer.toString(courseID));
-			String path = FilesystemInterface.generatePath(submission) + FilesystemConstants.FEEDBACK_VIDEO_FILENAME;
+			String path = FilesystemInterface.generatePath(submission) + fileName;
+			System.out.println(path);
 			return FilesystemInterface.getVideo(path);
 		}
 	}
