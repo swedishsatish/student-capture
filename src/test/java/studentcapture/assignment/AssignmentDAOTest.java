@@ -98,14 +98,14 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
 
         int assID = assignmentDAO.createAssignment(am);
 
-        assertEquals(am, assignmentDAO.getAssignmentModel(assID));
+        assertEquals(am, assignmentDAO.getAssignmentModel(assID).get());
     }
 
     @Test
     public void shouldGetCorrectAssignment() throws Exception {
         int assID = assignmentDAO.createAssignment(am);
 
-        assertEquals(am, assignmentDAO.getAssignmentModel(assID));
+        assertEquals(am, assignmentDAO.getAssignmentModel(assID).get());
     }
 
     @Test
@@ -167,7 +167,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
 
         // Update and get updated
         assignmentDAO.updateAssignment(am);
-        AssignmentModel am2 = assignmentDAO.getAssignmentModel(am.getAssignmentID());
+        AssignmentModel am2 = assignmentDAO.getAssignmentModel(am.getAssignmentID()).get();
 
         // Assert that truly updated
         assertNotEquals(am2.getDescription(), originalDescription);
