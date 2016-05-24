@@ -36,14 +36,16 @@ var Options = React.createClass({
                 document.getElementById('courseContent'));
         }
         else {
-            ReactDOM.render(<Feedback course={courseID} assignment={assID}/>,
+            ReactDOM.render(<Feedback course={courseID} assignment={assID} user={this.props.uid}/>,
                 document.getElementById('courseContent'));
         }
 
 
     },
     editClick: function () {
-
+        var assID = this.props.assignment.assignment.assignmentID;
+        var courseID = this.props.couseId;
+        ReactDOM.render(<NewAssignment edit={true} courseID={courseID} assID={assID} uid={this.props.uid}/>,document.getElementById("courseContent"))
     },
     render: function () {
         return (
@@ -85,7 +87,7 @@ var Assignment = React.createClass({
             var now = Date.now();
             if(objToList(this.props.assignment.submissions).length == 0 &&
                 new Date(this.props.assignment.assignment.assignmentIntervall.endDate).getTime() >= now){
-                ReactDOM.render(<AssignmentContent course={courseID} assignment={assID} uid={uid}/>,
+                ReactDOM.render(<AssignmentContent uid={uid} course={courseID} assignment={assID}/>,
                     document.getElementById('courseContent'));
             }
             else {
@@ -95,7 +97,7 @@ var Assignment = React.createClass({
 
         }
         else if(this.props.role == "teacher"){
-            console.log(courseID + " " +assID);
+
             document.getElementById("courseContent").innerHTML = "";
             ReactDOM.render(<TeacherViewSubmission courseId={courseID} assignmentId={assID}/>,
                                 document.getElementById('courseContent') );
@@ -114,7 +116,7 @@ var Assignment = React.createClass({
         var now = Date.now();
         var options = "";
         if(this.state.showChildren && this.props.role == "teacher"){
-            options = <Options assignment={assignment} courseId={this.props.courseId}/>;
+            options = <Options assignment={assignment} courseId={this.props.courseId} uid={this.props.uid}/>;
         }
         if(new Date(assignment.assignment.assignmentIntervall.startDate).getTime() <= now &&
             new Date(assignment.assignment.assignmentIntervall.endDate).getTime() >= now)
@@ -131,7 +133,7 @@ var Assignments = React.createClass({
      * @param event
      */
     handleClick: function (course, event) {
-        ReactDOM.render(<NewAssignment courseID={course.courseId} courseCode={course.courseCode} uid={this.props.uid}/>,document.getElementById("courseContent"))
+        ReactDOM.render(<NewAssignment edit={false} courseID={course.courseId} courseCode={course.courseCode} uid={this.props.uid}/>,document.getElementById("courseContent"))
     },
     /**
      * Get the course information and render the edit course page passing course and user id as props.
@@ -183,14 +185,14 @@ var Course = React.createClass({
     },
     
     handleClick: function(course,event) {
-        
+        var role = this.props.role;
         $.get("course/" + course.course.courseId,function (res) {
-            ReactDOM.render(<CourseInfo course={res}/>,document.getElementById("courseContent"));
+            ReactDOM.render(<CourseInfo course={res} role={role}/>,document.getElementById("courseContent"));
             
             
         });
 
-        
+       
     
         
         this.setState({showChildren:!this.state.showChildren});
@@ -288,6 +290,7 @@ window.RenderMenu = function () {
     $.get("course", function (res) {
         // if(res)
         var userID = res.userId;
+
         var SCList = objToList(res.studentCourses);
         var TCList = objToList(res.teacherCourses);
         var name = res.firstName + " " + res.lastName;

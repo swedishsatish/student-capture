@@ -1,7 +1,5 @@
 package studentcapture.course.invite;
 
-import java.util.Optional;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import studentcapture.course.CourseModel;
 import studentcapture.login.LoginDAO;
 
+/**
+ * CourseInviteResource is a controller that maps REST requests related to 
+ * 
+ * @author tfy12hsm
+ *
+ */
 @RestController
 @RequestMapping(value = "/invite")
 public class CourseInviteResource {
@@ -28,15 +32,27 @@ public class CourseInviteResource {
 	@CrossOrigin
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
+    method = RequestMethod.GET,
+    value = "")
+    @ResponseBody
+    public InviteModel postCourseInvite() {
+		InviteModel result = new InviteModel();
+		result.setCourse(new CourseModel());
+		
+		return result;
+    }
+	
+	@CrossOrigin
+    @RequestMapping(
+    produces = MediaType.APPLICATION_JSON_VALUE,
     method = RequestMethod.POST,
     value = "")
     @ResponseBody
-    public String postCourseInvite(
-    		@RequestBody
-    		CourseModel course) {
-		Optional<String> hex = courseInviteDAO.addCourseInvite(course);
-    	if(hex.isPresent()) {
-    		return hex.get();
+    public InviteModel postCourseInvite(
+    		@RequestBody InviteModel invite) {
+		InviteModel result = courseInviteDAO.addCourseInvite(invite.getCourse());
+    	if(result.getHex()!=null) {
+    		return result;
     	} else {
     		throw new ResourceConflictException(); 
     	}
@@ -48,17 +64,17 @@ public class CourseInviteResource {
     method = RequestMethod.POST,
     value = "/{Hex}")
     @ResponseBody
-    public CourseModel joinCourse(
+    public InviteModel joinCourse(
     		HttpSession session,
     		@PathVariable(value = "Hex") String hex) {
-    	CourseModel result = courseInviteDAO.joinCourseThroughInvite(
+    	InviteModel result = courseInviteDAO.joinCourseThroughInvite(
     			LoginDAO.getUserIdFromSession(session), hex);
-    	if(result.getCourseId()==null) {
-    		if(result.getErrorCode()==HttpStatus.CONFLICT.value()) {
-    			throw new ResourceConflictException();
-    		} else {
-    			throw new ResourceNotFoundException();
-    		}
+    	if(result.getCourse().getCourseId()==null) {
+//    		if(result.getCourse().getErrorCode()==HttpStatus.CONFLICT.value()) {
+//    			throw new ResourceConflictException();
+//    		} else {
+//    			throw new ResourceNotFoundException();
+//    		}
     	}
     	return result;
     }
@@ -67,15 +83,34 @@ public class CourseInviteResource {
     @RequestMapping(
     produces = MediaType.APPLICATION_JSON_VALUE,
     method = RequestMethod.GET,
-    value = "/{Hex}")
+    value = "/{CourseId}")
     @ResponseBody
-    public CourseModel getCourseInviteThroughHex(
-    		@PathVariable(value = "Hex") String hex) {
-    	CourseModel result = courseInviteDAO.getCourseThroughInvite(hex);
-    	if(result.getCourseId()==null)
-    		throw new ResourceNotFoundException();
-    	return result;
+    public InviteModel getCourseInviteThroughHex(
+    		@PathVariable(value = "CourseId") Integer courseId) {
+		CourseModel course = new CourseModel();
+		course.setCourseId(courseId);
+		InviteModel result = courseInviteDAO.addCourseInvite(course);
+    	if(result.getHex()!=null) {
+    		return result;
+    	} else {
+    		throw new ResourceConflictException(); 
+    	}
     }
+
+	
+//	@CrossOrigin
+//    @RequestMapping(
+//    produces = MediaType.APPLICATION_JSON_VALUE,
+//    method = RequestMethod.GET,
+//    value = "/{Hex}")
+//    @ResponseBody
+//    public InviteModel getCourseInviteThroughHex(
+//    		@PathVariable(value = "Hex") InviteModel invite) {
+//    	InviteModel result = courseInviteDAO.getCourseThroughInvite(invite.getHex());
+//    	if(result.getCourse().getCourseId()==null)
+//    		throw new ResourceNotFoundException();
+//    	return result;
+//    }
 	
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public static class ResourceNotFoundException extends RuntimeException {

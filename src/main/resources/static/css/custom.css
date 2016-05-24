@@ -5,6 +5,10 @@ html, body {
 	font-family: 'Open Sans', sans-serif;
 }
 
+html {
+	overflow:auto;
+}
+
 p {
 	font-family: 'Libre Baskerville', serif;
 	color: #424242;

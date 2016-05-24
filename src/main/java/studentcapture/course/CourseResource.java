@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import studentcapture.course.hierarchy.HierarchyDAO;
 import studentcapture.course.hierarchy.HierarchyModel;
+import studentcapture.course.participant.Participant;
 import studentcapture.course.participant.ParticipantDAO;
 import studentcapture.login.LoginDAO;
 
@@ -54,9 +55,8 @@ public class CourseResource {
     		throw new ResourceNotFoundException(); 
     	}
     	if(course.getInitialTeacherId()!=null) {
-    	   	Boolean result2 = participantDAO.addParticipant(
-    	   			course.getInitialTeacherId().toString(), result1.getCourseId().toString(),
-    	   			"teacher");
+			Participant p = new Participant(course.getInitialTeacherId(),result1.getCourseId(),"teacher");
+    	   	Boolean result2 = participantDAO.addParticipant(p);
     	   	if(!result2) 
     	   		throw new ResourceNotFoundException();
     	}

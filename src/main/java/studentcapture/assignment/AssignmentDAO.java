@@ -102,15 +102,15 @@ public class AssignmentDAO {
             insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
                     "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
                     "Published, GradeScale) VALUES (DEFAULT ,?,?, " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?,?,?);";
+                    "to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'), " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'),?,?,?,?);";
         } else {
             insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
                     "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
                     "Published, GradeScale) VALUES (DEFAULT ,?,?, " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?,?," +
-                    "to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'),?);";
+                    "to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'), " +
+                    "to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'),?,?," +
+                    "to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'),?);";
         }
         return insertQueryString;
     }
@@ -254,6 +254,34 @@ public class AssignmentDAO {
 			return Optional.empty();
 		}
 	}
+	
+	/**
+     * Returns a sought, published assignment from the database.
+     * 
+     * @param assignmentId		assignments identifier
+     * @return					sought assignment
+     * 
+     * @author tfy12hsm
+     */
+	public Optional<AssignmentModel> getPublishedAssignment(int assignmentId) {
+		try {
+            String getPublishedAssignmentStatement = "SELECT * FROM "
+                    + "Assignment WHERE AssignmentId=? AND "
+                    + "ass.published < current_timestamp";
+
+			Map<String, Object> map = jdbcTemplate.queryForMap(
+	    			getPublishedAssignmentStatement, assignmentId);
+			AssignmentModel result = new AssignmentModel(map);
+	    	
+	    	return Optional.of(result);
+		} catch (IncorrectResultSizeDataAccessException e){
+			//TODO
+		    return Optional.empty();
+		} catch (DataAccessException e1){
+			//TODO
+			return Optional.empty();
+		}
+	}
     
     public boolean updateAssignment(String assignmentID, String assignmentTitle,
                                     String startDate, String endDate, int minTime, int maxTime,
@@ -270,7 +298,7 @@ public class AssignmentDAO {
      *
      * @author dv14oan
      */
-    public AssignmentModel getAssignmentModel(int assignmentID) throws NotFoundException, IOException {
+    public Optional<AssignmentModel> getAssignmentModel(int assignmentID) throws NotFoundException, IOException {
 
         String getAssignmentStatement = "SELECT * FROM "
                 + "Assignment WHERE AssignmentId=?;";
@@ -307,7 +335,7 @@ public class AssignmentDAO {
                 srs.getString("GradeScale"),// GradeScale
                 recap);                     // Recap
 
-        return am;
+        return Optional.of(am);
     }
 
     /**

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import studentcapture.config.StudentCaptureApplicationTests;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,8 +42,8 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
         String sql3 = "INSERT INTO Users VALUES (3, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword', null);";
         String sql4 = "INSERT INTO Course VALUES (1, 2016, 'VT', 'ABC', null, true);";
         String sql5 = "INSERT INTO Assignment VALUES (1, 1, 'OU1', '2016-05-13 10:00:00', '2016-05-13 12:00:00', 60, 180, null, 'XYZ');";
-        String sql6 = "INSERT INTO Submission VALUES (1, 1, null, null, '2016-05-13 11:00:00', null, null, null, null);";
-        String sql7 = "INSERT INTO Submission VALUES (1, 3, null, null, '2016-05-13 11:00:00', 'MVG', 2, null, null);";
+        String sql6 = "INSERT INTO Submission VALUES (1, 1, null, null, '2016-05-13 11:00:00', null, null, null, null, null);";
+        String sql7 = "INSERT INTO Submission VALUES (1, 3, null, null, '2016-05-13 11:00:00', 'MVG', 2, null, null, null);";
         String sql8 = "INSERT INTO Participant VALUES (3, 1, 'Student');";
         String sql9 = "INSERT INTO Participant VALUES (2, 1, 'Student');";
 
@@ -86,7 +88,7 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
 
     @Test
     public void testGetStartDateFromAssignment(){
-        assertEquals("2016-05-13 10:00:00.0",mailDAO.getStartDateFromAssignment("1").get());
+        assertEquals("2016-05-13 10:00:00.0",mailDAO.getStartDateFromAssignment("1").get().toString());
     }
 
     @Test

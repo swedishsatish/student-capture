@@ -1,12 +1,17 @@
 package studentcapture.assignment;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -19,6 +24,13 @@ public class AssignmentResource {
 
     @Autowired
     private AssignmentDAO assignmentDAO;
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseBody AssignmentErrorInfo handleFailedRequest(HttpServletRequest req, Exception ex) {
+        //Nested exceptions. The exception thrown by this app is in the third level.
+        return new AssignmentErrorInfo(ex.getCause().getCause().getMessage());
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     public int createAssignment(@RequestBody AssignmentModel assignment) {
@@ -51,8 +63,9 @@ public class AssignmentResource {
      *                      or Http status NOT_FOUND.
      */
     @RequestMapping(value = "/{assignmentID}", method = RequestMethod.GET)
-    public ResponseEntity<AssignmentModel> getAssignment(@PathVariable("assignmentID") int assignmentID) {
-        Optional<AssignmentModel> assignment = assignmentDAO.getAssignment(assignmentID);
+    public ResponseEntity<AssignmentModel> getAssignment(@PathVariable("assignmentID") int assignmentID)
+            throws NotFoundException, IOException {
+        Optional<AssignmentModel> assignment = assignmentDAO.getAssignmentModel(assignmentID);
         if (assignment.isPresent()) {
             return new ResponseEntity<>(assignment.get(), HttpStatus.OK);
         }
