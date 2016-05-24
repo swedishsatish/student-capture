@@ -30,7 +30,7 @@ public class 	SubmissionDAO {
 	 * Add a new submission for an assignment
 	 *
 	 * @param submission the submission to be added
-	 * @param studentConsent
+	 * @param studentConsent if a student want their submission to be viewed by others
      * @return True if everything went well, otherwise false.
      */
 	public boolean addSubmission(Submission submission, Boolean studentConsent) {
