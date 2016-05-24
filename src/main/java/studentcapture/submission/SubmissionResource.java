@@ -28,18 +28,23 @@ import static org.springframework.http.HttpStatus.OK;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "assignments/{assignmentID}/submissions/")
-public class SubmissionResource {
+class SubmissionResource {
     @Autowired
     private SubmissionDAO DAO;
     @Autowired
     private HttpSession session;
 
+    /**
+     * Gets a student's submission on a particular assignment.
+     * @param assignmentID The assignment to which a student has submitted an answer.
+     * @param studentID The student's ID that determines which of the submissions should be returned.
+     * @return A submission object contained in a HTTP ResponseEntity.
+     */
     @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
                                                             @PathVariable("studentID") int studentID){
         Submission body = DAO.getSubmission(assignmentID, studentID).get();
         return new ResponseEntity<>(body, HttpStatus.OK);
-
     }
 
 
@@ -73,7 +78,7 @@ public class SubmissionResource {
      * @return
      */
     @RequestMapping(value = "{studentID}", method = RequestMethod.PATCH)
-    public ResponseEntity markSubmission(@PathVariable("assignmentID") int assignmentID,
+    public ResponseEntity<Map<String, String>> markSubmission(@PathVariable("assignmentID") int assignmentID,
                                      @PathVariable("studentID") int studentID,
                                      @RequestBody Submission submission){
         //TODO: VIDEO-POST
@@ -91,7 +96,7 @@ public class SubmissionResource {
         } else {
             response.put("Save data", "ERROR: Couldn't save the feedback to database/filesystem.");
             httpStatus = INTERNAL_SERVER_ERROR;
-            return new ResponseEntity(response, httpStatus);
+            return new ResponseEntity<>(response, httpStatus);
         }
 
         try {
@@ -100,7 +105,7 @@ public class SubmissionResource {
         } catch (IllegalAccessException e) {
             response.put("Save grade", "ERROR: "+e.getMessage());
             httpStatus = INTERNAL_SERVER_ERROR;
-            return new ResponseEntity(response, httpStatus);
+            return new ResponseEntity<>(response, httpStatus);
         }
 
         /*if (DAO.setFeedbackVideo(submission, feedbackVideo)) {
@@ -117,7 +122,7 @@ public class SubmissionResource {
         } catch (IllegalAccessException e) {
             response.put("Publish feedback", "ERROR: "+e.getMessage());
             httpStatus = INTERNAL_SERVER_ERROR;
-            return new ResponseEntity(response, httpStatus);
+            return new ResponseEntity<>(response, httpStatus);
         }
 
 
@@ -133,7 +138,7 @@ public class SubmissionResource {
         }
 
         response.put("Submission", submission.toString());
-        return new ResponseEntity(response, httpStatus);
+        return new ResponseEntity<>(response, httpStatus);
     }
 
 
