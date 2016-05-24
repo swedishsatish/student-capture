@@ -14,7 +14,9 @@ public enum ErrorFlags {
     USEREXISTS, //when username exist in the database
     USERCONTAINNULL, //when user parameters has null values
     NOERROR; //if ok
-    
+
+    //used in loginScript.js If any changes made,
+    // make sure to update loginScript.js Okay?
     @Override
     public String toString(){
         
