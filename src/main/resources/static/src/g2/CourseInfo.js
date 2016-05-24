@@ -11,8 +11,11 @@ function getCourseHash(courseID) {
         url : "invite/" + courseID,
         timeout : 100000,
         success : function(res) {
-            console.log(res);
-            document.getElementById("courseHashDiv").innerHTML = "Course url: " + window.location + "?param="+  res.hex;
+            
+            document.getElementById("courseHashDiv").innerHTML = "Course url: " +
+                                                        window.location.protocol +
+                                                        window.location.host +
+                                                        window.location.pathname + "?param="+  res.hex;
         }, error : function(e) {
             console.log("ERROR: ", e);
         }, done : function(e) {
@@ -27,11 +30,17 @@ window.CourseInfo = React.createClass({
         if(this.props.role == "teacher") {
             getCourseHash(this.props.course.courseId);
         }
+        else {
+            document.getElementById("courseHashDiv").innerHTML = "";
+        }
     },
     componentWillReceiveProps: function (nextProps) {
         document.getElementById("course").innerHTML = nextProps.course.courseDescription;
-        if(this.props.role == "teacher") {
-            getCourseHash(this.props.course.courseId);
+        if(nextProps.role == "teacher") {
+            getCourseHash(nextProps.course.courseId);
+        }
+        else {
+            document.getElementById("courseHashDiv").innerHTML = "";
         }
     },
     render: function () {
