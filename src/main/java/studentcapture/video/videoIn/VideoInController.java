@@ -53,7 +53,7 @@ public class VideoInController {
         }
 
         if (!videoType.equals("assignment") && !videoType.equals("submission") && !videoType.equals("feedback")) {
-            System.err.println("Wrong video type. Videotype: " + videoType);
+            System.err.println("Wrong video type. Video type: " + videoType);
             return new ResponseEntity<>("Unknown type of upload.",HttpStatus.BAD_REQUEST);
         }
 
@@ -90,7 +90,7 @@ public class VideoInController {
                 System.err.println("Could not save video.");
                 return new ResponseEntity<>("Could not store video.", HttpStatus.BAD_REQUEST);
             } else if(!response.equals("OK")) {
-                System.err.println("DataLayerComunicator: "+response);
+                System.err.println("DataLayerCommunicator: "+response);
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         } catch (RestClientException e) {
