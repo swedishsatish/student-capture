@@ -21,8 +21,11 @@ public class CourseDAO {
 
     /**
      * Attempts to add a course to the database.
-     * 
+     * 	
      * @author tfy12hsm
+     * 
+     * @param course	added course
+     * @return			added course. Includes errorcode if problem has occured
      */
     public CourseModel addCourse(CourseModel course) {
         String addCourseStatement =
@@ -55,10 +58,11 @@ public class CourseDAO {
     }
 
     /**
+     * Returns latest course with similar data. Used to find course without
+     * knowing it's id.
      * 
-     * 
-     * @param course
-     * @return
+     * @param course	course to compare to
+     * @return			course found
      * 
      * @author tfy12hsm
      */
@@ -81,6 +85,9 @@ public class CourseDAO {
     
     /**
      * Attempts to retrieve all data regarding a course from the database.
+     *
+     * @param course	course to find
+     * @return			found course
      *
      * @author tfy12hsm
      */
@@ -165,6 +172,8 @@ public class CourseDAO {
         String removeCourseStatement = "DELETE FROM Course WHERE CourseID=?";
 
         try {
+        	course = getCourse(course);
+        	
             int rowsAffected = jdbcTemplate.update(removeCourseStatement,
                     course.getCourseId());
             

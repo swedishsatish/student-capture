@@ -51,7 +51,7 @@ public class ResetPasswordController {
         
         //Return if user does not exist
         if(user == null){
-            mav.setViewName("redirect:login?error=invalidUser");
+            mav.setViewName("redirect:login?error=invaliduser");
         } else if(!user.getEmail().equals(email)) {
             mav.setViewName("redirect:login?passwordemail");
         } else {

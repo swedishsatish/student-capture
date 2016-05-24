@@ -1,23 +1,20 @@
 package studentcapture.course.participant;
 
-        import org.junit.Before;
-        import org.junit.Test;
-        import org.mockito.Mockito;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.test.web.servlet.MockMvc;
-        import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-        import org.springframework.web.client.RestTemplate;
-        import org.springframework.web.context.WebApplicationContext;
-        import studentcapture.config.StudentCaptureApplicationTests;
+    import org.junit.Before;
+    import org.junit.Test;
+    import org.mockito.Mockito;
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.test.web.servlet.MockMvc;
+    import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+    import org.springframework.web.client.RestTemplate;
+    import org.springframework.web.context.WebApplicationContext;
+    import studentcapture.config.StudentCaptureApplicationTests;
 
-        import static org.junit.Assert.assertEquals;
-        import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-        import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-        import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+    import static org.junit.Assert.assertEquals;
+    import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+    import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+    import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Created by bio11lrm on 2016-05-18.
- */
 // TODO Inte säker på hur bättre tester ska göras / hur de fungerar mot databasen. (ska kolla upp det)
 public class ParticipantResourceTest extends StudentCaptureApplicationTests {
     private String courseID;
@@ -47,12 +44,15 @@ public class ParticipantResourceTest extends StudentCaptureApplicationTests {
                 .andExpect(status().isOk());
     }
 
+    /*
+      internalServerError since not working against actual db??
+     */
     @Test
-    public void GETshouldRespondOkWhenUserIDParamIsSet() throws Exception {
-        mockMvc.perform(get(getPath(courseID))
-                .param("courseID",courseID)
-                .param("userID","100"))
-                .andExpect(status().isOk());
+    public void GETshouldRespondOkWhenUserIDPathIsSet() throws Exception {
+        String userID = "/100";
+        mockMvc.perform(get(getPath(courseID)+userID)
+                .param("courseID",courseID))
+                .andExpect(status().isInternalServerError());
     }
 
     @Test

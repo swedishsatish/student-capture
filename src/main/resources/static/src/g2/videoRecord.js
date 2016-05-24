@@ -46,7 +46,7 @@ var Recorder = React.createClass({
 
         if(startRecordButtonExists) {
             var recordButton = document.getElementById(props.recButtonID);
-            if(!cameraStartOnLoad)
+            if(cameraStartOnLoad)
                 recordButton.disabled = true;
         }
 
@@ -246,9 +246,9 @@ var Recorder = React.createClass({
                 if (request.readyState == 4 && request.status == 200) {
                     callback(request.responseText);
                     alert("Your video has been uploaded successfully!");
-                } else if(request.readyState == 4 && request.status !== 200) {
-                    if(request.responseText.length < 5) {
-                        // Error message should be longer than 5 characters
+                } else if(request.readyState == 4 && request.status != 200) {
+                    if(request.responseText.length < 10) {
+                        // Error message should be longer than 10 characters
                         alert("Failed to upload video.");
                     } else if(request.responseText.includes("Exception")) {
                         // Do not print out exception (should not occur....)
