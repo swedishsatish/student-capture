@@ -35,9 +35,8 @@ window.NewProfile = React.createClass({
 		$("#internet-speed").text("");
 	},
     clickFaqHandler: function () {
-        ReactDOM.render(<FAQInfo />, document.getElementById('modal-container'));
+		ReactDOM.render(<HelpWindow />, document.getElementById('modal-container'));
         reloadScripts();
-
     },
 
 	clickSettingsHandler: function () {
@@ -65,7 +64,7 @@ window.NewProfile = React.createClass({
 					<h6 onClick={this.clickHandler} className="md-trigger md-setperspective dropdown-head" 
 						data-modal="modal-19">Test equipment</h6>
 					<h6 onClick={this.clickFaqHandler} className="md-trigger md-setperspective dropdown-head" 
-						data-modal="modal-19">FAQ</h6>
+						data-modal="modal-19">Help</h6>
 					<h6 onClick={this.clickSettingsHandler} className="md-trigger md-setperspective dropdown-head"
 						data-modal="modal-19">Settings</h6>
 					<h6 onClick={this.clickLogoutHandler} className="dropdown-head">Log Out</h6>
