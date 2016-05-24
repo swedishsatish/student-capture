@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
  */
 public class User {
 
-
     private String userName;
     private String firstName;
     private String lastName;
@@ -19,7 +18,6 @@ public class User {
     private String pswd;
     private String userID;
     private String token;  //Will be used for recovery of password
-
 
     //Needed because of json
     public User() {}
@@ -32,7 +30,17 @@ public class User {
         this.lastName = lName;
         this.email = email;
         this.pswd = pswd;
+    }
 
+    /**
+     * checks if all the params in the user is valid (not null)
+     * @return boolean
+     */
+    public boolean areUserParamsValid() {
+
+        return !(this.userName == null || this.firstName == null
+                || this.lastName == null || this.email == null
+                || this.pswd == null);
     }
 
     public String getUserName() {
@@ -93,20 +101,20 @@ public class User {
 
     @Override
     public boolean equals(Object other) {
-        User that = (User) other;
+        User user = (User) other;
 
-        return (that.getUserName() == this.getUserName())
-                && (that.getFirstName() == this.firstName)
-                && (that.getLastName() == this.lastName)
-                && (that.getEmail() == this.email)
-                && (that.getPswd()  == this.pswd)
-                && (that.getToken() == this.token);
+        return (user.getUserName() == this.getUserName())
+                && (user.getFirstName() == this.firstName)
+                && (user.getLastName() == this.lastName)
+                && (user.getEmail() == this.email)
+                && (user.getPswd()  == this.pswd)
+                && (user.getToken() == this.token);
     }
     
     /**
      * Use this method to extract user id from a session
      * @param session The current session
-     * @return 
+     * @return userID
      */
     public static int getSessionUserId(HttpSession session) {
     	String userid = (String) session.getAttribute("userid");

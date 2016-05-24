@@ -103,6 +103,15 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     }
 
     @Test
+    public void testAddingNullUser() {
+        User user = new User("userPelle","Pelle","Jönsson",null,
+                             "mypassword123");
+        ErrorFlags errorFlag = userDAO.addUser(user);
+
+        assertEquals(errorFlag.USERCONTAINNULL, errorFlag);
+    }
+
+    @Test
     public void testGetNonExistingUser() {
         User userRes = userDAO.getUser("notExist",0);
         assertEquals(null,userRes);
