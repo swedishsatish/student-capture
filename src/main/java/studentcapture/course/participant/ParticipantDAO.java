@@ -186,8 +186,6 @@ public class ParticipantDAO {
             int rowsAffected = jdbcTemplate.update(removeParticipantStatement,
                     userId, courseId);
             result = rowsAffected == 1;
-        } catch (IncorrectResultSizeDataAccessException e){
-            result = false;
         } catch (DataAccessException e1){
             result = false;
         }
@@ -209,8 +207,6 @@ public class ParticipantDAO {
             int rowsAffected = jdbcTemplate.update(editParticipantFunctionStatement,
                     participant.getFunction(), participant.getUserId(), participant.getCourseId());
             result = rowsAffected == 1;
-        } catch (IncorrectResultSizeDataAccessException e) {
-            result = false;
         } catch (DataAccessException e1) {
             result = false;
         }

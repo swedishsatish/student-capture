@@ -45,6 +45,12 @@ window.BlankBox = React.createClass({
             });
             this.forceUpdate();
         //}
+        var hasModal = document.getElementById("assignment-modal");
+        if (hasModal !== null) {
+            hasModal.style.display = 'none';
+        }
+        document.getElementById("studentSubmit").onclick = function() {};
+
     },
     /**
      * Renderfunction for studentlist, renders the list on a div

@@ -98,8 +98,21 @@ var btn = document.getElementById("modalBtn");
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
+var modalBody = document.getElementById("modalBody");
+
+
+var testTable = document.getElementById("testTable");
+
 // When the user clicks the button, open the modal 
 btn.onclick = function() {
+
+    // table content with the minimum requirements test
+    testTable.innerHTML = "<tr><td>Test</td><td>Result</td></tr>"+
+                        "<tr><td>webRTC support</td><td>" + DetectRTC.isWebRTCSupported + "</td></tr>"+
+                        "<tr><td>webcam found</td><td>" + DetectRTC.hasWebcam + "</td></tr>"+
+                        "<tr><td>microphone found</td><td>" + DetectRTC.hasMicrophone + "</td></tr>"+
+                        "<tr><td>speakers found</td><td>" + DetectRTC.hasSpeakers + "</td></tr>";
+
     fadeIn(modal);
 }
 

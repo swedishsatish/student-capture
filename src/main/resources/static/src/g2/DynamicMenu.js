@@ -32,7 +32,7 @@ var Options = React.createClass({
         if(objToList(this.props.assignment.submissions).length == 0 &&
             new Date(this.props.assignment.assignment.assignmentIntervall.endDate).getTime() >= now){
 
-            ReactDOM.render(<AssignmentContent course={courseID} assignment={assID}/>,
+            ReactDOM.render(<AssignmentContent uid={this.props.uid} course={courseID} assignment={assID}/>,
                 document.getElementById('courseContent'));
         }
         else {
@@ -204,9 +204,14 @@ var Course = React.createClass({
         var course = this.props.course;
         var classname = "course menuItem navigationText";
         var assignments = "";
-        if(this.state.showChildren){
+
+        if(this.state.showChildren || preload == course.course.courseId){
             assignments = <Assignments course={course} role={this.props.role} uid={this.props.uid}/>;
+            this.state.showChildren = true;
+            preload = null;
         }
+
+
         if(course.course.active)
             classname += " active";
 
@@ -240,6 +245,7 @@ var DynamicMenu = React.createClass({
         var teach;
         var stud;
         var uid = this.props.uid;
+        var preload = this.props.preload;
         if(this.props.tList.length > 0){
             var tList = this.props.tList.map(function(tCourse){
                 return <Course key={tCourse.course.courseId} course={tCourse} uid={uid} role="teacher"/>
@@ -253,7 +259,7 @@ var DynamicMenu = React.createClass({
         }
         if(this.props.sList.length > 0){
             var sList = this.props.sList.map(function(sCourse){
-                return <Course key={sCourse.course.courseId} course={sCourse} uid={uid} role="student"/>
+                return <Course key={sCourse.course.courseId} course={sCourse} uid={uid} role="student" />
             });
             stud = <div>
                         <h3>Student:</h3>
@@ -286,17 +292,25 @@ var DynamicMenu = React.createClass({
  * and then render the menus.
  *
  */
-window.RenderMenu = function () {
+window.RenderMenu = function (preloaded) {
     $.get("course", function (res) {
         // if(res)
         var userID = res.userId;
-
+        console.log(res);
+        console.log(res.toString());
         var SCList = objToList(res.studentCourses);
         var TCList = objToList(res.teacherCourses);
         var name = res.firstName + " " + res.lastName;
-        ReactDOM.render(<DynamicMenu tList={TCList} sList={SCList} uid={userID}/>, document.getElementById("desktopNavigation"));
+        preload = preloaded;
+        ReactDOM.render(<DynamicMenu tList={TCList} sList={SCList} uid={userID} />, document.getElementById("desktopNavigation"));
+
+
+
         ReactDOM.render(<NewProfile name={name} uid={userID}/>, document.getElementById('desktopHeader'));
     });
 };
 
-RenderMenu();
+var preload;
+if(window.getQueryVariable("param") == false){
+    RenderMenu();
+}
