@@ -17,6 +17,14 @@ CREATE TABLE IF NOT EXISTS Course (
     Active               BOOLEAN        NOT NULL
     );
 
+CREATE TABLE IF NOT EXISTS CourseInvite (
+    Hex          CHAR(16)      NOT NULL, 
+    CourseId     INT           references Course(CourseId),
+    CreationDate Timestamp     NOT NULL,
+    UNIQUE (Hex, CourseId),
+    PRIMARY KEY (Hex, CourseId)
+    );
+
 CREATE TABLE IF NOT EXISTS Participant (
     UserId       INT           references Users(UserId),
     CourseId     VARCHAR(10)   references Course(CourseId),
