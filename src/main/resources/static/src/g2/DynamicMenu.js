@@ -43,7 +43,9 @@ var Options = React.createClass({
 
     },
     editClick: function () {
-
+        var assID = this.props.assignment.assignment.assignmentID;
+        var courseID = this.props.couseId;
+        ReactDOM.render(<NewAssignment edit={true} courseID={courseID} assID={assID} uid={this.props.uid}/>,document.getElementById("courseContent"))
     },
     render: function () {
         return (
@@ -131,7 +133,7 @@ var Assignments = React.createClass({
      * @param event
      */
     handleClick: function (course, event) {
-        ReactDOM.render(<NewAssignment courseID={course.courseId} courseCode={course.courseCode} uid={this.props.uid}/>,document.getElementById("courseContent"))
+        ReactDOM.render(<NewAssignment edit={false} courseID={course.courseId} courseCode={course.courseCode} uid={this.props.uid}/>,document.getElementById("courseContent"))
     },
     /**
      * Get the course information and render the edit course page passing course and user id as props.

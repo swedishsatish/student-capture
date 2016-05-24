@@ -59,12 +59,47 @@ var NewAssignment = React.createClass({
                 '//www.tinymce.com/css/codepen.min.css'
             ]
         });
-    },
 
+        if (this.props.edit) {
+            this.getAssignmentData();
+        }
+    },
     componentDidUpdate() {
         window.scrollTo(0, 0);
     },
+    getAssignmentData() {
+        $.ajax({
+            type : "GET",
+            contentType : "application/json",
+            url : "assignments/" + this.props.assID,
+            timeout : 100000,
+            success : function(response) {
+                document.getElementById("title").value = response.title;
+                document.getElementById("minTimeSeconds").value = response.videoIntervall.minTimeSeconds;
+                document.getElementById("maxTimeSeconds").value = response.videoIntervall.maxTimeSeconds;
+                document.getElementById("startDate").value = response.assignmentIntervall.startDate;
+                document.getElementById("endDate").value = response.assignmentIntervall.endDate;
+                document.getElementById("publish").value = response.assignmentIntervall.publishedDate;
+                tinymce.get('description').setContent(response.description);
+                tinymce.get('recap').setContent(response.recap);
 
+                if (response.scale == "NUMBER_SCALE") {
+                    document.getELementById("scale").value = "NUMBER_SCALE";
+                } else if (response.scale == "U_G_VG_MVG") {
+                    document.getELementById("scale").value = "U_G_VG_MVG";
+                } else {
+                    document.getElementById("scale").value = "U_O_K_G";
+                }
+            }.bind(this),
+            error : function(e) {
+                console.log("ERROR: ", e);
+                this.setState({errorMessage : "Could not find assignment. Contact support or try again later"});
+            }.bind(this),
+            done : function(e) {
+                console.log("DONE");
+            }
+        });
+    },
     submitAssignment: function() {
         var reqBody = {};
         var videoIntervall = {};
