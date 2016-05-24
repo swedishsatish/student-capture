@@ -32,7 +32,7 @@ var Options = React.createClass({
         if(objToList(this.props.assignment.submissions).length == 0 &&
             new Date(this.props.assignment.assignment.assignmentIntervall.endDate).getTime() >= now){
 
-            ReactDOM.render(<AssignmentContent course={courseID} assignment={assID}/>,
+            ReactDOM.render(<AssignmentContent uid={this.props.uid} course={courseID} assignment={assID}/>,
                 document.getElementById('courseContent'));
         }
         else {
