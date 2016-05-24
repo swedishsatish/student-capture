@@ -49,11 +49,11 @@ public class VideoInController {
         if(video.isEmpty()) {
             // No video was received.
             System.err.println("POST request to /uploadVideo with empty video.");
-            return new ResponseEntity<String>("Empty video.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Empty video.", HttpStatus.BAD_REQUEST);
         }
 
         if (!videoType.equals("assignment") && !videoType.equals("submission") && !videoType.equals("feedback")) {
-            System.err.println("Wrong video type. Videotype: " + videoType);
+            System.err.println("Wrong video type. Video type: " + videoType);
             return new ResponseEntity<>("Unknown type of upload.",HttpStatus.BAD_REQUEST);
         }
 
@@ -88,10 +88,10 @@ public class VideoInController {
 
             if(response == null) {
                 System.err.println("Could not save video.");
-                return new ResponseEntity<String>("Could not store video.", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Could not store video.", HttpStatus.BAD_REQUEST);
             } else if(!response.equals("OK")) {
-                System.err.println("DataLayerComunicator: "+response);
-                return new ResponseEntity<String>(response,  HttpStatus.BAD_REQUEST);
+                System.err.println("DataLayerCommunicator: "+response);
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         } catch (RestClientException e) {
             System.err.println("Failed to send submission to DataLayerCommunicator.");
@@ -101,7 +101,7 @@ public class VideoInController {
             return new ResponseEntity<>("Corrupted video.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<String>(HttpStatus.OK); // Everything went better than expected :)
+        return new ResponseEntity<>(HttpStatus.OK); // Everything went better than expected :)
     }
 
     /**

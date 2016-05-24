@@ -70,69 +70,69 @@ public class CourseDAOTest extends StudentCaptureApplicationTests {
         jdbcMock.update(sql2);
 	}
 
-//	@Test
-//	public void testAddCourse() {
-//		CourseModel course = new CourseModel();
-//		course.setYear(2017);
-//        course.setTerm("HT");
-//        course.setCourseName("Kurs2");
-//        course.setCourseDescription("En kurs 2.");
-//        course.setActive(false);
-//		
-//        CourseModel result = courseDAO.addCourse(course);
-//        
-//        course.setCourseId(2);
-//        assertEquals(result,course);
-//	}
-//
-//	@Test
-//	public void testGetCourseWithoutID() {
-//		CourseModel course = new CourseModel();
-//		course.setYear(courseSetup.getYear());
-//        course.setTerm(courseSetup.getTerm());
-//        course.setCourseName(courseSetup.getCourseName());
-//        course.setCourseDescription(courseSetup.getCourseDescription());
-//        course.setActive(courseSetup.getActive());
-//		
-//        CourseModel result = courseDAO.getCourseWithoutID(course);
-//        
-//        assertTrue(result.getCourseId()!=null);
-//        assertEquals(course.getYear(), result.getYear());
-//        assertEquals(course.getTerm(), result.getTerm());
-//        assertEquals(course.getCourseName(), result.getCourseName());
-//	}
-//
-//	@Test
-//	public void testGetCourseCourseModel() {
-//		CourseModel course = new CourseModel();
-//		course.setCourseId(1);
-//		CourseModel result = courseDAO.getCourse(course);
-//		
-//		result.setCourseId(courseSetup.getCourseId());
-//		assertEquals(result, courseSetup);
-//	}
+	@Test
+	public void testAddCourse() {
+		CourseModel course = new CourseModel();
+		course.setYear(2017);
+        course.setTerm("HT");
+        course.setCourseName("Kurs2");
+        course.setCourseDescription("En kurs 2.");
+        course.setActive(false);
+		
+        CourseModel result = courseDAO.addCourse(course);
+        
+        course.setCourseId(2);
+        assertEquals(result,course);
+	}
+
+	@Test
+	public void testGetCourseWithoutID() {
+		CourseModel course = new CourseModel();
+		course.setYear(courseSetup.getYear());
+        course.setTerm(courseSetup.getTerm());
+        course.setCourseName(courseSetup.getCourseName());
+        course.setCourseDescription(courseSetup.getCourseDescription());
+        course.setActive(courseSetup.getActive());
+		
+        CourseModel result = courseDAO.getCourseWithoutID(course);
+        
+        assertTrue(result.getCourseId()!=null);
+        assertEquals(course.getYear(), result.getYear());
+        assertEquals(course.getTerm(), result.getTerm());
+        assertEquals(course.getCourseName(), result.getCourseName());
+	}
+
+	@Test
+	public void testGetCourseCourseModel() {
+		CourseModel course = new CourseModel();
+		course.setCourseId(1);
+		CourseModel result = courseDAO.getCourse(course);
+		
+		result.setCourseId(courseSetup.getCourseId());
+		assertEquals(result, courseSetup);
+	}
+
+	@Test
+	public void testGetCourseInteger() {
+		CourseModel result = courseDAO.getCourse(1);
+		result.setCourseId(courseSetup.getCourseId());
+		assertEquals(result, courseSetup);
+	}
 
 //	@Test
-//	public void testGetCourseInteger() {
-//		CourseModel result = courseDAO.getCourse(1);
-//		result.setCourseId(courseSetup.getCourseId());
-//		assertEquals(result, courseSetup);
+//	public void testUpdateCourse() {
+//		courseSetup.setCourseId(1);
+//		courseSetup.setCourseDescription("nagat annat");
+//		courseSetup.setYear(1234);
+//		courseSetup.setTerm("SO");
+//		courseSetup.setCourseName("nagat");
+//		
+//		CourseModel result1 = courseDAO.updateCourse(courseSetup);
+//		CourseModel result2 = courseDAO.getCourse(courseSetup);
+//		
+//		assertTrue(courseSetup.equals(result1));
+//		assertTrue(courseSetup.equals(result2));
 //	}
-//
-	@Test
-	public void testUpdateCourse() {
-		courseSetup.setCourseId(1);
-		courseSetup.setCourseDescription("nagat annat");
-		courseSetup.setYear(1234);
-		courseSetup.setTerm("SO");
-		courseSetup.setCourseName("nagat");
-		
-		CourseModel result1 = courseDAO.updateCourse(courseSetup);
-		CourseModel result2 = courseDAO.getCourse(courseSetup);
-		
-		assertEquals(courseSetup, result1);
-		assertEquals(courseSetup, result2);
-	}
 
 	@Test
 	public void testRemoveCourseCourseModel() {

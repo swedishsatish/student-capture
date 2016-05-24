@@ -89,7 +89,7 @@ function fadeIn(el, display){
 //------------------------------------modal-------------------------------------
 // Sets listeners for showing and hiding the modal
 
-//get the modal
+// Get the modal
 var modal = document.getElementById('myModal');
 
 // Get the button that opens the modal
@@ -98,8 +98,32 @@ var btn = document.getElementById("modalBtn");
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
+// Get the table where the minimum system requirements is displayed.
+var testTable = document.getElementById("testTable");
+
 // When the user clicks the button, open the modal 
 btn.onclick = function() {
+
+    // table content with the minimum requirements test
+    testTable.innerHTML = "<tr><td>Test</td><td>Result</td></tr>"+
+                        "<tr><td>webRTC support</td><td>" + DetectRTC.isWebRTCSupported + "</td></tr>"+
+                        "<tr><td>webcam found</td><td>" + DetectRTC.hasWebcam + "</td></tr>"+
+                        "<tr><td>microphone found</td><td>" + DetectRTC.hasMicrophone + "</td></tr>"+
+                        "<tr><td>speakers found</td><td>" + DetectRTC.hasSpeakers + "</td></tr>";
+
+    // get all the cells
+    var tds = testTable.getElementsByTagName("td");
+
+    // loop all the cells and check if the value is true or false
+    // and selects a color depending on teh boolean
+    for(var i = 0, j = tds.length; i < j; ++i){
+        if(tds[i].innerHTML == "true")
+            tds[i].style.color = "green";
+
+        if(tds[i].innerHTML == "false")
+            tds[i].style.color = "red";
+    }
+
     fadeIn(modal);
 }
 

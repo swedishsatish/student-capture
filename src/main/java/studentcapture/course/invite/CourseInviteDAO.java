@@ -89,7 +89,6 @@ public class CourseInviteDAO {
     	if(invite.getCourse()!=null) {
 			Participant p = new Participant(userId,invite.getCourse().getCourseId(),"student");
     		if(!(participantDAO.addParticipant(p))){
-    			invite.getCourse().setCourseId(null);
     			invite.getCourse().setErrorCode(HttpStatus.CONFLICT.value());
     		}
     			
@@ -159,8 +158,7 @@ public class CourseInviteDAO {
             if(rowsAffected == 1) {
             	return true;
             }
-        } catch (IncorrectResultSizeDataAccessException e){
-        } catch (DataAccessException e1){
+        } catch (DataAccessException ignored){
         }
         return false;
 	}
@@ -174,8 +172,7 @@ public class CourseInviteDAO {
             if(rowsAffected == 1) {
             	return true;
             }
-        } catch (IncorrectResultSizeDataAccessException e){
-        } catch (DataAccessException e1){
+        } catch (DataAccessException ignored){
         }
         return false;
 	}

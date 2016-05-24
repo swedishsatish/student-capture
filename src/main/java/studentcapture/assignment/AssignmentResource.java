@@ -45,6 +45,18 @@ public class AssignmentResource {
     }
 
     /**
+     * Update an assignments information (not video).
+     * To update the assignment video, simply use
+     * addAssignmentVideo above (smelly, should be a PUT method).
+     *
+     * @param assignment An assignment, including its assignmentID, to update to.
+     */
+    @RequestMapping(method =  RequestMethod.PUT)
+    public void updateAssignment(@RequestBody AssignmentModel assignment) {
+        assignmentDAO.updateAssignment(assignment);
+    }
+
+    /**
      * Gets the video question corresponding to the specified assignment.
      * @param assignmentID  Unique assignment identifier.
      * @return              The video and Http status OK

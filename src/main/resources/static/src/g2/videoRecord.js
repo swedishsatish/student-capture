@@ -30,6 +30,7 @@ var Recorder = React.createClass({
         var blobsize;
         var sendTime;
         var forceSubmit = false;
+        var withraw = false;
         var cameraStartOnLoad = (typeof props.camOnLoad === "undefined") ?
                         false : props.camOnLoad == "true";
         var cameraStarted = false;
@@ -99,7 +100,7 @@ var Recorder = React.createClass({
                 if(props.maxRecordTime != null) {
                     window.setTimeout(function() {
                                     forceSubmit = true;
-                                    stopRecording();
+                                    stopButton.onclick();
                                 }, 1000*parseInt(props.maxRecordTime));
                 }
             } else {

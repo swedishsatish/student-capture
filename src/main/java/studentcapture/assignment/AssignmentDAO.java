@@ -46,7 +46,7 @@ public class AssignmentDAO {
      * @author dv14oan & tfy13dbd
      */
     public int createAssignment(AssignmentModel assignmentModel)
-    throws IllegalArgumentException {
+            throws IllegalArgumentException {
 
         Integer assignmentID;
         String courseCode;
@@ -117,6 +117,55 @@ public class AssignmentDAO {
 
     public void addAssignmentVideo(MultipartFile video, String courseID, String assignmentID) {
         FilesystemInterface.storeAssignmentVideo(courseID, assignmentID, video);
+    }
+
+    public void updateAssignment(AssignmentModel assignmentModel) {
+
+        String updateQuery = "UPDATE Assignment SET " +
+                "CourseID=?, " +
+                "Title=?, " +
+                "StartDate=to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                "EndDate=to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                "MinTime=?, " +
+                "MaxTime=?, " +
+                "Published=to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                "GradeScale=? " +
+                "WHERE AssignmentID=?;";
+
+        int rowAffected = jdbcTemplate.update(updateQuery,
+                assignmentModel.getCourseID(),
+                assignmentModel.getTitle(),
+                assignmentModel.getAssignmentIntervall().getStartDate(),
+                assignmentModel.getAssignmentIntervall().getEndDate(),
+                assignmentModel.getVideoIntervall().getMinTimeSeconds(),
+                assignmentModel.getVideoIntervall().getMaxTimeSeconds(),
+                assignmentModel.getAssignmentIntervall().getPublishedDate(),
+                assignmentModel.getScale(),
+                assignmentModel.getAssignmentID());
+
+        if (rowAffected == 0) {
+            //TODO: HANDLE THIS
+            System.err.print("DB: Update assignment with id=" +
+                    assignmentModel.getAssignmentID() + " failed.");
+            return;
+        }
+
+        // Overwrite description and recap
+        try {
+            FilesystemInterface.storeAssignmentText(
+                    assignmentModel.getCourseID(),
+                    assignmentModel.getAssignmentID().toString(),
+                    assignmentModel.getDescription(),
+                    FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+            FilesystemInterface.storeAssignmentText(
+                    assignmentModel.getCourseID(),
+                    assignmentModel.getAssignmentID().toString(),
+                    assignmentModel.getRecap(),
+                    FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+        } catch (IOException e) {
+            //TODO: HANDLE THIS
+            System.err.println("Update assignment: IOEXCEPTION");
+        }
     }
 
     /**
@@ -254,11 +303,33 @@ public class AssignmentDAO {
 			return Optional.empty();
 		}
 	}
-    
-    public boolean updateAssignment(String assignmentID, String assignmentTitle,
-                                    String startDate, String endDate, int minTime, int maxTime,
-                                    boolean published){
-        throw new UnsupportedOperationException();
+
+    /**
+     * Returns a sought, published assignment from the database.
+     *
+     * @param assignmentId		assignments identifier
+     * @return					sought assignment
+     *
+     * @author tfy12hsm
+     */
+    public Optional<AssignmentModel> getPublishedAssignment(int assignmentId) {
+        try {
+            String getPublishedAssignmentStatement = "SELECT * FROM "
+                    + "Assignment WHERE AssignmentId=? AND "
+                    + "ass.published < current_timestamp";
+
+            Map<String, Object> map = jdbcTemplate.queryForMap(
+                    getPublishedAssignmentStatement, assignmentId);
+            AssignmentModel result = new AssignmentModel(map);
+
+            return Optional.of(result);
+        } catch (IncorrectResultSizeDataAccessException e){
+            //TODO
+            return Optional.empty();
+        } catch (DataAccessException e1){
+            //TODO
+            return Optional.empty();
+        }
     }
 
     /**
