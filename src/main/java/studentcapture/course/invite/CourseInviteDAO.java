@@ -46,13 +46,13 @@ public class CourseInviteDAO {
 		return sb.toString();
 	}
 	
-    public Optional<String> addCourseInvite(CourseModel course) {
+    public InviteModel addCourseInvite(CourseModel course) {
         String addCourseInviteStatement =
                 "INSERT INTO CourseInvite VALUES (?,?,?)";
         
-        Optional<String> previousHex = getCourseInvite(course);
-        if(previousHex.isPresent()) {
-        	return previousHex;
+        InviteModel previousInvite = getCourseInvite(course);
+        if(previousInvite.getHex()!=null) {
+        	return previousInvite;
         }
         
         String newHex = generateRandomHexString(HEX_LENGTH);
@@ -62,7 +62,9 @@ public class CourseInviteDAO {
             		course.getCourseId(),
                     new Timestamp(System.currentTimeMillis()));
             if (rowsAffected == 1) {
-            	return Optional.of(newHex);
+            	InviteModel invite = new InviteModel();
+            	invite.setHex(newHex);
+            	return invite;
             } else {
 //            	CourseModel errorCourse = new CourseModel();
 //            	errorCourse.setErrorCode(HttpStatus.CONFLICT.value());
@@ -78,25 +80,25 @@ public class CourseInviteDAO {
 //        	return errorCourse;
         }
         
-        return Optional.empty();
+        return new InviteModel();
     }
 
-    public CourseModel joinCourseThroughInvite(Integer userId, String hex) {
-    	CourseModel course = getCourseThroughInvite(hex);
-    	if(course.getCourseId()!=null) {
+    public InviteModel joinCourseThroughInvite(Integer userId, String hex) {
+    	InviteModel invite = getCourseThroughInvite(hex);
+    	if(invite.getCourse()!=null) {
     		if(!(participantDAO.addParticipant(
     				userId.toString(),
-    				course.getCourseId().toString(),
+    				invite.getCourse().getCourseId().toString(),
     				"student"))) {
-    			course.setCourseId(null);
-            	course.setErrorCode(HttpStatus.CONFLICT.value());
+    			invite.getCourse().setCourseId(null);
+    			invite.getCourse().setErrorCode(HttpStatus.CONFLICT.value());
     		}
     			
     	}
-    	return course;
+    	return invite;
     }
     
-	public CourseModel getCourseThroughInvite(String hex) {
+	public InviteModel getCourseThroughInvite(String hex) {
 		try {
 			String getCourseThroughInviteStatement =
 	                "SELECT * FROM CourseInvite WHERE Hex=?";
@@ -106,14 +108,17 @@ public class CourseInviteDAO {
             Timestamp creationDate = (Timestamp) map.get("CreationDate");
             if(isTimedOut(creationDate)) {
             	removeCourseInvite(hex);
-            	return new CourseModel();
+            	return new InviteModel();
             } else {
-            	return courseDAO.getCourse((Integer) map.get("CourseId"));
+            	InviteModel invite = new InviteModel();
+            	invite.setCourse(courseDAO.getCourse((Integer) map.get("CourseId")));
+            	invite.setHex(hex);
+            	return invite;
             }
 		} catch (IncorrectResultSizeDataAccessException e) {
-			return new CourseModel();
+			return new InviteModel();
 		} catch (DataAccessException e1) {
-			return new CourseModel();
+			return new InviteModel();
 		}
 		
 	}
@@ -123,7 +128,7 @@ public class CourseInviteDAO {
 				< System.currentTimeMillis());
 	}
 	
-	public Optional<String> getCourseInvite(CourseModel course) {
+	public InviteModel getCourseInvite(CourseModel course) {
 		try {
 			String getCourseThroughInviteStatement =
 	                "SELECT * FROM CourseInvite WHERE CourseId=?";
@@ -133,14 +138,16 @@ public class CourseInviteDAO {
             Timestamp creationDate = (Timestamp) map.get("CreationDate");
             if(isTimedOut(creationDate)) {
             	removeCourseInvite(course);
-            	return Optional.empty();
+            	return new InviteModel();
             } else {
-            	return Optional.of((String) map.get("Hex"));
+            	InviteModel invite = new InviteModel();
+            	invite.setHex((String) map.get("Hex"));
+            	return invite;
             }
 		} catch (IncorrectResultSizeDataAccessException e) {
-			return Optional.empty();
+			return new InviteModel();
 		} catch (DataAccessException e1) {
-			return Optional.empty();
+			return new InviteModel();
 		}
 	}
 	

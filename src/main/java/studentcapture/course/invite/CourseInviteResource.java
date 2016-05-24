@@ -1,7 +1,5 @@
 package studentcapture.course.invite;
 
-import java.util.Optional;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +14,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import studentcapture.course.CourseModel;
 import studentcapture.login.LoginDAO;
 
+/**
+ * CourseInviteResource is a controller that maps REST requests related to 
+ * 
+ * @author tfy12hsm
+ *
+ */
 @RestController
 @RequestMapping(value = "/invite")
 public class CourseInviteResource {
@@ -31,12 +34,11 @@ public class CourseInviteResource {
     method = RequestMethod.POST,
     value = "")
     @ResponseBody
-    public String postCourseInvite(
-    		@RequestBody
-    		CourseModel course) {
-		Optional<String> hex = courseInviteDAO.addCourseInvite(course);
-    	if(hex.isPresent()) {
-    		return hex.get();
+    public InviteModel postCourseInvite(
+    		@RequestBody InviteModel invite) {
+		InviteModel result = courseInviteDAO.addCourseInvite(invite.getCourse());
+    	if(result.getHex()!=null) {
+    		return result;
     	} else {
     		throw new ResourceConflictException(); 
     	}
@@ -48,13 +50,13 @@ public class CourseInviteResource {
     method = RequestMethod.POST,
     value = "/{Hex}")
     @ResponseBody
-    public CourseModel joinCourse(
+    public InviteModel joinCourse(
     		HttpSession session,
     		@PathVariable(value = "Hex") String hex) {
-    	CourseModel result = courseInviteDAO.joinCourseThroughInvite(
+    	InviteModel result = courseInviteDAO.joinCourseThroughInvite(
     			LoginDAO.getUserIdFromSession(session), hex);
-    	if(result.getCourseId()==null) {
-    		if(result.getErrorCode()==HttpStatus.CONFLICT.value()) {
+    	if(result.getCourse().getCourseId()==null) {
+    		if(result.getCourse().getErrorCode()==HttpStatus.CONFLICT.value()) {
     			throw new ResourceConflictException();
     		} else {
     			throw new ResourceNotFoundException();
@@ -69,10 +71,10 @@ public class CourseInviteResource {
     method = RequestMethod.GET,
     value = "/{Hex}")
     @ResponseBody
-    public CourseModel getCourseInviteThroughHex(
-    		@PathVariable(value = "Hex") String hex) {
-    	CourseModel result = courseInviteDAO.getCourseThroughInvite(hex);
-    	if(result.getCourseId()==null)
+    public InviteModel getCourseInviteThroughHex(
+    		@PathVariable(value = "Hex") InviteModel invite) {
+    	InviteModel result = courseInviteDAO.getCourseThroughInvite(invite.getHex());
+    	if(result.getCourse().getCourseId()==null)
     		throw new ResourceNotFoundException();
     	return result;
     }
