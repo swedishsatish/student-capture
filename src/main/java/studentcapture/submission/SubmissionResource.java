@@ -155,15 +155,20 @@ class SubmissionResource {
     @RequestMapping(value = "{studentID}", method = RequestMethod.POST)
     public HttpStatus storeSubmission(@PathVariable("assignmentID") int assignmentID,
                                       @PathVariable("studentID") int studentID,
-                                      @RequestPart(value = "studentVideo") MultipartFile studentVideo,
+                                      @RequestPart(value = "studentVideo", required = false) MultipartFile studentVideo,
                                       @RequestPart(value = "submission") Submission updatedSubmission){
 
         HttpStatus returnStatus;
 
         updatedSubmission.setStudentID(studentID);
         updatedSubmission.setAssignmentID(assignmentID);
-        updatedSubmission.setStudentVideo(studentVideo);
-        returnStatus = DAO.addSubmission(updatedSubmission, true) ? OK : INTERNAL_SERVER_ERROR;
+        if(studentVideo != null) {
+            updatedSubmission.setStudentVideo(studentVideo);
+            updatedSubmission.setStatus("answer");
+        } else {
+            updatedSubmission.setStatus("blank");
+        }
+        returnStatus = DAO.addSubmission(updatedSubmission, true) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
 
         /*Validation of Submission
         * Should be sent by a student, might have to validate that the student didnt set the grade himself.
