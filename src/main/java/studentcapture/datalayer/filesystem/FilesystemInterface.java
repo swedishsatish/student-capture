@@ -50,9 +50,9 @@ public class FilesystemInterface {
 	}
 
 	/**
-	 * Gets the specified video on the fileserver.
-	 * @param path 	The path to the file on the fileserver.
-	 * @return		The video, in the form of an responseentity.
+	 * Gets the specified video on the file server.
+	 * @param path 	The path to the file on the file server.
+	 * @return The video as an InputStream contained in a HTTP ResponseEntity.
      */
 	public static ResponseEntity<InputStreamResource> getVideo(String path) {
         if(path == null){
@@ -111,10 +111,8 @@ public class FilesystemInterface {
 	 * Store the students video for an assignment at a course.
 	 * If student folder doesn't exist a folder will be created.
 	 *
-	 * @param courseCode the code for the course.
-	 * @param courseID course id from the database
-	 * @param assignmentID from database
-	 * @param userID from database
+     * @param submission The submission which the video will be linked to.
+     * @param source the video.
 	 * @return true if video was stored successfully
 	 */
 	public static boolean storeStudentVideo(Submission submission, MultipartFile source) {
