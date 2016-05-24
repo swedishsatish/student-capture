@@ -5,19 +5,14 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.course.CourseDAO;
 import studentcapture.course.CourseModel;
 import studentcapture.course.hierarchy.HierarchyModel.AssignmentPackage;
 import studentcapture.course.hierarchy.HierarchyModel.CoursePackage;
-import studentcapture.user.UserDAO;
 import studentcapture.submission.Submission;
 import studentcapture.submission.SubmissionDAO;
-
-
-
-
+import studentcapture.user.UserDAO;
 
 import java.sql.Timestamp;
 import java.util.HashMap;

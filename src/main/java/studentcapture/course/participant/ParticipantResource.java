@@ -46,7 +46,7 @@ public class ParticipantResource {
         }
         Optional<List<Participant>> participants = participantDAO.getCourseParticipants(courseID,userID,userRole);
         if (participants.isPresent()) {
-            return new ResponseEntity<List<Participant>>(participants.get(), HttpStatus.OK);
+            return new ResponseEntity<>(participants.get(), HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -66,7 +66,7 @@ public class ParticipantResource {
         }
         userRole = userRole.toLowerCase();
         if(!validRole(userRole)){
-            return new ResponseEntity<String>("Participant is neither teacher,assistant or student",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Participant is neither teacher,assistant or student", HttpStatus.BAD_REQUEST);
         }
         if(participantDAO.addParticipant(userID,courseID,userRole)){
             return new ResponseEntity("Participant successfully added to course",HttpStatus.OK);
@@ -88,7 +88,7 @@ public class ParticipantResource {
         }
         userRole = userRole.toLowerCase();
         if(!validRole(userRole)){
-            return new ResponseEntity<String>("Participant is neither teacher,assistant or student",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Participant is neither teacher,assistant or student", HttpStatus.BAD_REQUEST);
         }
         Participant participant = new Participant();
         participant.setCourseId(Integer.parseInt(courseID));

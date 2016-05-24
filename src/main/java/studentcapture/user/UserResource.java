@@ -1,16 +1,15 @@
 package studentcapture.user;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
-
 import studentcapture.login.ErrorFlags;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Created by c12ton on 5/17/16.
@@ -45,7 +44,7 @@ public class UserResource {
             return new ResponseEntity(httpHeaders, HttpStatus.FOUND);
         }
 
-        return new ResponseEntity<User>(user,HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     /**
@@ -105,7 +104,6 @@ public class UserResource {
      * @return Encrypted password
      */
     protected String encryptPassword(String password) {
-        String generatedPassword = BCrypt.hashpw(password, BCrypt.gensalt(11));
-        return generatedPassword;
+        return BCrypt.hashpw(password, BCrypt.gensalt(11));
     }
 }

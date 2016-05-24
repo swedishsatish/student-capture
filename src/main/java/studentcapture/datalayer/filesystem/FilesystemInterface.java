@@ -221,7 +221,7 @@ public class FilesystemInterface {
 	}
 
 	public static String getAssignmentText(int courseId, String assignmentId, String fileName)
-			throws FileNotFoundException, IOException {
+			throws IOException {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/" + fileName;
 		File file = new File(path);
 		BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -238,7 +238,7 @@ public class FilesystemInterface {
 
 
 	public static void deleteAssignmentFiles(int courseId, int assignmentId)
-			throws FileNotFoundException, IOException {
+			throws IOException {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/";
 		File file = new File(path);
 		FileUtils.deleteDirectory(file);
