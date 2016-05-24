@@ -16,10 +16,6 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-/**
- * Created by bio11lrm on 2016-05-16.
- */
 public class ParticipantDAOTest extends StudentCaptureApplicationTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -35,12 +31,12 @@ public class ParticipantDAOTest extends StudentCaptureApplicationTests {
      */
     @Before
     public void setUp() {
-        String sql1 = "INSERT INTO Users VALUES (1, 'mudd', 'abcd', 'defg', 'mkyong@gmail.com', 'MyPassword',null);";
-        String sql2 = "INSERT INTO Users VALUES (5, 'madd', 'defg','hej', 'mkyong@gmail.com', 'MyPassword',null);";
-        String sql3 = "INSERT INTO Course VALUES (2,2016,'VT', '1234', null, true);";
+        String sql1 = "INSERT INTO Users VALUES (1, 'pelle', 'pelle', 'pellesson', 'pelle@gmail.com', 'MyPassword',null);";
+        String sql2 = "INSERT INTO Users VALUES (5, 'alle', 'alle','allesson', 'alle@gmail.com', 'MyPassword',null);";
+        String sql3 = "INSERT INTO Course VALUES (2,2016,'VT', '1234', 'ABC', null, true);";
         String sql4 = "INSERT INTO Participant VALUES (1,2, 'student');";
         String sql5 = "INSERT INTO Participant VALUES (5,2, 'teacher');";
-        String sql10 = "INSERT INTO Users VALUES (10, 'mudda', 'abcd', 'defg', 'mkyong@gmail.com', 'MyPassword',null);";
+        String sql10 = "INSERT INTO Users VALUES (10, 'kalle', 'Carl', 'carlsson', 'calle@gmail.com', 'MyPassword',null);";
 
 
         jdbcMock.update(sql1);
@@ -114,7 +110,7 @@ public class ParticipantDAOTest extends StudentCaptureApplicationTests {
     @Test
     public void testGetUserWithRoleAsScaryDog() {
         String role = "ScaryDog";
-        Optional<List<Participant>> participants = participantDAO.getCourseParticipants("2","many users",role);
+        Optional<List<Participant>> participants = participantDAO.getCourseParticipants(2,role);
         assertFalse(participants.isPresent());
     }
 }

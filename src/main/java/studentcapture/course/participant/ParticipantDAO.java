@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Created by c13gan on 2016-04-26.
+ * Created by c13gan on 2016-04-26..
  */
 
 @Repository
@@ -25,98 +25,50 @@ public class ParticipantDAO {
     /**
      * Add a new participant to a course by connecting the tables "User" and "Course" in the database.
      *
-     * @param userID        unique identifier for a person
-     * @param function      student, teacher, ....
-     * @return              true if insertion worked, else false
-     * 
-     * @author tfy12hsm
+     * @param p participant
+     * @return true if insertion worked, else false
+     *
      */
-    public boolean addParticipant(String userID, String courseID, String function) {
-    	String addParticipantStatement = "INSERT INTO Participant VALUES (?,?,?)";
+    public boolean addParticipant(Participant p) {
+        String addParticipantStatement = "INSERT INTO Participant VALUES (?,?,?)";
         boolean result;
-        int userId = Integer.parseInt(userID);
-        int courseId = Integer.parseInt(courseID);
         try {
             int rowsAffected = jdbcTemplate.update(addParticipantStatement,
-                    userId, courseId, function);
+                    p.getUserId(), p.getCourseId(), p.getFunction());
             result = rowsAffected == 1;
-        } catch (IncorrectResultSizeDataAccessException e){
-            result = false;
-        } catch (DataAccessException e1){
+        } catch (Exception e) {
             result = false;
         }
-
         return result;
     }
 
 
-    /**
-     * Get the role for a participant in a selected course
-     *
-     * @param userID        unique identifier for a person
-     * @return              role of a person
-     * 
-     * @author tfy12hsm
-     */
-    public Optional<String> getFunctionForParticipant(String userID, String courseID) {
-    	String result = null;
-        int userId = Integer.parseInt(userID);
-        int courseId = Integer.parseInt(courseID);
-        String getFunctionForParticipantStatement =
-                "SELECT Function FROM Participant WHERE (UserId=? AND CourseId=?)";
-
-        try {
-    		result = jdbcTemplate.queryForObject(
-    				getFunctionForParticipantStatement, new Object[]
-    						{userId, courseId},
-                    String.class);
-    	} catch (IncorrectResultSizeDataAccessException e){
-            //TODO
-        } catch (DataAccessException e1){
-        	//TODO
-        }
-
-        return Optional.of(result);
-    }
-
-
-
-
-    public Optional<List<Participant>> getCourseParticipants(String courseId,String userID,String userRole){
-        List<Participant> participants = new ArrayList<>();
-        String sqlQuery;
-        int CourseID = Integer.parseInt(courseId);
-        boolean manyUsers = false;
-        if(userID.compareTo("many users") == 0){
-            sqlQuery = getCourseParticipantsQuery(userRole);
-            if(sqlQuery == null){
-                return Optional.empty();
-            }
-            manyUsers = true;
-        }
-
-        else{
-
-            sqlQuery = "SELECT * FROM Participant WHERE (UserId=? AND CourseId=?);";
+    public Optional<List<Participant>> getCourseParticipants(int courseID,String userRole){
+        String sqlQuery= getCourseParticipantsQuery(userRole);
+        if(sqlQuery == null){
+            return Optional.empty();
         }
         try {
-            List<Map<String, Object>> rows;
-            if(manyUsers){
-                rows = jdbcTemplate.queryForList(sqlQuery,CourseID);
-            }
-            else{
-                int UserID = Integer.parseInt(userID);
-                rows = jdbcTemplate.queryForList(sqlQuery,UserID,CourseID);
-            }
+            List<Participant> participants = new ArrayList<>();
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlQuery,courseID);
             for (Map<String, Object> row : rows) {
                 participants.add(new Participant(row));
             }
-        } catch (IncorrectResultSizeDataAccessException e){
-            return Optional.empty();
-        } catch (DataAccessException e1){
+            return Optional.of(participants);
+        } catch (Exception e){
             return Optional.empty();
         }
-        return Optional.of(participants);
+    }
+
+    public Optional<Participant> getCourseParticipant(int courseID,int userID){
+        String sql = "SELECT * FROM Participant WHERE (UserID = ? AND CourseID = ?);";
+        try{
+            Map<String, Object> map = jdbcTemplate.queryForMap(sql,userID,courseID);
+            return Optional.of(new Participant(map));
+        }
+        catch(Exception e){
+            return Optional.empty();
+        }
     }
 
 
@@ -265,4 +217,5 @@ public class ParticipantDAO {
 
         return result;
     }
+
 }
