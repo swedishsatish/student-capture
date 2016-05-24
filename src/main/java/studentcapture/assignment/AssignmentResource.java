@@ -23,6 +23,7 @@ public class AssignmentResource {
     @Autowired
     private AssignmentDAO assignmentDAO;
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseBody AssignmentErrorInfo handleFailedRequest(HttpServletRequest req, Exception ex) {
         //Nested exceptions. The exception thrown by this app is in the third level.

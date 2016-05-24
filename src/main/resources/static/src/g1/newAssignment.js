@@ -94,8 +94,7 @@ var NewAssignment = React.createClass({
             }.bind(this), 
             error : function(e) {
                 console.log("ERROR: ", e);
-                /*this.setState({errorMessage : e.errorMessage});*/
-                this.setState({errorMessage : "TESTARRRRR"});
+                this.setState({errorMessage : e.responseJSON.errorMessage});
             }.bind(this),
             done : function(e) {
                 console.log("DONE");
