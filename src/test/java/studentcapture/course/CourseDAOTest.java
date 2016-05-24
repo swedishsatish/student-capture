@@ -130,8 +130,8 @@ public class CourseDAOTest extends StudentCaptureApplicationTests {
 		CourseModel result1 = courseDAO.updateCourse(courseSetup);
 		CourseModel result2 = courseDAO.getCourse(courseSetup);
 		
-		assertEquals(courseSetup, result1);
-		assertEquals(courseSetup, result2);
+		assertTrue(courseSetup.equals(result1));
+		assertTrue(courseSetup.equals(result2));
 	}
 
 	@Test
