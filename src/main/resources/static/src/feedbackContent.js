@@ -27,7 +27,7 @@ window.Feedback = React.createClass({
     handleVideoClick: function () {
         var assignment = this.props.assignment;
         var user = this.props.user;
-        var sour = "assignments/" + assignment + "/submissions/" + user + "/video";
+        var sour = "assignments/" + assignment + "/submissions/" + user + "/videos" + "/feedback.webm";
         this.setState({source: sour});
     },
     render: function () {
