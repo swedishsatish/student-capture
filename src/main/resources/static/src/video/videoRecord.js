@@ -42,7 +42,7 @@ var Recorder = React.createClass({
         var stopButton = document.getElementById(props.stopButtonID);
         var previewElement;
         var recordAudio, recordVideo;
-        //var mediaStream;
+
 
 
         if(startRecordButtonExists) {

@@ -30,7 +30,7 @@ var StudentRecordVideo = React.createClass({
         return (
             <div>
                 <div id="recorder-div">
-                    <Recorder contID="studentPreview"
+                    <Recorder id="recorder" contID="studentPreview"
                               playCallback={this.playVideo}
                               postURL={submissionURL}
                               formDataBuilder={this.formDataBuilder}
