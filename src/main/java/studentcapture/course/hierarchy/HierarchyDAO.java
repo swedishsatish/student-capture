@@ -42,15 +42,13 @@ public class HierarchyDAO {
     private AssignmentDAO assignmentDAO;
     @Autowired
     private SubmissionDAO submissionDAO;
-    @Autowired
-    private UserDAO userDAO;
 
 
     /**
      * Returns an hierarchy of data, retrieved from the database, related to
      * courses, assignments and submissions a user is participating in.
      *
-     * @param userID users identifier
+     * @param userId users identifier
      * @return hierarchy of course, assignment and submission data
      * @author tfy12hsm
      */
