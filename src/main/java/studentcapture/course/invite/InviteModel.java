@@ -10,6 +10,7 @@ import studentcapture.course.CourseModel;
 public class InviteModel {
 	private String hex;
 	private CourseModel course;
+	private int errorCode;
 	/**
 	 * @return the hex
 	 */
@@ -33,5 +34,17 @@ public class InviteModel {
 	 */
 	public void setCourse(CourseModel course) {
 		this.course = course;
+	}
+	/**
+	 * @return the errorCode
+	 */
+	public int getErrorCode() {
+		return errorCode;
+	}
+	/**
+	 * @param errorCode the errorCode to set
+	 */
+	public void setErrorCode(int errorCode) {
+		this.errorCode = errorCode;
 	}
 }

@@ -89,7 +89,6 @@ public class CourseInviteDAO {
     	if(invite.getCourse()!=null) {
 			Participant p = new Participant(userId,invite.getCourse().getCourseId(),"student");
     		if(!(participantDAO.addParticipant(p))){
-    			invite.getCourse().setCourseId(null);
     			invite.getCourse().setErrorCode(HttpStatus.CONFLICT.value());
     		}
     			

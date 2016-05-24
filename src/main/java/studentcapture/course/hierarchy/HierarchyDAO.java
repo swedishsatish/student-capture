@@ -5,7 +5,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 import studentcapture.assignment.AssignmentDAO;
+import studentcapture.assignment.AssignmentModel;
 import studentcapture.course.CourseDAO;
 import studentcapture.course.CourseModel;
 import studentcapture.course.hierarchy.HierarchyModel.AssignmentPackage;
@@ -138,7 +140,6 @@ public class HierarchyDAO {
                 + "ass.courseId LEFT JOIN Submission AS sub ON par.userId="
                 + "sub.studentId AND ass.assignmentId=sub.assignmentId WHERE "
                 + "par.userId=? AND par.function='student'";
-                //+ " AND ass.published < current_timestamp";
 
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(
                 getStudentHierarchyStatement, userId);
@@ -154,13 +155,14 @@ public class HierarchyDAO {
 
         try {
             int assignmentId = (int) row.get("AssignmentId");
-            AssignmentPackage currentAssignment = addAssignmentToHierarchy(currentCourse,
+            Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
                     assignmentId);
-
+            if(!currentAssignment.isPresent())
+            	throw new NullPointerException();
             Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
             Integer studentId = (Integer) row.get("StudentId");
             if (submissionDate != null) {
-                addSubmissionToHierarchy(assignmentId, currentAssignment,
+                addSubmissionToHierarchy(assignmentId, currentAssignment.get(),
                         studentId);
             }
         } catch (NullPointerException e) {
@@ -175,13 +177,14 @@ public class HierarchyDAO {
 
         try {
             int assignmentId = (int) row.get("AssignmentId");
-            AssignmentPackage currentAssignment = addAssignmentToHierarchy(currentCourse,
+            Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
                     assignmentId);
-
+            if(!currentAssignment.isPresent())
+            	throw new NullPointerException();
             Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
             Integer studentId = (Integer) row.get("StudentId");
             if (submissionDate != null) {
-                addSubmissionToHierarchy(assignmentId, currentAssignment,
+                addSubmissionToHierarchy(assignmentId, currentAssignment.get(),
                         studentId);
             }
         } catch (NullPointerException e) {
@@ -204,7 +207,7 @@ public class HierarchyDAO {
         }
     }
 
-    private AssignmentPackage addAssignmentToHierarchy(
+    private Optional<AssignmentPackage> addAssignmentToHierarchy(
             CoursePackage currentCourse, int assignmentId) {
         AssignmentPackage currentAssignment;
         try {
@@ -216,13 +219,19 @@ public class HierarchyDAO {
             }
         } catch (NullPointerException e) {
             currentAssignment = new AssignmentPackage();
-            currentAssignment.setAssignment(assignmentDAO
-                    .getAssignment(assignmentId).get());
-            currentAssignment.setSubmissions(new HashMap<>());
-            currentCourse.getAssignments()
-                    .put(assignmentId, currentAssignment);
+            Optional<AssignmentModel> assignment = assignmentDAO
+                    .getPublishedAssignment(assignmentId);
+            if(assignment.isPresent()) {
+            	currentAssignment.setAssignment(assignment.get());
+	            currentAssignment.setSubmissions(new HashMap<>());
+	            currentCourse.getAssignments()
+	                    .put(assignmentId, currentAssignment);
+            } else {
+            	return Optional.empty();
+            }
+	        
         }
-        return currentAssignment;
+        return Optional.of(currentAssignment);
     }
 
     private CoursePackage addCourseToHierarchy(
