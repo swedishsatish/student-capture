@@ -217,5 +217,49 @@ public class ParticipantDAO {
 
         return result;
     }
-
+    
+    public boolean isTeacherOnCourse(Integer userId, Integer courseId) {
+    	String statement = "SELECT * FROM Participant WHERE (UserId=?) AND "
+    			+ "(CourseId=?) AND (Function='teacher')";
+    	List<Map<String, Object>> result = jdbcTemplate.queryForList(
+    			statement, userId, courseId);
+    	return result.size() > 0;
+    }
+    
+    public boolean isStudentOnCourse(Integer userId, Integer courseId) {
+    	String statement = "SELECT * FROM Participant WHERE (UserId=?) AND "
+    			+ "(CourseId=?) AND (Function='student')";
+    	List<Map<String, Object>> result = jdbcTemplate.queryForList(
+    			statement, userId, courseId);
+    	return result.size() > 0;
+    }
+    
+    public boolean isTeacherOnAssignment(Integer userId, Integer assignmentId) {
+    	String statement = "SELECT * FROM Participant AS par INNER JOIN "
+    			+ "Assignment AS ass ON par.courseId=ass.courseId WHERE "
+    			+ "(userId=?) AND (assignmentId=?) AND (function='teacher')";
+    	List<Map<String, Object>> result = jdbcTemplate.queryForList(
+    			statement, userId, assignmentId);
+    	return result.size() > 0;
+    }
+    
+    public boolean isStudentOnAssignment(Integer userId, Integer assignmentId) {
+    	String statement = "SELECT * FROM Participant AS par INNER JOIN "
+    			+ "Assignment AS ass ON par.courseId=ass.courseId WHERE "
+    			+ "(userId=?) AND (assignmentId=?) AND (function='student')";
+    	List<Map<String, Object>> result = jdbcTemplate.queryForList(
+    			statement, userId, assignmentId);
+    	return result.size() > 0;
+    }
+    
+//    public boolean isSubmissionTeacher(Integer teacherId, Integer studentId, 
+//    		Integer assignmentId) {
+//    	String statement = "SELECT * FROM Participant AS par INNER JOIN "
+//    			+ "Assignment AS ass ON par.courseId=ass.courseId WHERE "
+//    			+ "(userId=?) AND (assignmentId=?) AND (function='student')";
+//    	List<Map<String, Object>> result = jdbcTemplate.queryForList(
+//    			statement, userId, assignmentId);
+//    	return result.size() > 0;
+//    }
+    
 }
