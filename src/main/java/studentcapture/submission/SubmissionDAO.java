@@ -3,6 +3,7 @@ package studentcapture.submission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -129,16 +130,16 @@ public class 	SubmissionDAO {
 	 * @return True if a row was changed, otherwise false
 	 * @throws IllegalAccessError Cant set grade if not a teacher.
 	 */
-	public boolean setGrade(Submission submission) throws IllegalAccessException {
+	public boolean setGrade(Submission submission) throws IllegalAccessException,DataIntegrityViolationException {
 		Grade grade = submission.getGrade();
         /* If a person that is not a teacher tries to set a grade, return false */
         String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE" +
 				" (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
+
         int rows = databaseConnection.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
         if(rows != 1) {
 			throw new IllegalAccessException("Cant set grade, user not a teacher");
 		}
-
 		String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, PublishStudentSubmission = ?" +
 				" WHERE (AssignmentID = ?) AND (StudentID = ?);";
 		int updatedRows = databaseConnection.update(setGrade, grade.getGrade(),

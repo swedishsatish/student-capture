@@ -33,7 +33,7 @@ public class ParticipantDAOTest extends StudentCaptureApplicationTests {
     public void setUp() {
         String sql1 = "INSERT INTO Users VALUES (1, 'pelle', 'pelle', 'pellesson', 'pelle@gmail.com', 'MyPassword',null);";
         String sql2 = "INSERT INTO Users VALUES (5, 'alle', 'alle','allesson', 'alle@gmail.com', 'MyPassword',null);";
-        String sql3 = "INSERT INTO Course VALUES (2,2016,'VT', '1234', 'ABC', null, true);";
+        String sql3 = "INSERT INTO Course VALUES (2,2016,'VT', '1234', 'ABC', true);";
         String sql4 = "INSERT INTO Participant VALUES (1,2, 'student');";
         String sql5 = "INSERT INTO Participant VALUES (5,2, 'teacher');";
         String sql10 = "INSERT INTO Users VALUES (10, 'kalle', 'Carl', 'carlsson', 'calle@gmail.com', 'MyPassword',null);";
@@ -63,11 +63,9 @@ public class ParticipantDAOTest extends StudentCaptureApplicationTests {
         jdbcMock.update(sql1);
     }
 
-    // TODO : cannot parse to integer in Participant.... so tesst dont work
-    /*
     @Test
     public void testGetAllParticipants() {
-        Optional<List<Participant>> participants = participantDAO.getCourseParticipants("2","many users","all roles");
+        Optional<List<Participant>> participants = participantDAO.getCourseParticipants(2,"all roles");
         assertTrue(participants.get().size() == 2);
         Participant p1 = participants.get().get(0);
         Participant p2 = participants.get().get(1);
@@ -77,38 +75,32 @@ public class ParticipantDAOTest extends StudentCaptureApplicationTests {
         assertTrue((p1.getUserId() + p2.getUserId()) == 6);
 
     }
-    */
-    // TODO : cannot parse to integer in Participant.... so tesst dont work
-    /*
+
     @Test
     public void testGetAllTeachers() {
         String role = "teacher";
-        Optional<List<Participant>> participants = participantDAO.getCourseParticipants("2","many users",role);
+        Optional<List<Participant>> participants = participantDAO.getCourseParticipants(2,role);
         assertTrue(participants.get().size() == 1);
         Participant p1 = participants.get().get(0);
         assertEquals((Integer)5,p1.getUserId());
         assertEquals(p1.getFunction(),role);
     }
-    */
 
-    /*
-        When quering for a single user, the userrole is irrelevant
-     */
-    // TODO : cannot parse to integer in Participant.... so tesst dont work
-    /*
+
     @Test
     public void testGetSingleUser() {
-        String role = "teacher";
-        Optional<List<Participant>> participants = participantDAO.getCourseParticipants("2","1",role);
-        assertTrue(participants.get().size() == 1);
-        Participant p1 = participants.get().get(0);
-        assertEquals((Integer)1,p1.getUserId());
-        assertEquals(p1.getFunction(),"student");
+        Optional<Participant> participant = participantDAO.getCourseParticipant(2,5);
+        assertEquals((Integer)5,participant.get().getUserId());
+        assertEquals(participant.get().getFunction(),"teacher");
+
+        participant = participantDAO.getCourseParticipant(2,1);
+        assertEquals((Integer)1,participant.get().getUserId());
+        assertEquals(participant.get().getFunction(),"student");
     }
-    */
+
 
     @Test
-    public void testGetUserWithRoleAsScaryDog() {
+    public void testGetUsersWithRoleAsScaryDog() {
         String role = "ScaryDog";
         Optional<List<Participant>> participants = participantDAO.getCourseParticipants(2,role);
         assertFalse(participants.isPresent());

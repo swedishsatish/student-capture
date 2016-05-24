@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import studentcapture.course.CourseDAO;
 import studentcapture.course.CourseModel;
+import studentcapture.course.participant.Participant;
 import studentcapture.course.participant.ParticipantDAO;
 
 /**
@@ -84,10 +85,8 @@ public class CourseInviteDAO {
     public CourseModel joinCourseThroughInvite(Integer userId, String hex) {
     	CourseModel course = getCourseThroughInvite(hex);
     	if(course.getCourseId()!=null) {
-    		if(!(participantDAO.addParticipant(
-    				userId.toString(),
-    				course.getCourseId().toString(),
-    				"student"))) {
+			Participant p = new Participant(userId,course.getCourseId(),"student");
+    		if(!(participantDAO.addParticipant(p))){
     			course.setCourseId(null);
             	course.setErrorCode(HttpStatus.CONFLICT.value());
     		}
