@@ -51,7 +51,7 @@ public class AssignmentResource {
      * @param assignment An assignment, including its assignmentID, to update to.
      */
     @RequestMapping(method =  RequestMethod.PUT)
-    public void updateAssignment(@RequestBody AssignmentModel assignment) {
+    public void updateAssignment(@RequestBody AssignmentModel assignment) throws Exception {
         assignmentDAO.updateAssignment(assignment);
     }
 

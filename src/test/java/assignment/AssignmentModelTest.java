@@ -5,6 +5,8 @@ import org.junit.Test;
 import studentcapture.assignment.AssignmentDateIntervalls;
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.assignment.AssignmentVideoIntervall;
+import studentcapture.assignment.GradeScale;
+import studentcapture.model.Grade;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,9 +32,8 @@ public class AssignmentModelTest {
         assignmentModel.setDescription("Info");
         assignmentModel.setVideoIntervall(videoIntervall);
         assignmentModel.setAssignmentIntervall(assignmentIntervalls);
-        assignmentModel.setScale("NUMBER_SCALE");
+        assignmentModel.setScale(GradeScale.U_O_K_G.toString());
         assignmentModel.setRecap("Recap");
-
     }
 
     @Test
@@ -69,8 +70,8 @@ public class AssignmentModelTest {
     }
 
     @Test
-    public void gradeScaleShouldBeNumberScale() {
-        assertEquals("NUMBER_SCALE", assignmentModel.getScale());
+    public void gradeScaleShouldBeRightScale() {
+        assertEquals(GradeScale.U_O_K_G.toString(), assignmentModel.getScale());
     }
 
     @Test
@@ -121,32 +122,32 @@ public class AssignmentModelTest {
     /*@Test
     public void shouldNotThrowDateTimeParseException() {
         new AssignmentModel("Test", "info", 120, 300, "2015-01-20 10:00:00", "2015-01-22 10:00:00",
-                "2015-01-20 10:00:00", "NUMBER_SCALE", "Recap");
+                "2015-01-20 10:00:00", GradeScale.U_O_K_G.toString(), "Recap");
     }
 
     @Test(expected = DateTimeParseException.class)
     public void shouldThrowDateTimeParseExceptionBecauseNotValidMonth() {
         new AssignmentModel("Test", "info", 120, 300, "2015-20-20 10:00:00", "2015-01-20 10:00:00",
-                "2015-01-20 10:00:00", "NUMBER_SCALE", "Recap");
+                "2015-01-20 10:00:00", GradeScale.U_O_K_G.toString(), "Recap");
     }
 
     /*@Test(expected = DateTimeParseException.class)
     public void shouldBe28DaysInFeb() {
         AssignmentModel a = new AssignmentModel("Test", "info", 120, 300, "2015-02-30 10:00:00", "2015-03-20 10:00:00",
-                "2015-01-20 10:00:00", "NUMBER_SCALE", "Recap");
+                "2015-01-20 10:00:00", GradeScale.U_O_K_G.toString(), "Recap");
         System.out.println(a.getStartDate());
     }*/
 
     /*@Test(expected = DateTimeParseException.class)
     public void hourShouldBeUnder23() {
         new AssignmentModel("Test", "info", 120, 300, "2015-01-20 25:00:00", "2015-01-20 10:00:00",
-                "2015-01-20 10:00:00", "NUMBER_SCALE", "Recap");
+                "2015-01-20 10:00:00", GradeScale.U_O_K_G.toString(), "Recap");
     }
 
     @Test(expected = DateTimeParseException.class)
     public void minuteShouldBeUnder59() {
         new AssignmentModel("Test", "info",  120, 300, "2015-01-20 10:60:00", "2015-01-20 10:00:00",
-                "2015-01-20 10:00:00", "NUMBER_SCALE", "Recap");
+                "2015-01-20 10:00:00", GradeScale.U_O_K_G.toString(), "Recap");
     }
 
     @Test(expected = InputMismatchException.class)
