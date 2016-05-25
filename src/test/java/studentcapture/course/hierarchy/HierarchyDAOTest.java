@@ -68,7 +68,7 @@ public class HierarchyDAOTest extends StudentCaptureApplicationTests {
 //                "Published, GradeScale) VALUES (DEFAULT ,2,'Test4'," +
 //                "'2016-05-01 02:00:00', '2016-05-01 11:00:00'," +
 //                "0,100,null,'NUMBER_SCALE');");
-//	    jdbcMock.update("INSERT INTO Submission VALUES (1, 1, null,"
+//	    jdbcMock.update("INSERT INTO Submission VALUES (1, 1, true,"
 //	    		+ " null,'2016-05-01 03:00:00', null, null, null, null, "
 //	    		+ "null);");
 //	    jdbcMock.update("INSERT INTO Submission VALUES (1, 2, null,"
@@ -96,7 +96,8 @@ public class HierarchyDAOTest extends StudentCaptureApplicationTests {
 //
 //	@Test
 //	public void test() {
-//		Optional<HierarchyModel> hierarchy = hierarchyDAO.getCourseAssignmentHierarchy(1);
+//		Optional<HierarchyModel> hierarchy = 
+//				hierarchyDAO.getCourseAssignmentHierarchy(1);
 //		
 //		assertTrue(hierarchy!=null);
 //	}
