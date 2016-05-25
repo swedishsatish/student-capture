@@ -164,10 +164,10 @@ button{
     width:30%;
     height: 40%;
     top: 50%;
-    margin-top: -9em; /*set to a negative number 1/2 of your height*/
+    /*set to a negative number 1/2 of your height*/
     /*The popup is by default centered for coursecontent, but it looks better if its centered for the whole screen
     margin left 35% centers it to the whole screen. */
-    margin-left: -35%; /*set to a negative number 1/2 of your width*/
+     /*set to a negative number 1/2 of your width*/
     border:5px solid #000;
     z-index: 9002;
 }
@@ -219,7 +219,9 @@ button{
 }
 
 #teacherRecord {
-
+    margin-left: 26%;
+}
+#teststudentvideo{
     margin-left: 26%;
 }
 #teacherRecorder > #preview
