@@ -25,7 +25,7 @@ var video;
                 <div id="blanket" style={{"display":"none"}}></div>
                 <div id="popUpDiv" style={{"display":"none"}}></div>
 
-                <video width="720" height="460" src={videoSource} preload="auto" controls/>
+                <video width="720" height="460" src={videoSource} preload="auto" controls id="teststudentvideo"/>
                 <TeacherRecordVideo setVideo={this.setVideo}/>
 
                 <div id="feedBackContainer">

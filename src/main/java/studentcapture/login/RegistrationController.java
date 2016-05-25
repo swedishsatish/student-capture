@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import studentcapture.user.User;
+import studentcapture.user.UserDAO;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,7 +27,8 @@ import java.net.URISyntaxException;
 public class RegistrationController {
 
 	@Autowired
-	private LoginDAO loginDao;
+	private UserDAO userDao;
+	
 	/**
 	 * Adds a user to the User DB .
 	 * <p>
@@ -64,7 +66,7 @@ public class RegistrationController {
 		User user = new User(username, firstName, lastName, email,
 		        encryptPassword(password));
         
-        ErrorFlags status = loginDao.addUser(user);
+        ErrorFlags status = userDao.addUser(user);
 
         //Put correct status message in URL.
         if(status == ErrorFlags.NOERROR){

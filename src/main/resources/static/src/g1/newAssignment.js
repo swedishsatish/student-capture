@@ -361,7 +361,7 @@ var NewAssignmentStatus = React.createClass({
     render : function() {
         return (
             <div>
-                <h1>{this.props.message}</h1>
+                <h3 className="contentTitle">{this.props.message}</h3>
             </div>
         )
     }
