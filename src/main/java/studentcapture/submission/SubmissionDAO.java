@@ -239,10 +239,7 @@ public class SubmissionDAO {
 	 * @param assId The assignment to get submissions for
 	 * @return A list of submissions for the assignment
 	 */
-    public Optional<List<Submission>> getAllSubmissionsWithStudents
-    		(String assId) {
-    	int assignmentId = Integer.parseInt(assId);
-
+    public Optional<List<Submission>> getAllSubmissionsWithStudents(int assId) {
 		String getAllSubmissionsWithStudentsStatement =
 				"SELECT ass.AssignmentId,par.UserId AS StudentId,sub.SubmissionDate"
 						+ ",sub.Grade,sub.TeacherId,sub.StudentPublishConsent"
@@ -252,7 +249,7 @@ public class SubmissionDAO {
 						+ "Submission AS sub ON par.userId=sub.studentId WHERE "
 						+ "(par.function='Student') AND (ass.AssignmentId=?)";
 
-    	return getSubmissionsFromStatement(getAllSubmissionsWithStudentsStatement, assignmentId);
+    	return getSubmissionsFromStatement(getAllSubmissionsWithStudentsStatement, assId);
     }
     
     /**
