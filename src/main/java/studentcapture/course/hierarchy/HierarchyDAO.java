@@ -149,20 +149,17 @@ public class HierarchyDAO {
         Integer courseId = (Integer) row.get("CourseId");
         CoursePackage currentCourse = addCourseToHierarchy(hierarchy.getTeacherCourses(), courseId);
 
-        try {
-            int assignmentId = (int) row.get("AssignmentId");
-            Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
-                    assignmentId);
-            if(!currentAssignment.isPresent())
-            	throw new NullPointerException();
+        int assignmentId = (int) row.get("AssignmentId");
+        Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
+                assignmentId);
+        if(currentAssignment.isPresent()) {
+
             Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
             Integer studentId = (Integer) row.get("StudentId");
             if (submissionDate != null) {
                 addSubmissionToHierarchy(assignmentId, currentAssignment.get(),
                         studentId);
             }
-        } catch (NullPointerException e) {
-            return;
         }
     }
 
@@ -171,20 +168,16 @@ public class HierarchyDAO {
         Integer courseId = (Integer) row.get("CourseId");
         CoursePackage currentCourse = addCourseToHierarchy(hierarchy.getStudentCourses(), courseId);
 
-        try {
-            int assignmentId = (int) row.get("AssignmentId");
-            Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
-                    assignmentId);
-            if(!currentAssignment.isPresent())
-            	throw new NullPointerException();
+        int assignmentId = (int) row.get("AssignmentId");
+        Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
+                assignmentId);
+        if(currentAssignment.isPresent()) {
             Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
             Integer studentId = (Integer) row.get("StudentId");
             if (submissionDate != null) {
                 addSubmissionToHierarchy(assignmentId, currentAssignment.get(),
                         studentId);
             }
-        } catch (NullPointerException e) {
-            return;
         }
     }
 
