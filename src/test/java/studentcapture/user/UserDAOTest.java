@@ -1,10 +1,11 @@
 package studentcapture.user;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
-
 import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.login.ErrorFlags;
 
@@ -108,7 +109,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
                              "mypassword123");
         ErrorFlags errorFlag = userDAO.addUser(user);
 
-        assertEquals(errorFlag.USERCONTAINNULL, errorFlag);
+        assertEquals(ErrorFlags.USERCONTAINNULL, errorFlag);
     }
 
     @Test

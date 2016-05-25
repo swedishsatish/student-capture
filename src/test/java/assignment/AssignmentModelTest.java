@@ -6,7 +6,7 @@ import studentcapture.assignment.AssignmentDateIntervalls;
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.assignment.AssignmentVideoIntervall;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by root on 4/25/16.

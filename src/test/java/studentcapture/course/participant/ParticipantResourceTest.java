@@ -1,19 +1,18 @@
 package studentcapture.course.participant;
 
-    import org.junit.Before;
-    import org.junit.Test;
-    import org.mockito.Mockito;
-    import org.springframework.beans.factory.annotation.Autowired;
-    import org.springframework.test.web.servlet.MockMvc;
-    import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-    import org.springframework.web.client.RestTemplate;
-    import org.springframework.web.context.WebApplicationContext;
-    import studentcapture.config.StudentCaptureApplicationTests;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.WebApplicationContext;
+import studentcapture.config.StudentCaptureApplicationTests;
 
-    import static org.junit.Assert.assertEquals;
-    import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-    import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-    import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 // TODO Inte säker på hur bättre tester ska göras / hur de fungerar mot databasen. (ska kolla upp det)
 public class ParticipantResourceTest extends StudentCaptureApplicationTests {

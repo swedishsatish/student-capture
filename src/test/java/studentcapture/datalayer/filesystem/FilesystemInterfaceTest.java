@@ -1,6 +1,5 @@
 package studentcapture.datalayer.filesystem;
 
-import org.codehaus.groovy.tools.shell.IO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 import studentcapture.config.StudentCaptureApplication;
 import studentcapture.submission.Submission;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 

@@ -4,14 +4,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
-
 import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.model.Grade;
-import studentcapture.submission.Submission;
-import studentcapture.submission.SubmissionDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,9 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by c13arm on 2016-05-12.
