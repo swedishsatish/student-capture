@@ -19,7 +19,6 @@ public class FilesystemInterfaceTest {
     private String courseCode;
     private String courseID;
     private String assignmentID;
-    private String userID;
     private MultipartFile testFile;
 
     @Before
@@ -27,7 +26,6 @@ public class FilesystemInterfaceTest {
         courseCode = "test";
         courseID = "5DV151";
         assignmentID = "1337";
-        userID = "user";
 
     }
 
