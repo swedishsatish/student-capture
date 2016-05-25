@@ -43,14 +43,9 @@ public class AController {
      * TODO: Check @return from db.
      * @return At minimum, the start and stop date for an exam as JSON.
      */
-    @RequestMapping(
-            value = "startTime",
-            method = RequestMethod.GET,
-            produces = "application/json; charset=UTF-8")
-    public HashMap getStartTime(
-            @RequestParam(value = "courseID") String courseID,
-            @RequestParam(value = "assignmentID") String assignmentID) {
-
+    @RequestMapping(value = "startTime", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    public HashMap<String, String> getStartTime(@RequestParam(value = "courseID") String courseID,
+                                                @RequestParam(value = "assignmentID") String assignmentID) {
         // Get the db address.
         URI targetUrl = getStartTimeAddress(courseID, assignmentID);
         HashMap<String, String> response;
@@ -78,6 +73,7 @@ public class AController {
      * @return Assignment information corresponding to the id's.
      */
     private URI getStartTimeAddress(String courseID, String assignmentID) {
+        //TODO Change hard coded address away from "localhost"
         String rootPath = "https://localhost:8443";
         String dbAssignmentPath = "DB/getAssignmentInfo";
         String param1 = "courseID";

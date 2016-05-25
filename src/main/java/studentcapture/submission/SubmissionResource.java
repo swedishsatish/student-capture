@@ -50,18 +50,23 @@ class SubmissionResource {
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
-
     /**
-     * Gets the feedback video for a student
-     * @param assignmentID
-     * @param studentID
-     * @return
+     * Gets a video from the file system, can get either the feedback video or the submission video.
+     * @param assignmentID the assignment of which the feedback/submission video belongs to
+     * @param studentID the student which the feedback/submission video belongs to
+     * @param fileName the name of the file requested, can be either feedback or submission
+     * @return the video file
      */
     @RequestMapping(value = "{studentID}/videos/{fileName}", method = RequestMethod.GET, produces = "video/webm")
     public ResponseEntity<InputStreamResource> getFeedbackVideo(@PathVariable("assignmentID") int assignmentID,
                                                                 @PathVariable("studentID") int studentID,
                                                                 @PathVariable("fileName") String fileName) {
+        if(fileName.equals("feedback") || fileName.equals("submission")){
             return DAO.getVideo(new Submission(studentID, assignmentID), fileName + ".webm");
+        }else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     /**
@@ -71,7 +76,7 @@ class SubmissionResource {
      */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") int assignmentID){
-        return new ResponseEntity<>(DAO.getAllSubmissionsWithStudents(Integer.toString(assignmentID)).get(), HttpStatus.OK);
+        return new ResponseEntity<>(DAO.getAllSubmissions(assignmentID), HttpStatus.OK);
     }
 
     /**

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import studentcapture.course.CourseModel;
+import studentcapture.course.participant.ParticipantDAO;
 import studentcapture.login.LoginDAO;
 
 /**
@@ -28,6 +29,8 @@ import studentcapture.login.LoginDAO;
 public class CourseInviteResource {
 	@Autowired
     private CourseInviteDAO courseInviteDAO;
+	@Autowired
+    private ParticipantDAO participantDAO;
 	
 	@CrossOrigin
     @RequestMapping(
@@ -49,7 +52,12 @@ public class CourseInviteResource {
     value = "")
     @ResponseBody
     public InviteModel postCourseInvite(
+    		HttpSession session,
     		@RequestBody InviteModel invite) {
+		if(!participantDAO.isTeacherOnCourse(
+				LoginDAO.getUserIdFromSession(session),
+				invite.getCourse().getCourseId()))
+			throw new ResourceUnauthorizedException();
 		InviteModel result = courseInviteDAO.addCourseInvite(invite.getCourse());
     	if(result.getHex()!=null) {
     		return result;
@@ -86,7 +94,11 @@ public class CourseInviteResource {
     value = "/{CourseId}")
     @ResponseBody
     public InviteModel getCourseInviteThroughHex(
+    		HttpSession session,
     		@PathVariable(value = "CourseId") Integer courseId) {
+		if(!participantDAO.isTeacherOnCourse(
+				LoginDAO.getUserIdFromSession(session), courseId))
+			throw new ResourceUnauthorizedException();
 		CourseModel course = new CourseModel();
 		course.setCourseId(courseId);
 		InviteModel result = courseInviteDAO.addCourseInvite(course);
@@ -119,6 +131,11 @@ public class CourseInviteResource {
     
     @ResponseStatus(value = HttpStatus.CONFLICT)
     public static class ResourceConflictException extends RuntimeException {
+		private static final long serialVersionUID = 1L;
+    }
+    
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public static class ResourceUnauthorizedException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
     }
 }

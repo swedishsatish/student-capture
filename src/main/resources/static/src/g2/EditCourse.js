@@ -88,7 +88,7 @@ window.EditCourse = React.createClass({
                     <h5>Course Description</h5>
                     <textarea className="tinymceArea" id="course-description"></textarea>
                 </form>
-                <button onClick={this.handleClick.bind(this,course.courseId)}>Edit</button>
+                <div className="button primary-button SCButton" onClick={this.handleClick.bind(this,course.courseId)}>Edit</div>
             </div>
 
 

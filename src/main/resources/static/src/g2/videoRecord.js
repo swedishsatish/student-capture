@@ -188,6 +188,9 @@ var Recorder = React.createClass({
                     previewElement.setAttribute("controls","controls");
                     previewElement.removeAttribute("muted");
                 }
+                if(props.siteView == "feedback") {
+                    props.setVideo(recordVideo.getBlob());
+                }
 
                 if(postbutton == null) {
                     if(props.siteView !== null) {
