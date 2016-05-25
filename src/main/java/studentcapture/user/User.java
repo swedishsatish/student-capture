@@ -101,8 +101,10 @@ public class User {
 
     @Override
     public boolean equals(Object other) {
-        User user = (User) other;
+        if (other == this) return true;
+        if (!(other instanceof User)) return false;
 
+        User user = (User) other;
         return (user.getUserName() == this.getUserName())
                 && (user.getFirstName() == this.firstName)
                 && (user.getLastName() == this.lastName)
