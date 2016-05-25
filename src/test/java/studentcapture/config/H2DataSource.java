@@ -1,4 +1,4 @@
-package studentcapture.datalayer.database;
+package studentcapture.config;
 
 import org.apache.catalina.Server;
 import org.springframework.context.annotation.Configuration;

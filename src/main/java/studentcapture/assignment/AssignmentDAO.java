@@ -316,7 +316,7 @@ public class AssignmentDAO {
         try {
             String getPublishedAssignmentStatement = "SELECT * FROM "
                     + "Assignment WHERE AssignmentId=? AND "
-                    + "ass.published < current_timestamp";
+                    + "published < current_timestamp";
 
             Map<String, Object> map = jdbcTemplate.queryForMap(
                     getPublishedAssignmentStatement, assignmentId);

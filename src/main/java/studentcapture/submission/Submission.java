@@ -105,6 +105,28 @@ public class Submission {
         this.feedbackVideo = feedbackVideo;
     }
 
+    @Override
+    public String toString() {
+        return "Submission{" +
+                "assignmentID=" + assignmentID +
+                ", studentID=" + studentID +
+                ", studentPublishConsent=" + studentPublishConsent +
+                ", submissionDate=" + submissionDate +
+                ", grade=" + grade +
+                ", publishStudentSubmission=" + publishStudentSubmission +
+                ", courseID='" + courseID + '\'' +
+                ", courseCode='" + courseCode + '\'' +
+                ", feedback='" + feedback + '\'' +
+                ", subStatus=" + subStatus +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", status='" + status + '\'' +
+                ", teacherName='" + teacherName + '\'' +
+                ", studentVideo=" + studentVideo +
+                ", feedbackVideo=" + feedbackVideo +
+                '}';
+    }
+
     //A submission must have one of these statuses
     public enum Status {
         ANSWER("Answer"),
@@ -225,25 +247,6 @@ public class Submission {
         this.teacherName = teacherName;
     }
 
-
-    @Override
-    public String toString() {
-        return "Submission{" +
-                "\n\tassignmentID=" + assignmentID +
-                ", \n\tstudentID=" + studentID +
-                ", \n\tstudentPublishConsent=" + studentPublishConsent +
-                ", \n\tsubmissionDate=" + submissionDate +
-                ", \n\tgrade=" + grade +
-                ", \n\tteacherID=" + grade.getTeacherID() +
-                ", \n\tpublishStudentSubmission=" + publishStudentSubmission +
-                ", \n\tcourseID='" + courseID + '\'' +
-                ", \n\tcourseCode='" + courseCode + '\'' +
-                ", \n\tfeedback='" + feedback + '\'' +
-                ", \n\tsubStatus=" + subStatus +
-                ", \n\tfirstName='" + firstName + '\'' +
-                ", \n\tlastName='" + lastName + '\'' +
-                '}';
-    }
 
     @Override
     public boolean equals(Object o) {
