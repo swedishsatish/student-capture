@@ -21,7 +21,7 @@ import java.util.Map;
  */
 @Repository
 public class CourseInviteDAO {
-	private static final long INVITE_DURATION = 1000*60*60*24*30*2; // in milliseconds
+	private static final long INVITE_DURATION = 1000L*60L*60L*24L*30L*2L; // in milliseconds
 	private static final int HEX_LENGTH = 8;
 	
 	@Autowired
