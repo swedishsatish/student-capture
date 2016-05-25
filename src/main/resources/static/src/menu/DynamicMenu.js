@@ -220,22 +220,22 @@ var Course = React.createClass({
     getInitialState : function() {
         return { showChildren : false };
     },
-    
+
     handleClick: function(course,event) {
         var role = this.props.role;
         $.get("course/" + course.course.courseId,function (res) {
             ReactDOM.render(<CourseInfo course={res} role={role}/>,document.getElementById("courseContent"));
-            
-            
+
+
         });
 
-       
-    
-        
-        this.setState({showChildren:!this.state.showChildren});
-       
 
-        
+
+
+        this.setState({showChildren:!this.state.showChildren});
+
+
+
     },
     render: function (){
         var course = this.props.course;
