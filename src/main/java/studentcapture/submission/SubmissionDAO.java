@@ -33,7 +33,7 @@ public class SubmissionDAO {
 	 * @param studentConsent if a student want their submission to be viewed by others
      * @return True if everything went well, otherwise false.
      */
-	public boolean addSubmission(Submission submission, Boolean studentConsent) {
+	boolean addSubmission(Submission submission, Boolean studentConsent) {
 		String sql = "INSERT INTO Submission (assignmentId, studentId, SubmissionDate, studentpublishconsent, status)" +
 					" VALUES  (?,?,?,?,?)";
 		java.util.Date date = new java.util.Date(System.currentTimeMillis());
@@ -64,7 +64,7 @@ public class SubmissionDAO {
      * @return True if everything went well, otherwise false
 	 * @throws DataAccessException If the data could'nt be saved
 	 */
-    public boolean patchSubmission(Submission submission) throws DataAccessException {
+    boolean patchSubmission(Submission submission) throws DataAccessException {
 		String feedback = submission.getFeedback();
 		if (feedback != null && !feedback.isEmpty()) {
 			String path = FilesystemInterface.generatePath(submission) + FilesystemConstants.FEEDBACK_TEXT_FILENAME;
@@ -100,7 +100,7 @@ public class SubmissionDAO {
      * @return True if a row was changed, otherwise false
 	 * @throws IllegalAccessError Cant publish feedback if not a teacher.
      */
-    public boolean publishFeedback(Submission submission, boolean publish)
+    boolean publishFeedback(Submission submission, boolean publish)
 														throws IllegalAccessException {
         /* Publishing feedback without a grade is not possible, returns false */
         Grade grade = submission.getGrade();
@@ -127,7 +127,7 @@ public class SubmissionDAO {
 	 * @return True if a row was changed, otherwise false
 	 * @throws IllegalAccessError Cant set grade if not a teacher.
 	 */
-	public boolean setGrade(Submission submission, Integer userId) throws IllegalAccessException,DataIntegrityViolationException {
+	boolean setGrade(Submission submission, Integer userId) throws IllegalAccessException,DataIntegrityViolationException {
 		Grade grade = submission.getGrade();
         /* If a person that is not a teacher tries to set a grade, return false */
 
@@ -154,7 +154,7 @@ public class SubmissionDAO {
 	 * @param studentID Unique identifier for the student whose submission is removed
 	 * @return True if everything went well, otherwise false
 	 */
-	public boolean removeSubmission(String assID, String studentID) {
+	boolean removeSubmission(String assID, String studentID) {
 		String removeSubmissionStatement = "DELETE FROM "
 				+ "Submission WHERE (AssignmentId=? AND StudentId=?)";
 		boolean result;
@@ -193,44 +193,18 @@ public class SubmissionDAO {
         return getSubmissionsFromStatement(getAllUngradedStatement, assignmentId);
     }
 
-    /**
-     * Will return the result of a query to the DB.
-     * @param statement the string containing the sql statement
-     * @param assignmentID ID to specify assignment to get submissions for.
-     * @return a list of submissions.
-     */
-    private Optional<List<Submission>> getSubmissionsFromStatement(String statement, int assignmentID){
-        List<Submission> submissions = new ArrayList<>();
-        //TODO exceptions should maybe be handled in a better way?
-        try {
-            List<Map<String, Object>> rows = databaseConnection.queryForList(
-                    statement, assignmentID);
-            for (Map<String, Object> row : rows) {
-                Submission submission = new Submission(row);
-                submissions.add(submission);
-            }
-        } catch (IncorrectResultSizeDataAccessException e) {
-            return Optional.empty();
-        } catch (DataAccessException e1) {
-            return Optional.empty();
-        }
-        return Optional.of(submissions);
-    }
-
 	/**
 	 * Get all submissions for an assignment
 	 * @param assignmentID The assignment to get submissions for
 	 * @return A list of submissions for the assignment
 	 */
-    public List<Submission> getAllSubmissions(int assignmentID) {
+    List<Submission> getAllSubmissions(int assignmentID) {
     	List<Submission> submissions;
 		String getAllSubmissionsStatement = "SELECT * FROM Submission, Users WHERE AssignmentId = ? AND studentid = userid";
 		try {
 			submissions = databaseConnection.query(getAllSubmissionsStatement, new SubmissionRowMapper(), assignmentID);
-		} catch (IncorrectResultSizeDataAccessException e) {
-			return new ArrayList<>();
-		} catch (DataAccessException e1) {
-			return new ArrayList<>();
+		} catch (DataAccessException e) {
+			return null;
 		}
     	return submissions;
     }
@@ -265,7 +239,7 @@ public class SubmissionDAO {
      * @param userID		The studentId that the submission is connected to.
      * @return				The submission with the teacher name.
      */
-    public Optional<Submission> getSubmission(int assignmentID, int userID) {
+    Optional<Submission> getSubmission(int assignmentID, int userID) {
     	Submission result;
         String getStudentSubmission =
 				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
@@ -298,7 +272,7 @@ public class SubmissionDAO {
 	 * @param submission the submission which the video should be linked to.
      * @return An input stream contained within a HTTP response entity.
      */
-	public ResponseEntity<InputStreamResource> getVideo(Submission submission, String fileName) {
+	ResponseEntity<InputStreamResource> getVideo(Submission submission, String fileName) {
 		Integer courseID = getCourseIDFromAssignmentID(submission.getAssignmentID());
 		if(courseID == null){
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -317,8 +291,32 @@ public class SubmissionDAO {
      * @param feedbackVideo the feedback video.
      * @return true if it succeeds, otherwise false.
      */
-	public boolean setFeedbackVideo(Submission submission, MultipartFile feedbackVideo) {
+	boolean setFeedbackVideo(Submission submission, MultipartFile feedbackVideo) {
 		return FilesystemInterface.storeFeedbackVideo(submission, feedbackVideo);
+	}
+
+	/**
+	 * Will return the result of a query to the DB.
+	 * @param statement the string containing the sql statement
+	 * @param assignmentID ID to specify assignment to get submissions for.
+	 * @return a list of submissions.
+	 */
+	private Optional<List<Submission>> getSubmissionsFromStatement(String statement, int assignmentID){
+		List<Submission> submissions = new ArrayList<>();
+		//TODO exceptions should maybe be handled in a better way?
+		try {
+			List<Map<String, Object>> rows = databaseConnection.queryForList(
+					statement, assignmentID);
+			for (Map<String, Object> row : rows) {
+				Submission submission = new Submission(row);
+				submissions.add(submission);
+			}
+		} catch (IncorrectResultSizeDataAccessException e) {
+			return Optional.empty();
+		} catch (DataAccessException e1) {
+			return Optional.empty();
+		}
+		return Optional.of(submissions);
 	}
 
 	/**
@@ -337,6 +335,12 @@ public class SubmissionDAO {
 		}
 	}
 
+    /**
+     * Checks if the user is a teacher.
+     * @param courseID The ID of the course.
+     * @param userId The user's ID.
+     * @return True if the user is a teacher, otherwise throw exception with appropriate message.
+     */
     private boolean checkIfTeacher(Integer courseID, Integer userId){
         String checkIfTeacherExist = "SELECT COUNT(*) " +
                 "FROM participant " +
@@ -344,7 +348,6 @@ public class SubmissionDAO {
                 " (UserID = ?) " +
                 "AND (CourseID = ?) " +
                 "AND ( upper(Function) = upper('Teacher') )";
-
         System.err.println(userId);
         int rows = databaseConnection.queryForInt(checkIfTeacherExist,
                 userId,

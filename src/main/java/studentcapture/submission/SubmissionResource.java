@@ -44,7 +44,6 @@ class SubmissionResource {
     @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
                                                             @PathVariable("studentID") int studentID){
-
         Optional<Submission> submission = DAO.getSubmission(assignmentID, studentID);
 
         if (submission.isPresent()){
@@ -62,9 +61,9 @@ class SubmissionResource {
      * @return The video file if everything went fine, otherwise a HTTP Status error message.
      */
     @RequestMapping(value = "{studentID}/videos/{fileName}", method = RequestMethod.GET, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> getFeedbackVideo(@PathVariable("assignmentID") int assignmentID,
-                                                                @PathVariable("studentID") int studentID,
-                                                                @PathVariable("fileName") String fileName) {
+    public ResponseEntity<InputStreamResource> getVideo(@PathVariable("assignmentID") int assignmentID,
+                                                        @PathVariable("studentID") int studentID,
+                                                        @PathVariable("fileName") String fileName) {
         if(fileName.equals("feedback") || fileName.equals("submission")){
             return DAO.getVideo(new Submission(studentID, assignmentID), fileName + ".webm");
         }else{
@@ -79,7 +78,12 @@ class SubmissionResource {
      */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") int assignmentID){
-        return new ResponseEntity<>(DAO.getAllSubmissions(assignmentID), HttpStatus.OK);
+        List<Submission> list = DAO.getAllSubmissions(assignmentID);
+        HttpStatus status = HttpStatus.OK;
+        if (list == null) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(list, status);
     }
 
     /**
