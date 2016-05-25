@@ -33,7 +33,7 @@ public class CourseInviteDAO {
 	@Autowired
 	private ParticipantDAO participantDAO;
 	
-	private static SecureRandom random = new SecureRandom();
+	private static final SecureRandom random = new SecureRandom();
 
 	private String generateRandomHexString(int length) {
 		byte[] bytes = new byte[length/2];

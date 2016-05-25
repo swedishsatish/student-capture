@@ -46,7 +46,7 @@ public class LoginAuthentication implements AuthenticationProvider {
     @Autowired
     private RestTemplate requestSender;
     
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+    private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     /**
      * 
