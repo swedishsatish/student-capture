@@ -13,7 +13,6 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import studentcapture.user.User;
@@ -24,32 +23,30 @@ import java.util.Collections;
 
 /**
  * Custom login authentication for Spring Security
- * Currently accepts "user" as username and password
+ * Currently uses database for user comparisons.
+ * This class also sets sessions when a login is successful.
  * 
- * 2016-05-11
- * Connected to DB
- * 
- * @author Oskar Suikki, c13hbd
+ * @author dv11osi, c13hbd
  */
 @Component
 public class LoginAuthentication implements AuthenticationProvider {
 
-    
-    //Using the same method for connecting to DB as in FeedbackController.java
-    
-    private static final String SESSION_USERNAME_TAG = "username";
+	//Session attribute constants
+	private static final String SESSION_USERNAME_TAG = "username";
     private static final String SESSION_USERID_TAG = "userid";
+    //Session timeout, this is in minutes.
+    private static final int SESSION_TIMEOUT = 60*60;
     
     @Autowired
     private LoginDAO loginDao;
     
-    @Autowired
-    private RestTemplate requestSender;
-    
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     /**
-     * 
+     * Fired when login occurs via Spring Security.
+     * Checks password
+     * Updates session contents
+     * Redirects to initial target link if needed
      */
 	@Override
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
@@ -66,7 +63,6 @@ public class LoginAuthentication implements AuthenticationProvider {
 		    redirection();
 		    return a;
 		}
-
 		return null;
 	}
 
@@ -81,30 +77,26 @@ public class LoginAuthentication implements AuthenticationProvider {
 	 * @param password User input password
 	 * @return true if user name and password match in the database, else false
 	 */
-
 	private boolean checkUser(String username, String password) {
-		
-		        
-        //Get the user object and check that the password is valid
         User user = loginDao.getUser(username, 0);
         if (user == null) {
         	return false;
         }
-        return comparePassword(password, user.getPswd());
+        return BCrypt.checkpw(password, user.getPswd());
            
     }
-
-	private boolean comparePassword(String password, String hashed) {
-		//String hashed = "";
-		return BCrypt.checkpw(password, hashed);
-	}
 	
+	/**
+	 * Updates session object with attribute and timeout settings.
+	 * @param username The user that is logging in.
+	 */
 	private void updateSession(String username) {
 		User user = loginDao.getUser(username, 0);
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		attr.getRequest().getSession().setAttribute(SESSION_USERNAME_TAG, user.getUserName());
 		attr.getRequest().getSession().setAttribute(SESSION_USERID_TAG, user.getUserID());
-		attr.getRequest().getSession().setMaxInactiveInterval(60*60);
+		//The method for timeouts uses seconds, multiply by 60 for minutes.
+		attr.getRequest().getSession().setMaxInactiveInterval(SESSION_TIMEOUT*60);
 	}
 	
 	/**
