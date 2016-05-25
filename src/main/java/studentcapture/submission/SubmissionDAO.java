@@ -55,6 +55,8 @@ public class SubmissionDAO {
 		return rowsAffected == 1;
 	}
 
+
+
     /**
      * Patch a submission for an assignment
      *
@@ -108,11 +110,7 @@ public class SubmissionDAO {
 		}
 
 		/* If a person that is not a teacher tries to set a grade, return false */
-        String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
-        int rows = databaseConnection.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
-        if(rows != 1) {
-			throw new IllegalAccessException("Cant set grade, user not a teacher");
-		}
+        checkIfTeacher(Integer.valueOf(submission.getCourseID()), submission.getGrade().getTeacherID());
 
         String publishFeedback  = "UPDATE Submission SET publishFeedback = ? WHERE (AssignmentID = ?) AND (StudentID = ?);";
         int updatedRows = databaseConnection.update(publishFeedback, publish, submission.getAssignmentID(), submission.getStudentID());
@@ -127,17 +125,12 @@ public class SubmissionDAO {
 	 * @return True if a row was changed, otherwise false
 	 * @throws IllegalAccessError Cant set grade if not a teacher.
 	 */
-	public boolean setGrade(Submission submission, int userId) throws IllegalAccessException,DataIntegrityViolationException {
+	public boolean setGrade(Submission submission, Integer userId) throws IllegalAccessException,DataIntegrityViolationException {
 		Grade grade = submission.getGrade();
         /* If a person that is not a teacher tries to set a grade, return false */
-        String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE" +
-				" (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
+        checkIfTeacher(Integer.valueOf(submission.getCourseID()), userId);
 
-        int rows = databaseConnection.queryForInt(checkIfTeacherExist, userId, submission.getCourseID());
-        if(rows != 1) {
-			throw new IllegalAccessException("Cant set grade, user is not a teacher");
-		}
-		String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, PublishStudentSubmission = ?" +
+        String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, PublishStudentSubmission = ?" +
 				" WHERE (AssignmentID = ?) AND (StudentID = ?);";
 		int updatedRows = databaseConnection.update(setGrade, grade.getGrade(),
 																grade.getTeacherID(),
@@ -346,6 +339,23 @@ public class SubmissionDAO {
 		}
 	}
 
+    private boolean checkIfTeacher(Integer courseID, Integer userId) throws IllegalAccessException {
+        String checkIfTeacherExist = "SELECT COUNT(*) " +
+                "FROM participant " +
+                "WHERE" +
+                " (UserID = ?) " +
+                "AND (CourseID = ?) " +
+                "AND ( upper(Function) = upper('Teacher') )";
+
+        System.err.println(userId);
+        int rows = databaseConnection.queryForInt(checkIfTeacherExist,
+                userId,
+                courseID);
+        if(rows != 1) {
+            throw new IllegalAccessException("Cant set grade, user not a teacher");
+        }
+        return true;
+    }
 
 }
 

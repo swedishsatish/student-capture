@@ -1,7 +1,9 @@
 package studentcapture.submission;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +35,7 @@ import static org.springframework.http.HttpStatus.OK;
 class SubmissionResource {
     @Autowired
     private SubmissionDAO DAO;
-    @Autowired
-    private HttpSession session;
+
 
     /**
      * Gets a student's submission on a particular assignment.
@@ -75,35 +76,48 @@ class SubmissionResource {
 
     /**
      * Edits a submission, is used to set the grade when the teacher marks the assignment.
-     * @param assignmentID
-     * @param studentID
-     * @param submission
-     * @return
+     * @param assignmentID  The AssignmentID
+     * @param studentID     The studentID
+     * @param submission    The Submission
+     * @return  HTTP-POST with status and information in body of JSON.
      */
     @RequestMapping(value = "{studentID}", method = RequestMethod.PATCH)
-    public ResponseEntity<Map<String, String>> markSubmission(@PathVariable("assignmentID") int assignmentID,
+    public ResponseEntity<HashMap<String, String>> markSubmission(HttpSession session,
+                                     @PathVariable("assignmentID") int assignmentID,
                                      @PathVariable("studentID") int studentID,
-                                     @RequestBody Submission submission){
+                                     @RequestBody Submission submission) throws IllegalAccessException {
         //TODO: VIDEO-POST
+        HashMap<String, String> response = new HashMap<>();
+        HttpStatus httpStatus = OK;
+        boolean publishFeedback = true;
+        int userId = Integer.parseInt(session.getAttribute("userid").toString());
 
+        if (userId < 0) {
+            response.put("Session", "ERROR: not logged in.");
+            httpStatus = INTERNAL_SERVER_ERROR;
+            return new ResponseEntity<>(response, httpStatus);
+        }
+
+        /* Set all sessions IDs in Submission */
+        submission.getGrade().setTeacherID(userId);
         submission.setAssignmentID(assignmentID);
         submission.setStudentID(studentID);
-        //TODO: Set by inRequest variable
-        boolean publishFeedback = true;
 
-        Map<String, String> response = new HashMap<>();
-        HttpStatus httpStatus = OK;
-
-        if (DAO.patchSubmission(submission)) {
-            response.put("Save data", "Success");
-        } else {
+        try {
+            if (DAO.patchSubmission(submission)) {
+                response.put("Save data", "Success");
+            } else {
+                response.put("Save data", "Notice: Nothing to save.");
+            }
+        } catch (DataAccessException e) {
             response.put("Save data", "ERROR: Couldn't save the feedback to database/filesystem.");
             httpStatus = INTERNAL_SERVER_ERROR;
             return new ResponseEntity<>(response, httpStatus);
         }
 
+
         try {
-            DAO.setGrade(submission);
+            DAO.setGrade(submission, userId);
             response.put("Save grade", "Success");
         } catch (IllegalAccessException e) {
             response.put("Save grade", "ERROR: "+e.getMessage());
@@ -117,8 +131,9 @@ class SubmissionResource {
             response.put("Save video", "ERROR: Couldn't save the feedbackVideo to filesystem.");
             httpStatus = INTERNAL_SERVER_ERROR;
             return new ResponseEntity(response, httpStatus);
-        }*/
-
+        }
+        */
+        //TODO: Will be POST-FORM for feedbackTeacherVideo.
         try {
             DAO.publishFeedback(submission, publishFeedback);
             response.put("Publish feedback", "Success");
@@ -140,7 +155,8 @@ class SubmissionResource {
             response.put("LTI", "ERROR: "+e.getMessage());
         }
 
-        response.put("Submission", submission.toString());
+
+        response.put("Submission", "OK");
         return new ResponseEntity<>(response, httpStatus);
     }
 
@@ -184,11 +200,20 @@ class SubmissionResource {
 
         return new ResponseEntity<>(responseText, returnStatus);
     }
+/*
+    @RequestMapping(value = "{studentID}", method = RequestMethod.POST)
+    public HttpStatus storeFeedback(@PathVariable("assignmentID") int assignmentID,
+                                      @PathVariable("studentID") int studentID,
+                                      @RequestPart(value = "feedbackVideo") MultipartFile studentVideo){
+
+        return null;
+    }
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.DELETE)
     public HttpStatus deleteSubmission(@PathVariable("assignmentID") String assignment,
                                        @PathVariable("studentID") String studentID){
-        /*Check permission*/
+        //Check permission
         return HttpStatus.NOT_IMPLEMENTED;
     }
+*/
 }
