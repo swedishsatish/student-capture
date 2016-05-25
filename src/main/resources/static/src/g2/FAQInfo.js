@@ -3,7 +3,33 @@
  * Change information displayed in the FAQ by changing
  * the content inside the <h> and <p> tags.
  */
+
+function genScripts(){
+    var script1 = document.createElement("script");
+    script1.setAttribute("src","src/g2/classie.js");
+    script1.setAttribute("id","script1");
+    document.body.appendChild(script1);
+    var script2 = document.createElement("script");
+    script2.setAttribute("id","script2");
+    script2.setAttribute("src","src/g2/modalEffects.js");
+    document.body.appendChild(script2);
+
+}
+
+function reloadScripts() {
+    var script1 = document.getElementById("script1");
+    var script2 = document.getElementById("script2");
+    document.body.removeChild(script1);
+    document.body.removeChild(script2);
+    genScripts();
+}
+
 var FAQInfo = React.createClass({
+
+    backClickHandle: function () {
+        ReactDOM.render(<HelpWindow />, document.getElementById('modal-container'));
+        reloadScripts();
+    },
     render: function () {
         return (
             <div >
@@ -40,6 +66,7 @@ var FAQInfo = React.createClass({
                 <div className="row">
                     <div className="two columns u-pull-right">
                         <button className="md-close">Close</button>
+                        <button onClick={this.backClickHandle}>Back</button>
                     </div>
                 </div>
             </div>

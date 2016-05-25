@@ -27,6 +27,11 @@ input[type=text]:disabled {
 	background: #dddddd;
 }
 
+#sendButton:disabled {
+	background: #dddddd;
+	pointer-events: none;
+}
+
 #courseContent h1,
 #courseContent h2,
 #courseContent h3,
