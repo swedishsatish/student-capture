@@ -6,11 +6,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import studentcapture.user.User;
 
+import javax.servlet.http.HttpSession;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-
-import javax.servlet.http.HttpSession;
 
 @Repository
 public class LoginDAO {
@@ -188,7 +187,7 @@ public class LoginDAO {
     public boolean setEmail(int userID, String email) {
         String sql = "UPDATE Users SET Email = ? WHERE UserID = ?";
         try {
-            jdbcTemplate.update(sql, new Object[]{email, userID});
+            jdbcTemplate.update(sql, email, userID);
             return true;
         } catch(Exception e) {
             return false;

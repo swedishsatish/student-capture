@@ -1,14 +1,7 @@
 package studentcapture.config;
 
-import org.apache.catalina.Server;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import studentcapture.config.StudentCaptureApplication;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 /**
  * Configurates the  h2 database.

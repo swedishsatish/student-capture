@@ -65,8 +65,8 @@ var FAQInfo = React.createClass({
                 </div>
                 <div className="row">
                     <div className="two columns u-pull-right">
-                        <button className="md-close">Close</button>
-                        <button onClick={this.backClickHandle}>Back</button>
+                        <div className="md-close button primary-button SCButton">Close</div>
+                        <div className="button primary-button SCButton" onClick={this.backClickHandle}>Back</div>
                     </div>
                 </div>
             </div>

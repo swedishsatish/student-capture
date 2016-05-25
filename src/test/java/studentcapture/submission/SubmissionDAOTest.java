@@ -4,14 +4,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
-
 import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.model.Grade;
-import studentcapture.submission.Submission;
-import studentcapture.submission.SubmissionDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,9 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by c13arm on 2016-05-12.
@@ -308,18 +302,18 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     @Test
     public void shouldReturnSubmissionWithGrade() {
         Optional<Submission> result = submissionDAO.getSubmission(1, 4);
-        Submission submissionFromDB = result.get();
-
         assertTrue(result.isPresent());
+        
+        Submission submissionFromDB = result.get();
         assertTrue(subWithGrade.equals(submissionFromDB));
     }
 
     @Test
     public void shouldReturnSubmissionWithoutGrade() {
         Optional<Submission> result = submissionDAO.getSubmission(1, 3);
-        Submission submissionFromDB = result.get();
-
         assertTrue(result.isPresent());
+
+        Submission submissionFromDB = result.get();
         assertTrue(subWithoutGrade.equals(submissionFromDB));
     }
 

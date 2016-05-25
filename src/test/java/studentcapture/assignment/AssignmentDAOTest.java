@@ -3,12 +3,12 @@ package studentcapture.assignment;
 import javassist.NotFoundException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import studentcapture.config.StudentCaptureApplicationTests;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Statement;
 import java.time.LocalDateTime;
@@ -157,32 +157,57 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
      * Should update assignment in the database.
      */
     @Test
-    public void shouldUpdateAssignmentConfigurations() throws Exception {
-        // Setup: create ass, set new description
+    public void shouldUpdateConfigurations() throws Exception {
+        // Setup: create ass, set new title
         int assID = assignmentDAO.createAssignment(am);
         am.setAssignmentID(assID);
-        String originalDescription = am.getDescription();
-        String updatedDescription = "Updated description";
-        am.setDescription(updatedDescription);
+        String originalTitle = am.getTitle();
+        String updatedTitle = "Updated title";
+        am.setTitle(updatedTitle);
 
         // Update and get updated
-        assignmentDAO.updateAssignment(am);
+        boolean res = assignmentDAO.updateAssignment(am);
         AssignmentModel am2 = assignmentDAO.getAssignmentModel(am.getAssignmentID()).get();
 
         // Assert that truly updated
-        assertNotEquals(am2.getDescription(), originalDescription);
-        assertEquals(am2.getDescription(), updatedDescription);
+        assertTrue(res);
+        assertNotEquals(am2.getTitle(), originalTitle);
+        assertEquals(am2.getTitle(), updatedTitle);
     }
 
-    /*
-    @org.junit.Test
-    public void testGetAssignmentInfo() throws Exception {
-    }*/
-
-    /*@Test
-    public void testUpdateAssignment() throws Exception {
-    }
+    /**
+     * Should update assignment configuration files in the file system  (ex recap).
+     */
     @Test
-    public void testRemoveAssignment() throws Exception {
-    }*/
+    public void shouldUpdateFiles() throws Exception {
+        // Setup: create ass, set new recap
+        int assID = assignmentDAO.createAssignment(am);
+        am.setAssignmentID(assID);
+        String originalRecap = am.getRecap();
+        String updatedRecap = "Updated recap.";
+        am.setRecap(updatedRecap);
+
+        // Update and get updated
+        boolean res = assignmentDAO.updateAssignment(am);
+        AssignmentModel am2 = assignmentDAO.getAssignmentModel(am.getAssignmentID()).get();
+
+        // Assert that truly updated
+        assertTrue(res);
+        assertNotEquals(am2.getRecap(), originalRecap);
+        assertEquals(am2.getRecap(), updatedRecap);
+    }
+
+    @Test (expected = NotFoundException.class)
+    public void shouldFailToUpdateNonExisting() throws Exception {
+        // Setup: create ass, set new title
+        int nonExistingAssID = assignmentDAO.createAssignment(am) + 666;
+        am.setAssignmentID(nonExistingAssID);
+        String originalTitle = am.getTitle();
+        String updatedTitle = "Updated title";
+        am.setTitle(updatedTitle);
+
+        // Try to update
+        boolean res = assignmentDAO.updateAssignment(am);
+    }
+
 }

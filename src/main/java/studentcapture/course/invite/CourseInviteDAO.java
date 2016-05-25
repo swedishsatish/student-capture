@@ -1,20 +1,19 @@
 package studentcapture.course.invite;
 
-import java.security.SecureRandom;
-import java.sql.Timestamp;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import studentcapture.course.CourseDAO;
 import studentcapture.course.CourseModel;
 import studentcapture.course.participant.Participant;
 import studentcapture.course.participant.ParticipantDAO;
+
+import java.security.SecureRandom;
+import java.sql.Timestamp;
+import java.util.Map;
 
 /**
  * 
@@ -34,8 +33,8 @@ public class CourseInviteDAO {
 	@Autowired
 	private ParticipantDAO participantDAO;
 	
-	private static SecureRandom random = new SecureRandom();;
-	
+	private static final SecureRandom random = new SecureRandom();
+
 	private String generateRandomHexString(int length) {
 		byte[] bytes = new byte[length/2];
 		StringBuilder sb = new StringBuilder();

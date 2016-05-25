@@ -4,17 +4,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.mock_javamail.Mailbox;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import studentcapture.config.StudentCaptureApplicationTests;
 
 import javax.mail.Message;
 import javax.mail.internet.AddressException;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import studentcapture.config.StudentCaptureApplicationTests;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Isak Hjelt, Emil Vannebäck

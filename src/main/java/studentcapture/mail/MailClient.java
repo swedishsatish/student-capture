@@ -22,7 +22,7 @@ import java.util.Properties;
  */
 @Repository
 public class MailClient {
-    private Session session;
+    private final Session session;
 
     public MailClient() {
         Properties properties = new Properties();

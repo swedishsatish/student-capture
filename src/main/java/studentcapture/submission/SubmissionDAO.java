@@ -220,7 +220,7 @@ public class SubmissionDAO {
     public List<Submission> getAllSubmissions(int assignmentID) {
     	List<Submission> submissions;
 
-		String getAllSubmissionsStatement = "SELECT * FROM Submission WHERE AssignmentId = ?";
+		String getAllSubmissionsStatement = "SELECT * FROM Submission, Users WHERE AssignmentId = ? AND studentid = userid";
 		try {
 			submissions = databaseConnection.query(getAllSubmissionsStatement, new SubmissionRowMapper(), assignmentID);
 		} catch (IncorrectResultSizeDataAccessException e) {
@@ -236,13 +236,10 @@ public class SubmissionDAO {
 	 * Get all submissions for an assignment, including students that have not
 	 * yet made a submission.
 	 *
-	 * @param assId The assignment to get submissions for
+	 * @param assignmentID The assignment to get submissions for
 	 * @return A list of submissions for the assignment
 	 */
-    public Optional<List<Submission>> getAllSubmissionsWithStudents
-    		(String assId) {
-    	int assignmentId = Integer.parseInt(assId);
-
+    public Optional<List<Submission>> getAllSubmissionsWithStudents(int assignmentID) {
 		String getAllSubmissionsWithStudentsStatement =
 				"SELECT ass.AssignmentId,par.UserId AS StudentId,sub.SubmissionDate"
 						+ ",sub.Grade,sub.TeacherId,sub.StudentPublishConsent"
@@ -252,19 +249,19 @@ public class SubmissionDAO {
 						+ "Submission AS sub ON par.userId=sub.studentId WHERE "
 						+ "(par.function='Student') AND (ass.AssignmentId=?)";
 
-    	return getSubmissionsFromStatement(getAllSubmissionsWithStudentsStatement, assignmentId);
+    	return getSubmissionsFromStatement(getAllSubmissionsWithStudentsStatement, assignmentID);
     }
     
     /**
      * Gets an entire submission with the name of the teacher, if the teacher
 	 * exists.
      * 
-     * @param assignmentId	The assignmentId that the submission is connected
+     * @param assignmentID	The assignmentId that the submission is connected
 	 *                      to.
-     * @param userId		The studentId that the submission is connected to.
+     * @param userID		The studentId that the submission is connected to.
      * @return				The submission with the teacher name.
      */
-    public Optional<Submission> getSubmission(int assignmentId, int userId) {
+    public Optional<Submission> getSubmission(int assignmentID, int userID) {
     	Submission result;
         String getStudentSubmission =
 				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
@@ -273,7 +270,7 @@ public class SubmissionDAO {
 
 		try {
 	        result = databaseConnection.queryForObject(
-					getStudentSubmission, new SubmissionRowMapper(), assignmentId, userId);
+					getStudentSubmission, new SubmissionRowMapper(), assignmentID, userID);
 			if (result.getGrade().getTeacherID() != null) {
 				result.setTeacherName(databaseConnection.queryForObject(getTeacherName, new Object[]{result.getGrade().getTeacherID()}, String.class));
 			} else if (result.getGrade().getTeacherID() == null) {
@@ -303,7 +300,6 @@ public class SubmissionDAO {
 		}else{
 			submission.setCourseID(Integer.toString(courseID));
 			String path = FilesystemInterface.generatePath(submission) + fileName;
-			System.out.println(path);
 			return FilesystemInterface.getVideo(path);
 		}
 	}
@@ -317,10 +313,7 @@ public class SubmissionDAO {
      * @return true if it succeeds, otherwise false.
      */
 	public boolean setFeedbackVideo(Submission submission, MultipartFile feedbackVideo) {
-
 		return FilesystemInterface.storeFeedbackVideo(submission, feedbackVideo);
-
-
 	}
 
 	/**

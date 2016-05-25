@@ -11,15 +11,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
-import studentcapture.assignment.AssignmentDAO;
-import studentcapture.assignment.AssignmentDateIntervalls;
-import studentcapture.assignment.AssignmentModel;
-import studentcapture.assignment.AssignmentVideoIntervall;
+import studentcapture.assignment.GradeScale;
 import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.course.CourseDAO;
 import studentcapture.course.CourseDAOTest;
 import studentcapture.course.CourseModel;
-
+import studentcapture.assignment.AssignmentDAO;
+import studentcapture.assignment.AssignmentDateIntervalls;
+import studentcapture.assignment.AssignmentModel;
+import studentcapture.assignment.AssignmentVideoIntervall;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,8 +37,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
     private WebApplicationContext context;
 
     private MockMvc mvc;
-
-    @Autowired
+@Autowired
     private CourseDAO courseDAO;
 
     @Autowired
@@ -47,18 +46,16 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
     @Autowired
     private JdbcTemplate jdbcMock;
 
-
-
-    private static String json_test_string = "{\"title\":\"TheTitle\"," +
+    private String json_test_string = "{\"title\":\"TheTitle\"," +
             "\"Info\": \"Assignment Info\"," +
-            "\"videIntervall\":" +
+            "\"videoIntervall\":" +
             "{\"minTimeSeconds\":0," +
             "\"maxTimeSeconds\":320}," +
             "\"assignmentIntervall\":" +
             "{\"startDate\":\"2016-10-01 10:00:00\"," +
             "\"endDate\":\"2016-10-02 10:00:00\"," +
             "\"published\":\"2016-10-01 10:00:00\"}," +
-            "\"scale\":\"NUMBER_SCALE\"," +
+            "\"scale\":\"" + GradeScale.U_O_K_G.toString() + "\"," +
             "\"recap\":\"recap\"" +
             "}";
 
@@ -104,12 +101,11 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
 
 
     /**
-     * NestedServletException is expected since the method that handles the request sends another request to another
-     * method. This doesn't seem to work in JUnit. This test only shows that it works to post to /assignments. No side
-     * effects are tested at all.
-     * @throws Exception
+     * This test tests that the JSON will be properly sent and parsed.
+     * Will throw DataIntegrityViolationException (in NestedServletException)
+     * because this test connects to the database, where the course does not exist.
      */
-    @Test(expected = NestedServletException.class)
+    @Test (expected = NestedServletException.class)
     public void shouldWorkToSendJSONToCreateAssignment() throws Exception {
         mvc.perform(post("/assignments").contentType(MediaType.APPLICATION_JSON).content(json_test_string))
                 .andExpect(status().isOk());
