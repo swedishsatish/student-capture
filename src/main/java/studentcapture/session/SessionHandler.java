@@ -171,17 +171,12 @@ public class SessionHandler {
 	 * @see Session
 	 */
 	private Optional<Session> getSession(Integer sessionKey) {
-		Session session = null;
-		try {
-			session = sessions.get(sessionKey);
-			if(session == null)
-				throw new NullPointerException();
-			if(checkForTimeOut(session, sessionKey))
-				throw new NullPointerException();
-		} catch (NullPointerException e) {
-			return Optional.empty();
+		Session session = sessions.get(sessionKey);
+
+		if (session == null || checkForTimeOut(session, sessionKey)) {
+				return Optional.empty();
 		}
-		
+
 		return Optional.of(session);
 	}
 	

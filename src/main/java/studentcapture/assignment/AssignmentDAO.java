@@ -47,7 +47,6 @@ public class AssignmentDAO {
             throws IllegalArgumentException {
 
         Integer assignmentID;
-        String courseCode;
 
         // Construct query, depends on if assignment has publishdate or not.
         String insertQueryString = getInsertQueryString(assignmentModel.getAssignmentIntervall().getPublishedDate());
