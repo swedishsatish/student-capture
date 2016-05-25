@@ -60,10 +60,8 @@ public class HierarchyDAO {
             addUserToHierarchy(hierarchy, userId);
             //hierarchy.moveMapsToLists();
         } catch (IncorrectResultSizeDataAccessException e) {
-            e.printStackTrace();
             return Optional.empty();
         } catch (DataAccessException e1) {
-            e1.printStackTrace();
             return Optional.empty();
         }
 
@@ -82,12 +80,12 @@ public class HierarchyDAO {
                                     int userId) {
         String getUserStatement = "SELECT * FROM Users WHERE "
                 + "UserId=?";
-
-        Map<String, Object> map = jdbcTemplate.queryForMap(
-                getUserStatement, userId);
-        hierarchy.setUserId((int) map.get("UserId"));
-        hierarchy.setFirstName((String) map.get("FirstName"));
-        hierarchy.setLastName((String) map.get("LastName"));
+        
+        	Map<String, Object> map = jdbcTemplate.queryForMap(
+                    getUserStatement, userId);
+            hierarchy.setUserId((int) map.get("UserId"));
+            hierarchy.setFirstName((String) map.get("FirstName"));
+            hierarchy.setLastName((String) map.get("LastName"));
     }
 
     /**
@@ -152,7 +150,7 @@ public class HierarchyDAO {
 
         try {
         	int assignmentId = (int) row.get("AssignmentId");
-	        Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
+	        Optional<AssignmentPackage> currentAssignment = addAssignmentToTeacherHierarchy(currentCourse,
 	                assignmentId);
 	        if(currentAssignment.isPresent()) {
 	
@@ -175,7 +173,7 @@ public class HierarchyDAO {
         
         try {
         	int assignmentId = (int) row.get("AssignmentId");
-        	Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
+        	Optional<AssignmentPackage> currentAssignment = addAssignmentToStudentHierarchy(currentCourse,
                     assignmentId);
             if(currentAssignment.isPresent()) {
                 Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
@@ -206,7 +204,34 @@ public class HierarchyDAO {
         }
     }
 
-    private Optional<AssignmentPackage> addAssignmentToHierarchy(
+    private Optional<AssignmentPackage> addAssignmentToTeacherHierarchy(
+            CoursePackage currentCourse, int assignmentId) {
+        AssignmentPackage currentAssignment;
+        try {
+            currentAssignment = currentCourse.getAssignments()
+                    .get(assignmentId);
+
+            if (currentAssignment == null) {
+                throw new NullPointerException();
+            }
+        } catch (NullPointerException e) {
+            currentAssignment = new AssignmentPackage();
+            Optional<AssignmentModel> assignment = assignmentDAO
+                    .getAssignment(assignmentId);
+            if(assignment.isPresent()) {
+            	currentAssignment.setAssignment(assignment.get());
+	            currentAssignment.setSubmissions(new HashMap<>());
+	            currentCourse.getAssignments()
+	                    .put(assignmentId, currentAssignment);
+            } else {
+            	return Optional.empty();
+            }
+	        
+        }
+        return Optional.of(currentAssignment);
+    }
+    
+    private Optional<AssignmentPackage> addAssignmentToStudentHierarchy(
             CoursePackage currentCourse, int assignmentId) {
         AssignmentPackage currentAssignment;
         try {
