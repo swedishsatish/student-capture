@@ -141,36 +141,15 @@ public class CourseModel {
 	public Integer getErrorCode() {
 		return errorCode;
 	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		CourseModel that = (CourseModel) o;
-
-		if (!courseId.equals(that.courseId)) return false;
-		if (!year.equals(that.year)) return false;
-		if (!term.equals(that.term)) return false;
-		if (courseName != null ? !courseName.equals(that.courseName) : that.courseName != null) return false;
-		if (courseDescription != null ? !courseDescription.equals(that.courseDescription) : that.courseDescription != null)
-			return false;
-		if (!active.equals(that.active)) return false;
-		if (!initialTeacherId.equals(that.initialTeacherId)) return false;
-		return errorCode.equals(that.errorCode);
-
-	}
 
 	@Override
-	public int hashCode() {
-		int result = courseId.hashCode();
-		result = 31 * result + year.hashCode();
-		result = 31 * result + term.hashCode();
-		result = 31 * result + (courseName != null ? courseName.hashCode() : 0);
-		result = 31 * result + (courseDescription != null ? courseDescription.hashCode() : 0);
-		result = 31 * result + active.hashCode();
-		result = 31 * result + initialTeacherId.hashCode();
-		result = 31 * result + errorCode.hashCode();
-		return result;
+	public boolean equals(Object other) {
+		CourseModel course = (CourseModel) other;
+		return (Objects.equals(getActive(), course.getActive())&&
+				(Objects.equals(course.getCourseDescription(), getCourseDescription()))&&
+				(Objects.equals(course.getCourseId(), getCourseId()))&&
+				(Objects.equals(getCourseName(), getCourseName()))&&
+				(Objects.equals(course.getTerm(), getTerm()))&&
+				(Objects.equals(course.getYear(), getYear())));
 	}
 }
