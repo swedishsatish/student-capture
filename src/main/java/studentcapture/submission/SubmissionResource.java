@@ -209,7 +209,7 @@ class SubmissionResource {
      * This will save the teacher's feedback-video (Because of the MultipartFile it must be
      * POST, it should be PATCH) received as a part of the POST.
      * @param assignmentID          The assignmentID of the video
-     * @param studentID             The studentID of submission that will recive feedback-Video.
+     * @param studentID             The studentID of submission that will receive feedback-Video.
      * @param courseID              The course of the submission-feedback-video.
      * @param teacherFeedbackVideo  The multipartVideo.
      * @return                      Will only return HTTPStatus if saving went successful or not.
