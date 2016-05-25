@@ -214,12 +214,20 @@ public class ParticipantDAO {
         return result;
     }
     
+    public boolean isParticipantOnCourse(Integer userId, Integer courseId) {
+    	String statement = "SELECT * FROM Participant WHERE (UserId=?) AND "
+    			+ "(CourseId=?)";
+    	List<Map<String, Object>> result = jdbcTemplate.queryForList(
+    			statement, userId, courseId);
+    	return (result.size() > 0);
+    }
+    
     public boolean isTeacherOnCourse(Integer userId, Integer courseId) {
     	String statement = "SELECT * FROM Participant WHERE (UserId=?) AND "
     			+ "(CourseId=?) AND (Function='teacher')";
     	List<Map<String, Object>> result = jdbcTemplate.queryForList(
     			statement, userId, courseId);
-    	return result.size() > 0;
+    	return (result.size() > 0);
     }
     
     public boolean isStudentOnCourse(Integer userId, Integer courseId) {
@@ -227,7 +235,7 @@ public class ParticipantDAO {
     			+ "(CourseId=?) AND (Function='student')";
     	List<Map<String, Object>> result = jdbcTemplate.queryForList(
     			statement, userId, courseId);
-    	return result.size() > 0;
+    	return (result.size() > 0);
     }
     
     public boolean isTeacherOnAssignment(Integer userId, Integer assignmentId) {
@@ -236,7 +244,7 @@ public class ParticipantDAO {
     			+ "(userId=?) AND (assignmentId=?) AND (function='teacher')";
     	List<Map<String, Object>> result = jdbcTemplate.queryForList(
     			statement, userId, assignmentId);
-    	return result.size() > 0;
+    	return (result.size() > 0);
     }
     
     public boolean isStudentOnAssignment(Integer userId, Integer assignmentId) {
@@ -245,17 +253,19 @@ public class ParticipantDAO {
     			+ "(userId=?) AND (assignmentId=?) AND (function='student')";
     	List<Map<String, Object>> result = jdbcTemplate.queryForList(
     			statement, userId, assignmentId);
-    	return result.size() > 0;
+    	return (result.size() > 0);
     }
     
-//    public boolean isSubmissionTeacher(Integer teacherId, Integer studentId, 
-//    		Integer assignmentId) {
-//    	String statement = "SELECT * FROM Participant AS par INNER JOIN "
-//    			+ "Assignment AS ass ON par.courseId=ass.courseId WHERE "
-//    			+ "(userId=?) AND (assignmentId=?) AND (function='student')";
-//    	List<Map<String, Object>> result = jdbcTemplate.queryForList(
-//    			statement, userId, assignmentId);
-//    	return result.size() > 0;
-//    }
+    public boolean isSubmissionTeacher(Integer teacherId, Integer studentId, 
+    		Integer assignmentId) {
+    	String statement = "SELECT * FROM Participant AS par INNER JOIN "
+    			+ "Assignment AS ass ON par.courseId=ass.courseId INNER JOIN"
+    			+ " Submission AS sub ON ass.assignmentId=sub.assignmentId WHERE "
+    			+ "(userId=?) AND (ass.assignmentId=?) AND (studentId=?) AND "
+    			+ "(function='teacher')";
+    	List<Map<String, Object>> result = jdbcTemplate.queryForList(
+    			statement, teacherId, assignmentId, studentId);
+    	return (result.size() > 0);
+    }
     
 }
