@@ -32,7 +32,7 @@ public class AssignmentResource {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public int createAssignment(@RequestBody AssignmentModel assignment) {
+    public int createAssignment(@RequestBody AssignmentModel assignment) throws IOException {
         return assignmentDAO.createAssignment(assignment);
     }
 

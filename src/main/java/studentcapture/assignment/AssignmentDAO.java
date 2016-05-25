@@ -1,6 +1,7 @@
 package studentcapture.assignment;
 
 import javassist.NotFoundException;
+import org.codehaus.groovy.tools.shell.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
@@ -44,7 +45,7 @@ public class AssignmentDAO {
      *                        in the right format
      */
     public int createAssignment(AssignmentModel assignmentModel)
-            throws IllegalArgumentException {
+            throws IllegalArgumentException, IOException {
 
         Integer assignmentID;
 
@@ -85,8 +86,13 @@ public class AssignmentDAO {
             FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
                     assignmentModel.getRecap(), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
-            //TODO: HANDLE THIS
-            System.err.println("IOEXCEPTION");
+            try {
+                removeAssignment(assignmentModel.getCourseID(), assignmentModel.getAssignmentID());
+            } catch (IOException e2) {
+                throw new IOException("Could not store assignment and " +
+                        "could not delete semi-stored assignment successfully. ");
+            }
+            throw new IOException("Could not store assignment successfully.");
         }
 
         return assignmentID;
@@ -120,10 +126,10 @@ public class AssignmentDAO {
      * Update an assignment, both in the database and in the file system.
      *
      * @param assignmentModel The assignment to update to.
-     * @return True if assignment updated, false if failed to update assignment files in the file system.
      * @throws NotFoundException If the corresponding assignment is the database does not exist.
+     * @throws IOException If files could not be stored successfully.
      */
-    public boolean updateAssignment(AssignmentModel assignmentModel) throws NotFoundException {
+    public void updateAssignment(AssignmentModel assignmentModel) throws NotFoundException, IOException {
 
         String updateQuery = "UPDATE Assignment SET " +
                 "CourseID=?, " +
@@ -164,11 +170,9 @@ public class AssignmentDAO {
                     assignmentModel.getRecap(),
                     FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
-            //TODO: Undo DB update...
-            return false;
+            throw new IOException("Could not store some data in the edited " +
+                    "assignment correctly. Please try again.");
         }
-
-        return true;
     }
 
     /**
