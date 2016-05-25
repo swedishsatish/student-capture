@@ -227,10 +227,8 @@ public class SubmissionDAO {
 		String getAllSubmissionsStatement = "SELECT * FROM Submission, Users WHERE AssignmentId = ? AND studentid = userid";
 		try {
 			submissions = databaseConnection.query(getAllSubmissionsStatement, new SubmissionRowMapper(), assignmentID);
-		} catch (IncorrectResultSizeDataAccessException e) {
-			return new ArrayList<>();
-		} catch (DataAccessException e1) {
-			return new ArrayList<>();
+		} catch (DataAccessException e) {
+			return null;
 		}
     	return submissions;
     }

@@ -79,7 +79,12 @@ class SubmissionResource {
      */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") int assignmentID){
-        return new ResponseEntity<>(DAO.getAllSubmissions(assignmentID), HttpStatus.OK);
+        List<Submission> list = DAO.getAllSubmissions(assignmentID);
+        HttpStatus status = HttpStatus.OK;
+        if (list == null) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(list, status);
     }
 
     /**
