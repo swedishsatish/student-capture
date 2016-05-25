@@ -284,7 +284,7 @@ public class SubmissionDAO {
 			//TODO
 			return Optional.empty();
 		}
-		result.setCourseID(Integer.toString(getCourseIDFromAssignmentID(result.getAssignmentID())));
+		result.setCourseID(getCourseIDFromAssignmentID(result.getAssignmentID()));
 		result.setFeedback(FilesystemInterface.getFeedbackText(result));
         return Optional.of(result);
 	}
@@ -299,7 +299,7 @@ public class SubmissionDAO {
 		if(courseID == null){
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else{
-			submission.setCourseID(Integer.toString(courseID));
+			submission.setCourseID(courseID);
 			String path = FilesystemInterface.generatePath(submission) + fileName;
 			return FilesystemInterface.getVideo(path);
 		}

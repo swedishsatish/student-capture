@@ -79,7 +79,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         String gradeString;
         Integer teacherId;
         String teacherName;
-        String courseID = "1";
+        Integer courseID = 1;
 
         int assignmentID = 1;
         boolean studentPublishConsent = false;
@@ -204,7 +204,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         String sql10 = "INSERT INTO Participant VALUES (3, 1, 'Teacher');";
          */
         int userId = 3;
-        String course = "1";
+        Integer course = 1;
         int assId = 1;
         int studentId = 1;
         int teacherId = 3;
@@ -237,7 +237,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     public void gradeExistingAssignment() throws IllegalAccessException {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 3);
-        submission.setCourseID("1");
+        submission.setCourseID(1);
         submission.setGrade(grade);
 
         boolean returnValue = submissionDAO.setGrade(submission, 3);
@@ -252,7 +252,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     public void gradeNonExistingAssignment() throws IllegalAccessException {
         Submission submission = new Submission(2,1);
         Grade grade = new Grade("vg", 3);
-        submission.setCourseID("1");
+        submission.setCourseID(1);
         submission.setGrade(grade);
 
         boolean returnValue = submissionDAO.setGrade(submission, 3);
@@ -268,7 +268,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     public void nonExistingTeacherSetsGrade() throws IllegalAccessException {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 2);
-        submission.setCourseID("1");
+        submission.setCourseID(1);
         submission.setGrade(grade);
 
         boolean returnValue = submissionDAO.setGrade(submission, 7777777);
@@ -280,7 +280,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     @Test
     public void publishNonGradedFeedback() throws IllegalAccessException {
         Submission submission = new Submission(1,1);
-        submission.setCourseID("PVT");
+        submission.setCourseID(1);
         boolean returnValue = submissionDAO.publishFeedback(submission, true);
 
         assertFalse(returnValue);
@@ -293,7 +293,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     public void publishFeedback() throws IllegalAccessException {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 3);
-        submission.setCourseID("1");
+        submission.setCourseID(1);
         submission.setGrade(grade);
 
         boolean returnValue = submissionDAO.publishFeedback(submission, true);
