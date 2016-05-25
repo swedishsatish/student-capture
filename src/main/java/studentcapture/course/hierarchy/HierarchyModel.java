@@ -132,14 +132,10 @@ public class HierarchyModel {
 	
 	public void moveMapsToLists() {
 		teacherCoursesList = new ArrayList<>(teacherCourses.values());
-		for(CoursePackage course : teacherCoursesList) {
-			course.moveMapsToLists();
-		}
+		teacherCoursesList.forEach(CoursePackage::moveMapsToLists);
 		
 		studentCoursesList = new ArrayList<>(studentCourses.values());
-		for(CoursePackage course : studentCoursesList) {
-			course.moveMapsToLists();
-		}
+		studentCoursesList.forEach(CoursePackage::moveMapsToLists);
 		
 		teacherCourses = null;
 		studentCourses = null;
@@ -163,9 +159,7 @@ public class HierarchyModel {
 
 		public void moveMapsToLists() {
 			assignmentsList = new ArrayList<>(assignments.values());
-			for(AssignmentPackage assignment : assignmentsList) {
-				assignment.moveMapsToLists();
-			}
+			assignmentsList.forEach(AssignmentPackage::moveMapsToLists);
 			
 			assignments = null;
 		}
