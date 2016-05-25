@@ -67,7 +67,7 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
             .formLogin()
                 .loginPage("/login")
                 .permitAll()
-                .defaultSuccessUrl("/index", true)//always redirect to "/index"
+                .defaultSuccessUrl("/index", true)
                 .failureUrl("/login?error=loginerror")
                 .and()
             .logout()
