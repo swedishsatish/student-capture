@@ -64,9 +64,12 @@ public class FilesystemInterface {
 
 		try {
 			byte[] out = FileCopyUtils.copyToByteArray(video);
+			InputStreamResource isr = new InputStreamResource(new ByteArrayInputStream(out));
+
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.add("content-disposition", "inline; filename=AssignmentVideo");
-			responseEntity = new ResponseEntity(out, responseHeaders, HttpStatus.OK);
+
+			responseEntity = new ResponseEntity<>(isr, responseHeaders, HttpStatus.OK);
 		} catch (FileNotFoundException e) {
 			responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (IOException e) {
