@@ -1,6 +1,5 @@
 package studentcapture.assignment;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
