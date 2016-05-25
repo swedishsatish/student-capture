@@ -30,11 +30,6 @@ public class ViewController {
         return "login";
     }
     
-    @RequestMapping(value = "/loggedin")
-    public String loggedinView() {
-        return "loggedin";
-    }
-    
     @RequestMapping(value = "/changePassword")
     public String changePasswordView() {
         return "changePassword";
