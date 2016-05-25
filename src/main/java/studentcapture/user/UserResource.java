@@ -42,7 +42,7 @@ public class UserResource {
         if(user == null) {
             URI uri = new URI("/login?failed");            
             HttpHeaders httpHeaders = new HttpHeaders();
-            return new ResponseEntity(httpHeaders, HttpStatus.FOUND);
+            return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
         }
 
         return new ResponseEntity<>(user, HttpStatus.OK);
