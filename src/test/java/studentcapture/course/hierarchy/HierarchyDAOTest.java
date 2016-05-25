@@ -125,7 +125,6 @@ public class HierarchyDAOTest extends StudentCaptureApplicationTests {
 		Optional<HierarchyModel> hierarchy = 
 				hierarchyDAO.getCourseAssignmentHierarchy(1);
 		
-		assertTrue(hierarchy.isPresent());
 		assertEquals(hierarchy.get().getTeacherCourses().size(),2);
 		assertTrue(hierarchy.get().getTeacherCourses().get(2)!=null);
 		assertTrue(hierarchy.get().getTeacherCourses().get(3)!=null);
@@ -136,7 +135,6 @@ public class HierarchyDAOTest extends StudentCaptureApplicationTests {
 		Optional<HierarchyModel> hierarchy = 
 				hierarchyDAO.getCourseAssignmentHierarchy(1);
 		
-		assertTrue(hierarchy.isPresent());
 		assertEquals(hierarchy.get().getStudentCourses().size(),1);
 		assertTrue(hierarchy.get().getStudentCourses().get(1)!=null);
 	}
@@ -149,5 +147,33 @@ public class HierarchyDAOTest extends StudentCaptureApplicationTests {
 		assertEquals(hierarchy.get().getTeacherCourses().get(2).getAssignments().size(),2);
 		assertEquals(hierarchy.get().getTeacherCourses().get(2).getAssignments().get(3).getAssignment().getTitle(),"Test3");
 		assertEquals(hierarchy.get().getTeacherCourses().get(2).getAssignments().get(4).getAssignment().getTitle(),"Test4");
+	}
+	
+	@Test
+	public void testStudentAssignments() {
+		Optional<HierarchyModel> hierarchy = 
+				hierarchyDAO.getCourseAssignmentHierarchy(1);
+		
+		assertEquals(hierarchy.get().getStudentCourses().get(1).getAssignments().size(),1);
+		assertEquals(hierarchy.get().getStudentCourses().get(1).getAssignments().get(1).getAssignment().getTitle(),"Test1");
+	}
+	
+	@Test
+	public void testTeacherSubmissions() {
+		Optional<HierarchyModel> hierarchy = 
+				hierarchyDAO.getCourseAssignmentHierarchy(1);
+		
+		assertEquals(hierarchy.get().getTeacherCourses().get(2).getAssignments().get(3).getSubmissions().size(),2);
+		assertTrue(hierarchy.get().getTeacherCourses().get(2).getAssignments().get(3).getSubmissions().get(1)!=null);
+		assertTrue(hierarchy.get().getTeacherCourses().get(2).getAssignments().get(3).getSubmissions().get(2)!=null);
+	}
+	
+	@Test
+	public void testStudentSubmissions() {
+		Optional<HierarchyModel> hierarchy = 
+				hierarchyDAO.getCourseAssignmentHierarchy(1);
+		
+		assertEquals(hierarchy.get().getStudentCourses().get(1).getAssignments().get(1).getSubmissions().size(),1);
+		assertTrue(hierarchy.get().getStudentCourses().get(1).getAssignments().get(1).getSubmissions().get(1)!=null);
 	}
 }
