@@ -119,6 +119,16 @@ input[type=text]:disabled {
 	color:#FAFAFA;
 }
 
+.SCButtonDisabled {
+    text-align: center;
+    height:40px;
+    line-height:40px;
+    border-radius: 10px;
+    background-color: #424242;
+    border: 2px solid #FAFAFA;
+    color:#FAFAFA;
+}
+
 .SCButton:hover {
 	color:#FAFAFA;
 	background-color:#F59B46;
@@ -197,5 +207,10 @@ iframe {
     color:white;
     text-align:center;
     padding:5px;
+}
+
+img.recLight {
+	width:20px;
+	height:20px;
 }
 

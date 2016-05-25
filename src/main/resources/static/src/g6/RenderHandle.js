@@ -40,7 +40,7 @@ var video;
                                 <PassCheckBox />
                             </div>
                             <div id="dropDown">
-                                <DropDown />
+                                <DropDown scale={this.props.scale}/>
                             </div>
                         </div>
                     </div>

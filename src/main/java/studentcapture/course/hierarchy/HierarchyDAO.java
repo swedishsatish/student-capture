@@ -5,7 +5,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.course.CourseDAO;
@@ -26,7 +25,6 @@ import java.util.Optional;
 /**
  * Now with slightly less code smell.
  *
- * @author tfy12hsm
  *
  */
 public class HierarchyDAO {
@@ -49,7 +47,6 @@ public class HierarchyDAO {
      *
      * @param userId users identifier
      * @return hierarchy of course, assignment and submission data
-     * @author tfy12hsm
      */
     public Optional<HierarchyModel> getCourseAssignmentHierarchy(
             Integer userId) {
@@ -60,10 +57,8 @@ public class HierarchyDAO {
             addUserToHierarchy(hierarchy, userId);
             //hierarchy.moveMapsToLists();
         } catch (IncorrectResultSizeDataAccessException e) {
-            e.printStackTrace();
             return Optional.empty();
         } catch (DataAccessException e1) {
-            e1.printStackTrace();
             return Optional.empty();
         }
 
@@ -76,18 +71,17 @@ public class HierarchyDAO {
      *
      * @param hierarchy hierarchy added to
      * @param userId    student identifier
-     * @author tfy12hsm
      */
     private void addUserToHierarchy(HierarchyModel hierarchy,
                                     int userId) {
         String getUserStatement = "SELECT * FROM Users WHERE "
                 + "UserId=?";
-
-        Map<String, Object> map = jdbcTemplate.queryForMap(
-                getUserStatement, userId);
-        hierarchy.setUserId((int) map.get("UserId"));
-        hierarchy.setFirstName((String) map.get("FirstName"));
-        hierarchy.setLastName((String) map.get("LastName"));
+        
+        	Map<String, Object> map = jdbcTemplate.queryForMap(
+                    getUserStatement, userId);
+            hierarchy.setUserId((int) map.get("UserId"));
+            hierarchy.setFirstName((String) map.get("FirstName"));
+            hierarchy.setLastName((String) map.get("LastName"));
     }
 
     /**
@@ -96,7 +90,6 @@ public class HierarchyDAO {
      *
      * @param hierarchy hierarchy added to
      * @param userId    teacher identifier
-     * @author tfy12hsm
      */
     private void addTeacherHierarchy(HierarchyModel hierarchy, int
             userId) {
@@ -124,7 +117,6 @@ public class HierarchyDAO {
      *
      * @param hierarchy hierarchy added to
      * @param userId    student identifier
-     * @author tfy12hsm
      */
     private void addStudentHierarchy(HierarchyModel hierarchy,
                                      int userId) {
@@ -152,7 +144,7 @@ public class HierarchyDAO {
 
         try {
         	int assignmentId = (int) row.get("AssignmentId");
-	        Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
+	        Optional<AssignmentPackage> currentAssignment = addAssignmentToTeacherHierarchy(currentCourse,
 	                assignmentId);
 	        if(currentAssignment.isPresent()) {
 	
@@ -175,7 +167,7 @@ public class HierarchyDAO {
         
         try {
         	int assignmentId = (int) row.get("AssignmentId");
-        	Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
+        	Optional<AssignmentPackage> currentAssignment = addAssignmentToStudentHierarchy(currentCourse,
                     assignmentId);
             if(currentAssignment.isPresent()) {
                 Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
@@ -206,7 +198,34 @@ public class HierarchyDAO {
         }
     }
 
-    private Optional<AssignmentPackage> addAssignmentToHierarchy(
+    private Optional<AssignmentPackage> addAssignmentToTeacherHierarchy(
+            CoursePackage currentCourse, int assignmentId) {
+        AssignmentPackage currentAssignment;
+        try {
+            currentAssignment = currentCourse.getAssignments()
+                    .get(assignmentId);
+
+            if (currentAssignment == null) {
+                throw new NullPointerException();
+            }
+        } catch (NullPointerException e) {
+            currentAssignment = new AssignmentPackage();
+            Optional<AssignmentModel> assignment = assignmentDAO
+                    .getAssignment(assignmentId);
+            if(assignment.isPresent()) {
+            	currentAssignment.setAssignment(assignment.get());
+	            currentAssignment.setSubmissions(new HashMap<>());
+	            currentCourse.getAssignments()
+	                    .put(assignmentId, currentAssignment);
+            } else {
+            	return Optional.empty();
+            }
+	        
+        }
+        return Optional.of(currentAssignment);
+    }
+    
+    private Optional<AssignmentPackage> addAssignmentToStudentHierarchy(
             CoursePackage currentCourse, int assignmentId) {
         AssignmentPackage currentAssignment;
         try {

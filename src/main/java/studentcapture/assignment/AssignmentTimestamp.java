@@ -120,20 +120,21 @@ public class AssignmentTimestamp {
      * @param assignmentID specific assignments ID.
      */
     private void notifySubmission(boolean inTime, int assignmentTime, String studentID, String assignmentID){
-        Date now = new Date();
         String submissionText;
-        if(assignmentTime == -1){
+
+        if (assignmentTime == -1) {
             submissionText = getTimeStamp() +
                     ": Turned in assignment but information about length was lost.";
-        }else if(inTime){
+        } else if (inTime) {
             submissionText = getTimeStamp() +
                     ": Turned in assignment and was within the time limit. Assignment time: "
                     + formatMilliSeconds(assignmentTime);
-        }else{
+        } else {
             submissionText = getTimeStamp() +
                     ": Turned in assignment but took longer time than allowed. Assignment time: "
                     + formatMilliSeconds(assignmentTime);
         }
+
         //TODO: Send submissionText to submission.
         System.out.println(submissionText);
     }

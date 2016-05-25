@@ -20,7 +20,7 @@
  * watch HardwareTest.js for example of use.
  */
 
-
+var mediaStream;
 
 var Recorder = React.createClass({
     componentDidMount: function() {
@@ -42,7 +42,7 @@ var Recorder = React.createClass({
         var stopButton = document.getElementById(props.stopButtonID);
         var previewElement;
         var recordAudio, recordVideo;
-        var mediaStream;
+        //var mediaStream;
 
 
         if(startRecordButtonExists) {
@@ -108,10 +108,12 @@ var Recorder = React.createClass({
             }
 
             if(typeof props.calc !== "undefined") {
-                document.getElementById("test-rec-text").innerHTML = "&#x1f534;";
+                /*document.getElementById("test-rec-text").innerHTML = "&#x1f534;";*/
+                document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/notRec.png\'>";
             }
             else {
-                document.getElementById("rec-text").innerHTML = "&#x1f534;";
+                /*document.getElementById("rec-text").innerHTML = "&#x1f534;";*/
+                document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/notRec.png\'>";
             }
         }
 
@@ -215,10 +217,12 @@ var Recorder = React.createClass({
                 mediaStream.stop();
                 mediaStream = null;
                 if(typeof props.calc !== "undefined") {
-                    document.getElementById("test-rec-text").innerHTML = "&#11093;";
+                    /*document.getElementById("test-rec-text").innerHTML = "&#11093;";*/
+                    document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
                 }
                 else {
-                    document.getElementById("rec-text").innerHTML = "&#11093;";
+                    /*document.getElementById("rec-text").innerHTML = "&#11093;";*/
+                    document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
                 }
                 cameraStarted = false;
             });
@@ -239,8 +243,15 @@ var Recorder = React.createClass({
               sendTime = Date.now();
             }
 
-            //call xhr with full url, data and callback function
-            xhr(props.postURL, formData, props.playCallback);
+            //If a httpCallback exists use that for sending the data.
+            if(typeof props.httpCallback !== "undefined") {
+                props.httpCallback(formData);
+                console.log("callback");
+            } else {
+                //call xhr with full url, data and callback function
+                xhr(props.postURL, formData, props.playCallback);
+                console.log("defualt");
+            }
         }
 
         /* Function for sending XMLHttpRequests. */
@@ -295,10 +306,24 @@ var Recorder = React.createClass({
         /* Showing recording-light on load (not recording) */
 
         if(typeof props.calc !== "undefined") {
-            document.getElementById("test-rec-text").innerHTML = "&#11093;";
+            /*document.getElementById("test-rec-text").innerHTML = "&#11093;";*/
+            document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
         }
         else {
-            document.getElementById("rec-text").innerHTML = "&#11093;";
+            /*document.getElementById("rec-text").innerHTML = "&#11093;";*/
+            document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+        }
+    },
+    componentWillUnmount: function () {
+      console.log("no more rec");
+        if(mediaStream != null){
+            mediaStream.stop();
+            mediaStream = null;
+        }
+
+        if(typeof this.props.calc !== "undefined") {
+            $("#you-id")[0].pause();
+
         }
     },
     render: function() {

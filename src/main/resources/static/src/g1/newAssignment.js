@@ -37,6 +37,7 @@ var NewAssignment = React.createClass({
                 minDate: 0
             });
 
+        tinymce.remove();
         tinymce.init({
             selector: 'textarea.inputField',
             theme: 'modern',
@@ -66,11 +67,10 @@ var NewAssignment = React.createClass({
     },
     componentDidUpdate : function() {
         document.getElementById("newAssError").scrollIntoView();
-        tinymce.remove();
         this.update();
     },
     componentDidMount : function() {
-      this.update();
+        this.update();
     },
     getAssignmentData() {
         $.ajax({
@@ -87,18 +87,12 @@ var NewAssignment = React.createClass({
                 document.getElementById("publish").value = response.assignmentIntervall.publishedDate;
                 tinymce.get('description').setContent(response.description);
                 tinymce.get('recap').setContent(response.recap);
+                document.getElementById("scale").value = response.scale;
 
-                if (response.scale == "NUMBER_SCALE") {
-                    document.getElementById("scale").value = "NUMBER_SCALE";
-                } else if (response.scale == "U_G_VG_MVG") {
-                    document.getElementById("scale").value = "U_G_VG_MVG";
-                } else {
-                    document.getElementById("scale").value = "U_O_K_G";
-                }
             }.bind(this),
             error : function(e) {
                 console.log("ERROR: ", e);
-                this.setState({errorMessage : "Could not find assignment. Contact support or try again later"});
+                this.setState({errorMessage : "Could not load assignment. Contact support or try again later"});
             }.bind(this),
             done : function(e) {
                 console.log("DONE");
@@ -204,9 +198,12 @@ var NewAssignment = React.createClass({
                         <div className="DTContainer" id="grading">
                             <p className="DTText">grading:</p>
                             <select id="scale">
-                                <option value="NUMBER_SCALE">1,2,3,4,5</option>
-                                <option value="U_G_VG_MVG">U,G,VG,MVG</option>
+                                <option value="_1_2_3_4_5">1,2,3,4,5</option>
+                                <option value="IG_G_VG_MVG">IG,G,VG,MVG</option>
                                 <option value="U_O_K_G">U,O,K,G</option>
+                                <option value="F_E_D_C_B_A">F,E,D,C,B,A</option>
+                                <option value="U_G">U,G</option>
+                                <option value="U_3_4_5">U,3,4,5</option>
                             </select>
                         </div>
                     </div>
@@ -249,6 +246,41 @@ var NewAssignmentVideo = React.createClass({
         fd.append("courseID", this.props.courseID);
         return fd;
     },
+    sendVideo : function(formData) {
+        $.ajax({
+            url: "assignments/" + this.props.assignmentID + "/video",
+            type: 'POST',
+            success: function (res) {
+                console.log("Success");
+                ReactDOM.render(<NewAssignmentStatus message="Successfully created a assignment"/>, document.getElementById('courseContent'));
+            },
+            error: function (e) {
+                this.deleteSettings();
+                ReactDOM.render(<NewAssignmentStatus message="Failed to create assigment, contact support or try again later"/>,document.getElementById('courseContent'));
+            }.bind(this),
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    },
+    deleteSettings : function () {
+        $.ajax({
+            type : "DELETE",
+            url : "assignments/" + this.props.assignmentID + "?courseID=" + this.props.courseID,
+            timeout : 100000,
+            success : function(response) {
+                console.log("Removed settings");
+            },
+            error : function(e) {
+                console.log(e);
+                console.log("Failed to remove assignment. The assignment may have submissions or it doesn't exist");
+            },
+            done : function(e) {
+                console.log("DONE");
+            }
+        });
+    },
     render: function () {
         return (
             <div>
@@ -258,7 +290,7 @@ var NewAssignmentVideo = React.createClass({
                         <Recorder id="recorder" playCallback={this.playVideo}
                                   postURL={"assignments/" + this.props.assignmentID + "/video"} formDataBuilder={this.formDataBuilder}
                                   recButtonID="record-question" stopButtonID="stop-question" fileName="assignmentVideo.webm" replay="true"
-                                  postButtonID="post-video" />
+                                  postButtonID="post-video" httpCallback={this.sendVideo}/>
                         <button id="stop-question" className="recControls SCButton" disabled>Stop</button>
                         <button id="record-question" className="recControls SCButton">Record</button>
                     </div>
@@ -304,6 +336,16 @@ window.CourseContent = React.createClass({
                 </div>
             </div>
         );
+    }
+});
+
+var NewAssignmentStatus = React.createClass({
+    render : function() {
+        return (
+            <div>
+                <h1>{this.props.message}</h1>
+            </div>
+        )
     }
 });
 

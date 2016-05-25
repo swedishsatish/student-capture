@@ -105,7 +105,6 @@ public class ParticipantDAO {
      *
      * @return              List of tuples: CAS_ID - function
      * 
-     * @author tfy12hsm
      */
     public Optional<List<Participant>> getAllParticipantsFromCourse(String courseID){
     	List<Participant> participants = new ArrayList<>();
@@ -138,7 +137,6 @@ public class ParticipantDAO {
      * @param userID        unique identifier for a person
      * @return              List of tuples: CourseID - function
      * 
-     * @author tfy12hsm
      */
     public Optional<List<Participant>> getAllCoursesIDsForParticipant(String userID) {
     	List<Participant> participants = new ArrayList<>();
@@ -173,7 +171,6 @@ public class ParticipantDAO {
      * @param userID        unique identifier for a person
      * @return              true if removal worked, else false
      * 
-     * @author tfy12hsm
      */
     public boolean removeParticipant(String userID, String courseID){
     	boolean result;
@@ -197,7 +194,6 @@ public class ParticipantDAO {
      *
      * @param participant object containing participant information
      * @return true if insertion worked, else false
-     * @author Andreas Savva & Benjamin Björklund Squad 8
      */
     public boolean setParticipantFunction(Participant participant) {
         String editParticipantFunctionStatement = "UPDATE participant SET function=? WHERE userid=? AND courseid=?";
