@@ -110,7 +110,7 @@ public class SubmissionDAO {
 		}
 
 		/* If a person that is not a teacher tries to set a grade, return false */
-        checkIfTeacher(Integer.valueOf(submission.getCourseID()), submission.getGrade().getTeacherID());
+        checkIfTeacher(submission.getCourseID(), submission.getGrade().getTeacherID());
 
         String publishFeedback  = "UPDATE Submission SET publishFeedback = ? WHERE (AssignmentID = ?) AND (StudentID = ?);";
         int updatedRows = databaseConnection.update(publishFeedback, publish, submission.getAssignmentID(), submission.getStudentID());
@@ -128,7 +128,7 @@ public class SubmissionDAO {
 	public boolean setGrade(Submission submission, Integer userId) throws IllegalAccessException,DataIntegrityViolationException {
 		Grade grade = submission.getGrade();
         /* If a person that is not a teacher tries to set a grade, return false */
-        checkIfTeacher(Integer.valueOf(submission.getCourseID()), userId);
+        checkIfTeacher(submission.getCourseID(), userId);
 
         String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, PublishStudentSubmission = ?" +
 				" WHERE (AssignmentID = ?) AND (StudentID = ?);";
