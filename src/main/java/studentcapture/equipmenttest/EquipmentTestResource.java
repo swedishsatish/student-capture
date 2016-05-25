@@ -58,22 +58,12 @@ public class EquipmentTestResource {
     public TEST getTEST(){
         return new TEST();
     }
-    /**
-     * Receives a video as a MultipartFile and returns the video
-     * in a responseEntity containing a encoded string in base64.
-     * Used for hardware testing when a user whats to check if the
-     * client can send a video to the system and receive the same
-     * video.
-     *
-     * @param userID String containing the ID of the User(optional)
-     * @param video MultipartFile of the video to be send back.
-     * @return ResponseEntity containing encoded string in base64.
-     */
+   
     @CrossOrigin()
     @RequestMapping(value="", method = RequestMethod.POST,
             headers = "content-type=multipart/form-data", produces = "video/webm")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<InputStreamResource> equipmentTest(
+    public ResponseEntity equipmentTest(
             //map inparams to mathing params in TEST. Also take video name.
             @ModelAttribute("tst") TEST test,@RequestParam("videoName") String vName
     ) {
@@ -81,7 +71,7 @@ public class EquipmentTestResource {
 
 
 
-        ResponseEntity<InputStreamResource> responseEntity;
+        ResponseEntity<String> responseEntity;
         MultipartFile video = test.getVideo();
         String videoName = test.getVideoName();
         if (!video.isEmpty()) {
@@ -91,7 +81,7 @@ public class EquipmentTestResource {
                 HttpHeaders responseHeaders = new HttpHeaders();
                 responseHeaders.add("content-disposition", "inline; filename="+videoName);
 
-                responseEntity = new ResponseEntity(Base64.getEncoder().
+                responseEntity = new ResponseEntity<>(Base64.getEncoder().
                         encodeToString(videoArray), responseHeaders, HttpStatus.OK);
             } catch (Exception e) {
                 System.err.println("Failed to upload file.");
