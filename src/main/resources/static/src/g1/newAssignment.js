@@ -1,6 +1,10 @@
 var NewAssignment = React.createClass({
     getInitialState: function() {
-        return {courseID : 0, errorMessage : ""};
+        if (this.props.edit) {
+            return {courseID : 0, errorMessage : "", title : "EDIT ASSIGNMENT"};
+        } else {
+            return {courseID : 0, errorMessage : "", title : "NEW ASSIGNMENT"};
+        }
     },
     update: function () {
         $("#startDate").datetimepicker(
@@ -157,13 +161,13 @@ var NewAssignment = React.createClass({
         });
     },
     renderChild : function (assignmentID) {
-        ReactDOM.render(<NewAssignmentVideo courseID={this.props.courseID} assignmentID={assignmentID}/>, document.getElementById('courseContent'));
+        ReactDOM.render(<NewAssignmentVideo edit={this.props.edit} courseID={this.props.courseID} assignmentID={assignmentID}/>, document.getElementById('courseContent'));
     },
 
     render : function() {
       return (<div>
                 <div key={new Date().getTime()} className="newAssForm">
-                    <h3 className="contentTitle">NEW ASSIGNMENT</h3>
+                    <h3 className="contentTitle">{this.state.title}</h3>
                     <h3 className="errorMsg" id="newAssError">{this.state.errorMessage}</h3>
                     <input className="inputField" id="title" type="text" placeholder="title" />
 
@@ -235,7 +239,11 @@ function handleCancel() {
 
 var NewAssignmentVideo = React.createClass({
     getInitialState: function() {
-        return {courseID : 0, assignmentID : 0};
+        if (this.props.edit) {
+            return {courseID : 0, assignmentID : 0, title : "EDIT ASSIGNMENT VIDEO"};
+        } else {
+            return {courseID : 0, assignmentID : 0, title : "NEW ASSIGNMENT VIDEO"};
+        }
     },
     playVideo: function () {
         console.log("Video success");
@@ -252,11 +260,21 @@ var NewAssignmentVideo = React.createClass({
             type: 'POST',
             success: function (res) {
                 console.log("Success");
-                ReactDOM.render(<NewAssignmentStatus message="Successfully created a assignment"/>, document.getElementById('courseContent'));
-            },
+                if(this.props.edit) {
+                    ReactDOM.render(<NewAssignmentStatus message="Successfully edited a assignment"/>, document.getElementById('courseContent'));
+                } else {
+                    ReactDOM.render(<NewAssignmentStatus message="Successfully created a assignment"/>, document.getElementById('courseContent'));
+                }
+
+            }.bind(this),
             error: function (e) {
-                this.deleteSettings();
-                ReactDOM.render(<NewAssignmentStatus message="Failed to create assigment, contact support or try again later"/>,document.getElementById('courseContent'));
+                this.deleteSettings(); 
+                if (this.props.edit) {
+                    ReactDOM.render(<NewAssignmentStatus message="Failed to edit assignment, contact support or try again later"/>,document.getElementById('courseContent'));
+                } else {
+                    ReactDOM.render(<NewAssignmentStatus message="Failed to create assignment, contact support or try again later"/>,document.getElementById('courseContent'));
+                }
+
             }.bind(this),
             data: formData,
             cache: false,
@@ -285,7 +303,7 @@ var NewAssignmentVideo = React.createClass({
         return (
             <div>
                 <div className="newAssForm">
-                    <h3 className="contentTitle">NEW ASSIGNMENT VIDEO</h3>
+                    <h3 className="contentTitle">{this.state.title}</h3>
                     <div id="video-container" >
                         <Recorder id="recorder" playCallback={this.playVideo}
                                   postURL={"assignments/" + this.props.assignmentID + "/video"} formDataBuilder={this.formDataBuilder}
