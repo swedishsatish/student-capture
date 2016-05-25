@@ -8,10 +8,8 @@ import java.sql.SQLException;
 
 /**
  * Created by c13gan on 2016-05-18.
- */
-
-/**
- * A helpclass to retrieve the information from the database for a submission.
+ *
+ * A help class to retrieve the information from the database for a submission.
  */
 public class SubmissionRowMapper implements RowMapper<Submission> {
 
@@ -36,6 +34,16 @@ public class SubmissionRowMapper implements RowMapper<Submission> {
         submission.setStudentPublishConsent(resultSet.getBoolean("StudentPublishConsent"));
         submission.setStatus(resultSet.getString("Status"));
         submission.setSubmissionDate(resultSet.getTimestamp("SubmissionDate"));
+
+        // Depending on if the sql query joins submission with users or not, firstname and lastname might not exists
+        try {
+            submission.setFirstName(resultSet.getString("firstname"));
+            submission.setLastName(resultSet.getString("lastname"));
+        } catch (SQLException e) {
+            submission.setFirstName(null);
+            submission.setLastName(null);
+        }
+
         grade.setGrade(resultSet.getString("Grade"));
         if (resultSet.getInt("TeacherID") != 0) {
             grade.setTeacherID(resultSet.getInt("TeacherID"));
@@ -43,7 +51,6 @@ public class SubmissionRowMapper implements RowMapper<Submission> {
         grade.setFeedbackIsVisible(resultSet.getBoolean("PublishFeedback"));
         submission.setGrade(grade);
         submission.setPublishStudentSubmission(resultSet.getBoolean("PublishStudentSubmission"));
-
 
         return submission;
     }

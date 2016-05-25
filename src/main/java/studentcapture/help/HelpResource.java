@@ -13,7 +13,7 @@ import studentcapture.mail.MailClient;
 public class HelpResource {
 
 
-    private MailClient mailClient = new MailClient();
+    private final MailClient mailClient = new MailClient();
 
     /**
      * Get the FAQ.

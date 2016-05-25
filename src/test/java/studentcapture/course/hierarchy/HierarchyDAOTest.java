@@ -14,14 +14,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.assignment.AssignmentModel;
+
 import studentcapture.config.StudentCaptureApplicationTests;
-import studentcapture.course.CourseDAO;
-import studentcapture.course.CourseModel;
-import studentcapture.course.participant.Participant;
-import studentcapture.submission.Submission;
-import studentcapture.submission.SubmissionDAO;
-import studentcapture.user.User;
-import studentcapture.user.UserDAO;
 
 public class HierarchyDAOTest extends StudentCaptureApplicationTests {
 

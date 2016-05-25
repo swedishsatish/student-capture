@@ -71,10 +71,9 @@ public class CourseDAO {
     		String sql = "SELECT * from course WHERE Year=? "
         			+ "AND Term=? AND CourseName=?";
     		List<Map<String,Object>> sqlResponse = jdbcTemplate.queryForList(
-    				sql, new Object[]{
-        			course.getYear(),
-        			course.getTerm(),
-        			course.getCourseName()});
+    				sql, course.getYear(),
+					course.getTerm(),
+					course.getCourseName());
         	return new CourseModel(sqlResponse.get(sqlResponse.size() - 1));
     	} catch (IncorrectResultSizeDataAccessException e) {
 			return new CourseModel();

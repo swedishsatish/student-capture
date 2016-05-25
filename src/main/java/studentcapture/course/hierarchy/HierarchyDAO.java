@@ -5,7 +5,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import studentcapture.assignment.AssignmentDAO;
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.course.CourseDAO;
@@ -14,7 +13,6 @@ import studentcapture.course.hierarchy.HierarchyModel.AssignmentPackage;
 import studentcapture.course.hierarchy.HierarchyModel.CoursePackage;
 import studentcapture.submission.Submission;
 import studentcapture.submission.SubmissionDAO;
-import studentcapture.user.UserDAO;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -151,20 +149,17 @@ public class HierarchyDAO {
         Integer courseId = (Integer) row.get("CourseId");
         CoursePackage currentCourse = addCourseToHierarchy(hierarchy.getTeacherCourses(), courseId);
 
-        try {
-            int assignmentId = (int) row.get("AssignmentId");
-            Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
-                    assignmentId);
-            if(!currentAssignment.isPresent())
-            	throw new NullPointerException();
+        int assignmentId = (int) row.get("AssignmentId");
+        Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
+                assignmentId);
+        if(currentAssignment.isPresent()) {
+
             Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
             Integer studentId = (Integer) row.get("StudentId");
             if (submissionDate != null) {
                 addSubmissionToHierarchy(assignmentId, currentAssignment.get(),
                         studentId);
             }
-        } catch (NullPointerException e) {
-            return;
         }
     }
 
@@ -173,20 +168,16 @@ public class HierarchyDAO {
         Integer courseId = (Integer) row.get("CourseId");
         CoursePackage currentCourse = addCourseToHierarchy(hierarchy.getStudentCourses(), courseId);
 
-        try {
-            int assignmentId = (int) row.get("AssignmentId");
-            Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
-                    assignmentId);
-            if(!currentAssignment.isPresent())
-            	throw new NullPointerException();
+        int assignmentId = (int) row.get("AssignmentId");
+        Optional<AssignmentPackage> currentAssignment = addAssignmentToHierarchy(currentCourse,
+                assignmentId);
+        if(currentAssignment.isPresent()) {
             Timestamp submissionDate = (Timestamp) row.get("SubmissionDate");
             Integer studentId = (Integer) row.get("StudentId");
             if (submissionDate != null) {
                 addSubmissionToHierarchy(assignmentId, currentAssignment.get(),
                         studentId);
             }
-        } catch (NullPointerException e) {
-            return;
         }
     }
 

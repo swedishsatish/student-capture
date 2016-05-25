@@ -44,8 +44,30 @@ var Options = React.createClass({
     },
     editClick: function () {
         var assID = this.props.assignment.assignment.assignmentID;
-        var courseID = this.props.couseId;
+        var courseID = this.props.courseId;
         ReactDOM.render(<NewAssignment edit={true} courseID={courseID} assID={assID} uid={this.props.uid}/>,document.getElementById("courseContent"))
+    },
+    deleteClick: function () {
+        var assID = this.props.assignment.assignment.assignmentID;
+        var courseID = this.props.courseId;
+        var reqBody = {};
+
+        reqBody["courseID"] = courseID;
+        $.ajax({
+            type : "DELETE",
+            url : "assignments/" + assID + "?courseID=" + courseID,
+            timeout : 100000,
+            success : function(response) {
+                alert("Removed assignment");
+            },
+            error : function(e) {
+                console.log(e);
+                alert("Failed to remove assignment");
+            },
+            done : function(e) {
+                console.log("DONE");
+            }
+        });
     },
     render: function () {
         return (
@@ -58,6 +80,11 @@ var Options = React.createClass({
                 <li className="active course menuItem navigationText">
                     <div onClick={this.editClick}>
                         Edit Assignment
+                    </div>
+                </li>
+                <li className="active course menuItem navigationText">
+                    <div onClick={this.deleteClick}>
+                        Delete Assignment
                     </div>
                 </li>
             </ul>

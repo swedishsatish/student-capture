@@ -119,16 +119,23 @@ public class AssignmentDAO {
         FilesystemInterface.storeAssignmentVideo(courseID, assignmentID, video);
     }
 
-    public void updateAssignment(AssignmentModel assignmentModel) {
+    /**
+     * Update an assignment, both in the database and in the file system.
+     *
+     * @param assignmentModel The assignment to update to.
+     * @return True if assignment updated, false if failed to update assignment files in the file system.
+     * @throws NotFoundException If the corresponding assignment is the database does not exist.
+     */
+    public boolean updateAssignment(AssignmentModel assignmentModel) throws NotFoundException {
 
         String updateQuery = "UPDATE Assignment SET " +
                 "CourseID=?, " +
                 "Title=?, " +
-                "StartDate=to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
-                "EndDate=to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                "StartDate=to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'), " +
+                "EndDate=to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'), " +
                 "MinTime=?, " +
                 "MaxTime=?, " +
-                "Published=to_timestamp(?, 'YYYY-MM-DD HH:MI:SS'), " +
+                "Published=to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'), " +
                 "GradeScale=? " +
                 "WHERE AssignmentID=?;";
 
@@ -144,10 +151,7 @@ public class AssignmentDAO {
                 assignmentModel.getAssignmentID());
 
         if (rowAffected == 0) {
-            //TODO: HANDLE THIS
-            System.err.print("DB: Update assignment with id=" +
-                    assignmentModel.getAssignmentID() + " failed.");
-            return;
+            throw new NotFoundException("Assignment not found.");
         }
 
         // Overwrite description and recap
@@ -163,9 +167,11 @@ public class AssignmentDAO {
                     assignmentModel.getRecap(),
                     FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
-            //TODO: HANDLE THIS
-            System.err.println("Update assignment: IOEXCEPTION");
+            //TODO: Undo DB update...
+            return false;
         }
+
+        return true;
     }
 
     /**

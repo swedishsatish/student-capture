@@ -6,16 +6,21 @@ import org.springframework.web.multipart.MultipartFile;
  * Created by Beaverulf on 26/04/16.
  */
 public class VideoInfo {
-    private String courseID;
+    private final String courseID;
     private String assignmentID;
     private String studentID;
+
     private String title;
+
     private String startDate;
     private String endDate;
+
     private String minTime;
     private String maxTime;
+
     private String published;
-    private MultipartFile videoFile;
+
+    private final MultipartFile videoFile;
 
     public VideoInfo(String title, String startDate, String endDate, String minTime, String maxTime, String published, String courseID, MultipartFile video) {
         this.title = title;

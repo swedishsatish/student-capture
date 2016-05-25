@@ -2,7 +2,7 @@ var NewAssignment = React.createClass({
     getInitialState: function() {
         return {courseID : 0, errorMessage : ""};
     },
-    componentDidMount: function () {
+    update: function () {
         $("#startDate").datetimepicker(
             {
                 dateFormat: "yy-mm-dd",
@@ -64,8 +64,13 @@ var NewAssignment = React.createClass({
             this.getAssignmentData();
         }
     },
-    componentDidUpdate() {
-        window.scrollTo(0, 0);
+    componentDidUpdate : function() {
+        document.getElementById("newAssError").scrollIntoView();
+        tinymce.remove();
+        this.update();
+    },
+    componentDidMount : function() {
+      this.update();
     },
     getAssignmentData() {
         $.ajax({
@@ -124,6 +129,7 @@ var NewAssignment = React.createClass({
         reqBody["assignmentIntervall"] = assignmentIntervall;
         reqBody["recap"] = tinymce.get('recap').getContent();
         reqBody["scale"] = $("#scale").val();
+        
         $.ajax({
             type : type,
             contentType : "application/json",
@@ -132,13 +138,21 @@ var NewAssignment = React.createClass({
             timeout : 100000,
             success : function(response) {
                 console.log("SUCCESS: ", response);
-                this.renderChild(response);
+                if (this.props.edit) {
+                    this.renderChild(this.props.assID);
+                } else {
+                    this.renderChild(response);
+                }
             }.bind(this), 
             error : function(e) {
                 console.log("ERROR: ", e);
 
                 if (e.status == 500) {
-                    this.setState({errorMessage: "Failed to create assignment. Contact support or try again later."});
+                    if (this.props.edit) {
+                        this.setState({errorMessage : "Failed to edit assignment. Contact support or try again later."});
+                    } else {
+                        this.setState({errorMessage: "Failed to create assignment. Contact support or try again later."});
+                    }
                 } else {
                     this.setState({errorMessage: e.responseJSON.errorMessage});
                 }
@@ -153,10 +167,10 @@ var NewAssignment = React.createClass({
     },
 
     render : function() {
-      return <div>
-                <div className="newAssForm">
+      return (<div>
+                <div key={new Date().getTime()} className="newAssForm">
                     <h3 className="contentTitle">NEW ASSIGNMENT</h3>
-                    <h3 className="errorMsg">{this.state.errorMessage}</h3>
+                    <h3 className="errorMsg" id="newAssError">{this.state.errorMessage}</h3>
                     <input className="inputField" id="title" type="text" placeholder="title" />
 
                     <div id="dates">
@@ -212,7 +226,7 @@ var NewAssignment = React.createClass({
                         <div className="button primary-button SCButton" id="post-question" onClick = {this.submitAssignment}> NEXT </div>
                     </div>
             </div>
-        </div>
+        </div>)
     }
 });
 

@@ -5,7 +5,7 @@ package studentcapture.assignment;
  */
 public class AssignmentErrorInfo {
 
-    public String errorMessage;
+    public final String errorMessage;
 
     public AssignmentErrorInfo(String errorMessage) {
        this.errorMessage = errorMessage;

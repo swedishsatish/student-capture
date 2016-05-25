@@ -13,7 +13,7 @@ import java.security.cert.X509Certificate;
 @SpringBootApplication
 @ComponentScan(basePackages = {"studentcapture"})
 public class StudentCaptureApplication {
-	public static String ROOT = System.getProperty("user.dir");
+	public static final String ROOT = System.getProperty("user.dir");
 	public static void main(String[] args) {
 		enableSelfSignedHTTPSCertificate();
 		SpringApplication.run(StudentCaptureApplication.class, args);

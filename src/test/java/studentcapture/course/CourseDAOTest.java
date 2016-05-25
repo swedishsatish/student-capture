@@ -1,19 +1,17 @@
 package studentcapture.course;
 
-import static org.junit.Assert.*;
-
-import java.sql.Types;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
-
 import studentcapture.config.StudentCaptureApplicationTests;
-import studentcapture.user.User;
-import studentcapture.user.UserDAO;
+
+import java.sql.Types;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests. 

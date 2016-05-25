@@ -87,13 +87,13 @@ var HardwareTest = React.createClass({
                 </div>
                 <div className="row">
                     <div className="four columns u-pull-left">
-                        <button id="record-test" className="recControls">Record</button>
+                        <div id="record-test" className="recControls button primary-button SCButton">Record</div>
 
-                        <button id="stop-test" className="recControls" disabled>Stop</button>
+                        <div id="stop-test" className="recControls button primary-button SCButton" disabled>Stop</div>
                         
                     </div>
                     <div className="two columns u-pull-right">
-                        <button className="md-close">Close</button>
+                        <div className="md-close button primary-button SCButton">Close</div>
                     </div>
                 </div>
             </div>

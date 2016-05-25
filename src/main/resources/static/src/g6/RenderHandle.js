@@ -26,8 +26,6 @@ var video;
                 <div id="popUpDiv" style={{"display":"none"}}></div>
 
                 <video width="720" height="460" src={videoSource} preload="auto" controls/>
-
-                <TeacherRecordVideo />
                 <TeacherRecordVideo setVideo={this.setVideo}/>
 
                 <div id="feedBackContainer">

@@ -13,8 +13,8 @@ import java.util.Map;
  *
  */
 public class KeyUserTable {
-	private Map<Integer, Integer> keyUserRelations = new HashMap<>();
-	private Map<Integer, Integer> userKeyRelations = new HashMap<>();
+	private final Map<Integer, Integer> keyUserRelations = new HashMap<>();
+	private final Map<Integer, Integer> userKeyRelations = new HashMap<>();
 	
 	/**
 	 * Bind a key to a user.

@@ -30,8 +30,8 @@ import java.util.Optional;
 public class SessionHandler {
 	private static final long TIMEOUT_LENGTH = 60000; // In milliseconds
 	private static final String SESSION_KEY_ATTRIBUTE_STRING = "SessionKey";
-	private static KeyUserTable keyUserTable = new KeyUserTable();
-	private static Map<Integer, Session> sessions = new HashMap<>();
+	private static final KeyUserTable keyUserTable = new KeyUserTable();
+	private static final Map<Integer, Session> sessions = new HashMap<>();
 	private static volatile int nextSessionKey = 1;
 	
 	/**

@@ -7,18 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import studentcapture.config.StudentCaptureApplicationTests;
-import studentcapture.user.User;
 import studentcapture.user.UserDAO;
 
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * TODO: Refactor UserDAO spy.
@@ -36,7 +32,6 @@ public class UserSettingsResourceTest extends StudentCaptureApplicationTests {
     private String requestMappingInvalidID;
     /** original test string, as json "{"language":"english","email":"test@email.test","mailUpdate":true,"textSize":12}" */
     private static String json_test_string = "{\"language\":\"english\",\"email\":\"test@email.test\",\"mailUpdate\":true,\"textSize\":12}";
-    private Settings settings;
 
     @Before
     public void BeforeClass() {
@@ -46,16 +41,6 @@ public class UserSettingsResourceTest extends StudentCaptureApplicationTests {
         /* /users/{id}/settings resource mapping. */
         requestMapping = getNewRequestMapping(String.valueOf(1));
         requestMappingInvalidID = getNewRequestMapping(String.valueOf(0));
-
-        /*
-         * Create a settings object and fill with the same test data
-         * as json_test_string
-         */
-        settings = new Settings();
-        settings.setEmail("test@email.test");
-        settings.setLanguage("english");
-        settings.setMailUpdate(Boolean.TRUE);
-        settings.setTextSize(12);
     }
 
     @Before

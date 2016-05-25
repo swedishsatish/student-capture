@@ -66,7 +66,7 @@ public class AssignmentModel {
 				throw new NullPointerException();
 			}
 		} catch (Exception e) {
-			scale = GradeScale.NUMBER_SCALE;
+			scale = GradeScale.U_O_K_G;
 		}
 	}
 
@@ -119,7 +119,7 @@ public class AssignmentModel {
     }
 
     public String getScale() {
-        return scale.name();
+        return scale.toString();
     }
 
     public void setScale(String scale) {
