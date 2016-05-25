@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import studentcapture.course.hierarchy.HierarchyDAO;
 import studentcapture.course.hierarchy.HierarchyModel;
 import studentcapture.course.participant.Participant;
@@ -13,7 +12,6 @@ import studentcapture.course.participant.ParticipantDAO;
 import studentcapture.login.LoginDAO;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.Optional;
 
 /**
