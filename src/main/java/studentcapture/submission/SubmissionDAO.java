@@ -239,7 +239,7 @@ public class SubmissionDAO {
      * @param userID		The studentId that the submission is connected to.
      * @return				The submission with the teacher name.
      */
-    Optional<Submission> getSubmission(int assignmentID, int userID) {
+    public Optional<Submission> getSubmission(int assignmentID, int userID) {
     	Submission result;
         String getStudentSubmission =
 				"SELECT * FROM Submission WHERE AssignmentId=? AND StudentId=?";
