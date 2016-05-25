@@ -34,26 +34,25 @@ class SubmissionResource {
     @Autowired
     private SubmissionDAO DAO;
 
-
     /**
-     * Gets a student's submission on a particular assignment.
+     * Acquires a student's submission on a particular assignment.
      * @param assignmentID The assignment to which a student has submitted an answer.
      * @param studentID The student's ID that determines which of the submissions should be returned.
      * @return A submission object contained in a HTTP ResponseEntity.
      */
     @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
-                                                            @PathVariable("studentID") int studentID){
+                                                            @PathVariable("studentID") int studentID) {
         Submission body = DAO.getSubmission(assignmentID, studentID).get();
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     /**
-     * Gets a video from the file system, can get either the feedback video or the submission video.
+     * Acquires a video from the file system, can get either the feedback video or the submission video.
      * @param assignmentID the assignment of which the feedback/submission video belongs to
      * @param studentID the student which the feedback/submission video belongs to
      * @param fileName the name of the file requested, can be either feedback or submission
-     * @return the video file
+     * @return The video file if everything went fine, otherwise a HTTP Status error message.
      */
     @RequestMapping(value = "{studentID}/videos/{fileName}", method = RequestMethod.GET, produces = "video/webm")
     public ResponseEntity<InputStreamResource> getFeedbackVideo(@PathVariable("assignmentID") int assignmentID,
@@ -64,13 +63,12 @@ class SubmissionResource {
         }else{
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
     /**
-     * Gets all submissions for an assignment
-     * @param assignmentID
-     * @return
+     * Acquires all submissions for an assignment
+     * @param assignmentID The assignmentID for the submitted submissions.
+     * @return A list of submissions for the assignment
      */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") int assignmentID){
@@ -161,12 +159,12 @@ class SubmissionResource {
 
 
     /**
-     * Stores a submission
-     * @param assignmentID
-     * @param studentID
-     * @param studentVideo
-     * @param updatedSubmission
-     * @return
+     * Stores a submission.
+     * @param assignmentID The assignmentID for the stored submission.
+     * @param studentID The studentID for the stored submission.
+     * @param studentVideo The student's video for the stored submission.
+     * @param updatedSubmission The updated submission to be stored.
+     * @return HTTP status that's either OK or some error code together with an appropriate error message.
      */
     @RequestMapping(value = "{studentID}", method = RequestMethod.POST)
     public ResponseEntity<String> storeSubmission(@PathVariable("assignmentID") int assignmentID,
@@ -201,7 +199,7 @@ class SubmissionResource {
     }
 
     /**
-     * This will save the teachers feedback-video (Cause of the MultipartFile it must be
+     * This will save the teacher's feedback-video (Because of the MultipartFile it must be
      * POST, it should be PATCH) received as a part of the POST.
      * @param assignmentID          The assignmentID of the video
      * @param studentID             The studentID of submission that will recive feedback-Video.

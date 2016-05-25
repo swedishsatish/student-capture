@@ -219,7 +219,6 @@ public class SubmissionDAO {
 	 */
     public List<Submission> getAllSubmissions(int assignmentID) {
     	List<Submission> submissions;
-
 		String getAllSubmissionsStatement = "SELECT * FROM Submission, Users WHERE AssignmentId = ? AND studentid = userid";
 		try {
 			submissions = databaseConnection.query(getAllSubmissionsStatement, new SubmissionRowMapper(), assignmentID);
