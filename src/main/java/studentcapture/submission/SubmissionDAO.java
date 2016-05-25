@@ -335,6 +335,12 @@ public class SubmissionDAO {
 		}
 	}
 
+    /**
+     * Checks if the user is a teacher.
+     * @param courseID The ID of the course.
+     * @param userId The user's ID.
+     * @return True if the user is a teacher, otherwise throw exception with appropriate message.
+     */
     private boolean checkIfTeacher(Integer courseID, Integer userId){
         String checkIfTeacherExist = "SELECT COUNT(*) " +
                 "FROM participant " +
@@ -342,7 +348,6 @@ public class SubmissionDAO {
                 " (UserID = ?) " +
                 "AND (CourseID = ?) " +
                 "AND ( upper(Function) = upper('Teacher') )";
-
         System.err.println(userId);
         int rows = databaseConnection.queryForInt(checkIfTeacherExist,
                 userId,
