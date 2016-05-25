@@ -107,10 +107,8 @@ public class CourseDAO {
 	/**
      * Attempts to retrieve all data regarding a course from the database.
      *
-     * @param courseID	target courses database identification
+     * @param courseId	target courses database identification
      * @return			sought after course
-     * 
-     * @author tfy12hsm
      */
 	public CourseModel getCourse(Integer courseId) {
 		try {
@@ -197,12 +195,12 @@ public class CourseDAO {
             if(rowsAffected == 1) {
             	return course;
             }
-        } catch (IncorrectResultSizeDataAccessException e){
         } catch (DataAccessException e1){
         	CourseModel errorCourse = new CourseModel();
         	errorCourse.setErrorCode(HttpStatus.CONFLICT.value());
         	return errorCourse;
         }
+
         CourseModel errorCourse = new CourseModel();
     	errorCourse.setErrorCode(HttpStatus.NOT_FOUND.value());
     	return errorCourse;
