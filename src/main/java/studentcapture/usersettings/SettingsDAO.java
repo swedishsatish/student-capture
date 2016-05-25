@@ -58,4 +58,27 @@ public class SettingsDAO {
         }
         return true;
     }
+
+    /**
+     * Set default settings for a user.
+     * @param userID Identifier of the user to modify
+     * @return True if everything went well, otherwise false
+     */
+    public boolean setDefaultConfig(int userID) {
+        return setUserConfig(userID, defaultSettings());
+    }
+
+    /**
+     * The default user settings.
+     * Should be used when initializing user settings (POST),
+     * and when deleting user settings (DELETE).
+     * @return The default settings object.
+     */
+    private Settings defaultSettings() {
+        Settings settings = new Settings();
+        settings.setLanguage("English");
+        settings.setMailUpdate(true);
+        settings.setTextSize(12);
+        return settings;
+    }
 }

@@ -26,6 +26,7 @@ public class HierarchyDAOTest extends StudentCaptureApplicationTests {
 	
 	@Before
 	public void setUp() throws Exception {
+		tearDown();
 		jdbcMock.update("INSERT INTO users (username, firstname, lastname, "
 				+ "email, pswd) VALUES ('testUser', 'testFName', 'testLName',"
 				+ " 'testEmail@example.com', 'testPassword')");
