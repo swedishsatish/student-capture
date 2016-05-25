@@ -78,7 +78,8 @@ class SubmissionResource {
     }
 
     /**
-     * Edits a submission, is used to set the grade when the teacher marks the assignment.
+     * Edits a submission, is used to set the grade when the teacher sets feedback of
+     * the assignment.
      * @param assignmentID  The AssignmentID
      * @param studentID     The studentID
      * @param submission    The Submission
@@ -89,12 +90,13 @@ class SubmissionResource {
                                      @PathVariable("assignmentID") int assignmentID,
                                      @PathVariable("studentID") int studentID,
                                      @RequestBody Submission submission) throws IllegalAccessException {
-        //TODO: VIDEO-POST
+
         HashMap<String, String> response = new HashMap<>();
         HttpStatus httpStatus = OK;
         boolean publishFeedback = true;
         int userId = Integer.parseInt(session.getAttribute("userid").toString());
 
+        /* Check so userID is existing */
         if (userId < 0) {
             response.put("Session", "ERROR: not logged in.");
             httpStatus = INTERNAL_SERVER_ERROR;
@@ -106,6 +108,7 @@ class SubmissionResource {
         submission.setAssignmentID(assignmentID);
         submission.setStudentID(studentID);
 
+        /* Try save some of the data for the feedback */
         try {
             if (DAO.patchSubmission(submission)) {
                 response.put("Save data", "Success");
@@ -118,7 +121,7 @@ class SubmissionResource {
             return new ResponseEntity<>(response, httpStatus);
         }
 
-
+        /* Save grade */
         try {
             DAO.setGrade(submission, userId);
             response.put("Save grade", "Success");
@@ -128,15 +131,8 @@ class SubmissionResource {
             return new ResponseEntity<>(response, httpStatus);
         }
 
-        /*if (DAO.setFeedbackVideo(submission, feedbackVideo)) {
-            response.put("Save video", "Success");
-        } else {
-            response.put("Save video", "ERROR: Couldn't save the feedbackVideo to filesystem.");
-            httpStatus = INTERNAL_SERVER_ERROR;
-            return new ResponseEntity(response, httpStatus);
-        }
-        */
-        //TODO: Will be POST-FORM for feedbackTeacherVideo.
+        /* Publish the feedback */
+        /* TODO: This is not optional at current state. */
         try {
             DAO.publishFeedback(submission, publishFeedback);
             response.put("Publish feedback", "Success");
@@ -146,7 +142,7 @@ class SubmissionResource {
             return new ResponseEntity<>(response, httpStatus);
         }
 
-
+        /* Set LTI grade if LTI-link exists */
         try {
             LTICommunicator.setGrade(submission);
             response.put("LTI", "Success");
@@ -203,20 +199,39 @@ class SubmissionResource {
 
         return new ResponseEntity<>(responseText, returnStatus);
     }
-/*
-    @RequestMapping(value = "{studentID}", method = RequestMethod.POST)
-    public HttpStatus storeFeedback(@PathVariable("assignmentID") int assignmentID,
-                                      @PathVariable("studentID") int studentID,
-                                      @RequestPart(value = "feedbackVideo") MultipartFile studentVideo){
 
-        return null;
+    /**
+     * This will save the teachers feedback-video (Cause of the MultipartFile it must be
+     * POST, it should be PATCH) received as a part of the POST.
+     * @param assignmentID          The assignmentID of the video
+     * @param studentID             The studentID of submission that will recive feedback-Video.
+     * @param courseID              The course of the submission-feedback-video.
+     * @param teacherFeedbackVideo  The multipartVideo.
+     * @return                      Will only return HTTPStatus if saving went successful or not.
+     */
+    @RequestMapping(value = "{studentID}/feedbackvideo/", method = RequestMethod.POST)
+    public HttpStatus storeFeedback(@PathVariable("assignmentID") int assignmentID,
+                                    @PathVariable("studentID") int studentID,
+                                    @RequestPart(value = "courseID") String courseID,
+                                    @RequestPart(value = "feedbackVideo") MultipartFile teacherFeedbackVideo){
+
+        Submission submission = new Submission();
+        HttpStatus httpStatus = OK;
+
+        submission.setStudentID(studentID);
+        submission.setCourseID(courseID);
+        submission.setAssignmentID(assignmentID);
+
+        if (!DAO.setFeedbackVideo(submission, teacherFeedbackVideo)) {
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return httpStatus;
     }
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.DELETE)
     public HttpStatus deleteSubmission(@PathVariable("assignmentID") String assignment,
-                                       @PathVariable("studentID") String studentID){
+                                       @PathVariable("studentID") String studentID) {
         //Check permission
         return HttpStatus.NOT_IMPLEMENTED;
     }
-*/
 }
