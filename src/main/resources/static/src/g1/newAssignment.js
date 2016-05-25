@@ -147,7 +147,11 @@ var NewAssignment = React.createClass({
                 console.log("ERROR: ", e);
 
                 if (e.status == 500) {
-                    this.setState({errorMessage: "Failed to create assignment. Contact support or try again later."});
+                    if (this.props.edit) {
+                        this.setState({errorMessage : "Failed to edit assignment. Contact support or try again later."});
+                    } else {
+                        this.setState({errorMessage: "Failed to create assignment. Contact support or try again later."});
+                    }
                 } else {
                     this.setState({errorMessage: e.responseJSON.errorMessage});
                 }
