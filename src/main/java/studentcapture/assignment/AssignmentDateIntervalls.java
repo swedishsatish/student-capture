@@ -87,24 +87,6 @@ public class AssignmentDateIntervalls {
                 throw new IllegalArgumentException("Start date can't be after end date");
             }
         }
-
-        if (startDateIsSet) {
-            LocalDateTime currentDate = LocalDateTime.now();
-            if(isDatesEqual(startDate, currentDate)) {
-                throw new IllegalArgumentException("Start date can't be todays date");
-            }
-        }
-    }
-
-    private boolean isDatesEqual(LocalDateTime first, LocalDateTime second) {
-        int firstDay = first.getDayOfMonth();
-        int firstMonth = first.getMonthValue();
-        int firstYear = first.getYear();
-        int secondDay = second.getDayOfMonth();
-        int secondMonth = second.getMonthValue();
-        int secondYear = second.getYear();
-
-        return ((firstDay == secondDay) && (firstMonth == secondMonth) && (firstYear == secondYear));
     }
 
     @Override

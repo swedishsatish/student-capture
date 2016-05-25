@@ -34,6 +34,16 @@ public class SubmissionRowMapper implements RowMapper<Submission> {
         submission.setStudentPublishConsent(resultSet.getBoolean("StudentPublishConsent"));
         submission.setStatus(resultSet.getString("Status"));
         submission.setSubmissionDate(resultSet.getTimestamp("SubmissionDate"));
+
+        // Depending on if the sql query joins submission with users or not, firstname and lastname might not exists
+        try {
+            submission.setFirstName(resultSet.getString("firstname"));
+            submission.setLastName(resultSet.getString("lastname"));
+        } catch (SQLException e) {
+            submission.setFirstName(null);
+            submission.setLastName(null);
+        }
+
         grade.setGrade(resultSet.getString("Grade"));
         if (resultSet.getInt("TeacherID") != 0) {
             grade.setTeacherID(resultSet.getInt("TeacherID"));
