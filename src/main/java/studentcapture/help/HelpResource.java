@@ -59,11 +59,11 @@ public class HelpResource {
             @RequestBody SCContactForm scContactForm) {
 
         String to;
-        String from = scContactForm.getSenderEmail();
-        String subject = "Contact Form";
+        String from = "nobody@cs.umu.se";
+        String subject = "Student Capture Contact Form";
         String message;
 
-        /*
+
         // See method doc.
         to = administratorDAO.getSupportEmail();
         if (to == null) {
@@ -71,10 +71,11 @@ public class HelpResource {
                     "No administrator mail found",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        */
 
-        /* Temp email. */
+
+        /* Temp email.
         to = "c13bbd@cs.umu.se";
+        */
 
         message = formatMessage(scContactForm);
         mailClient.send(to, from, subject, message);
@@ -89,6 +90,7 @@ public class HelpResource {
      */
     private String formatMessage(SCContactForm scContactForm) {
         return "Student Capture Contact Form:\n"
+                + "Response email: " + scContactForm.getSenderEmail() + "\n"
                 + "OS: " + scContactForm.getSenderOperatingSystem() + "\n"
                 + "Browser: " + scContactForm.getSenderBrowser() + "\n"
                 + "---\n"

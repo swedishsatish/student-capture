@@ -105,12 +105,11 @@ public class User {
         if (!(other instanceof User)) return false;
 
         User user = (User) other;
-        return (user.getUserName() == this.getUserName())
-                && (user.getFirstName() == this.firstName)
-                && (user.getLastName() == this.lastName)
-                && (user.getEmail() == this.email)
-                && (user.getPswd()  == this.pswd)
-                && (user.getToken() == this.token);
+        return user.getUserName().equals(this.getUserName())
+                && user.getFirstName().equals(this.firstName)
+                && user.getLastName().equals(this.lastName)
+                && user.getEmail().equals(this.email)
+                && user.getPswd().equals(this.pswd);
     }
     
     /**
