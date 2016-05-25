@@ -49,13 +49,6 @@ public class AssignmentIntervallTest {
         assignmentIntervalls.setEndDate(endDate);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowWhenStartDateIsTodaysDate() {
-        String startDate = LocalDateTime.now().format(formatter);
-
-        assignmentIntervalls.setStartDate(startDate);
-    }
-
     private String currentDatePlusDaysGenerator(int days){
         return LocalDateTime.now().plusDays(days).format(formatter);
     }
