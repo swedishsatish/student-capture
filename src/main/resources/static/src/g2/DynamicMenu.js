@@ -62,7 +62,7 @@ var Options = React.createClass({
             },
             error : function(e) {
                 console.log(e);
-                alert("Failed to remove assignment");
+                alert("Failed to remove assignment. The assignment may have submissions or it doesn't exist");
             },
             done : function(e) {
                 console.log("DONE");
