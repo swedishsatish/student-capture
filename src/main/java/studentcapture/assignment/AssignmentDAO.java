@@ -115,7 +115,7 @@ public class AssignmentDAO {
         return insertQueryString;
     }
 
-    public void addAssignmentVideo(MultipartFile video, String courseID, String assignmentID) {
+    public void addAssignmentVideo(MultipartFile video, Integer courseID, String assignmentID) {
         FilesystemInterface.storeAssignmentVideo(courseID, assignmentID, video);
     }
 
