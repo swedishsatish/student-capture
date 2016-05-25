@@ -89,7 +89,7 @@ class SubmissionResource {
     public ResponseEntity<HashMap<String, String>> markSubmission(HttpSession session,
                                      @PathVariable("assignmentID") int assignmentID,
                                      @PathVariable("studentID") int studentID,
-                                     @RequestBody Submission submission) throws IllegalAccessException {
+                                     @RequestBody Submission submission) {
 
         HashMap<String, String> response = new HashMap<>();
         HttpStatus httpStatus = OK;
