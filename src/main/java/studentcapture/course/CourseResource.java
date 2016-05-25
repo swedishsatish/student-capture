@@ -9,7 +9,7 @@ import studentcapture.course.hierarchy.HierarchyDAO;
 import studentcapture.course.hierarchy.HierarchyModel;
 import studentcapture.course.participant.Participant;
 import studentcapture.course.participant.ParticipantDAO;
-import studentcapture.login.LoginDAO;
+import studentcapture.user.User;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
@@ -60,7 +60,7 @@ public class CourseResource {
     	   	if(!result2) 
     	   		throw new ResourceNotFoundException();
     	} else {
-    		Participant p = new Participant(LoginDAO.getUserIdFromSession(session),result1.getCourseId(),"teacher");
+    		Participant p = new Participant(User.getSessionUserId(session),result1.getCourseId(),"teacher");
     	   	Boolean result2 = participantDAO.addParticipant(p);
     	   	if(!result2) 
     	   		throw new ResourceNotFoundException();
@@ -78,7 +78,7 @@ public class CourseResource {
     		HttpSession session,
     		@RequestBody CourseModel course) {
     	if(!participantDAO.isTeacherOnCourse(
-    			LoginDAO.getUserIdFromSession(session),
+    			User.getSessionUserId(session),
     			course.getCourseId()))
     		throw new ResourceUnauthorizedException();
     	CourseModel result = courseDAO.updateCourse(course);
@@ -100,7 +100,7 @@ public class CourseResource {
     		HttpSession session,
     		@RequestBody CourseModel course) {
     	if(!participantDAO.isTeacherOnCourse(
-    			LoginDAO.getUserIdFromSession(session),
+    			User.getSessionUserId(session),
     			course.getCourseId()))
     		throw new ResourceUnauthorizedException();
     	CourseModel result = courseDAO.removeCourse(course);
@@ -125,7 +125,7 @@ public class CourseResource {
     		HttpSession session,
     		@PathVariable(value = "CourseId") Integer courseID) {
     	if(!participantDAO.isParticipantOnCourse(
-    			LoginDAO.getUserIdFromSession(session),
+    			User.getSessionUserId(session),
     			courseID))
     		throw new ResourceUnauthorizedException();
     	CourseModel result = courseDAO.getCourse(courseID);
@@ -145,7 +145,7 @@ public class CourseResource {
     		@PathVariable(value = "CourseId") Integer courseID,
     		@RequestBody CourseModel course) {
     	if(!participantDAO.isTeacherOnCourse(
-    			LoginDAO.getUserIdFromSession(session),
+    			User.getSessionUserId(session),
     			courseID))
     		throw new ResourceUnauthorizedException();
     	course.setCourseId(courseID);
@@ -173,7 +173,7 @@ public class CourseResource {
     		HttpSession session,
     		@PathVariable(value = "CourseId") Integer courseID) {
     	if(!participantDAO.isTeacherOnCourse(
-    			LoginDAO.getUserIdFromSession(session),
+    			User.getSessionUserId(session),
     			courseID))
     		throw new ResourceUnauthorizedException();
     	CourseModel result = courseDAO.removeCourse(courseID);
@@ -196,7 +196,7 @@ public class CourseResource {
     @ResponseBody
     public HierarchyModel getHierarchy(HttpSession session) {
     	Optional<HierarchyModel> hierarchy = 
-    			hierarchyDAO.getCourseAssignmentHierarchy(LoginDAO.getUserIdFromSession(session));
+    			hierarchyDAO.getCourseAssignmentHierarchy(User.getSessionUserId(session));
     	if(hierarchy.isPresent()) 
     		return hierarchy.get();
     	throw new ResourceNotFoundException();

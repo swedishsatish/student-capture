@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import studentcapture.course.CourseModel;
 import studentcapture.course.participant.ParticipantDAO;
 import studentcapture.login.LoginDAO;
+import studentcapture.user.User;
 
 import javax.servlet.http.HttpSession;
 
@@ -46,7 +47,7 @@ public class CourseInviteResource {
     		HttpSession session,
     		@RequestBody InviteModel invite) {
 		if(!participantDAO.isTeacherOnCourse(
-				LoginDAO.getUserIdFromSession(session),
+				User.getSessionUserId(session),
 				invite.getCourse().getCourseId()))
 			throw new ResourceUnauthorizedException();
 		InviteModel result = courseInviteDAO.addCourseInvite(invite.getCourse());
@@ -67,7 +68,7 @@ public class CourseInviteResource {
     		HttpSession session,
     		@PathVariable(value = "Hex") String hex) {
     	InviteModel result = courseInviteDAO.joinCourseThroughInvite(
-    			LoginDAO.getUserIdFromSession(session), hex);
+    			User.getSessionUserId(session), hex);
     	if(result.getCourse().getCourseId()==null) {
 //    		if(result.getCourse().getErrorCode()==HttpStatus.CONFLICT.value()) {
 //    			throw new ResourceConflictException();
@@ -88,7 +89,7 @@ public class CourseInviteResource {
     		HttpSession session,
     		@PathVariable(value = "CourseId") Integer courseId) {
 		if(!participantDAO.isTeacherOnCourse(
-				LoginDAO.getUserIdFromSession(session), courseId))
+				User.getSessionUserId(session), courseId))
 			throw new ResourceUnauthorizedException();
 		CourseModel course = new CourseModel();
 		course.setCourseId(courseId);

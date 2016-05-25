@@ -20,8 +20,7 @@ public class Submission {
     private Timestamp submissionDate;
     private Grade grade;
     private Boolean publishStudentSubmission;
-    private String courseID;
-    private String courseCode;
+    private Integer courseID;
     private String feedback;
     private Status subStatus;
     private String firstName;
@@ -114,7 +113,6 @@ public class Submission {
                 ", grade=" + grade +
                 ", publishStudentSubmission=" + publishStudentSubmission +
                 ", courseID='" + courseID + '\'' +
-                ", courseCode='" + courseCode + '\'' +
                 ", feedback='" + feedback + '\'' +
                 ", subStatus=" + subStatus +
                 ", firstName='" + firstName + '\'' +
@@ -137,11 +135,11 @@ public class Submission {
         }
     }
 
-    public String getCourseID() {
+    public Integer getCourseID() {
         return courseID;
     }
 
-    public void setCourseID(String courseID) {
+    public void setCourseID(Integer courseID) {
         this.courseID = courseID;
     }
 
@@ -205,14 +203,6 @@ public class Submission {
         this.studentPublishConsent = studentPublishConsent;
     }
 
-    public String getCourseCode() {
-        return courseCode;
-    }
-
-    public void setCourseCode(String courseCode) {
-        this.courseCode = courseCode;
-    }
-
     public String getFeedback() {
         return feedback;
     }
@@ -267,8 +257,6 @@ public class Submission {
         if (publishStudentSubmission != null ? !publishStudentSubmission.equals(that.publishStudentSubmission) : that.publishStudentSubmission != null)
             return false;
         if (courseID != null ? !courseID.equals(that.courseID) : that.courseID != null)
-            return false;
-        if (courseCode != null ? !courseCode.equals(that.courseCode) : that.courseCode != null)
             return false;
         if (feedback != null ? !feedback.equals(that.feedback) : that.feedback != null)
             return false;
