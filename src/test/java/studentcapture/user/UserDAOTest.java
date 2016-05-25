@@ -82,7 +82,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     }
 
 
-    @Test
+  /*  @Test
     public void testAddUser() {
 
         User user = new User("userPelle","Pelle","Jönsson","pelle@gmail.com",
@@ -94,12 +94,21 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         assertEquals(ErrorFlags.NOERROR,res);
         assertEquals(user,userRes);
     }
-
+*/
     @Test
     public void testAddingUserTwice() {
         ErrorFlags errorFlags = userDAO.addUser(userSetup);
 
         assertEquals(ErrorFlags.USEREXISTS,errorFlags);
+    }
+
+    @Test
+    public void testAddingNullUser() {
+        User user = new User("userPelle","Pelle","Jönsson",null,
+                             "mypassword123");
+        ErrorFlags errorFlag = userDAO.addUser(user);
+
+        assertEquals(errorFlag.USERCONTAINNULL, errorFlag);
     }
 
     @Test

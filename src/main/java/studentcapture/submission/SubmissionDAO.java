@@ -3,6 +3,7 @@ package studentcapture.submission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class SubmissionDAO {
+public class 	SubmissionDAO {
 
 	// This template should be used to send queries to the database
 	@Autowired
@@ -29,7 +30,7 @@ public class SubmissionDAO {
 	 * Add a new submission for an assignment
 	 *
 	 * @param submission the submission to be added
-	 * @param studentConsent
+	 * @param studentConsent if a student want their submission to be viewed by others
      * @return True if everything went well, otherwise false.
      */
 	public boolean addSubmission(Submission submission, Boolean studentConsent) {
@@ -38,7 +39,6 @@ public class SubmissionDAO {
 		java.util.Date date = new java.util.Date(System.currentTimeMillis());
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 		timestamp.setNanos(0);
-
 		int rowsAffected;
 		try {
 			rowsAffected = databaseConnection.update(sql, submission.getAssignmentID(),
@@ -50,9 +50,8 @@ public class SubmissionDAO {
 			return false;
 		}
 		if(submission.getStudentVideo() != null) {
-            FilesystemInterface.storeStudentVideo(submission, submission.getStudentVideo());
+				FilesystemInterface.storeStudentVideo(submission, submission.getStudentVideo());
         }
-
 		return rowsAffected == 1;
 	}
 
@@ -129,16 +128,16 @@ public class SubmissionDAO {
 	 * @return True if a row was changed, otherwise false
 	 * @throws IllegalAccessError Cant set grade if not a teacher.
 	 */
-	public boolean setGrade(Submission submission) throws IllegalAccessException {
+	public boolean setGrade(Submission submission) throws IllegalAccessException,DataIntegrityViolationException {
 		Grade grade = submission.getGrade();
         /* If a person that is not a teacher tries to set a grade, return false */
         String checkIfTeacherExist = "SELECT COUNT(*) FROM Participant WHERE" +
 				" (UserID = ?) AND (CourseID = ?) AND (Function = 'Teacher')";
+
         int rows = databaseConnection.queryForInt(checkIfTeacherExist, grade.getTeacherID(), submission.getCourseID());
         if(rows != 1) {
-			throw new IllegalAccessException("Cant set grade, user not a teacher");
+			throw new IllegalAccessException("Cant set grade, user is not a teacher");
 		}
-
 		String setGrade  = "UPDATE Submission SET Grade = ?, TeacherID = ?, PublishStudentSubmission = ?" +
 				" WHERE (AssignmentID = ?) AND (StudentID = ?);";
 		int updatedRows = databaseConnection.update(setGrade, grade.getGrade(),
@@ -146,7 +145,6 @@ public class SubmissionDAO {
 																submission.getPublishStudentSubmission(),
 																submission.getAssignmentID(),
 																submission.getStudentID());
-
 		return updatedRows == 1;
 	}
 
@@ -158,8 +156,6 @@ public class SubmissionDAO {
 	 * @param assID     Unique identifier for the assignment with the submission being removed
 	 * @param studentID Unique identifier for the student whose submission is removed
 	 * @return True if everything went well, otherwise false
-     * 
-     * @author tfy12hsm
 	 */
 	public boolean removeSubmission(String assID, String studentID) {
 		String removeSubmissionStatement = "DELETE FROM "
@@ -184,8 +180,6 @@ public class SubmissionDAO {
      *
      * @param assId The assignment to get submissions for
      * @return A list of ungraded submissions for the assignment
-     * 
-     * @author tfy12hsm
      */
     public Optional<List<Submission>> getAllUngraded(String assId) {
 
@@ -230,8 +224,6 @@ public class SubmissionDAO {
 	 * Get all submissions for an assignment
 	 * @param assignmentID The assignment to get submissions for
 	 * @return A list of submissions for the assignment
-     * 
-     * @author tfy12hsm
 	 */
     public List<Submission> getAllSubmissions(int assignmentID) {
     	List<Submission> submissions;
@@ -254,8 +246,6 @@ public class SubmissionDAO {
 	 *
 	 * @param assId The assignment to get submissions for
 	 * @return A list of submissions for the assignment
-     * 
-     * @author tfy12hsm
 	 */
     public Optional<List<Submission>> getAllSubmissionsWithStudents
     		(String assId) {
@@ -281,8 +271,6 @@ public class SubmissionDAO {
 	 *                      to.
      * @param userId		The studentId that the submission is connected to.
      * @return				The submission with the teacher name.
-     * 
-     * @author tfy12hsm
      */
     public Optional<Submission> getSubmission(int assignmentId, int userId) {
     	Submission result;
@@ -316,13 +304,14 @@ public class SubmissionDAO {
 	 * @param submission the submission which the video should be linked to.
      * @return An input stream contained within a HTTP response entity.
      */
-	public ResponseEntity<InputStreamResource> getFeedbackVideo(Submission submission) {
+	public ResponseEntity<InputStreamResource> getVideo(Submission submission, String fileName) {
 		Integer courseID = getCourseIDFromAssignmentID(submission.getAssignmentID());
 		if(courseID == null){
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else{
 			submission.setCourseID(Integer.toString(courseID));
-			String path = FilesystemInterface.generatePath(submission) + FilesystemConstants.FEEDBACK_VIDEO_FILENAME;
+			String path = FilesystemInterface.generatePath(submission) + fileName;
+			System.out.println(path);
 			return FilesystemInterface.getVideo(path);
 		}
 	}

@@ -50,17 +50,17 @@ public class FilesystemInterface {
 	}
 
 	/**
-	 * Gets the specified video on the fileserver.
-	 * @param path 	The path to the file on the fileserver.
-	 * @return		The video, in the form of an responseentity.
+	 * Gets the specified video on the file server.
+	 * @param path 	The path to the file on the file server.
+	 * @return The video as an InputStream contained in a HTTP ResponseEntity.
      */
 	public static ResponseEntity<InputStreamResource> getVideo(String path) {
-		ResponseEntity<InputStreamResource> responseEntity;
-		if(path == null){
-			System.out.println("path was null");
-		}
-		System.out.println("path : "+path);
-		File video = new File(path);
+        if(path == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        ResponseEntity<InputStreamResource> responseEntity;
+        File video = new File(path);
 
 		try {
 			byte[] out = FileCopyUtils.copyToByteArray(video);
@@ -111,10 +111,8 @@ public class FilesystemInterface {
 	 * Store the students video for an assignment at a course.
 	 * If student folder doesn't exist a folder will be created.
 	 *
-	 * @param courseCode the code for the course.
-	 * @param courseID course id from the database
-	 * @param assignmentID from database
-	 * @param userID from database
+     * @param submission The submission which the video will be linked to.
+     * @param source the video.
 	 * @return true if video was stored successfully
 	 */
 	public static boolean storeStudentVideo(Submission submission, MultipartFile source) {
@@ -221,7 +219,7 @@ public class FilesystemInterface {
 	}
 
 	public static String getAssignmentText(int courseId, String assignmentId, String fileName)
-			throws FileNotFoundException, IOException {
+			throws IOException {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/" + fileName;
 		File file = new File(path);
 		BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -238,7 +236,7 @@ public class FilesystemInterface {
 
 
 	public static void deleteAssignmentFiles(int courseId, int assignmentId)
-			throws FileNotFoundException, IOException {
+			throws IOException {
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/";
 		File file = new File(path);
 		FileUtils.deleteDirectory(file);

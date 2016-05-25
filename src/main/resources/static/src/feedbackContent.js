@@ -25,9 +25,9 @@ window.Feedback = React.createClass({
         }.bind(this));
     },
     handleVideoClick: function () {
-        var assignement = this.props.assignment;
+        var assignment = this.props.assignment;
         var user = this.props.user;
-        var sour = "assignments/" + assignement + "/submissions/" + user + "/video";
+        var sour = "assignments/" + assignment + "/submissions/" + user + "/videos" + "/feedback.webm";
         this.setState({source: sour});
     },
     render: function () {
@@ -59,9 +59,10 @@ window.Feedback = React.createClass({
                 <div>
                     <h5 style={{color:gradeColor}}>Grade: {response.grade
                         .grade}</h5>
-                    <h5>Submissiondate: {response.submissionDate.toGMTString()}</h5>
+                    <h5>Submission date: {response.submissionDate.toGMTString
+                    ()}</h5>
                     <h5>Feedback: {response.feedback}</h5>
-                    <h5>Teachername: {response.teacherName}</h5>
+                    <h5>Teacher name: {response.teacherName}</h5>
                     <br />
                     {videoButContent}
                 </div>

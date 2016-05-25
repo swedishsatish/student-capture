@@ -56,10 +56,11 @@ class SubmissionResource {
      * @param studentID
      * @return
      */
-    @RequestMapping(value = "{studentID}/video", method = RequestMethod.GET, produces = "video/webm")
+    @RequestMapping(value = "{studentID}/videos/{fileName}", method = RequestMethod.GET, produces = "video/webm")
     public ResponseEntity<InputStreamResource> getFeedbackVideo(@PathVariable("assignmentID") int assignmentID,
-                                                                @PathVariable("studentID") int studentID) {
-        return DAO.getFeedbackVideo(new Submission(studentID, assignmentID));
+                                                                @PathVariable("studentID") int studentID,
+                                                                @PathVariable("fileName") String fileName) {
+            return DAO.getVideo(new Submission(studentID, assignmentID), fileName + ".webm");
     }
 
     /**
@@ -69,7 +70,7 @@ class SubmissionResource {
      */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") int assignmentID){
-        return new ResponseEntity<>(DAO.getAllSubmissions(assignmentID), HttpStatus.OK);
+        return new ResponseEntity<>(DAO.getAllSubmissionsWithStudents(Integer.toString(assignmentID)).get(), HttpStatus.OK);
     }
 
     /**
@@ -153,24 +154,35 @@ class SubmissionResource {
      * @return
      */
     @RequestMapping(value = "{studentID}", method = RequestMethod.POST)
-    public HttpStatus storeSubmission(@PathVariable("assignmentID") int assignmentID,
+    public ResponseEntity<String> storeSubmission(@PathVariable("assignmentID") int assignmentID,
                                       @PathVariable("studentID") int studentID,
-                                      @RequestPart(value = "studentVideo") MultipartFile studentVideo,
+                                      @RequestPart(value = "studentVideo", required = false) MultipartFile studentVideo,
                                       @RequestPart(value = "submission") Submission updatedSubmission){
-
+        String responseText = "OK";
         HttpStatus returnStatus;
-
+        // TODO User from session
+        // TODO check if submission can be submitted (begin/end date)
         updatedSubmission.setStudentID(studentID);
         updatedSubmission.setAssignmentID(assignmentID);
-        updatedSubmission.setStudentVideo(studentVideo);
-        returnStatus = DAO.addSubmission(updatedSubmission, true) ? OK : INTERNAL_SERVER_ERROR;
+        if(studentVideo != null) {
+            updatedSubmission.setStudentVideo(studentVideo);
+            updatedSubmission.setStatus("answer");
+        } else {
+            updatedSubmission.setStatus("blank");
+        }
+        if(DAO.addSubmission(updatedSubmission, true)) {
+            returnStatus = HttpStatus.OK;
+        } else {
+            returnStatus = HttpStatus.FORBIDDEN;
+            responseText = "Student has already submitted an answer.";
+        }
 
         /*Validation of Submission
         * Should be sent by a student, might have to validate that the student didnt set the grade himself.
         * However this should probably be handled somewhere else
         * validate the Submission.studentID against studentID and permissions*/
 
-        return returnStatus;
+        return new ResponseEntity<>(responseText, returnStatus);
     }
 
     @RequestMapping(value = "{studentID}", method = RequestMethod.DELETE)

@@ -1,12 +1,16 @@
 //Created by:
-//Simon Lundmark
+//Simon Lundmark, Erik Andersson
+
+//Refactored by:
+//Henrik Bylund
 
 //Last update:
-//2016-19-05
+//2016-05-24
 
-//-----------------------showing/hiding forms-------------------------
+//----------------------------showing/hiding forms------------------------------
+// Handles changing of which form is active
 
-//get the forms
+// Get the forms
 var loginForm = document.getElementById('loginPage');
 var regForm = document.getElementById('registerPage');
 var lostForm = document.getElementById('lostPasswordPage');
@@ -38,16 +42,20 @@ cnclBtn2.onclick = function() {
     hideShow(lostForm, loginForm);
 }
 
+// Animate change in visible form
+// param toHide DOM element
+// param toShow DOM element
 function hideShow(toHide, toShow){
     fadeIn(toShow);
     fadeOut(toHide);
     toHide.reset();
 }
 
-//------------------------------------animation-------------------------------------
+//------------------------------------animation---------------------------------
+// Handles the animation for changing between different forms
 
-// fade out
-
+// Fade out
+// param el DOM element
 function fadeOut(el){
   el.style.opacity = 1;
 
@@ -60,10 +68,13 @@ function fadeOut(el){
   })();
 }
 
-// fade in
-
+// Fade in
+// param el DOM element
+// param display Value for CSS property display on element el
 function fadeIn(el, display){
   el.style.opacity = 0;
+
+  //Default value if param display is not set
   el.style.display = display || "block";
 
   (function fade() {
@@ -76,8 +87,9 @@ function fadeIn(el, display){
 }
 
 //------------------------------------modal-------------------------------------
+// Sets listeners for showing and hiding the modal
 
-//get the modal
+// Get the modal
 var modal = document.getElementById('myModal');
 
 // Get the button that opens the modal
@@ -86,8 +98,32 @@ var btn = document.getElementById("modalBtn");
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
+// Get the table where the minimum system requirements is displayed.
+var testTable = document.getElementById("testTable");
+
 // When the user clicks the button, open the modal 
 btn.onclick = function() {
+
+    // table content with the minimum requirements test
+    testTable.innerHTML = "<tr><td>Test</td><td>Result</td></tr>"+
+                        "<tr><td>webRTC support</td><td>" + DetectRTC.isWebRTCSupported + "</td></tr>"+
+                        "<tr><td>webcam found</td><td>" + DetectRTC.hasWebcam + "</td></tr>"+
+                        "<tr><td>microphone found</td><td>" + DetectRTC.hasMicrophone + "</td></tr>"+
+                        "<tr><td>speakers found</td><td>" + DetectRTC.hasSpeakers + "</td></tr>";
+
+    // get all the cells
+    var tds = testTable.getElementsByTagName("td");
+
+    // loop all the cells and check if the value is true or false
+    // and selects a color depending on teh boolean
+    for(var i = 0, j = tds.length; i < j; ++i){
+        if(tds[i].innerHTML == "true")
+            tds[i].style.color = "green";
+
+        if(tds[i].innerHTML == "false")
+            tds[i].style.color = "red";
+    }
+
     fadeIn(modal);
 }
 
@@ -104,12 +140,16 @@ window.onclick = function(event) {
 }
 
 //--------------------------------error handling--------------------------------
+// Parses errors from the current URL and alerts the user which error occurred
+
+// Get array of parameter value pairs from the current URL query string
 var urlVars = window.location.search.toLowerCase().substr(1).split("&");
 var err = false, type = "";
+// For each pair
 for(var i=0; i<urlVars.length; i++) {
+    // Split into name and value, and check for error parameter
     var varSplit = urlVars[i].split("=");
     if(varSplit[0]==="error"){
-        console.log(varSplit);
         if(varSplit.length>1){
             for(var j=1; j<varSplit.length; j++) {
                 type += varSplit[j];
@@ -117,16 +157,26 @@ for(var i=0; i<urlVars.length; i++) {
         }
         err = true;
         break;
+    // Defined in RegistrationController.java
     } else if(varSplit[0]==="success") {
     	alert("Registration success!");
+    	break;
+    // Defined in ResetPasswordController.java
     } else if(varSplit[0]==="passwordemail") {
-    	alert("Check your inbox for an email with the link to reset your password!");
+    	alert("Check your inbox for an email with the link to reset your"
+    	        + "password!");
+        break;
+    // Defined in ResetPasswordController.java
     } else if(varSplit[0]==="passwordchanged") {
     	alert("Password changed!");
-    } 
+        break;
+    }
     
 }
 /*
+
+
+Defined in ErrorFlags.java
 error=usernamelength
 error=passwordformat
 error=passwordmatch
@@ -148,13 +198,13 @@ if(err){
             msg = "The two passwords do not match";
             break;
         case "emailformat":
-            msg = "Invalid Email";
+            msg = "Invalid email";
             break;
         case "emailexists":
             msg = "Email already associated with an account";
             break;
         case "userexists":
-            msg = "Username already used by another user";
+            msg = "Username already associated with an account";
             break;
         case "loginerror":
             msg = "Invalid username or password";
@@ -163,10 +213,13 @@ if(err){
         	msg = "Invalid or missing token";
         	break;
         case "emailusernamemismatch":
-            msg = "Username and Email do not belong to the same user."
+            msg = "Username and email do not belong to the same user."
             break;
         default:
-            msg = "Unknown Error";
+            msg = "Unknown error";
+            if(type !== ""){
+                msg+= " of type " + type;
+            }
             break;
     }
     alert("Error:\n"+msg);

@@ -9,11 +9,17 @@ import java.util.Map;
  */
 public class Participant {
     private Integer userId;
-    private int courseId;
+    private Integer courseId;
     private String function;
     
     public Participant() {
     }
+
+	public Participant(int userID,int courseID,String role){
+		userId = userID;
+		courseId = courseID;
+		function = role;
+	}
     
     public Participant(Map<String, Object> map) {
     	parseMap(map);
@@ -24,9 +30,9 @@ public class Participant {
      * 
      * @param map		map of database elements
      */
-    public void parseMap(Map<String, Object> map) {
+	private void parseMap(Map<String, Object> map) {
     	userId = (Integer) map.get("UserId");
-		courseId = (int) map.get("CourseId");
+		courseId = (Integer) map.get("CourseId");
 		function = (String) map.get("Function");
     }
     

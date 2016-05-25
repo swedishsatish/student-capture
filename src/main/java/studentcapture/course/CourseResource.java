@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import studentcapture.course.hierarchy.HierarchyDAO;
 import studentcapture.course.hierarchy.HierarchyModel;
+import studentcapture.course.participant.Participant;
 import studentcapture.course.participant.ParticipantDAO;
+import studentcapture.login.LoginDAO;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
@@ -53,9 +55,8 @@ public class CourseResource {
     		throw new ResourceNotFoundException(); 
     	}
     	if(course.getInitialTeacherId()!=null) {
-    	   	Boolean result2 = participantDAO.addParticipant(
-    	   			course.getInitialTeacherId().toString(), result1.getCourseId().toString(),
-    	   			"teacher");
+			Participant p = new Participant(course.getInitialTeacherId(),result1.getCourseId(),"teacher");
+    	   	Boolean result2 = participantDAO.addParticipant(p);
     	   	if(!result2) 
     	   		throw new ResourceNotFoundException();
     	}
@@ -169,7 +170,7 @@ public class CourseResource {
     @ResponseBody
     public HierarchyModel getHierarchy(HttpSession session) {
     	Optional<HierarchyModel> hierarchy = 
-    			hierarchyDAO.getCourseAssignmentHierarchy(Integer.parseInt(session.getAttribute("userid").toString()));
+    			hierarchyDAO.getCourseAssignmentHierarchy(LoginDAO.getUserIdFromSession(session));
     	if(hierarchy.isPresent()) 
     		return hierarchy.get();
     	throw new ResourceNotFoundException();
@@ -177,9 +178,11 @@ public class CourseResource {
     
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public static class ResourceNotFoundException extends RuntimeException {
+		private static final long serialVersionUID = 5132715904141343691L;
     }
     
     @ResponseStatus(value = HttpStatus.CONFLICT)
     public static class ResourceConflictException extends RuntimeException {
+		private static final long serialVersionUID = 1L;
     }
 }

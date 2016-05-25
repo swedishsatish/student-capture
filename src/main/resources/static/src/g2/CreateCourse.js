@@ -50,7 +50,7 @@ window.CreateCourse = React.createClass({
             data : JSON.stringify(course),
             timeout : 100000,
             success : function(res) {
-                RenderMenu(uid);
+                RenderMenu();
                 $.get("course/" + res.courseId,function (res2) {
 
                     ReactDOM.render(<CourseInfo course={res2}/>,document.getElementById("courseContent"));
