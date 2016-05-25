@@ -77,7 +77,13 @@ public class FilesystemInterfaceTest {
         FilesystemInterface.storeFeedbackText(submission, testFile);
         File storedFile = new File(FilesystemInterface.generatePath(submission)+FilesystemConstants.FEEDBACK_TEXT_FILENAME);
         assertTrue(storedFile.exists());
+    }
 
+    @Test
+    public void shouldCreateFilePathWithoutNullDir() throws Exception {
+        Submission submission = createSubmissionModel();
+        String result = FilesystemInterface.generatePath(submission);
+        assertTrue(result.endsWith("/moose/5DV151/1337/15/"));
     }
 
 

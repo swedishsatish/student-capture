@@ -79,6 +79,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         String gradeString;
         Integer teacherId;
         String teacherName;
+        String courseID = "1";
 
         int assignmentID = 1;
         boolean studentPublishConsent = false;
@@ -103,6 +104,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         grade.setFeedbackIsVisible(publishFeedback);
 
         submission.setAssignmentID(assignmentID);
+        submission.setCourseID(courseID);
         submission.setStudentID(studentID);
         submission.setStudentPublishConsent(studentPublishConsent);
         submission.setStatus(status);

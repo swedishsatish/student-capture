@@ -284,6 +284,9 @@ public class SubmissionDAO {
 			//TODO
 			return Optional.empty();
 		}
+		Integer courseID = getCourseIDFromAssignmentID(result.getAssignmentID());
+
+		result.setCourseID(Integer.toString(courseID));
 		result.setFeedback(FilesystemInterface.getFeedbackText(result));
         return Optional.of(result);
 	}
