@@ -302,18 +302,18 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     @Test
     public void shouldReturnSubmissionWithGrade() {
         Optional<Submission> result = submissionDAO.getSubmission(1, 4);
-        Submission submissionFromDB = result.get();
-
         assertTrue(result.isPresent());
+        
+        Submission submissionFromDB = result.get();
         assertTrue(subWithGrade.equals(submissionFromDB));
     }
 
     @Test
     public void shouldReturnSubmissionWithoutGrade() {
         Optional<Submission> result = submissionDAO.getSubmission(1, 3);
-        Submission submissionFromDB = result.get();
-
         assertTrue(result.isPresent());
+
+        Submission submissionFromDB = result.get();
         assertTrue(subWithoutGrade.equals(submissionFromDB));
     }
 
