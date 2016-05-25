@@ -175,10 +175,11 @@ iframe {
     margin-left:0px;
 }
 #desktopNavigation li {
-    color: #D9853B;
+    opacity: 0.5;
 }
 #desktopNavigation li.active {
     color: white;
+	opacity: 1;
 }
 
 #students-table tbody tr:hover{

@@ -93,7 +93,7 @@ window.CreateCourse = React.createClass({
                     <h5>Course Description</h5>
                     <textarea className="tinymceArea" id="course-description"></textarea>
                 </form>
-                <button onClick={this.handleClick.bind(this,this.props.uid)}>Create</button>
+                <div className="button primary-button SCButton" onClick={this.handleClick.bind(this,this.props.uid)}>Create</div>
             </div>
 
 
