@@ -1,6 +1,5 @@
 package studentcapture.equipmenttest;
 
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
