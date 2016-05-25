@@ -66,6 +66,7 @@ var NewAssignment = React.createClass({
     },
     componentDidUpdate : function() {
         window.scrollTo(0, 0);
+        tinymce.remove();
         this.update();
     },
     componentDidMount : function() {
