@@ -28,7 +28,6 @@ public class Submission {
     private String status;
     private String teacherName;
     private MultipartFile studentVideo;
-    private MultipartFile feedbackVideo;
 
     public Submission(int studentID, int assignmentID) {
         this.studentID = studentID;
@@ -42,7 +41,6 @@ public class Submission {
      * Constructor that parses map of database elements.
      *
      * @param map map retrieved from database
-     * @author tfy12hsm
      */
     public Submission(Map<String, Object> map) {
         // These three variables (assignmentID, studentID, submissionDate) cannot be null.
@@ -96,14 +94,6 @@ public class Submission {
         this.studentVideo = studentVideo;
     }
 
-    public MultipartFile getFeedbackVideo() {
-        return feedbackVideo;
-    }
-
-    public void setFeedbackVideo(MultipartFile feedbackVideo) {
-        this.feedbackVideo = feedbackVideo;
-    }
-
     @Override
     public String toString() {
         return "Submission{" +
@@ -121,7 +111,6 @@ public class Submission {
                 ", status='" + status + '\'' +
                 ", teacherName='" + teacherName + '\'' +
                 ", studentVideo=" + studentVideo +
-                ", feedbackVideo=" + feedbackVideo +
                 '}';
     }
 
@@ -272,7 +261,8 @@ public class Submission {
             return false;
         if (studentVideo != null ? !studentVideo.equals(that.studentVideo) : that.studentVideo != null)
             return false;
-        return feedbackVideo != null ? feedbackVideo.equals(that.feedbackVideo) : that.feedbackVideo == null;
+
+        return true;
 
     }
 }

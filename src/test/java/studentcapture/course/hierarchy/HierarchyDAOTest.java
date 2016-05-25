@@ -1,20 +1,5 @@
 package studentcapture.course.hierarchy;
 
-import static org.junit.Assert.*;
-
-import java.sql.Types;
-import java.util.Optional;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.context.WebApplicationContext;
-
-import studentcapture.assignment.AssignmentDAO;
-import studentcapture.assignment.AssignmentModel;
-
 import studentcapture.config.StudentCaptureApplicationTests;
 
 public class HierarchyDAOTest extends StudentCaptureApplicationTests {

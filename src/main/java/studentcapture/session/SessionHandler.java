@@ -23,7 +23,6 @@ import java.util.Optional;
  * One Object is allowed to be stored for each session. The object will be 
  * lost of the session runs out.
  * 
- * @author tfy12hsm
  *
  */
 @Repository
@@ -172,17 +171,12 @@ public class SessionHandler {
 	 * @see Session
 	 */
 	private Optional<Session> getSession(Integer sessionKey) {
-		Session session = null;
-		try {
-			session = sessions.get(sessionKey);
-			if(session == null)
-				throw new NullPointerException();
-			if(checkForTimeOut(session, sessionKey))
-				throw new NullPointerException();
-		} catch (NullPointerException e) {
-			return Optional.empty();
+		Session session = sessions.get(sessionKey);
+
+		if (session == null || checkForTimeOut(session, sessionKey)) {
+				return Optional.empty();
 		}
-		
+
 		return Optional.of(session);
 	}
 	
@@ -322,7 +316,6 @@ public class SessionHandler {
 	/**
 	 * A small struct that keeps track of information about a session.
 	 * 
-	 * @author tfy12hsm
 	 *
 	 */
 	private class Session {

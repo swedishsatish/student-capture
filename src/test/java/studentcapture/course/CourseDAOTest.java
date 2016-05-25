@@ -16,7 +16,6 @@ import static org.junit.Assert.assertTrue;
 /**
  * Unit tests. 
  * 
- * @author tfy12hsm
  *
  */
 public class CourseDAOTest extends StudentCaptureApplicationTests {

@@ -27,7 +27,6 @@ public class UserSettingsResource {
      * @return          200 Ok and the Settings as JSON.
      *                  422 Unprocessable Entity.
      *                  500 Internal Server Error.
-     * @author c13elt, sanna, tfy12ajn.
      */
     @CrossOrigin
     @RequestMapping(
@@ -65,7 +64,6 @@ public class UserSettingsResource {
      * @return          200 Ok and .
      *                  422 Unprocessable Entity.
      *                  500 Internal Server Error.
-     * @author tfy12ajn
      */
     @CrossOrigin
     @RequestMapping(
@@ -111,7 +109,6 @@ public class UserSettingsResource {
      * @param userID    Identifier for a specific user.
      * @param settings An object containing all settings to be changed
      * @return True if everything went well, otherwise false
-     * @author c13elt, sanna
      */
     @CrossOrigin
     @RequestMapping(

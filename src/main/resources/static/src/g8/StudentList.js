@@ -34,23 +34,14 @@ var StudentList = React.createClass({
      * FIXA INFO BACKKNAPP
      * */
     clickhandle: function (user, event) {
-        window.studentName =
-        window.assignmentID = user.assignmentID;
-        window.courseID = user.courseID;
-        window.teacherID = user.teacherID;
         var student = [{
             "studentID":user.studentID,
             "studentName":user.firstName + " " + user.lastName,
             "courseID":user.courseID,
             "assignmentID":user.assignmentID,
             "teacherName":user.teacherName}];
-     //   var jebane=[user.studentID,user.firstName + " " + user.lastName,user.courseID,user.assignmentID,user.teacherName];
-
-        //TODO: REMOVE JEBANE
         document.getElementById("courseContent").innerHTML = ""; //TODO: find better solution.
         ReactDOM.render(<RenderHandle studentArray={student} idArray={this.props.idArray} />, document.getElementById("courseContent"));
-        //   this.getData();
-        //TODO: render other user story.
     },
 
     componentWillMount: function () {
@@ -68,7 +59,7 @@ var StudentList = React.createClass({
                         <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4"/> </video>
                     <td>{user.firstName + " " + user.lastName}</td>
                     <td>{date.getFullYear() + "-" + (date.getMonth()+1/*Months start from 0)*/ + "-" + date.getDate())}</td>
-                    <td>{user.gradeSign}</td>
+                    <td>{user.grade.grade}</td>
                 </tr>
             );
 
