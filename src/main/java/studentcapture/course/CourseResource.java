@@ -18,7 +18,6 @@ import java.util.Optional;
  * CourseResource is a REST controller that maps course related methods to 
  * to REST requests. 
  * 
- * @author tfy12hsm
  *
  */
 @RestController
@@ -115,8 +114,6 @@ public class CourseResource {
      *
      * @param courseID		    course identifier
      * @return					found course
-     *
-     * @author tfy12hsm
      */
     @CrossOrigin
     @RequestMapping(
@@ -187,9 +184,7 @@ public class CourseResource {
     
     /**
      * Returns {@link HierarchyModel} including data related to a given user.
-     * 
-     * @author tfy12hsm
-     * 
+     *
      * given users identification
      * @return			hierarchy
      */

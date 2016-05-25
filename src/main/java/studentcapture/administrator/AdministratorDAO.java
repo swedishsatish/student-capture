@@ -16,7 +16,6 @@ public class AdministratorDAO {
 
     /**
      * Fetches the support e-mail address from the database.
-     * @author c13elt
      *
      * @return The address, or null if something went wrong.
      */

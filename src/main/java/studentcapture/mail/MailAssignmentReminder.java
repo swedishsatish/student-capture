@@ -3,6 +3,7 @@ package studentcapture.mail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,10 +38,14 @@ public class MailAssignmentReminder {
                 emailAddresses = tempOptList.get();
 
                 for (String emailAddress : emailAddresses) {
-                    mailClient.send(emailAddress, "studentcapture@cs.umu.se",
-                            "Assignment Reminder", "Upcoming assignment starting: "
-                                    + mailDAO.getStartDateFromAssignment(assignmentID).get() +
-                                    " in course: " + courseID + " ends: " + ". Good luck, have fun!");
+                    Optional<Date> assignmentStartDate = mailDAO.getStartDateFromAssignment(assignmentID);
+                    
+                    if (assignmentStartDate.isPresent()) {
+                        mailClient.send(emailAddress, "studentcapture@cs.umu.se",
+                                "Assignment Reminder", "Upcoming assignment starting: "
+                                        + assignmentStartDate.get() +
+                                        " in course: " + courseID + " ends: " + ". Good luck, have fun!");
+                    }
                 }
             }
         }

@@ -3,7 +3,7 @@
  *@author: Andreas Savva <ens15asa>,
  *         Benjamin Björklund <c13bbd>,
  *         Tobias Estefors <dv13tes>
- *     
+ *
  *@note: This react-class is rendered from DynamicMenu.js
  **/
 
@@ -84,7 +84,7 @@ var TeacherViewSubmission = React.createClass({
                 <div className="four columns offset-by-one">
 
                     <div id="studentContainer">
-                        <StudentList submissions={this.submissionsArray} idArray={idArray} participants={this.participantsArray} />
+                        <StudentList submissions={this.submissionsArray} idArray={idArray} participants={this.participantsArray} scale={this.props.scale}/>
                         <div id="textList">
                             <p>Submissions: {this.nSubmissions}/{this.nParticipants}</p>
                             <p>Withdrawals: {this.nWithdrawals}</p>

@@ -24,6 +24,7 @@ var DropDown = React.createClass({
      * @returns {XML} A dropdown menu with values.
      */
     render: function() {
+        console.log(this.props.scale);
         return(
             <div id="dropdown">
                 <label for="dropDownMenu">Grade</label>

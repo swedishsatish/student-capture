@@ -32,6 +32,7 @@ var HardwareTest = React.createClass({
         }
 
         var mediaElement = document.createElement("video");
+        mediaElement.setAttribute("id","you-id");
 
         var source = document.createElement('source');
         source.src = "data:video/webm;base64," + fName;
