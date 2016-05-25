@@ -55,6 +55,12 @@ public class AssignmentResource {
         assignmentDAO.updateAssignment(assignment);
     }
 
+    @RequestMapping(value = "/{assignmentID}", method = RequestMethod.DELETE)
+    public void deleteAssignment(@PathVariable("assignmentID") int assignmentID,
+                                 @RequestParam("courseID") int courseID) throws IOException {
+        assignmentDAO.removeAssignment(courseID, assignmentID);
+    }
+
     /**
      * Gets the video question corresponding to the specified assignment.
      * @param assignmentID  Unique assignment identifier.

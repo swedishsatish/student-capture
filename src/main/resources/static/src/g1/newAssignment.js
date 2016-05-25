@@ -129,6 +129,7 @@ var NewAssignment = React.createClass({
         reqBody["assignmentIntervall"] = assignmentIntervall;
         reqBody["recap"] = tinymce.get('recap').getContent();
         reqBody["scale"] = $("#scale").val();
+        
         $.ajax({
             type : type,
             contentType : "application/json",
