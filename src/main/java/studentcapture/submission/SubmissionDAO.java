@@ -110,7 +110,7 @@ public class SubmissionDAO {
 		}
 
 		/* If a person that is not a teacher tries to set a grade, return false */
-        if (!checkIfTeacher(Integer.valueOf(submission.getCourseID()), submission.getGrade().getTeacherID())) {
+        if (!checkIfTeacher(submission.getCourseID(), submission.getGrade().getTeacherID())) {
 			throw new IllegalAccessException("Cant set grade, user not a teacher");
 		}
 
@@ -131,7 +131,7 @@ public class SubmissionDAO {
 		Grade grade = submission.getGrade();
         /* If a person that is not a teacher tries to set a grade, return false */
 
-        if (!checkIfTeacher(Integer.valueOf(submission.getCourseID()), userId)){
+        if (!checkIfTeacher(submission.getCourseID(), userId)){
 			throw new IllegalAccessException("Cant set grade, user not a teacher");
 		}
 
