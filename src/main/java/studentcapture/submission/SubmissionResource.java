@@ -62,9 +62,9 @@ class SubmissionResource {
      * @return The video file if everything went fine, otherwise a HTTP Status error message.
      */
     @RequestMapping(value = "{studentID}/videos/{fileName}", method = RequestMethod.GET, produces = "video/webm")
-    public ResponseEntity<InputStreamResource> getFeedbackVideo(@PathVariable("assignmentID") int assignmentID,
-                                                                @PathVariable("studentID") int studentID,
-                                                                @PathVariable("fileName") String fileName) {
+    public ResponseEntity<InputStreamResource> getVideo(@PathVariable("assignmentID") int assignmentID,
+                                                        @PathVariable("studentID") int studentID,
+                                                        @PathVariable("fileName") String fileName) {
         if(fileName.equals("feedback") || fileName.equals("submission")){
             return DAO.getVideo(new Submission(studentID, assignmentID), fileName + ".webm");
         }else{
