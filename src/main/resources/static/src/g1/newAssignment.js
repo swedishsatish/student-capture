@@ -37,6 +37,7 @@ var NewAssignment = React.createClass({
                 minDate: 0
             });
 
+        tinymce.remove();
         tinymce.init({
             selector: 'textarea.inputField',
             theme: 'modern',
@@ -66,11 +67,10 @@ var NewAssignment = React.createClass({
     },
     componentDidUpdate : function() {
         document.getElementById("newAssError").scrollIntoView();
-        tinymce.remove();
         this.update();
     },
     componentDidMount : function() {
-      this.update();
+        this.update();
     },
     getAssignmentData() {
         $.ajax({
@@ -246,6 +246,41 @@ var NewAssignmentVideo = React.createClass({
         fd.append("courseID", this.props.courseID);
         return fd;
     },
+    sendVideo : function(formData) {
+        $.ajax({
+            url: "assignments/" + this.props.assignmentID + "/video",
+            type: 'POST',
+            success: function (res) {
+                console.log("Success");
+                ReactDOM.render(<NewAssignmentStatus message="Successfully created a assignment"/>, document.getElementById('courseContent'));
+            },
+            error: function (e) {
+                this.deleteSettings();
+                ReactDOM.render(<NewAssignmentStatus message="Failed to create assigment, contact support or try again later"/>,document.getElementById('courseContent'));
+            }.bind(this),
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    },
+    deleteSettings : function () {
+        $.ajax({
+            type : "DELETE",
+            url : "assignments/" + this.props.assignmentID + "?courseID=" + this.props.courseID,
+            timeout : 100000,
+            success : function(response) {
+                console.log("Removed settings");
+            },
+            error : function(e) {
+                console.log(e);
+                console.log("Failed to remove assignment. The assignment may have submissions or it doesn't exist");
+            },
+            done : function(e) {
+                console.log("DONE");
+            }
+        });
+    },
     render: function () {
         return (
             <div>
@@ -255,7 +290,7 @@ var NewAssignmentVideo = React.createClass({
                         <Recorder id="recorder" playCallback={this.playVideo}
                                   postURL={"assignments/" + this.props.assignmentID + "/video"} formDataBuilder={this.formDataBuilder}
                                   recButtonID="record-question" stopButtonID="stop-question" fileName="assignmentVideo.webm" replay="true"
-                                  postButtonID="post-video" />
+                                  postButtonID="post-video" httpCallback={this.sendVideo}/>
                         <button id="stop-question" className="recControls SCButton" disabled>Stop</button>
                         <button id="record-question" className="recControls SCButton">Record</button>
                     </div>
@@ -301,6 +336,16 @@ window.CourseContent = React.createClass({
                 </div>
             </div>
         );
+    }
+});
+
+var NewAssignmentStatus = React.createClass({
+    render : function() {
+        return (
+            <div>
+                <h1>{this.props.message}</h1>
+            </div>
+        )
     }
 });
 

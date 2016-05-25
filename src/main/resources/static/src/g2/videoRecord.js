@@ -239,8 +239,15 @@ var Recorder = React.createClass({
               sendTime = Date.now();
             }
 
-            //call xhr with full url, data and callback function
-            xhr(props.postURL, formData, props.playCallback);
+            //If a httpCallback exists use that for sending the data.
+            if(typeof props.httpCallback !== "undefined") {
+                props.httpCallback(formData);
+                console.log("callback");
+            } else {
+                //call xhr with full url, data and callback function
+                xhr(props.postURL, formData, props.playCallback);
+                console.log("defualt");
+            }
         }
 
         /* Function for sending XMLHttpRequests. */
