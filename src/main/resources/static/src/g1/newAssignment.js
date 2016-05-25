@@ -65,7 +65,8 @@ var NewAssignment = React.createClass({
         }
     },
     componentDidUpdate : function() {
-        window.scrollTo(0, 0);
+        document.getElementById("newAssError").scrollIntoView();
+        tinymce.remove();
         this.update();
     },
     componentDidMount : function() {
@@ -164,7 +165,7 @@ var NewAssignment = React.createClass({
       return (<div>
                 <div key={new Date().getTime()} className="newAssForm">
                     <h3 className="contentTitle">NEW ASSIGNMENT</h3>
-                    <h3 className="errorMsg">{this.state.errorMessage}</h3>
+                    <h3 className="errorMsg" id="newAssError">{this.state.errorMessage}</h3>
                     <input className="inputField" id="title" type="text" placeholder="title" />
 
                     <div id="dates">

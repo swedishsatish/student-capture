@@ -222,6 +222,11 @@ button{
 
     margin-left: 26%;
 }
+#teacherRecorder > #preview
+{
+    position: relative;
+    top: 0px;
+}
 
 #tmpDiv {
 
