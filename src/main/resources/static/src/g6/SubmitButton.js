@@ -29,6 +29,7 @@ var PopUpCancelButton = React.createClass({
  */
 var PopUpConfirmButton = React.createClass({
     onclick: function () {
+        sendVideo(this.props.getVideo);
         sendData();
         close();
         ReactDOM.render(<TeacherViewSubmission courseId={IDs[0].courseID} assignmentId={IDs[0].assignmentID}/>,document.getElementById('courseContent'));
@@ -99,7 +100,7 @@ var PopUpRender = React.createClass({
                 <br/>
                 <div id="popUpButtonContainer">
                     <PopUpCancelButton/>
-                    <PopUpConfirmButton/>
+                    <PopUpConfirmButton getVideo={this.props.getVideo}/>
 
                 </div>
 
@@ -130,9 +131,6 @@ function submitForm(method) {
     reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
     reqBody["courseID"] = IDs[0].courseID;
 
-
-
-
     $.ajax({
         type: method,
         contentType: "application/json",
@@ -141,13 +139,49 @@ function submitForm(method) {
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
-            console.log("SUCCESS reqBody contains:", reqBody);
+            console.log("SUCCESS reqBody contains:", fd);
             // TODO: check response with if/else, if respons is fail give error message
 
           //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);
-            console.log("ReqBody contains:", reqBody);
+            console.log("ReqBody contains:", fd);
+        }, done: function (e) {
+            console.log("DONE");
+        }
+    });
+
+}
+
+function submitVideo(method, getVideoFunc) {
+
+        var video = getVideoFunc();
+        var fd = new FormData();
+        console.log(video);
+        if(video != null) {
+            fd.append("studentVideo", video);
+            console.log(video);
+
+        } else {
+            console.log("VIDEO IS NULL");
+        }
+
+    $.ajax({
+        type: method,
+        url: "assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID ,
+        data : fd,
+        contentType: false,
+        processData: false,
+        timeout: 100000,
+        success: function (response) {
+            console.log("VIDEO SUCCESS: ", response);
+            console.log("SUCCESS fd contains:", fd);
+            // TODO: check response with if/else, if respons is fail give error message
+
+          //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
+        }, error: function (e) {
+            console.log("VIDEO ERROR: ", e);
+            console.log("ERROR fd contains:", fd);
         }, done: function (e) {
             console.log("DONE");
         }
@@ -205,13 +239,20 @@ function  getForm(method) {
 
 }
 
-
-
 /**
  * Sending data to database.
  */
+ /* Sends all data except the video */
 function sendData () {
+
     submitForm('PATCH');
+}
+
+/* Sends the recorded video */
+function sendVideo(getVideoFunc) {
+
+    submitVideo('POST', getVideoFunc);
+
 }
 
 
@@ -220,6 +261,7 @@ function sendData () {
  * Upon clicking on the button it sends the feedback information to the student.
  */
 var SubmitButton = React.createClass({
+
 
     componentWillMount: function(){
         student=this.props.studentArray;
@@ -260,7 +302,7 @@ var SubmitButton = React.createClass({
      * Rendering popup window in react class.
      */
     popUpRender: function () {
-        ReactDOM.render(<PopUpRender student={this.props.student}/>,document.getElementById('popUpDiv'));
+        ReactDOM.render(<PopUpRender getVideo={this.props.getVideo} student={this.props.student}/>,document.getElementById('popUpDiv'));
     },
     /**
      * Set size for popup blanket.

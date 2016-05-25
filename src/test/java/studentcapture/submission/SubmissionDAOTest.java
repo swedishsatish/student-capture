@@ -194,11 +194,32 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
     @Test
     @SuppressWarnings("unchecked")
     public void setGradeValues() throws IllegalAccessException {
-        Submission submission = new Submission(1,1);
-        Grade grade = new Grade("vg", 3);
-        submission.setCourseID("1");
+        /*
+        createSubmission(Submission submission, boolean isGraded, int studentID) {
+        String sql1 = "INSERT INTO Users VALUES (1, 'mkyong', 'abcd', 'defg', 'mkyong@gmail.com', 'MyPassword', null);";
+        String sql2 = "INSERT INTO Users VALUES (2, 'alex', 'abcd', 'defg', 'alex@yahoo.com', 'SecretPassword', null);";
+        String sql3 = "INSERT INTO Users VALUES (3, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword', null);";
+        String sql4 = "INSERT INTO Users VALUES (4, 'username', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword', null);";
+        String sql5 = "INSERT INTO Course VALUES (1, 2016, 'VT', 'ABC', null, true);";
+        String sql6 = "INSERT INTO Assignment VALUES (1, 1, 'OU1', '2016-05-13 10:00:00', '2016-05-13 12:00:00', 60, 180, null, 'XYZ');";
+        String sql7 = "INSERT INTO Submission VALUES (1, 1, null, null, '2016-05-13 11:00:00', null, null, null, null);";
+        String sql8 = createSubmission(subWithoutGrade, false, 3);
+        String sql9 = createSubmission(subWithGrade, true, 4);
+        String sql10 = "INSERT INTO Participant VALUES (3, 1, 'Teacher');";
+         */
+        int userId = 3;
+        String course = "1";
+        int assId = 1;
+        int studentId = 1;
+        int teacherId = 3;
+        String gradeStr = "vg";
+
+        Submission submission = new Submission(studentId, assId);
+        Grade grade = new Grade(gradeStr, teacherId);
         submission.setGrade(grade);
-        submissionDAO.setGrade(submission);
+        submission.setCourseID(course);
+
+        submissionDAO.setGrade(submission, userId);
 
         String sql = "SELECT * FROM Submission WHERE assignmentID = 1 AND studentID = 1";
 
@@ -223,7 +244,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         submission.setCourseID("1");
         submission.setGrade(grade);
 
-        boolean returnValue = submissionDAO.setGrade(submission);
+        boolean returnValue = submissionDAO.setGrade(submission, 3);
 
         assertTrue(returnValue);
     }
@@ -238,7 +259,7 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
         submission.setCourseID("1");
         submission.setGrade(grade);
 
-        boolean returnValue = submissionDAO.setGrade(submission);
+        boolean returnValue = submissionDAO.setGrade(submission, 3);
 
         assertFalse(returnValue);
     }
@@ -247,14 +268,14 @@ public class SubmissionDAOTest extends StudentCaptureApplicationTests {
      * Checks if the teacher trying to set a grade exists in the table, in this test the teacher does not exist and the test should return false
      */
     //TODO ändrade illegalAccesException till DataIntegretyViolationException... så att testet skulle fungera, inte säker på hur det ska vara
-    @Test (expected = DataIntegrityViolationException.class)
+    @Test(expected = IllegalAccessException.class)
     public void nonExistingTeacherSetsGrade() throws IllegalAccessException {
         Submission submission = new Submission(1,1);
         Grade grade = new Grade("vg", 2);
-        submission.setCourseID("PVT");
+        submission.setCourseID("1");
         submission.setGrade(grade);
 
-        boolean returnValue = submissionDAO.setGrade(submission);
+        boolean returnValue = submissionDAO.setGrade(submission, 7777777);
     }
 
     /**

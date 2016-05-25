@@ -2,7 +2,7 @@
  * Handles rendering for teacher feedback components.
  * @author: dv13trm, c14gls, group 6
  */
-
+var video;
 /**
  * Renders all the different built components for the GUI in prioritizing order.
  * For example: First it renders Recorder, then CommentBox and so on.
@@ -28,6 +28,7 @@
                 <video width="720" height="460" src={videoSource} preload="auto" controls/>
 
                 <TeacherRecordVideo />
+                <TeacherRecordVideo setVideo={this.setVideo}/>
 
                 <div id="feedBackContainer">
 
@@ -50,14 +51,28 @@
                             <BackButton idArray={this.props.idArray} />
                         </div>
                         <div id="submitButton">
-                            <SubmitButton studentArray={this.props.studentArray} idArray={this.props.idArray} />
+                            <SubmitButton getVideo={this.getVideo} studentArray={this.props.studentArray} idArray={this.props.idArray}/>
                         </div>
 
                     </div>
                 </div>
             </div>
         )
+    },
+
+    setVideo:function(blob) {
+        video = blob;
+        console.log("VIDEO WAS SET");
+
+    },
+
+    getVideo:function() {
+
+       return video;
+
     }
 
+
 });
+
 window.RenderHandle = RenderHandle;
