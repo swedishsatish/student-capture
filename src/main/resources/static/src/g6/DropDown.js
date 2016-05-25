@@ -9,7 +9,7 @@ var DropDown = React.createClass({
      */
     getInitialState: function() {
         return {
-            value: 'U'
+            value: '*'
         }
     },
     /**
@@ -20,19 +20,24 @@ var DropDown = React.createClass({
         this.setState({value: event.target.value})
     },
     /**
-     * Render function for dropdown menu.
+     * Render function for dropdown menu. Using the props(gradescale)
+     * to generate correct scale.
      * @returns {XML} A dropdown menu with values.
      */
     render: function() {
         console.log(this.props.scale);
+
+        var tempList = this.props.scale.split("_");
+
+        var list = tempList.map(function (item) {
+            return <option value={item}>{item}</option>
+        })
+
         return(
             <div id="dropdown">
                 <label for="dropDownMenu">Grade</label>
                 <select id="dropDownMenu" onChange={this.change} value={this.state.value}>
-                    <option value="U">U</option>
-                    <option value="O">O</option>
-                    <option value="K">K</option>
-                    <option value="G">G</option>
+                    {list}
                 </select>
             </div>
         )

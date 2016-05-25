@@ -15,6 +15,8 @@ var video;
 
     render: function () {
         console.log(this.props.studentArray);
+        console.log("hejhej" + this.props.toString());
+
         var id_array = this.props.idArray;
         var student = this.props.studentArray;
         var filenm = '/submission.webm';

@@ -22,9 +22,7 @@ var DropDown = React.createClass({
 
 
     render: function() {
-        var list = this.props.list.map(function (item) {
-            return <option value={item}>{item}</option>
-        })
+        
 
         return(
             <div id="dropdown">
