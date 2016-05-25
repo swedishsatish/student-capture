@@ -20,9 +20,9 @@ public class HelpResource {
     @Autowired
     AdministratorDAO administratorDAO;
 
-    @Autowired
-    @Qualifier("helpMailClient")
-    private MailClient mailClient;
+    //@Autowired
+    //@Qualifier("helpMailClient")
+    private MailClient mailClient = new MailClient();
 
     /**
      * Get the FAQ.
