@@ -41,7 +41,7 @@ public class AssignmentResource {
 
     @RequestMapping(value = "/{assignmentID}/video", method = RequestMethod.POST)
     public void addAssignmentVideo(@RequestParam("video") MultipartFile video,
-                                   @RequestParam("courseID") String courseID,
+                                   @RequestParam("courseID") Integer courseID,
                                    @PathVariable("assignmentID") String assignmentID) {
         assignmentDAO.addAssignmentVideo(video, courseID, assignmentID);
     }

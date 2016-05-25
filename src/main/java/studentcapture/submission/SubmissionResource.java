@@ -213,7 +213,7 @@ class SubmissionResource {
     @RequestMapping(value = "{studentID}/feedbackvideo/", method = RequestMethod.POST)
     public HttpStatus storeFeedback(@PathVariable("assignmentID") int assignmentID,
                                     @PathVariable("studentID") int studentID,
-                                    @RequestPart(value = "courseID") String courseID,
+                                    @RequestPart(value = "courseID") Integer courseID,
                                     @RequestPart(value = "feedbackVideo") MultipartFile teacherFeedbackVideo){
 
         Submission submission = new Submission();
