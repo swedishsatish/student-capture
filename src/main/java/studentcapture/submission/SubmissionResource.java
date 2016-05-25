@@ -15,6 +15,7 @@ import studentcapture.lti.LTISignatureException;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
@@ -42,9 +43,15 @@ class SubmissionResource {
      */
     @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
-                                                            @PathVariable("studentID") int studentID) {
-        Submission body = DAO.getSubmission(assignmentID, studentID).get();
-        return new ResponseEntity<>(body, HttpStatus.OK);
+                                                            @PathVariable("studentID") int studentID){
+
+        Optional<Submission> submission = DAO.getSubmission(assignmentID, studentID);
+
+        if (submission.isPresent()){
+            return new ResponseEntity<>(submission.get(), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**
