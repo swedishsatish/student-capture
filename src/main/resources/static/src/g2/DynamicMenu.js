@@ -27,7 +27,7 @@ var Options = React.createClass({
         var assID = this.props.assignment.assignment.assignmentID;
         var courseID = this.props.courseId;
 
-        console.log(this.props.assignment.assignment.assignmentIntervall.endDate)
+
         var now = Date.now();
         if(objToList(this.props.assignment.submissions).length == 0 &&
             new Date(this.props.assignment.assignment.assignmentIntervall.endDate).getTime() >= now){
@@ -124,9 +124,9 @@ var Assignment = React.createClass({
 
         }
         else if(this.props.role == "teacher"){
-
+            var scale = this.props.assignment.assignment.scale;
             document.getElementById("courseContent").innerHTML = "";
-            ReactDOM.render(<TeacherViewSubmission courseId={courseID} assignmentId={assID}/>,
+            ReactDOM.render(<TeacherViewSubmission courseId={courseID} assignmentId={assID} scale={scale}/>,
                                 document.getElementById('courseContent') );
         }
         this.setState({showChildren:!this.state.showChildren});
@@ -323,8 +323,7 @@ window.RenderMenu = function (preloaded) {
     $.get("course", function (res) {
         // if(res)
         var userID = res.userId;
-        console.log(res);
-        console.log(res.toString());
+
         var SCList = objToList(res.studentCourses);
         var TCList = objToList(res.teacherCourses);
         var name = res.firstName + " " + res.lastName;
