@@ -1,10 +1,6 @@
 var NewAssignment = React.createClass({
     getInitialState: function() {
-        if (this.props.edit) {
-            return {courseID : 0, errorMessage : "", title : "EDIT ASSIGNMENT"};
-        } else {
-            return {courseID : 0, errorMessage : "", title : "NEW ASSIGNMENT"};
-        }
+        return {courseID : 0, errorMessage : ""};
     },
     update: function () {
         $("#startDate").datetimepicker(
@@ -165,9 +161,14 @@ var NewAssignment = React.createClass({
     },
 
     render : function() {
+        if (this.props.edit) {
+            var title = "EDIT ASSIGNMENT";
+        } else {
+            var title = "NEW ASSIGNMENT";
+        }
       return (<div>
                 <div key={new Date().getTime()} className="newAssForm">
-                    <h3 className="contentTitle">{this.state.title}</h3>
+                    <h3 className="contentTitle">{title}</h3>
                     <h3 className="errorMsg" id="newAssError">{this.state.errorMessage}</h3>
                     <input className="inputField" id="title" type="text" placeholder="title" />
 
