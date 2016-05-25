@@ -28,7 +28,8 @@ public class AssignmentResource {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    @ResponseBody AssignmentErrorInfo handleFailedRequest(HttpServletRequest req, Exception ex) {
+    @ResponseBody
+    AssignmentErrorInfo handleFailedRequest(HttpServletRequest req, Exception ex) {
         //Nested exceptions. The exception thrown by this app is in the third level.
         return new AssignmentErrorInfo(ex.getCause().getCause().getMessage());
     }
@@ -52,7 +53,7 @@ public class AssignmentResource {
      *
      * @param assignment An assignment, including its assignmentID, to update to.
      */
-    @RequestMapping(method =  RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT)
     public void updateAssignment(@RequestBody AssignmentModel assignment) throws Exception {
         assignmentDAO.updateAssignment(assignment);
     }
@@ -65,18 +66,30 @@ public class AssignmentResource {
 
     /**
      * Gets the video question corresponding to the specified assignment.
-     * @param assignmentID  Unique assignment identifier.
-     * @return              The video and Http status OK
-     *                      or Http status NOT_FOUND.
+     *
+     * @param assignmentID Unique assignment identifier.
+     * @return The video and Http status OK
+     * or Http status NOT_FOUND.
      */
     @RequestMapping(value = "/{assignmentID}/video", method = RequestMethod.GET, produces = "video/webm")
     public ResponseEntity<InputStreamResource> getAssignmentVideo(
-                                        @PathVariable("assignmentID") int assignmentID) {
+            @PathVariable("assignmentID") int assignmentID) {
 
-        Optional<AssignmentModel> assignment = assignmentDAO.getAssignmentModel(assignmentID);
-        if(assignmentDAO.hasAccess(assignment, true)) {
-            return assignmentDAO.getAssignmentVideo(assignmentID);
+        Optional<AssignmentModel> assignment = null;
+        try {
+            assignment = assignmentDAO.getAssignmentModel(assignmentID);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (assignmentDAO.hasAccess(assignment.get(), true)) {
+                return assignmentDAO.getAssignmentVideo(assignmentID);
 
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -85,9 +98,10 @@ public class AssignmentResource {
 
     /**
      * Gets the assignment model corresponding to the specified assignment.
-     * @param assignmentID  Unique assignment identifier.
-     * @return              The assignment and Http status OK
-     *                      or Http status NOT_FOUND.
+     *
+     * @param assignmentID Unique assignment identifier.
+     * @return The assignment and Http status OK
+     * or Http status NOT_FOUND.
      */
     @RequestMapping(value = "/{assignmentID}", method = RequestMethod.GET)
     public ResponseEntity<AssignmentModel> getAssignment(@PathVariable("assignmentID") int assignmentID, HttpSession session)
@@ -95,10 +109,17 @@ public class AssignmentResource {
         Optional<AssignmentModel> assignment = assignmentDAO.getAssignmentModel(assignmentID);
 
         if (assignment.isPresent()) {
-            if(assignmentDAO.hasAccess(assignment.get(), false)) {
-                return new ResponseEntity<>(assignment.get(), HttpStatus.OK);
+            try {
+                if (assignmentDAO.hasAccess(assignment.get(), false)) {
+                    return new ResponseEntity<>(assignment.get(), HttpStatus.OK);
+
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
         }
+
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

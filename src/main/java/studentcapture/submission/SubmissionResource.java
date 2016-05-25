@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import studentcapture.login.LoginDAO;
 import studentcapture.lti.LTICommunicator;
 import studentcapture.lti.LTIInvalidGradeException;
 import studentcapture.lti.LTINullPointerException;
@@ -163,21 +164,21 @@ class SubmissionResource {
     /**
      * Stores a submission
      * @param assignmentID
-     * @param studentID
      * @param studentVideo
      * @param updatedSubmission
      * @return
      */
     @RequestMapping(value = "{studentID}", method = RequestMethod.POST)
     public ResponseEntity<String> storeSubmission(@PathVariable("assignmentID") int assignmentID,
-                                      @PathVariable("studentID") int studentID,
+                                      HttpSession session,
                                       @RequestPart(value = "studentVideo", required = false) MultipartFile studentVideo,
                                       @RequestPart(value = "submission") Submission updatedSubmission){
         String responseText = "OK";
         HttpStatus returnStatus;
         // TODO User from session
         // TODO check if submission can be submitted (begin/end date)
-        updatedSubmission.setStudentID(studentID);
+
+        updatedSubmission.setStudentID(LoginDAO.getUserIdFromSession(session));
         updatedSubmission.setAssignmentID(assignmentID);
         if(studentVideo != null) {
             updatedSubmission.setStudentVideo(studentVideo);

@@ -220,13 +220,15 @@ public class AssignmentDAO {
 
         DateFormat sdf1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
         DateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date1 = sdf1.parse(new Date().toString());
+        Date currentDate = sdf1.parse(new Date().toString());
 
-        Date date2 = sdf2.parse(assignmentModel.getAssignmentIntervall().getStartDate());
+        Date assignmentStartDate = sdf2.parse(assignmentModel.getAssignmentIntervall().getStartDate());
+        Date assignmentEndDate = sdf2.parse(assignmentModel.getAssignmentIntervall().getEndDate());
+
 
 
         if(video) {
-            if(date1.after(date2)) {
+            if(currentDate.after(assignmentStartDate) && currentDate.before(assignmentEndDate)) {
                 return true;
             }
 

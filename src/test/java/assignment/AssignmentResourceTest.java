@@ -69,10 +69,11 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         String sql3 = "INSERT INTO Users VALUES (3, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword', null);";
         String sql4 = "INSERT INTO Users VALUES (4, 'derp', 'abcd', 'defg', 'derp@gmail.com', 'MyGloriousPassword', null);";
 
-
         String sql5 = "INSERT INTO Course VALUES (1, 2016, 'VT', 'ABC', null, true);";
 
-        String sql6 = "INSERT INTO Assignment VALUES (1, 1, 'OU1', '2016-10-25 10:00:00', '2016-10-25 12:00:00', 60, 180, null, 'U_G_VG_MVG');";
+        String sql6 = "INSERT INTO Assignment VALUES (1, 1, 'OU1', '2016-10-25 10:00:00', '2016-10-25 12:00:00', 60, 180, null, 'IG_G_VG_MVG')";
+        String sql7 = "INSERT INTO Assignment VALUES (2, 1, 'OU1', '2016-6-25 10:00:00', '2016-10-25 12:00:00', 60, 180, null, 'IG_G_VG_MVG')";
+
         String sql10 = "INSERT INTO Participant VALUES (3, 1, 'Teacher');";
 
         jdbcMock.update(sql3);
