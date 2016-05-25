@@ -44,7 +44,6 @@ class SubmissionResource {
     @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
                                                             @PathVariable("studentID") int studentID){
-
         Optional<Submission> submission = DAO.getSubmission(assignmentID, studentID);
 
         if (submission.isPresent()){
