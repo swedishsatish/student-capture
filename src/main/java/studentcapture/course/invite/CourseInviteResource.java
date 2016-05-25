@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 /**
  * CourseInviteResource is a controller that maps REST requests related to 
  * 
- * @author tfy12hsm
  *
  */
 @RestController

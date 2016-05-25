@@ -42,8 +42,6 @@ public class AssignmentDAO {
      * @return the generated AssignmentID
      * @throws IllegalArgumentException fails if startDate or endDate is not
      *                        in the right format
-     *
-     * @author dv14oan & tfy13dbd
      */
     public int createAssignment(AssignmentModel assignmentModel)
             throws IllegalArgumentException {
@@ -203,7 +201,6 @@ public class AssignmentDAO {
      *
      * @param assignmentModel the assignment model
      * @return true or false
-     * @author c13bll
      */
     public boolean hasAccess(AssignmentModel assignmentModel){
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
@@ -288,8 +285,6 @@ public class AssignmentDAO {
      * 
      * @param assignmentId		assignments identifier
      * @return					sought assignment
-     * 
-     * @author tfy12hsm
      */
 	public Optional<AssignmentModel> getAssignment(int assignmentId) {
 		try {
@@ -315,8 +310,6 @@ public class AssignmentDAO {
      *
      * @param assignmentId		assignments identifier
      * @return					sought assignment
-     *
-     * @author tfy12hsm
      */
     public Optional<AssignmentModel> getPublishedAssignment(int assignmentId) {
         try {
@@ -344,8 +337,6 @@ public class AssignmentDAO {
      * @param assignmentID          Assignment identifier
      * @return The AssignmentModel
      * @throws NotFoundException    If the assignment was not found.
-     *
-     * @author dv14oan
      */
     public Optional<AssignmentModel> getAssignmentModel(int assignmentID) throws NotFoundException, IOException {
 
@@ -392,8 +383,6 @@ public class AssignmentDAO {
      *
      * @param assignmentID  Assignment identifier
      * @return true if the assignment were removed, else false.
-     *
-     * @author dv14oan
      */
     public boolean removeAssignment(int courseId, int assignmentID) throws IOException {
         int rowAffected = jdbcTemplate.update("DELETE FROM Assignment WHERE AssignmentId = ?", assignmentID);

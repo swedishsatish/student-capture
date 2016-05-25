@@ -22,7 +22,7 @@ public class ConfigDAO {
 
     /**
      * Returns saved user settings for the config page
-     * @author c13elt, sanna
+     *
      * @param userID Identifier of the user to get settings for
      * @return A Config object containing all the information
      */
@@ -46,7 +46,7 @@ public class ConfigDAO {
 
     /**
      * Changes a user's settings
-     * @author c13elt, sanna
+     *
      * @param userID Identifier of the user to modify
      * @param c An object containing all settings to be changed
      * @return True if everything went well, otherwise false

@@ -19,7 +19,6 @@ public class SettingsDAO {
     protected JdbcTemplate jdbcTemplate;
     /**
      * Returns saved user settings for the config page
-     * @author c13elt, sanna
      * @param userID Identifier of the user to get settings for
      * @return A Settings object containing all the information
      */
@@ -41,7 +40,6 @@ public class SettingsDAO {
     }
     /**
      * Changes a user's settings
-     * @author c13elt, sanna
      * @param userID Identifier of the user to modify
      * @param c An object containing all settings to be changed
      * @return True if everything went well, otherwise false

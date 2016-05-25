@@ -23,7 +23,6 @@ import java.util.Optional;
  * One Object is allowed to be stored for each session. The object will be 
  * lost of the session runs out.
  * 
- * @author tfy12hsm
  *
  */
 @Repository
@@ -322,7 +321,6 @@ public class SessionHandler {
 	/**
 	 * A small struct that keeps track of information about a session.
 	 * 
-	 * @author tfy12hsm
 	 *
 	 */
 	private class Session {

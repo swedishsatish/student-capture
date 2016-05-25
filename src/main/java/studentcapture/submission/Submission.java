@@ -43,7 +43,6 @@ public class Submission {
      * Constructor that parses map of database elements.
      *
      * @param map map retrieved from database
-     * @author tfy12hsm
      */
     public Submission(Map<String, Object> map) {
         // These three variables (assignmentID, studentID, submissionDate) cannot be null.

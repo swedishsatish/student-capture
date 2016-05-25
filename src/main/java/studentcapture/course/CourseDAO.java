@@ -21,9 +21,7 @@ public class CourseDAO {
 
     /**
      * Attempts to add a course to the database.
-     * 	
-     * @author tfy12hsm
-     * 
+     *
      * @param course	added course
      * @return			added course. Includes errorcode if problem has occured
      */
@@ -63,8 +61,6 @@ public class CourseDAO {
      * 
      * @param course	course to compare to
      * @return			course found
-     * 
-     * @author tfy12hsm
      */
     public CourseModel getCourseWithoutID(CourseModel course){
     	try {
@@ -87,8 +83,6 @@ public class CourseDAO {
      *
      * @param course	course to find
      * @return			found course
-     *
-     * @author tfy12hsm
      */
 	public CourseModel getCourse(CourseModel course) {
 		try {
@@ -129,8 +123,6 @@ public class CourseDAO {
 	 * 
 	 * @param course
 	 * @return
-	 * 
-	 * @author tfy12hsm
 	 */
 	public CourseModel updateCourse(CourseModel course) {
 		String changeDescriptionOnCourseStatement = "UPDATE Course SET "
@@ -160,10 +152,8 @@ public class CourseDAO {
     /**
      * Attempts to remove a course from the database.
      *
-     * @param courseID	courses database identification
+     * @param course	courses database identification
      * @return			true if successful, else false
-     * 
-     * @author tfy12hsm
      */
     public CourseModel removeCourse(CourseModel course) {
         String removeCourseStatement = "DELETE FROM Course WHERE CourseID=?";

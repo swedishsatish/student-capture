@@ -14,7 +14,6 @@ import java.util.Map;
  * hierarchy. A course-assignment hierarchy is a container of all 
  * information required to display the main page.
  *
- * @author tfy12hsm
  */
 public class HierarchyModel {
 	private int userId;
@@ -145,7 +144,6 @@ public class HierarchyModel {
      * Used to collect data related to a course in a users course-assignment
      * hierarchy.
      *
-     * @author tfy12hsm
      */
     public static class CoursePackage {
     	private CourseModel course;
@@ -211,7 +209,6 @@ public class HierarchyModel {
      * Used to collect data related to an assignment in a users
      * course-assignment hierarchy.
      *
-     * @author tfy12hsm
      */
     public static class AssignmentPackage {
     	private AssignmentModel assignment = null;

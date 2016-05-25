@@ -8,7 +8,6 @@ import java.util.Objects;
  * It is used to transport this information between the front end and the 
  * database.
  * 
- * @author tfy12hsm
  */
 public class CourseModel {
 	private Integer courseId;
@@ -40,8 +39,6 @@ public class CourseModel {
 	 * Parses a map of database elements and adds them to the 
 	 * 
 	 * @param map		map of database elements
-     * 
-     * @author tfy12hsm
 	 */
 	private void parseMap(Map<String, Object> map) {
 		courseId = (Integer) map.get("CourseId");

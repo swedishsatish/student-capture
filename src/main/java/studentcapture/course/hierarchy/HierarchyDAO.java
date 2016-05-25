@@ -25,7 +25,6 @@ import java.util.Optional;
 /**
  * Now with slightly less code smell.
  *
- * @author tfy12hsm
  *
  */
 public class HierarchyDAO {
@@ -48,7 +47,6 @@ public class HierarchyDAO {
      *
      * @param userId users identifier
      * @return hierarchy of course, assignment and submission data
-     * @author tfy12hsm
      */
     public Optional<HierarchyModel> getCourseAssignmentHierarchy(
             Integer userId) {
@@ -75,7 +73,6 @@ public class HierarchyDAO {
      *
      * @param hierarchy hierarchy added to
      * @param userId    student identifier
-     * @author tfy12hsm
      */
     private void addUserToHierarchy(HierarchyModel hierarchy,
                                     int userId) {
@@ -95,7 +92,6 @@ public class HierarchyDAO {
      *
      * @param hierarchy hierarchy added to
      * @param userId    teacher identifier
-     * @author tfy12hsm
      */
     private void addTeacherHierarchy(HierarchyModel hierarchy, int
             userId) {
@@ -123,7 +119,6 @@ public class HierarchyDAO {
      *
      * @param hierarchy hierarchy added to
      * @param userId    student identifier
-     * @author tfy12hsm
      */
     private void addStudentHierarchy(HierarchyModel hierarchy,
                                      int userId) {

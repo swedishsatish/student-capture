@@ -24,7 +24,6 @@ public class LoginDAO {
 
     /**
      * Add a new user to the User-table in the database.
-     * @author Timmy Olsson
      *
      * @param user  instance that contains information of the user to be added.
      */
@@ -72,7 +71,6 @@ public class LoginDAO {
 
     /**
      * Get user by username.
-     * @author Timmy Olsson
      * @param value to be searched for in respect to  given flag
      * @param flag 0 returns user object by giving username
      *             1 returns user object by giving userID.
@@ -113,7 +111,6 @@ public class LoginDAO {
 
     /**
      * Updates user with username from user object.
-     * @author Timmy Olsson
      *
      * @param user
      * @return true if update was successfull else false
@@ -146,7 +143,6 @@ public class LoginDAO {
 
     /**
      * Checks if given username already exists.
-     * @author Timmy Olsson
      *
      * @param userName user name for user.
      * @return true if it exists else false
@@ -163,7 +159,6 @@ public class LoginDAO {
 
     /**
      * Return email for a user
-     * @author c13elt, sanna
      *
      * @param userID
      * @return
@@ -180,7 +175,6 @@ public class LoginDAO {
 
     /**
      * Change a user's email address
-     * @author c13elt, sanna
      * @param userID Identifier of the user to modify
      * @param email The new email address
      */
