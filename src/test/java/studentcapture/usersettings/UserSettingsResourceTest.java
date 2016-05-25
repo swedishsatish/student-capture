@@ -32,7 +32,6 @@ public class UserSettingsResourceTest extends StudentCaptureApplicationTests {
     private String requestMappingInvalidID;
     /** original test string, as json "{"language":"english","email":"test@email.test","mailUpdate":true,"textSize":12}" */
     private static String json_test_string = "{\"language\":\"english\",\"email\":\"test@email.test\",\"mailUpdate\":true,\"textSize\":12}";
-    private Settings settings;
 
     @Before
     public void BeforeClass() {
@@ -42,16 +41,6 @@ public class UserSettingsResourceTest extends StudentCaptureApplicationTests {
         /* /users/{id}/settings resource mapping. */
         requestMapping = getNewRequestMapping(String.valueOf(1));
         requestMappingInvalidID = getNewRequestMapping(String.valueOf(0));
-
-        /*
-         * Create a settings object and fill with the same test data
-         * as json_test_string
-         */
-        settings = new Settings();
-        settings.setEmail("test@email.test");
-        settings.setLanguage("english");
-        settings.setMailUpdate(Boolean.TRUE);
-        settings.setTextSize(12);
     }
 
     @Before
