@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import studentcapture.mail.MailClient;
 import studentcapture.user.User;
+import studentcapture.user.UserDAO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
@@ -21,7 +22,7 @@ import java.util.UUID;
 public class ResetPasswordController {
     
     @Autowired
-    private LoginDAO loginDao;
+    private UserDAO userDAO;
     
     /**
      * Generates a link for resetting username's password, and emails the link
@@ -46,7 +47,7 @@ public class ResetPasswordController {
         
         //flag = 0 for username, flag = 1 for userID
         int flag = 0;
-        User user = loginDao.getUser(username, flag);
+        User user = userDAO.getUser(username, flag);
 
         
         //Return if user does not exist
@@ -73,7 +74,7 @@ public class ResetPasswordController {
             user.setToken(token);
             
             //Update user
-            loginDao.updateUser(user);
+            userDAO.updateUser(user);
                         
             //Email link
             MailClient mailClient = new MailClient();
@@ -112,7 +113,7 @@ public class ResetPasswordController {
                 
         //flag = 0 for username, flag = 1 for userID
         int flag = 0;
-        User user = loginDao.getUser(username, flag);
+        User user = userDAO.getUser(username, flag);
                 
         ModelAndView mav = new ModelAndView(); 
         
@@ -130,7 +131,7 @@ public class ResetPasswordController {
             mav.setViewName("redirect:login?passwordchanged");
 
             //Update user
-            loginDao.updateUser(user);
+            userDAO.updateUser(user);
 
         } else {
             mav.setViewName("redirect:login?error=badtoken");
