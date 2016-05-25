@@ -3,7 +3,6 @@ package studentcapture.config;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,9 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
-import studentcapture.datalayer.database.H2DataSource;
 
-import javax.sql.DataSource;
 import java.nio.charset.Charset;
 
 @RunWith(SpringJUnit4ClassRunner.class)
