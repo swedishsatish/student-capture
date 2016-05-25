@@ -15,6 +15,7 @@ import studentcapture.lti.LTISignatureException;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
@@ -34,9 +35,8 @@ class SubmissionResource {
     @Autowired
     private SubmissionDAO DAO;
 
-
     /**
-     * Gets a student's submission on a particular assignment.
+     * Acquires a student's submission on a particular assignment.
      * @param assignmentID The assignment to which a student has submitted an answer.
      * @param studentID The student's ID that determines which of the submissions should be returned.
      * @return A submission object contained in a HTTP ResponseEntity.
@@ -44,16 +44,22 @@ class SubmissionResource {
     @RequestMapping(value = "{studentID}", method = RequestMethod.GET)
     public ResponseEntity<Submission> getSpecificSubmission(@PathVariable("assignmentID") int assignmentID,
                                                             @PathVariable("studentID") int studentID){
-        Submission body = DAO.getSubmission(assignmentID, studentID).get();
-        return new ResponseEntity<>(body, HttpStatus.OK);
+
+        Optional<Submission> submission = DAO.getSubmission(assignmentID, studentID);
+
+        if (submission.isPresent()){
+            return new ResponseEntity<>(submission.get(), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**
-     * Gets a video from the file system, can get either the feedback video or the submission video.
+     * Acquires a video from the file system, can get either the feedback video or the submission video.
      * @param assignmentID the assignment of which the feedback/submission video belongs to
      * @param studentID the student which the feedback/submission video belongs to
      * @param fileName the name of the file requested, can be either feedback or submission
-     * @return the video file
+     * @return The video file if everything went fine, otherwise a HTTP Status error message.
      */
     @RequestMapping(value = "{studentID}/videos/{fileName}", method = RequestMethod.GET, produces = "video/webm")
     public ResponseEntity<InputStreamResource> getFeedbackVideo(@PathVariable("assignmentID") int assignmentID,
@@ -64,13 +70,12 @@ class SubmissionResource {
         }else{
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
     /**
-     * Gets all submissions for an assignment
-     * @param assignmentID
-     * @return
+     * Acquires all submissions for an assignment
+     * @param assignmentID The assignmentID for the submitted submissions.
+     * @return A list of submissions for the assignment
      */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") int assignmentID){
@@ -89,7 +94,7 @@ class SubmissionResource {
     public ResponseEntity<HashMap<String, String>> markSubmission(HttpSession session,
                                      @PathVariable("assignmentID") int assignmentID,
                                      @PathVariable("studentID") int studentID,
-                                     @RequestBody Submission submission) throws IllegalAccessException {
+                                     @RequestBody Submission submission) {
 
         HashMap<String, String> response = new HashMap<>();
         HttpStatus httpStatus = OK;
@@ -161,31 +166,31 @@ class SubmissionResource {
 
 
     /**
-     * Stores a submission
-     * @param assignmentID
-     * @param studentID
-     * @param studentVideo
-     * @param updatedSubmission
-     * @return
+     * Stores a submission.
+     * @param assignmentID The ID of the assignment which the submission corresponds to.
+     * @param studentID The studentID for the stored submission.
+     * @param studentVideo The video of the submission.
+     * @param submission Container for other submission related information.
+     * @return HTTP status that's either OK or some error code together with an appropriate error message.
      */
     @RequestMapping(value = "{studentID}", method = RequestMethod.POST)
     public ResponseEntity<String> storeSubmission(@PathVariable("assignmentID") int assignmentID,
                                       @PathVariable("studentID") int studentID,
                                       @RequestPart(value = "studentVideo", required = false) MultipartFile studentVideo,
-                                      @RequestPart(value = "submission") Submission updatedSubmission){
+                                      @RequestPart(value = "submission") Submission submission){
         String responseText = "OK";
         HttpStatus returnStatus;
         // TODO User from session
         // TODO check if submission can be submitted (begin/end date)
-        updatedSubmission.setStudentID(studentID);
-        updatedSubmission.setAssignmentID(assignmentID);
+        submission.setStudentID(studentID);
+        submission.setAssignmentID(assignmentID);
         if(studentVideo != null) {
-            updatedSubmission.setStudentVideo(studentVideo);
-            updatedSubmission.setStatus("answer");
+            submission.setStudentVideo(studentVideo);
+            submission.setStatus("answer");
         } else {
-            updatedSubmission.setStatus("blank");
+            submission.setStatus("blank");
         }
-        if(DAO.addSubmission(updatedSubmission, true)) {
+        if(DAO.addSubmission(submission, true)) {
             returnStatus = HttpStatus.OK;
         } else {
             returnStatus = HttpStatus.FORBIDDEN;
@@ -201,10 +206,10 @@ class SubmissionResource {
     }
 
     /**
-     * This will save the teachers feedback-video (Cause of the MultipartFile it must be
+     * This will save the teacher's feedback-video (Because of the MultipartFile it must be
      * POST, it should be PATCH) received as a part of the POST.
      * @param assignmentID          The assignmentID of the video
-     * @param studentID             The studentID of submission that will recive feedback-Video.
+     * @param studentID             The studentID of submission that will receive feedback-Video.
      * @param courseID              The course of the submission-feedback-video.
      * @param teacherFeedbackVideo  The multipartVideo.
      * @return                      Will only return HTTPStatus if saving went successful or not.

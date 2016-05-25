@@ -4,7 +4,6 @@ import studentcapture.course.CourseModel;
 
 /**
  * 
- * @author tfy12hsm
  *
  */
 public class InviteModel {

@@ -137,7 +137,6 @@ public class FilesystemInterface {
 	 * @param courseID course id from the database.
 	 * @param assignmentID from database.
 	 * @return true if video was stored successfully, false otherwise.
-	 * @author c13ljn
 	 */
 	public static boolean storeAssignmentVideo(Integer courseID, String assignmentID, MultipartFile source) {
 

@@ -4,7 +4,6 @@ import java.util.Map;
 
 /**
  * 
- * @author tfy12hsm
  *
  */
 public class Participant {

@@ -1,20 +1,5 @@
 package studentcapture.course.hierarchy;
 
-import static org.junit.Assert.*;
-
-import java.sql.Types;
-import java.util.Optional;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.context.WebApplicationContext;
-
-import studentcapture.assignment.AssignmentDAO;
-import studentcapture.assignment.AssignmentModel;
-
 import studentcapture.config.StudentCaptureApplicationTests;
 
 public class HierarchyDAOTest extends StudentCaptureApplicationTests {
@@ -68,7 +53,7 @@ public class HierarchyDAOTest extends StudentCaptureApplicationTests {
 //                "Published, GradeScale) VALUES (DEFAULT ,2,'Test4'," +
 //                "'2016-05-01 02:00:00', '2016-05-01 11:00:00'," +
 //                "0,100,null,'NUMBER_SCALE');");
-//	    jdbcMock.update("INSERT INTO Submission VALUES (1, 1, null,"
+//	    jdbcMock.update("INSERT INTO Submission VALUES (1, 1, true,"
 //	    		+ " null,'2016-05-01 03:00:00', null, null, null, null, "
 //	    		+ "null);");
 //	    jdbcMock.update("INSERT INTO Submission VALUES (1, 2, null,"
@@ -96,7 +81,8 @@ public class HierarchyDAOTest extends StudentCaptureApplicationTests {
 //
 //	@Test
 //	public void test() {
-//		Optional<HierarchyModel> hierarchy = hierarchyDAO.getCourseAssignmentHierarchy(1);
+//		Optional<HierarchyModel> hierarchy = 
+//				hierarchyDAO.getCourseAssignmentHierarchy(1);
 //		
 //		assertTrue(hierarchy!=null);
 //	}

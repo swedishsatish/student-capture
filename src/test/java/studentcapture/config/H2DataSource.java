@@ -6,7 +6,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 /**
  * Configurates the  h2 database.
  *
- * @author Timmy Olsson
  */
 @Configuration
 public class H2DataSource {
