@@ -12,10 +12,21 @@ window.Settings = React.createClass({
      */
     componentDidMount: function () {
         var settingsArray = this.GETSettings();
-        document.getElementById("emailAddressInput").value = settingsArray.emailAddress;
-        document.getElementById("ts" + settingsArray.textSize).selected = true;
-        document.getElementById("lang" + settingsArray.language).selected = true;
-        document.getElementById("emailCheckbox").checked = settingsArray.receiveEmails;
+
+        if (settingsArray.status == "ok") {
+            if (settingsArray.emailAddress!=null) {
+                document.getElementById("emailAddressInput").value = settingsArray.emailAddress;
+            }
+            if (settingsArray.textSize!=null) {
+                document.getElementById("ts" + settingsArray.textSize).selected = true;
+            }
+            if (settingsArray.language!=null) {
+                document.getElementById("lang" + settingsArray.language).selected = true;
+            }
+            if (settingsArray.receiveEmails!=null) {
+                document.getElementById("emailCheckbox").checked = settingsArray.receiveEmails;
+            }
+        }
     },
 
     /*
@@ -63,6 +74,7 @@ window.Settings = React.createClass({
 
         // Array to fill with actual values, from the database, and return
         var settingsArray = {
+            status: "",
             userID: "",
             language: "",
             emailAddress: "",
@@ -75,12 +87,14 @@ window.Settings = React.createClass({
             type: "GET",
             async: false,
             success: function (data, status) {
+                settingsArray.status = "ok";
                 settingsArray.emailAddress = data.email;
                 settingsArray.textSize = data.textSize;
                 settingsArray.language = data.language;
                 settingsArray.receiveEmails = data.mailUpdate;
             }.bind(this),
             error: function (xhr, status, err) {
+                settingsArray.status = "error";
                 console.log("Settings.js: Error: GETSettings");
             }.bind(this)
         });
