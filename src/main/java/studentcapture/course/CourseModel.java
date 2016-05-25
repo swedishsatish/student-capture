@@ -147,6 +147,9 @@ public class CourseModel {
 	
 	@Override
 	public boolean equals(Object other) {
+		if (other == this) return true;
+		if (!(other instanceof CourseModel)) return false;
+
 		CourseModel course = (CourseModel) other;
 		return (Objects.equals(getActive(), course.getActive())&&
 				(Objects.equals(course.getCourseDescription(), getCourseDescription()))&&
