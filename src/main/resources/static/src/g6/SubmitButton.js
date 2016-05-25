@@ -139,13 +139,13 @@ function submitForm(method) {
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
-            console.log("SUCCESS reqBody contains:", fd);
+            console.log("SUCCESS reqBody contains:", reqBody);
             // TODO: check response with if/else, if respons is fail give error message
 
           //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);
-            console.log("ReqBody contains:", fd);
+            console.log("ReqBody contains:", reqBody);
         }, done: function (e) {
             console.log("DONE");
         }
@@ -207,26 +207,16 @@ function  getForm(method) {
         url: "assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID,
         timeout: 100000,
         success: function (response) {
-            console.log("HEJ Sucsess");
             console.log(response);
-            console.log("HEJ ");
-            //console.log(response);
-            //document.setElementById("Course") = response["course"] == null ? "" : response["course"];
             document.getElementById('teachercomments').value = response["status"] == null ? "" : response["feedback"];
-            console.log("HEJ2");
-            document.getElementById('dropDownMenu').value = response["grade"]["grade"] == null ? "U" : response["grade"]["grade"];
-            //document.getElementById('dropDownMenu').value = responseData["grade"]["grade"];
-            console.log("HEJ4");
-            //document.getElementById('ifStudentPass').checked = response["studentPass"] == null "false" : response["studentPass"];
-            //document.getElementById('ifStudentPass').checked = responseData["studentPass"];
-            //console.log("response[publishStudentSubmission] :"+response["publishStudentSubmission"]);
+           // document.getElementById('dropDownMenu').value = response["grade"]["grade"] == null ? "U" : response["grade"]["grade"];
+            document.getElementById('dropDownMenu').value = (response["grade"]["grade"] == null)|| (gradeEqualsTo(response["grade"]["grade"])) ? "U" : response["grade"]["grade"];
             console.log("response[studentPublishConsent] :"+response["studentPublishConsent"]);
             console.log("1CheckIf:"+response["studentPublishConsent"] ? "false" : "true");
             console.log("2CheckIf:"+response["studentPublishConsent"] ? "1" : "2");
 
             document.getElementById('PermissionFromStudent').disabled = response["studentPublishConsent"] ? false : true;
             document.getElementById('PermissionFromStudent').checked = response["publishStudentSubmission"] ? true : false;
-            //document.getElementById('PermissionFromStudent').checked = ["publishStudentSubmission"];
 
         }, error: function (e) {
             console.log("FAIL HUE");
@@ -237,6 +227,18 @@ function  getForm(method) {
         }
     });
 
+}
+/**
+ * Checks if a valid grade is returned from database
+ * @param grade returned grade to check
+ * @returns {boolean} true if grade is valid, else false
+ */
+function gradeEqualsTo(grade){
+    var validGrade=false;
+    if(grade == ( "U" || "O" || "K" || "G")){
+        validGrade=true;
+    }
+    return validGrade;
 }
 
 /**

@@ -66,7 +66,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
                 "Description",          // Info
                 videoIntervall,
                 assignmentIntervalls,
-                "U_O_K_G",              // GradeScale
+                GradeScale.U_O_K_G.toString(), // GradeScale
                 "Recap");               // Recap
         am.setCourseID(courseID);
     }
@@ -170,11 +170,10 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
         am.setTitle(updatedTitle);
 
         // Update and get updated
-        boolean res = assignmentDAO.updateAssignment(am);
+        assignmentDAO.updateAssignment(am);
         AssignmentModel am2 = assignmentDAO.getAssignmentModel(am.getAssignmentID()).get();
 
         // Assert that truly updated
-        assertTrue(res);
         assertNotEquals(am2.getTitle(), originalTitle);
         assertEquals(am2.getTitle(), updatedTitle);
     }
@@ -192,11 +191,10 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
         am.setRecap(updatedRecap);
 
         // Update and get updated
-        boolean res = assignmentDAO.updateAssignment(am);
+        assignmentDAO.updateAssignment(am);
         AssignmentModel am2 = assignmentDAO.getAssignmentModel(am.getAssignmentID()).get();
 
         // Assert that truly updated
-        assertTrue(res);
         assertNotEquals(am2.getRecap(), originalRecap);
         assertEquals(am2.getRecap(), updatedRecap);
     }
@@ -211,7 +209,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
         am.setTitle(updatedTitle);
 
         // Try to update
-        boolean res = assignmentDAO.updateAssignment(am);
+        assignmentDAO.updateAssignment(am);
     }
 
 }

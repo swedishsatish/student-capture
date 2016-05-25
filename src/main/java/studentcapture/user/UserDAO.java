@@ -19,7 +19,6 @@ public class UserDAO {
 
     /**
      * Add a new user to the User-table in the database.
-     * @author Timmy Olsson, c12ton
      *
      * @param user  instance that contains information of the user to be added.
      * @return If an error has occurred a appropriate flag will be returned,
@@ -61,7 +60,6 @@ public class UserDAO {
 
     /**
      * Get user by username.
-     * @author Timmy Olsson, c12ton
      * @param value to be searched for in respect to  given flag
      * @param flag 0 returns user object by giving username
      *             1 returns user object by giving userID.
@@ -104,7 +102,6 @@ public class UserDAO {
 
     /**
      * Updates user with given user object. This is with respect to username
-     * @author Timmy Olsson, c12ton
      *
      * @param user user object to be updated
      * @return true if update was successfull else false
@@ -139,7 +136,6 @@ public class UserDAO {
 
     /**
      * Checks if given username already exists in the database.
-     * @author Timmy Olsson, c12ton
      *
      * @param userName user name for user.
      * @return true if it exists else false
@@ -156,7 +152,6 @@ public class UserDAO {
 
     /**
      * Checks if given email already  exists in the database.
-     * @author Timmy Olsson, c12ton
      *
      * @param email email to be checked if it exist
      * @return  boolean if the email exist or not
@@ -173,7 +168,6 @@ public class UserDAO {
 
     /**
      * Return email for a user
-     * @author c13elt, sanna
      *
      * @param userID
      * @return
@@ -190,7 +184,6 @@ public class UserDAO {
 
     /**
      * Change a user's email address
-     * @author c13elt, sanna
      * @param userID Identifier of the user to modify
      * @param email The new email address
      */

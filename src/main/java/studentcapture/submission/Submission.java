@@ -20,8 +20,7 @@ public class Submission {
     private Timestamp submissionDate;
     private Grade grade;
     private Boolean publishStudentSubmission;
-    private String courseID;
-    private String courseCode;
+    private Integer courseID;
     private String feedback;
     private Status subStatus;
     private String firstName;
@@ -29,7 +28,6 @@ public class Submission {
     private String status;
     private String teacherName;
     private MultipartFile studentVideo;
-    private MultipartFile feedbackVideo;
 
     public Submission(int studentID, int assignmentID) {
         this.studentID = studentID;
@@ -43,7 +41,6 @@ public class Submission {
      * Constructor that parses map of database elements.
      *
      * @param map map retrieved from database
-     * @author tfy12hsm
      */
     public Submission(Map<String, Object> map) {
         // These three variables (assignmentID, studentID, submissionDate) cannot be null.
@@ -97,14 +94,6 @@ public class Submission {
         this.studentVideo = studentVideo;
     }
 
-    public MultipartFile getFeedbackVideo() {
-        return feedbackVideo;
-    }
-
-    public void setFeedbackVideo(MultipartFile feedbackVideo) {
-        this.feedbackVideo = feedbackVideo;
-    }
-
     @Override
     public String toString() {
         return "Submission{" +
@@ -115,7 +104,6 @@ public class Submission {
                 ", grade=" + grade +
                 ", publishStudentSubmission=" + publishStudentSubmission +
                 ", courseID='" + courseID + '\'' +
-                ", courseCode='" + courseCode + '\'' +
                 ", feedback='" + feedback + '\'' +
                 ", subStatus=" + subStatus +
                 ", firstName='" + firstName + '\'' +
@@ -123,7 +111,6 @@ public class Submission {
                 ", status='" + status + '\'' +
                 ", teacherName='" + teacherName + '\'' +
                 ", studentVideo=" + studentVideo +
-                ", feedbackVideo=" + feedbackVideo +
                 '}';
     }
 
@@ -138,11 +125,11 @@ public class Submission {
         }
     }
 
-    public String getCourseID() {
+    public Integer getCourseID() {
         return courseID;
     }
 
-    public void setCourseID(String courseID) {
+    public void setCourseID(Integer courseID) {
         this.courseID = courseID;
     }
 
@@ -206,14 +193,6 @@ public class Submission {
         this.studentPublishConsent = studentPublishConsent;
     }
 
-    public String getCourseCode() {
-        return courseCode;
-    }
-
-    public void setCourseCode(String courseCode) {
-        this.courseCode = courseCode;
-    }
-
     public String getFeedback() {
         return feedback;
     }
@@ -269,8 +248,6 @@ public class Submission {
             return false;
         if (courseID != null ? !courseID.equals(that.courseID) : that.courseID != null)
             return false;
-        if (courseCode != null ? !courseCode.equals(that.courseCode) : that.courseCode != null)
-            return false;
         if (feedback != null ? !feedback.equals(that.feedback) : that.feedback != null)
             return false;
         if (subStatus != that.subStatus) return false;
@@ -284,7 +261,8 @@ public class Submission {
             return false;
         if (studentVideo != null ? !studentVideo.equals(that.studentVideo) : that.studentVideo != null)
             return false;
-        return feedbackVideo != null ? feedbackVideo.equals(that.feedbackVideo) : that.feedbackVideo == null;
+
+        return true;
 
     }
 }

@@ -6,7 +6,6 @@ import studentcapture.assignment.AssignmentDateIntervalls;
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.assignment.AssignmentVideoIntervall;
 import studentcapture.assignment.GradeScale;
-import studentcapture.model.Grade;
 
 import static org.junit.Assert.assertEquals;
 

@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import studentcapture.course.CourseModel;
 import studentcapture.course.participant.ParticipantDAO;
-import studentcapture.login.LoginDAO;
 import studentcapture.user.User;
 
 import javax.servlet.http.HttpSession;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpSession;
 /**
  * CourseInviteResource is a controller that maps REST requests related to 
  * 
- * @author tfy12hsm
  *
  */
 @RestController
