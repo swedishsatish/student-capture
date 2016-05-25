@@ -2,10 +2,14 @@
  *
  *@author: Benjamin Björklund <c13bbd>,
  *         Tobias Estefors <dv13tes>
+ *         Squad 8
  *
  *@note: This react-class is rendered from HelpWindow.js
  **/
 
+/*
+Taken from profile.js
+ */
 function genScripts(){
     var script1 = document.createElement("script");
     script1.setAttribute("src","src/g2/classie.js");
@@ -18,6 +22,9 @@ function genScripts(){
 
 }
 
+/*
+Taken from profile.js
+ */
 function reloadScripts() {
     var script1 = document.getElementById("script1");
     var script2 = document.getElementById("script2");
@@ -26,8 +33,15 @@ function reloadScripts() {
     genScripts();
 }
 
+/**
+ * Window for the user to send an email to support.
+ */
 window.EmailSupportWindow = React.createClass({
 
+    /**
+     * Sends the email to support (via the resource-layer). This should
+     * send data to HelpResource.java
+     */
     sendClickHandle: function () {
         $.ajax({
             url: "help/form",
@@ -36,21 +50,22 @@ window.EmailSupportWindow = React.createClass({
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify({
+                //Get the given return email address
                 "senderEmail": document.getElementById('emailTextArea').value + "",
-                "senderOperatingSystem": document.getElementById('platformSelect').value + "",
-                "senderBrowser": document.getElementById('browserSelect').value + "",
-                "senderMessage": document.getElementById('messageTextArea').value + ""
-            }),
-            success: function (data, status) {
-
-            }.bind(this),
-            error: function (xhr, status, err) {
-
-            }.bind(this)
+                //Get the type of operating system
+                "senderOperatingSystem": navigator.platform + "", 
+                //Get the browser name and version
+                "senderBrowser": DetectRTC.browser.name + " " + DetectRTC.browser.version, 
+                //Get the message written by user
+                "senderMessage": document.getElementById('messageTextArea').value + "" 
+            })
         });
 
         document.getElementById('sendButton').disabled = true;
     },
+    /**
+     * Handle for if the user presses the 'back'.
+     */
     backClickHandle: function () {
         ReactDOM.render(<HelpWindow />, document.getElementById('modal-container'));
         reloadScripts();
@@ -59,18 +74,8 @@ window.EmailSupportWindow = React.createClass({
         return (
             <div>
                 <div className="row">
-                    How can we help? <br />
+                    <b>How can we help?</b> <br />
                     Your email: <input id="emailTextArea" type="text" placeholder="example@example.com" /> <br />
-                    Platform:
-                    <select id="platformSelect">
-                        <option>Windows ME</option>
-                        <option>Redhat Fedora</option>
-                    </select> <br />
-                    Web-browser:
-                    <select id="browserSelect">
-                        <option>Lynx</option>
-                        <option>Chromium</option>
-                    </select> <br />
                     Message: <br />
                     <textarea id="messageTextArea" placeholder="Write message here"/> <br />
                 </div>

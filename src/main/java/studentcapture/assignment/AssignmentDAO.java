@@ -115,7 +115,7 @@ public class AssignmentDAO {
         return insertQueryString;
     }
 
-    public void addAssignmentVideo(MultipartFile video, String courseID, String assignmentID) {
+    public void addAssignmentVideo(MultipartFile video, Integer courseID, String assignmentID) {
         FilesystemInterface.storeAssignmentVideo(courseID, assignmentID, video);
     }
 
@@ -302,10 +302,8 @@ public class AssignmentDAO {
 	    	
 	    	return Optional.of(result);
 		} catch (IncorrectResultSizeDataAccessException e){
-			//TODO
 		    return Optional.empty();
 		} catch (DataAccessException e1){
-			//TODO
 			return Optional.empty();
 		}
 	}
@@ -330,10 +328,8 @@ public class AssignmentDAO {
 
             return Optional.of(result);
         } catch (IncorrectResultSizeDataAccessException e){
-            //TODO
             return Optional.empty();
         } catch (DataAccessException e1){
-            //TODO
             return Optional.empty();
         }
     }
