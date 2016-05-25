@@ -62,7 +62,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
                 "Description",          // Info
                 videoIntervall,
                 assignmentIntervalls,
-                "U_O_K_G",              // GradeScale
+                GradeScale.U_O_K_G.toString(), // GradeScale
                 "Recap");               // Recap
         am.setCourseID(courseID);
     }
