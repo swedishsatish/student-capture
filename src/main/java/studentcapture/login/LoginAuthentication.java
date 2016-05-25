@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import studentcapture.user.User;
+import studentcapture.user.UserDAO;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -38,7 +39,7 @@ public class LoginAuthentication implements AuthenticationProvider {
     private static final int SESSION_TIMEOUT = 60*60;
     
     @Autowired
-    private LoginDAO loginDao;
+    private UserDAO userDao;
     
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
@@ -78,7 +79,7 @@ public class LoginAuthentication implements AuthenticationProvider {
 	 * @return true if user name and password match in the database, else false
 	 */
 	private boolean checkUser(String username, String password) {
-        User user = loginDao.getUser(username, 0);
+        User user = userDao.getUser(username, 0);
         if (user == null) {
         	return false;
         }
@@ -91,7 +92,7 @@ public class LoginAuthentication implements AuthenticationProvider {
 	 * @param username The user that is logging in.
 	 */
 	private void updateSession(String username) {
-		User user = loginDao.getUser(username, 0);
+		User user = userDao.getUser(username, 0);
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		attr.getRequest().getSession().setAttribute(SESSION_USERNAME_TAG, user.getUserName());
 		attr.getRequest().getSession().setAttribute(SESSION_USERID_TAG, user.getUserID());
