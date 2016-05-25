@@ -17,14 +17,14 @@ import static org.junit.Assert.*;
 
 public class FilesystemInterfaceTest {
     private String courseCode;
-    private String courseID;
+    private Integer courseID;
     private String assignmentID;
     private MultipartFile testFile;
 
     @Before
     public void setUp() throws Exception {
         courseCode = "test";
-        courseID = "5DV151";
+        courseID = 1;
         assignmentID = "1337";
 
     }
@@ -77,7 +77,13 @@ public class FilesystemInterfaceTest {
         FilesystemInterface.storeFeedbackText(submission, testFile);
         File storedFile = new File(FilesystemInterface.generatePath(submission)+FilesystemConstants.FEEDBACK_TEXT_FILENAME);
         assertTrue(storedFile.exists());
+    }
 
+    @Test
+    public void shouldCreateFilePathWithoutNullDir() throws Exception {
+        Submission submission = createSubmissionModel();
+        String result = FilesystemInterface.generatePath(submission);
+        assertTrue(result.endsWith("/moose/1/1337/15/"));
     }
 
 
@@ -194,7 +200,7 @@ public class FilesystemInterfaceTest {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionAssignment(){
-        FilesystemInterface.storeAssignmentVideo("test","1337",null);
+        FilesystemInterface.storeAssignmentVideo(1,"1337",null);
     }
     @Test
     public void shouldStoreFileToNewPathAssignment(){
@@ -210,7 +216,6 @@ public class FilesystemInterfaceTest {
         Submission submission = new Submission();
         submission.setCourseID(courseID);
         submission.setAssignmentID(Integer.parseInt(assignmentID));
-        submission.setCourseCode(courseCode);
         submission.setStudentID(15);
         return submission;
     }
