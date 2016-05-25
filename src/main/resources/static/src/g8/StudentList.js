@@ -41,7 +41,7 @@ var StudentList = React.createClass({
             "assignmentID":user.assignmentID,
             "teacherName":user.teacherName}];
         document.getElementById("courseContent").innerHTML = ""; //TODO: find better solution.
-        ReactDOM.render(<RenderHandle studentArray={student} idArray={this.props.idArray} />, document.getElementById("courseContent"));
+        ReactDOM.render(<RenderHandle studentArray={student} idArray={this.props.idArray} scale={this.props.scale} />, document.getElementById("courseContent"));
     },
 
     componentWillMount: function () {
