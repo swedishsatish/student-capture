@@ -300,7 +300,6 @@ public class SubmissionDAO {
 		}else{
 			submission.setCourseID(Integer.toString(courseID));
 			String path = FilesystemInterface.generatePath(submission) + fileName;
-			System.out.println(path);
 			return FilesystemInterface.getVideo(path);
 		}
 	}
@@ -314,10 +313,7 @@ public class SubmissionDAO {
      * @return true if it succeeds, otherwise false.
      */
 	public boolean setFeedbackVideo(Submission submission, MultipartFile feedbackVideo) {
-
 		return FilesystemInterface.storeFeedbackVideo(submission, feedbackVideo);
-
-
 	}
 
 	/**
