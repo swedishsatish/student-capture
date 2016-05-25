@@ -19,7 +19,7 @@ public class LTICommunicatorTest {
         submission.setGrade(new Grade("VG", 1));
         submission.setFeedback("Dåligt");
         submission.setAssignmentID(100);
-        submission.setCourseID("2000");
+        submission.setCourseID(2000);
         submission.setStudentID(12);
     }
 

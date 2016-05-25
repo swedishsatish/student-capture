@@ -139,7 +139,7 @@ public class FilesystemInterface {
 	 * @return true if video was stored successfully, false otherwise.
 	 * @author c13ljn
 	 */
-	public static boolean storeAssignmentVideo(String courseID, String assignmentID, MultipartFile source) {
+	public static boolean storeAssignmentVideo(Integer courseID, String assignmentID, MultipartFile source) {
 
 		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/";
 
