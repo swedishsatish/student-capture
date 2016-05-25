@@ -106,6 +106,10 @@ btn.onclick = function() {
 
     // table content with the minimum requirements test
     testTable.innerHTML = "<tr><td>Test</td><td>Result</td></tr>"+
+                        "<tr><td>Operating system</td><td>" + DetectRTC.osName + " "
+                                                            + DetectRTC.osVersion + "</td></tr>"+
+                        "<tr><td>Browser</td><td>" + DetectRTC.browser.name + " "
+                                                   + DetectRTC.browser.version + "</td></tr>"+
                         "<tr><td>webRTC support</td><td>" + DetectRTC.isWebRTCSupported + "</td></tr>"+
                         "<tr><td>webcam found</td><td>" + DetectRTC.hasWebcam + "</td></tr>"+
                         "<tr><td>microphone found</td><td>" + DetectRTC.hasMicrophone + "</td></tr>"+
