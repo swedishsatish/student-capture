@@ -44,6 +44,7 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
         String sql7 = "INSERT INTO Submission VALUES (1, 3, null, null, '2016-05-13 11:00:00', 'MVG', 2, null, null, null);";
         String sql8 = "INSERT INTO Participant VALUES (3, 1, 'Student');";
         String sql9 = "INSERT INTO Participant VALUES (2, 1, 'Student');";
+        String sql10 = "INSERT INTO MailScheduler VALUES (1,'2016-05-24 11:00:00');";
 
         jdbcMock.update(sql1);
         jdbcMock.update(sql2);
@@ -54,6 +55,7 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
         jdbcMock.update(sql7);
         jdbcMock.update(sql8);
         jdbcMock.update(sql9);
+        jdbcMock.update(sql10);
 
     }
 
@@ -67,12 +69,15 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
         String sql3 = "DELETE FROM Assignment;";
         String sql4 = "DELETE FROM Submission;";
         String sql5 = "DELETE FROM Participant;";
+        String sql6 = "DELETE FROM MailScheduler;";
 
+        jdbcMock.update(sql6);
         jdbcMock.update(sql5);
         jdbcMock.update(sql4);
         jdbcMock.update(sql3);
         jdbcMock.update(sql2);
         jdbcMock.update(sql1);
+
     }
 
 
@@ -97,6 +102,21 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
     @Test
     public void testWrongAssignmentID(){
         assertEquals(Optional.empty(),mailDAO.getStartDateFromAssignment("12345"));
+    }
+
+    @Test
+    public void testGetNotification(){
+        List<String> notificationList = mailDAO.getNotificationList().get();
+        assertEquals(1,notificationList.size());
+    }
+
+    @Test
+    public void testDontGetNotification(){
+        String sqlUpdate = "UPDATE MailScheduler Set AssignmentID = 1, NotificationDate = '2050-05-24 11:00:00' "
+                +"WHERE AssignmentID=1;";
+        jdbcMock.update(sqlUpdate);
+        List<String> notificationList = mailDAO.getNotificationList().get();
+        assertEquals(0,notificationList.size());
     }
 
 

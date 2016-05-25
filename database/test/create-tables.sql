@@ -75,3 +75,9 @@ CREATE TABLE IF NOT EXISTS Config (
 CREATE TABLE IF NOT EXISTS Administrator (
     Email                       VARCHAR(128)
     );
+
+CREATE TABLE IF NOT EXISTS MailScheduler (
+    AssignmentId                INT             references Assignment(AssignmentId),
+    NotificationDate            timestamp       NOT NULL,
+    PRIMARY KEY (AssignmentId)
+    );
