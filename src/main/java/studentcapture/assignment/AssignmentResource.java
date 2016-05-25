@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Optional;
 
 /**
@@ -65,7 +67,15 @@ public class AssignmentResource {
     @RequestMapping(value = "/{assignmentID}/video", method = RequestMethod.GET, produces = "video/webm")
     public ResponseEntity<InputStreamResource> getAssignmentVideo(
                                         @PathVariable("assignmentID") int assignmentID) {
-        return assignmentDAO.getAssignmentVideo(assignmentID);
+
+        Optional<AssignmentModel> assignment = assignmentDAO.getAssignmentModel(assignmentID);
+        if(assignmentDAO.hasAccess(assignment, true)) {
+            return assignmentDAO.getAssignmentVideo(assignmentID);
+
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     }
 
     /**
@@ -75,11 +85,14 @@ public class AssignmentResource {
      *                      or Http status NOT_FOUND.
      */
     @RequestMapping(value = "/{assignmentID}", method = RequestMethod.GET)
-    public ResponseEntity<AssignmentModel> getAssignment(@PathVariable("assignmentID") int assignmentID)
+    public ResponseEntity<AssignmentModel> getAssignment(@PathVariable("assignmentID") int assignmentID, HttpSession session)
             throws NotFoundException, IOException {
         Optional<AssignmentModel> assignment = assignmentDAO.getAssignmentModel(assignmentID);
+
         if (assignment.isPresent()) {
-            return new ResponseEntity<>(assignment.get(), HttpStatus.OK);
+            if(assignmentDAO.hasAccess(assignment.get(), false)) {
+                return new ResponseEntity<>(assignment.get(), HttpStatus.OK);
+
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

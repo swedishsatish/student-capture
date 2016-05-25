@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StringMultipartFileEditor;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 
@@ -22,6 +23,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -196,32 +202,37 @@ public class AssignmentDAO {
      * Method for checking that the user is enrolled on the course where the video is received.
      *
      * @param assignmentModel the assignment model
+     * @param video
      * @return true or false
      * @author c13bll
      */
-    public boolean hasAccess(AssignmentModel assignmentModel){
+    public boolean hasAccess(AssignmentModel assignmentModel, boolean video) throws ParseException {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession();
-
         String userID = session.getAttribute("userid").toString();
-        String accessQuery = "SELECT userid FROM participants WHERE userid = ? AND courseid = ? LIMIT 1;";
 
 
-        //Needs more testing probably...
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(
-                connection -> {
-                    PreparedStatement ps =
-                            connection.prepareStatement(accessQuery,
-                                    Statement.RETURN_GENERATED_KEYS);
-                    ps.setInt(1, Integer.getInteger(userID));
-                    ps.setInt(2, assignmentModel.getCourseID());
-                    return ps;
-                },
-                keyHolder);
+        DateFormat sdf1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+        DateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date1 = sdf1.parse(new Date().toString());
 
-        return (Integer.getInteger(userID) == keyHolder.getKeys().get("userid"));
+        Date date2 = sdf2.parse(assignmentModel.getAssignmentIntervall().getStartDate());
+
+
+        if(video) {
+            if(date1.after(date2)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        String accessQuery = "SELECT userid FROM participant WHERE userid = ? AND courseid = ? LIMIT 1;";
+        List<String> total = jdbcTemplate.queryForList(accessQuery, new Object[] {userID, assignmentModel.getCourseID()}, String.class);
+
+        return !total.isEmpty();
     }
+
 
 //    /**
 //     * Fetches info about an assignment from the database.
