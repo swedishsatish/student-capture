@@ -27,7 +27,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
 
     private MockMvc mvc;
 
-    private static String json_test_string = "{\"title\":\"TheTitle\"," +
+    private String json_test_string = "{\"title\":\"TheTitle\"," +
             "\"Info\": \"Assignment Info\"," +
             "\"videIntervall\":" +
             "{\"minTimeSeconds\":0," +
