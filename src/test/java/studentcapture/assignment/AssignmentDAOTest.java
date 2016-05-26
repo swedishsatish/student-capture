@@ -5,15 +5,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import studentcapture.config.StudentCaptureApplicationTests;
-import studentcapture.submission.Submission;
-import studentcapture.submission.SubmissionDAO;
-
-import java.io.IOException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,9 +24,10 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     @Autowired
     private JdbcTemplate jdbcMock;
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
-            "yyyy-MM-dd HH:mm:ss");
+    private final static DateTimeFormatter FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private AssignmentModel am;
+    private int testCourseID;
 
     @Before
     public void setUp() {
@@ -46,29 +42,30 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
                 },
                 keyHolder);
 
-        int courseID;
         if (keyHolder.getKeys().size() > 1) {
-            courseID = (int) keyHolder.getKeys().get("courseid");
+            testCourseID = (int) keyHolder.getKeys().get("courseid");
         } else {
-            courseID = keyHolder.getKey().intValue();
+            testCourseID = keyHolder.getKey().intValue();
         }
 
-        AssignmentVideoIntervall videoIntervall = new AssignmentVideoIntervall();
-        AssignmentDateIntervalls assignmentIntervalls = new AssignmentDateIntervalls();
+        AssignmentVideoIntervall videoIntervall =
+                new AssignmentVideoIntervall();
+        AssignmentDateIntervalls assignmentIntervalls =
+                new AssignmentDateIntervalls();
         videoIntervall.setMinTimeSeconds(180);
         videoIntervall.setMaxTimeSeconds(360);
         assignmentIntervalls.setStartDate(currentDatePlusDaysGenerator(2));
         assignmentIntervalls.setEndDate(currentDatePlusDaysGenerator(3));
         assignmentIntervalls.setPublishedDate(currentDatePlusDaysGenerator(1));
         am = new AssignmentModel(
-                courseID,               // CourseId
+                testCourseID,           // CourseId
                 "PVT",                  // Title
                 "Description",          // Info
                 videoIntervall,
                 assignmentIntervalls,
                 GradeScale.U_O_K_G.toString(), // GradeScale
                 "Recap");               // Recap
-        am.setCourseID(courseID);
+        am.setCourseID(testCourseID);
     }
 
     @After
@@ -133,7 +130,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     public void shouldNotGetDeletedAssignment() throws Exception{
         int assID = assignmentDAO.createAssignment(am);
 
-        assignmentDAO.removeAssignment(151, assID);
+        assignmentDAO.removeAssignment(testCourseID, assID);
 
         assignmentDAO.getAssignmentModel(assID);
     }
@@ -142,7 +139,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     public void shouldDeleteOneAnAssignment() throws Exception{
         int assID = assignmentDAO.createAssignment(am);
 
-        assertTrue(assignmentDAO.removeAssignment(151, assID));
+        assertTrue(assignmentDAO.removeAssignment(testCourseID, assID));
     }
 
     @Test
@@ -150,11 +147,11 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
         int assID = assignmentDAO.createAssignment(am);
         int noneAssID = assID + 500;
 
-        assertFalse(assignmentDAO.removeAssignment(151, noneAssID));
+        assertFalse(assignmentDAO.removeAssignment(testCourseID, noneAssID));
     }
 
     private String currentDatePlusDaysGenerator(int days){
-        return LocalDateTime.now().plusDays(days).format(formatter);
+        return LocalDateTime.now().plusDays(days).format(FORMATTER);
     }
 
     /**
@@ -171,7 +168,8 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
 
         // Update and get updated
         assignmentDAO.updateAssignment(am);
-        AssignmentModel am2 = assignmentDAO.getAssignmentModel(am.getAssignmentID()).get();
+        AssignmentModel am2 = assignmentDAO
+                .getAssignmentModel(am.getAssignmentID()).get();
 
         // Assert that truly updated
         assertNotEquals(am2.getTitle(), originalTitle);
@@ -179,7 +177,8 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     }
 
     /**
-     * Should update assignment configuration files in the file system  (ex recap).
+     * Should update assignment configuration files
+     * in the file system  (ex recap).
      */
     @Test
     public void shouldUpdateFiles() throws Exception {
@@ -192,7 +191,8 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
 
         // Update and get updated
         assignmentDAO.updateAssignment(am);
-        AssignmentModel am2 = assignmentDAO.getAssignmentModel(am.getAssignmentID()).get();
+        AssignmentModel am2 = assignmentDAO
+                .getAssignmentModel(am.getAssignmentID()).get();
 
         // Assert that truly updated
         assertNotEquals(am2.getRecap(), originalRecap);
@@ -204,9 +204,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
         // Setup: create ass, set new title
         int nonExistingAssID = assignmentDAO.createAssignment(am) + 666;
         am.setAssignmentID(nonExistingAssID);
-        String originalTitle = am.getTitle();
-        String updatedTitle = "Updated title";
-        am.setTitle(updatedTitle);
+        am.setTitle("Updated title");
 
         // Try to update
         assignmentDAO.updateAssignment(am);

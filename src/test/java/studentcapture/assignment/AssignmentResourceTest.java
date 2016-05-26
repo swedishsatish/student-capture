@@ -1,4 +1,4 @@
-package assignment;
+package studentcapture.assignment;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +33,6 @@ import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -60,7 +59,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
     @Autowired
     private JdbcTemplate jdbcMock;
 
-    private String json_test_string = "{\"title\":\"TheTitle\"," +
+    private final static String JSON_TEST_STRING = "{\"title\":\"TheTitle\"," +
             "\"Info\": \"Assignment Info\"," +
             "\"videoIntervall\":" +
             "{\"minTimeSeconds\":0," +
@@ -205,27 +204,27 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
     /**
      * This test tests that the JSON will be properly sent and parsed.
      * Will throw DataIntegrityViolationException (in NestedServletException)
-     * because this test connects to the database, where the course does not exist.
+     * because this test connects to the database, where the course doesn't exist.
      */
     @Test (expected = NestedServletException.class)
     public void shouldWorkToSendJSONToCreateAssignment() throws Exception {
-        mvc.perform(post("/assignments").contentType(MediaType.APPLICATION_JSON).content(json_test_string))
-                .andExpect(status().isOk());
-
+        mvc.perform(post("/assignments").contentType(MediaType.APPLICATION_JSON)
+                .content(JSON_TEST_STRING)).andExpect(status().isOk());
     }
 
     @Test
     public void shouldHaveBadRequestOnWrongJSON() throws Exception {
-        mvc.perform(post("/assignments").contentType(MediaType.APPLICATION_JSON).content("{\"wrong\":\"json\""))
-                .andExpect(status().isBadRequest());
+        mvc.perform(post("/assignments").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"wrong\":\"json\"")).andExpect(status().isBadRequest());
     }
 
     @Test
     public void shouldWorkToSendFileAndMetaData() throws Exception {
-        MockMultipartFile file = new MockMultipartFile("data", "assignment.webm", "form", "some video".getBytes());
-        HashMap<String, String> contentTypeParams = new HashMap<String, String>();
+        MockMultipartFile file = new MockMultipartFile("data", "assignment.webm",
+                "form", "some video".getBytes());
 
-        mvc.perform(fileUpload("/assignments/video").file(file).param("courseID", "1000").param("assignmentID", "3"));
+        mvc.perform(fileUpload("/assignments/video").file(file)
+                .param("courseID", "1000").param("assignmentID", "3"));
     }
 
     @Test
