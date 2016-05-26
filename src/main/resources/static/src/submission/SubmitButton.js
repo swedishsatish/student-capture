@@ -33,6 +33,7 @@ var PopUpConfirmButton = React.createClass({
         //sendVideo(this.props.getVideo);
         sendData();
         close();
+        document.getElementById("courseContent").innerHTML = "";
         ReactDOM.render(<TeacherViewSubmission courseId={IDs[0].courseID} assignmentId={IDs[0].assignmentID}
         scale={curscale}/>,document.getElementById('courseContent'));
 
@@ -138,6 +139,7 @@ function submitForm(method) {
         contentType: "application/json",
         url: "assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID,
         data : JSON.stringify(reqBody),
+        async: false,
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);

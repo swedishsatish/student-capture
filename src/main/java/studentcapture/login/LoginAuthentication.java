@@ -18,7 +18,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import studentcapture.user.User;
 import studentcapture.user.UserDAO;
-import groovy.util.logging.Log;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -32,7 +31,7 @@ import java.util.Collections;
  * @author dv11osi, c13hbd
  */
 @Component
-public class LoginAuthentication implements AuthenticationProvider {
+class LoginAuthentication implements AuthenticationProvider {
 
 	//Session attribute constants
 	private static final String SESSION_USERNAME_TAG = "username";
@@ -43,7 +42,7 @@ public class LoginAuthentication implements AuthenticationProvider {
     @Autowired
     private UserDAO userDao;
     
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+    private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     /**
      * Fired when login occurs via Spring Security.
@@ -81,12 +80,10 @@ public class LoginAuthentication implements AuthenticationProvider {
 	 * @return true if user name and password match in the database, else false
 	 */
 	private boolean checkUser(String username, String password) {
-        User user = userDao.getUser(username, 0);
-        if (user == null) {
-        	return false;
-        }
-        return BCrypt.checkpw(password, user.getPswd());
-    }
+		User user = userDao.getUser(username, 0);
+
+		return user != null && BCrypt.checkpw(password, user.getPswd());
+	}
 	
 	/**
 	 * Updates session object with attribute and timeout settings.

@@ -299,7 +299,7 @@ var Recorder = React.createClass({
                 }
             }
 
-            request.open('POST', url,true);
+            request.open("POST", url,true);
             request.send(data);
         }
 
