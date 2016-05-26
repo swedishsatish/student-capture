@@ -22,6 +22,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -193,28 +198,39 @@ public class AssignmentDAO {
      * @param assignmentModel the assignment model
      * @return true or false
      */
-    public boolean hasAccess(AssignmentModel assignmentModel){
+    public boolean hasAccess(AssignmentModel assignmentModel) throws ParseException {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession();
 
         String userID = session.getAttribute("userid").toString();
-        String accessQuery = "SELECT userid FROM participants WHERE userid = ? AND courseid = ? LIMIT 1;";
+        String accessQuery = "SELECT userid FROM participant WHERE userid = ? AND courseid = ? LIMIT 1;";
+        List<String> total = databaseConnection.queryForList(accessQuery, new Object[] {Integer.parseInt(userID), assignmentModel.getCourseID()}, String.class);
 
+        return !total.isEmpty();
+    }
 
-        //Needs more testing probably...
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        databaseConnection.update(
-                connection -> {
-                    PreparedStatement ps =
-                            connection.prepareStatement(accessQuery,
-                                    Statement.RETURN_GENERATED_KEYS);
-                    ps.setInt(1, Integer.getInteger(userID));
-                    ps.setInt(2, assignmentModel.getCourseID());
-                    return ps;
-                },
-                keyHolder);
+    /**
+     * Method for checking that the the current time is between the assignment allowed timespan
+     * @param assignmentModel
+     * @return
+     */
+    public boolean canDoAssignment(AssignmentModel assignmentModel) throws ParseException {
 
-        return (Integer.getInteger(userID) == keyHolder.getKeys().get("userid"));
+        DateFormat sdf1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+        DateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date currentDate = sdf1.parse(new Date().toString());
+
+        Date assignmentStartDate = sdf2.parse(assignmentModel.getAssignmentIntervall().getStartDate());
+        Date assignmentEndDate = sdf2.parse(assignmentModel.getAssignmentIntervall().getEndDate());
+
+        System.out.println(currentDate.toString());
+        System.out.println(assignmentStartDate.toString());
+        if(currentDate.after(assignmentStartDate) && currentDate.before(assignmentEndDate)) {
+            return true;
+        }
+
+        return false;
+
     }
 
 	public String getAssignmentID(String courseID,String assignmentTitle){

@@ -44,9 +44,9 @@ public enum ErrorFlags {
             
         case NOERROR:
             return "success";
-            
+
         default:
-            return "success";
+            return "";
 
         }
     }
