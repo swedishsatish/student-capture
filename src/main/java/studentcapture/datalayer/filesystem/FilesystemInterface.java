@@ -44,6 +44,7 @@ public class FilesystemInterface {
 	 * @return the generated path
      */
 	public static String generatePath(Submission submission) {
+		System.out.println(submission.getCourseID() + " " + submission.getAssignmentID() + " " + submission.getStudentID() );
 		return FilesystemConstants.FILESYSTEM_PATH + "/" + submission.getCourseID()
 													+ "/" + submission.getAssignmentID()
 	   												+ "/" + submission.getStudentID() + "/";

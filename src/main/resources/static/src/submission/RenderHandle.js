@@ -15,8 +15,6 @@ var video;
 
     render: function () {
         console.log(this.props.studentArray);
-        console.log("hejhej" + this.props.toString());
-
         var id_array = this.props.idArray;
         var student = this.props.studentArray;
         var filenm = '/submission.webm';
@@ -27,8 +25,8 @@ var video;
                 <div id="blanket" style={{"display":"none"}}></div>
                 <div id="popUpDiv" style={{"display":"none"}}></div>
 
-                <video width="720" height="460" src={videoSource} preload="auto" controls id="teststudentvideo"/>
-                <TeacherRecordVideo setVideo={this.setVideo}/>
+                <video width="720" height="460" src={videoSource} preload="auto" controls/>
+                <TeacherRecordVideo studentArray={this.props.studentArray} idArray={this.props.idArray}/>
 
                 <div id="feedBackContainer">
 
@@ -42,7 +40,7 @@ var video;
                                 <PassCheckBox />
                             </div>
                             <div id="dropDown">
-                                <DropDown scale={this.props.scale}/>
+                                <DropDown />
                             </div>
                         </div>
                     </div>
@@ -51,7 +49,7 @@ var video;
                             <BackButton idArray={this.props.idArray} />
                         </div>
                         <div id="submitButton">
-                            <SubmitButton getVideo={this.getVideo} studentArray={this.props.studentArray} idArray={this.props.idArray}/>
+                            <SubmitButton studentArray={this.props.studentArray} idArray={this.props.idArray}/>
                         </div>
 
                     </div>
@@ -59,18 +57,6 @@ var video;
             </div>
         )
     },
-
-    setVideo:function(blob) {
-        video = blob;
-        console.log("VIDEO WAS SET");
-
-    },
-
-    getVideo:function() {
-
-       return video;
-
-    }
 
 
 });
