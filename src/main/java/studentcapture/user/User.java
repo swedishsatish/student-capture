@@ -19,6 +19,9 @@ public class User {
     private String userID;
     private String token;  //Will be used for recovery of password
 
+    //Needed for json string. DONT TOUCH!
+    public User() {}
+
     public User(String userName, String fName, String lName,
                 String email,String pswd) {
 
