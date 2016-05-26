@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
+import org.thymeleaf.util.DateUtils;
 import studentcapture.assignment.GradeScale;
 import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.course.CourseDAO;
@@ -26,10 +27,11 @@ import studentcapture.user.User;
 import studentcapture.user.UserDAO;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -59,6 +61,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
 
     @Autowired
     private JdbcTemplate jdbcMock;
+
 
     private final static String JSON_TEST_STRING = "{\"title\":\"TheTitle\"," +
             "\"Info\": \"Assignment Info\"," +
@@ -107,10 +110,12 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         courseModel.setYear(2016);
         courseModel.setCourseDescription("DPEPREWSPGSGSG");
 
+        CourseModel course = courseDAO.addCourse(courseModel);
+
 
         AssignmentModel model = new AssignmentModel();
         model.setTitle("HUEHUEUEh");
-        model.setCourseID(1);
+        model.setCourseID(course.getCourseId());
         model.setScale("IG_G_VG_MVG");
         model.setRecap("HEUHUEHEH");
         model.setDescription("HUEHUEHUEUHEUH");
@@ -120,9 +125,22 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         vintervlal.setMaxTimeSeconds(500);
         vintervlal.setMinTimeSeconds(100);
 
-        interval.setEndDate("2016-05-13 12:00:00");
-        interval.setStartDate("2016-05-12 12:00:00");
-        interval.setPublishedDate("2016-05-11 12:00:00");
+        DateFormat sdf1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+        DateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date currentDate = null;
+        try {
+            currentDate = sdf1.parse(new Date().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Date future = new Date(currentDate.getTime() + TimeUnit.HOURS.toMillis(1));
+        Date back = new Date(currentDate.getTime() - TimeUnit.HOURS.toMillis(1));
+
+        interval.setEndDate(sdf2.format(future));
+        interval.setStartDate(sdf2.format(back));
+        interval.setPublishedDate(sdf2.format(back));
+
         model.setAssignmentIntervall(interval);
         model.setVideoIntervall(vintervlal);
 
@@ -130,7 +148,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
 
         AssignmentModel model2 = new AssignmentModel();
         model2.setTitle("Assignment 2");
-        model2.setCourseID(1);
+        model2.setCourseID(course.getCourseId());
         model2.setScale("IG_G_VG_MVG");
         model2.setRecap("HEUHUEHEH");
         model2.setDescription("HUEHUEHUEUHEUH");
@@ -147,7 +165,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         model2.setVideoIntervall(vintervlal2);
 
 
-        courseDAO.addCourse(courseModel);
+
         printUsersTableTemp("course");
 
 
@@ -165,7 +183,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
 
 
         Participant part = new Participant();
-        part.setCourseId(1);
+        part.setCourseId(course.getCourseId());
         part.setUserId(1);
         part.setFunction("Teacher");
         participandDAO.addParticipant(part);
@@ -183,9 +201,9 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         String sql4 = "DELETE FROM Submission;";
         String sql5 = "DELETE FROM Participant;";
 
-        String sql6 = "ALTER TABLE Course ALTER COLUMN courseid RESTART WITH 1";
-        String sql7 = "ALTER TABLE Assignment ALTER COLUMN assignmentid RESTART WITH 1";
-        String sql8 = "ALTER TABLE Users ALTER COLUMN userid RESTART WITH 1";
+        String sql6 = "ALTER TABLE Course ALTER COLUMN courseid RESTART WITH 1;";
+        String sql7 = "ALTER TABLE Assignment ALTER COLUMN assignmentid RESTART WITH 1;";
+        String sql8 = "ALTER TABLE Users ALTER COLUMN userid RESTART WITH 1;";
 
         jdbcMock.update(sql5);
         jdbcMock.update(sql4);
@@ -248,16 +266,16 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         Map<String, Object> sessionAttrs = new HashMap<>();
         sessionAttrs.put("userid", "1");
 
-        mvc.perform(get("/assignments/1/video").sessionAttrs(sessionAttrs)).andExpect(status().isNotFound());
+        mvc.perform(get("/assignments/2/video").sessionAttrs(sessionAttrs)).andExpect(status().isNotFound());
 
     }
 
     @Test
-    public void shouldAcceptAccessingAssignmentVideo() throws Exception {
+    public void shouldAcceptAccessingAssignmentVideoInsideTimeframe() throws Exception {
         Map<String, Object> sessionAttrs = new HashMap<>();
         sessionAttrs.put("userid", "1");
 
-        mvc.perform(get("/assignments/2/video").sessionAttrs(sessionAttrs)).andExpect(status().isOk());
+        mvc.perform(get("/assignments/1/video").sessionAttrs(sessionAttrs)).andExpect(status().isOk());
 
     }
 
