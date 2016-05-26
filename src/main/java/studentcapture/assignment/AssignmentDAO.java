@@ -53,7 +53,7 @@ public class AssignmentDAO {
 
         Integer assignmentID;
 
-        // Construct query, depends on if assignment has publishdate or not.
+        // Construct query, depends on if assignment has publishDate or not.
         String insertQueryString = getInsertQueryString(assignmentModel.getAssignmentIntervall().getPublishedDate());
 
         // Execute query and fetch generated AssignmentID
@@ -80,7 +80,7 @@ public class AssignmentDAO {
         if (keyHolder.getKeys().size() > 1) {
             assignmentID = (int) keyHolder.getKeys().get("assignmentid");
         } else {
-            //If only one key assumes it is assignmentid.
+            //If only one key assumes it is assignmentID.
             assignmentID = keyHolder.getKey().intValue();
         }
         assignmentModel.setAssignmentID(assignmentID);
@@ -243,50 +243,6 @@ public class AssignmentDAO {
 
     }
 
-//    /**
-//     * Fetches info about an assignment from the database.
-//     * @param assignmentID Unique identifier for an assignment.
-//     * @return A list containing information about the assignment.
-//     *      The list is on the form [course ID, assignment title, opening datetime, closing datetime, minimum video time, maximum video time]
-//     */
-//    public AssignmentModel getAssignmentInfo(int assignmentID){
-//        ArrayList<String> returnValues = new ArrayList<>();
-//
-//        // Construct query
-//        String columns[] = {"courseid", "title", "startdate", "enddate", "mintime", "maxtime"};
-//        String tempVal;
-//        String query;
-//
-//        // Execute query
-//        try {
-//            for (String c : columns) {
-//                query = "SELECT " + c + " FROM assignment WHERE (assignmentid = ?);";
-//                tempVal = databaseConnection.queryForObject(query, new Object[]{assignmentID}, String.class);
-//
-//                if (tempVal == null) {
-//                    tempVal = "Missing value";
-//                } else {
-//                    tempVal = tempVal.trim();
-//                }
-//                returnValues.add(tempVal);
-//            }
-//        } catch (IncorrectResultSizeDataAccessException up) {
-//            throw up;
-//        } catch (DataAccessException down) {
-//            throw down;
-//        }
-//        // Format results
-//        AssignmentModel assignment = new AssignmentModel();
-//        assignment.setCourseID(returnValues.get(0));
-//        assignment.setTitle(returnValues.get(1));
-//        assignment.setStartDate(new Timestamp(System.currentTimeMillis()));
-//        assignment.setEndDate(new Timestamp(System.currentTimeMillis()));
-//        assignment.setMinTime(Integer.parseInt(returnValues.get(4)));
-//        assignment.setMaxTime(Integer.parseInt(returnValues.get(5)));
-//
-//        return assignment;
-//    }
-
 	public String getAssignmentID(String courseID,String assignmentTitle){
     	String sql = "SELECT assignmentID from Assignment WHERE courseID = ? AND Title = ?";
     	return databaseConnection.queryForObject(sql, new Object[]{courseID,assignmentTitle},String.class);
@@ -351,7 +307,7 @@ public class AssignmentDAO {
      * @return The AssignmentModel
      * @throws NotFoundException    If the assignment was not found.
      */
-    public Optional<AssignmentModel> getAssignmentModel(int assignmentID) throws NotFoundException, IOException {
+    public Optional<AssignmentModel> getAssignmentModel(int assignmentID) throws NotFoundException {
 
         String getAssignmentStatement = "SELECT * FROM "
                 + "Assignment WHERE AssignmentId=?;";
@@ -362,16 +318,16 @@ public class AssignmentDAO {
             throw new NotFoundException("Assignment not found");
         }
 
-        AssignmentVideoIntervall videoIntervall = new AssignmentVideoIntervall();
-        AssignmentDateIntervalls assignmentIntervalls = new AssignmentDateIntervalls();
+        AssignmentVideoIntervall videoInterval = new AssignmentVideoIntervall();
+        AssignmentDateIntervalls assignmentIntervals = new AssignmentDateIntervalls();
 
-        videoIntervall.setMinTimeSeconds(srs.getInt("MinTime"));
-        videoIntervall.setMaxTimeSeconds(srs.getInt("MaxTime"));
-        assignmentIntervalls.setStartDate(srs.getString("StartDate").replaceAll("\\.\\d+", ""));
-        assignmentIntervalls.setEndDate(srs.getString("EndDate").replaceAll("\\.\\d+", ""));
+        videoInterval.setMinTimeSeconds(srs.getInt("MinTime"));
+        videoInterval.setMaxTimeSeconds(srs.getInt("MaxTime"));
+        assignmentIntervals.setStartDate(srs.getString("StartDate").replaceAll("\\.\\d+", ""));
+        assignmentIntervals.setEndDate(srs.getString("EndDate").replaceAll("\\.\\d+", ""));
 
         if (srs.getString("Published") != null) {
-            assignmentIntervalls.setPublishedDate(srs.getString("Published").replaceAll("\\.\\d+", ""));
+            assignmentIntervals.setPublishedDate(srs.getString("Published").replaceAll("\\.\\d+", ""));
         }
 
         int courseId = srs.getInt("courseId");
@@ -380,8 +336,8 @@ public class AssignmentDAO {
         assignment.setAssignmentID(assignmentID);
         assignment.setCourseID(courseId);
         assignment.setTitle(srs.getString("Title"));
-        assignment.setVideoIntervall(videoIntervall);
-        assignment.setAssignmentIntervall(assignmentIntervalls);
+        assignment.setVideoIntervall(videoInterval);
+        assignment.setAssignmentIntervall(assignmentIntervals);
         assignment.setScale(srs.getString("GradeScale"));
 
         String description = FilesystemInterface.getAssignmentDescription(assignment);
