@@ -13,6 +13,7 @@
 
 var student;
 var IDs;
+var curscale;
 var PopUpCancelButton = React.createClass({
     onclick: function () {
         close();
@@ -32,7 +33,9 @@ var PopUpConfirmButton = React.createClass({
         //sendVideo(this.props.getVideo);
         sendData();
         close();
-        ReactDOM.render(<TeacherViewSubmission courseId={IDs[0].courseID} assignmentId={IDs[0].assignmentID}/>,document.getElementById('courseContent'));
+        document.getElementById("courseContent").innerHTML = "";
+        ReactDOM.render(<TeacherViewSubmission courseId={IDs[0].courseID} assignmentId={IDs[0].assignmentID}
+        scale={this.props.scale}/>,document.getElementById('courseContent'));
 
     },
     render: function () {
@@ -136,6 +139,7 @@ function submitForm(method) {
         contentType: "application/json",
         url: "assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID,
         data : JSON.stringify(reqBody),
+        async: false,
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
