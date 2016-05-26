@@ -28,15 +28,12 @@ public class UserDAO {
 
         if(!user.areUserParamsValid()){
             return ErrorFlags.USERCONTAINNULL;
-        }
-
-        if(userNameExist(user.getUserName())) {
+        } else if(userNameExist(user.getUserName())) {
             return ErrorFlags.USEREXISTS;
-        }
-
-        if(emailExists(user.getEmail())) {
+        } else if(emailExists(user.getEmail())) {
             return ErrorFlags.EMAILEXISTS;
         }
+
 
         String sql = "INSERT INTO users"
                 + " (username, firstname, lastname, email, pswd)"
@@ -164,37 +161,6 @@ public class UserDAO {
         int[] types = {Types.VARCHAR};
 
         return jdbcTemplate.queryForObject(sql,args,types,Boolean.class);
-    }
-
-    /**
-     * Return email for a user
-     *
-     * @param userID
-     * @return
-     */
-    public String getEmail(int userID) {
-        String sql = "SELECT Email FROM users WHERE userID = ?";
-
-        try {
-            return jdbcTemplate.queryForObject(sql,new Object[]{userID},String.class);
-        } catch(Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Change a user's email address
-     * @param userID Identifier of the user to modify
-     * @param email The new email address
-     */
-    public boolean setEmail(int userID, String email) {
-        String sql = "UPDATE Users SET Email = ? WHERE UserID = ?";
-        try {
-            jdbcTemplate.update(sql, email, userID);
-            return true;
-        } catch(Exception e) {
-            return false;
-        }
     }
 
 	/**

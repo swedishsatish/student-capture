@@ -19,9 +19,6 @@ public class User {
     private String userID;
     private String token;  //Will be used for recovery of password
 
-    //Needed because of json
-    public User() {}
-
     public User(String userName, String fName, String lName,
                 String email,String pswd) {
 
@@ -45,10 +42,6 @@ public class User {
 
     public String getUserName() {
         return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getFirstName() {
