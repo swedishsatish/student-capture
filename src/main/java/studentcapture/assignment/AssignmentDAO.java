@@ -204,7 +204,7 @@ public class AssignmentDAO {
 
         String userID = session.getAttribute("userid").toString();
         String accessQuery = "SELECT userid FROM participant WHERE userid = ? AND courseid = ? LIMIT 1;";
-        List<String> total = databaseConnection.queryForList(accessQuery, new Object[] {userID, assignmentModel.getCourseID()}, String.class);
+        List<String> total = databaseConnection.queryForList(accessQuery, new Object[] {Integer.parseInt(userID), assignmentModel.getCourseID()}, String.class);
 
         return !total.isEmpty();
     }
