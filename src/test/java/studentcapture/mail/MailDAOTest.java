@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import studentcapture.config.StudentCaptureApplicationTests;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,7 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
         String sql8 = "INSERT INTO Participant VALUES (3, 1, 'Student');";
         String sql9 = "INSERT INTO Participant VALUES (2, 1, 'Student');";
         String sql10 = "INSERT INTO MailScheduler VALUES (1,'2016-05-24 11:00:00');";
+        String sql11 = "INSERT INTO Assignment VALUES (2, 1, 'OU2', '2016-05-13 10:00:00', '2016-05-13 12:00:00', 60, 180, null, 'XYZ');";
 
         jdbcMock.update(sql1);
         jdbcMock.update(sql2);
@@ -56,6 +58,7 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
         jdbcMock.update(sql8);
         jdbcMock.update(sql9);
         jdbcMock.update(sql10);
+        jdbcMock.update(sql11);
 
     }
 
@@ -119,5 +122,23 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
         assertEquals(0,notificationList.size());
     }
 
+    @Test
+    public void testInsertNotification(){
+        String sqlGetList = "SELECT AssignmentID FROM MailScheduler";
+        List<Integer> assidList = jdbcMock.queryForList(sqlGetList,Integer.class);
+        int size = assidList.size();
+        mailDAO.insertNotification(2,new Date());
+        assidList = jdbcMock.queryForList(sqlGetList,Integer.class);
+        assertEquals(size+1,assidList.size());
+    }
 
+    @Test
+    public void testDateFromInsertNotification(){
+        Date date = new Date();
+        mailDAO.insertNotification(2,date);
+        String sqlGetDate = "SELECT NotificationDate from MailScheduler where assignmentID = 2";
+        Date timestamp = jdbcMock.queryForObject(sqlGetDate,Date.class);
+        System.out.println(timestamp);
+        assertEquals(date.getTime(),timestamp.getTime());
+    }
 }

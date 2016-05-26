@@ -111,7 +111,14 @@ public class MailDAO {
             return Optional.empty();
         }
         return Optional.of(notificationList);
+    }
 
+    public void insertNotification(int assID, Date date){
+        try {
+            jdbcTemplate.update(insertNotificationQuery(), assID,new Timestamp(date.getTime()));
+        } catch (DataAccessException e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -150,5 +157,9 @@ public class MailDAO {
 
     private String getNotificationQuery() {
         return "SELECT AssignmentID FROM MailScheduler WHERE (NotificationDate <= ?);";
+    }
+
+    private String insertNotificationQuery(){
+        return "INSERT INTO MailScheduler VALUES (?,?);";
     }
 }
