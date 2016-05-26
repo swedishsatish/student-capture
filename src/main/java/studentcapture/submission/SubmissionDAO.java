@@ -172,22 +172,20 @@ public class SubmissionDAO {
     /**
      * Get all ungraded submissions for an assignment
      *
-     * @param assId The assignment to get submissions for
+     * @param assignmentID The assignment to get submissions for
      * @return A list of ungraded submissions for the assignment
      */
-    public Optional<List<Submission>> getAllUngraded(String assId) {
+    public List<Submission> getAllUngraded(int assignmentID) {
 
-		String getAllUngradedStatement = "SELECT "
-				+ "sub.AssignmentId,sub.StudentId,stu.FirstName,stu.LastName,"
-				+ "sub.SubmissionDate,sub.Grade,sub.TeacherId,"
-				+ "sub.StudentPublishConsent,sub.PublishStudentSubmission FROM"
-				+ " Submission AS sub LEFT JOIN Users AS stu ON "
-				+ "sub.studentId=stu.userId WHERE (AssignmentId=?) AND "
-				+ "(Grade IS NULL)";
-
-		int assignmentId = Integer.parseInt(assId);
-
-        return getSubmissionsFromStatement(getAllUngradedStatement, assignmentId);
+		List<Submission> submissions;
+		String getAllSubmissionsStatement = "SELECT * FROM Submission, Users WHERE AssignmentId = ? " +
+				"AND studentid = userid AND Grade is NULL";
+		try {
+			submissions = databaseConnection.query(getAllSubmissionsStatement, new SubmissionRowMapper(), assignmentID);
+		} catch (DataAccessException e) {
+			return null;
+		}
+		return submissions;
     }
 
 	/**
