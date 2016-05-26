@@ -25,6 +25,7 @@ import studentcapture.course.participant.ParticipantDAO;
 import studentcapture.user.User;
 import studentcapture.user.UserDAO;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -155,9 +156,13 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         printUsersTableTemp("course");
 
 
+        try {
+            assignmentDao.createAssignment(model);
+            assignmentDao.createAssignment(model2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        assignmentDao.createAssignment(model);
-        assignmentDao.createAssignment(model2);
 
         printUsersTableTemp("assignment");
 
