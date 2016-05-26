@@ -26,11 +26,12 @@ var Options = React.createClass({
     studentClick: function () {
         var assID = this.props.assignment.assignment.assignmentID;
         var courseID = this.props.courseId;
+        var l = new Date();
+        var now = l.getTime() - (l.getTimezoneOffset() * 60000);
 
-
-        var now = Date.now();
+        var eDate = new Date(this.props.assignment.assignment.assignmentIntervall.endDate.split(' ').join('T')).getTime();
         if(objToList(this.props.assignment.submissions).length == 0 &&
-            new Date(this.props.assignment.assignment.assignmentIntervall.endDate).getTime() >= now){
+            eDate >= now){
 
             ReactDOM.render(<AssignmentContent uid={this.props.uid} course={courseID} assignment={assID}/>,
                 document.getElementById('courseContent'));
@@ -110,10 +111,12 @@ var Assignment = React.createClass({
         var assID = this.props.assignment.assignment.assignmentID;
         var courseID = this.props.courseId;
         if(this.props.role == "student"){
+            var l = new Date();
+            var now = l.getTime() - (l.getTimezoneOffset() * 60000);
 
-            var now = Date.now();
+            var eDate = new Date(this.props.assignment.assignment.assignmentIntervall.endDate.split(' ').join('T')).getTime();
             if(objToList(this.props.assignment.submissions).length == 0 &&
-                new Date(this.props.assignment.assignment.assignmentIntervall.endDate).getTime() >= now){
+                eDate >= now){
                 ReactDOM.render(<AssignmentContent uid={uid} course={courseID} assignment={assID}/>,
                     document.getElementById('courseContent'));
             }
@@ -140,13 +143,20 @@ var Assignment = React.createClass({
     render: function (){
         var assignment = this.props.assignment;
         var classname = "assignment menuItem navigationText";
-        var now = Date.now();
+        var l = new Date();
+
+
+        var now = l.getTime() - (l.getTimezoneOffset() * 60000);
+        var sDate = new Date(assignment.assignment.assignmentIntervall.startDate.split(' ').join('T')).getTime();
+        var eDate = new Date(assignment.assignment.assignmentIntervall.endDate.split(' ').join('T')).getTime();
+
+
         var options = "";
         if(this.state.showChildren && this.props.role == "teacher"){
             options = <Options assignment={assignment} courseId={this.props.courseId} uid={this.props.uid}/>;
         }
-        if(new Date(assignment.assignment.assignmentIntervall.startDate).getTime() <= now &&
-            new Date(assignment.assignment.assignmentIntervall.endDate).getTime() >= now)
+        if(sDate <= now &&
+            eDate >= now)
             classname += " active";
 
         return <li className={classname}><div onClick={this.handleClick.bind(this,assignment)}>{assignment.assignment.title}</div>{options}</li>;
@@ -323,8 +333,7 @@ window.RenderMenu = function (preloaded) {
     $.get("course", function (res) {
         // if(res)
         var userID = res.userId;
-       // var now = new Date();
-//console.log(Date().now()+now.getTimezoneOffset());
+
         var SCList = objToList(res.studentCourses);
         var TCList = objToList(res.teacherCourses);
         var name = res.firstName + " " + res.lastName;

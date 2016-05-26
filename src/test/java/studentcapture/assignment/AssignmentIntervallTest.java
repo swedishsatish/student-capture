@@ -1,21 +1,18 @@
-package assignment;
+package studentcapture.assignment;
 
 import org.junit.Before;
 import org.junit.Test;
-import studentcapture.assignment.AssignmentDateIntervalls;
-
+import studentcapture.config.StudentCaptureApplicationTests;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-/**
- * Created by root on 5/17/16.
- */
-public class AssignmentIntervallTest {
+
+public class AssignmentIntervallTest extends StudentCaptureApplicationTests {
 
     private AssignmentDateIntervalls assignmentIntervalls;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
-            "yyyy-MM-dd HH:mm:ss");
+    private final static DateTimeFormatter formatter =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Before
     public void setUp() {
@@ -33,9 +30,9 @@ public class AssignmentIntervallTest {
     }
 
     @Test(expected = DateTimeParseException.class)
-    public void shouldThrowWhenCreateWithFaultyDates() throws Exception {
-        String startDate = "20161019 111212"; // Faulty date format
-
+    public void shouldThrowWhenCreateWithFaultyDates() {
+        // Faulty date format
+        String startDate = "20161019 111212";
         //Set wrong date
         assignmentIntervalls.setStartDate(startDate);
     }
@@ -43,7 +40,8 @@ public class AssignmentIntervallTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowWhenEndDateIsBeforeStartDate(){
         String startDate = currentDatePlusDaysGenerator(3);
-        String endDate = currentDatePlusDaysGenerator(2); // enddate is one day before startdate
+        // enddate is one day before startdate
+        String endDate = currentDatePlusDaysGenerator(2);
 
         assignmentIntervalls.setStartDate(startDate);
         assignmentIntervalls.setEndDate(endDate);

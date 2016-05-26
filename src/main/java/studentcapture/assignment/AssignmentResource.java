@@ -58,7 +58,10 @@ public class AssignmentResource {
     @RequestMapping(value = "/{assignmentID}", method = RequestMethod.DELETE)
     public void deleteAssignment(@PathVariable("assignmentID") int assignmentID,
                                  @RequestParam("courseID") int courseID) throws IOException {
-        assignmentDAO.removeAssignment(courseID, assignmentID);
+        AssignmentModel assignment = new AssignmentModel();
+        assignment.setAssignmentID(assignmentID);
+        assignment.setCourseID(courseID);
+        assignmentDAO.removeAssignment(assignment);
     }
 
     /**

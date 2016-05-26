@@ -29,7 +29,7 @@ var PopUpCancelButton = React.createClass({
  */
 var PopUpConfirmButton = React.createClass({
     onclick: function () {
-        sendVideo(this.props.getVideo);
+        //sendVideo(this.props.getVideo);
         sendData();
         close();
         ReactDOM.render(<TeacherViewSubmission courseId={IDs[0].courseID} assignmentId={IDs[0].assignmentID}/>,document.getElementById('courseContent'));

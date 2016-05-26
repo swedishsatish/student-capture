@@ -6,6 +6,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -114,8 +115,10 @@ public class MailDAO {
     }
 
     public void insertNotification(int assID, Date date){
+        Timestamp timestamp = new Timestamp(date.getTime());
         try {
-            jdbcTemplate.update(insertNotificationQuery(), assID,new Timestamp(date.getTime()));
+            jdbcTemplate.update(updateNotificationQuery(), timestamp, assID);
+            jdbcTemplate.update(insertNotificationQuery(),assID,timestamp,assID);
         } catch (DataAccessException e){
             e.printStackTrace();
         }
@@ -159,7 +162,13 @@ public class MailDAO {
         return "SELECT AssignmentID FROM MailScheduler WHERE (NotificationDate <= ?);";
     }
 
+    private String updateNotificationQuery(){
+        return "UPDATE MailScheduler SET notificationDate=? WHERE assignmentID = ?;";
+    }
+
     private String insertNotificationQuery(){
-        return "INSERT INTO MailScheduler VALUES (?,?);";
+        return "INSERT INTO MailScheduler(assignmentID,notificationDate) " +
+                "SELECT ?, ? FROM MailScheduler "+
+                "WHERE NOT EXISTS (SELECT assignmentID FROM MailScheduler WHERE assignmentID=?);";
     }
 }

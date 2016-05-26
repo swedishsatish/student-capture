@@ -138,7 +138,31 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
         mailDAO.insertNotification(2,date);
         String sqlGetDate = "SELECT NotificationDate from MailScheduler where assignmentID = 2";
         Date timestamp = jdbcMock.queryForObject(sqlGetDate,Date.class);
-        System.out.println(timestamp);
         assertEquals(date.getTime(),timestamp.getTime());
     }
+
+    @Test
+    public void testReplacingExistingEntry(){
+        Date oldDate = new Date(System.currentTimeMillis());
+        Date newDate = new Date(System.currentTimeMillis()+1000000);
+
+        mailDAO.insertNotification(2,oldDate);
+        mailDAO.insertNotification(2,newDate);
+
+        String sqlGetDate = "SELECT NotificationDate from MailScheduler where assignmentID = 2";
+        Date timestamp = jdbcMock.queryForObject(sqlGetDate,Date.class);
+        assertEquals(newDate.getTime(),timestamp.getTime());
+    }
+
+    @Test
+    public void testInsertingWrongAssignmentID(){
+        String sqlGetList = "SELECT AssignmentID FROM MailScheduler";
+        List<Integer> assidList = jdbcMock.queryForList(sqlGetList,Integer.class);
+        int size = assidList.size();
+        mailDAO.insertNotification(1232,new Date());
+        assidList = jdbcMock.queryForList(sqlGetList,Integer.class);
+        assertEquals(size,assidList.size());
+    }
+
+
 }

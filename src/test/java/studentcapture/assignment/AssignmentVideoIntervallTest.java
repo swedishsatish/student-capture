@@ -1,15 +1,13 @@
-package assignment;
+package studentcapture.assignment;
 
 import org.junit.Before;
 import org.junit.Test;
-import studentcapture.assignment.AssignmentVideoIntervall;
+import studentcapture.config.StudentCaptureApplicationTests;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by David Björkstrand on 5/17/16.
- */
-public class AssignmentVideoIntervallTest {
+
+public class AssignmentVideoIntervallTest extends StudentCaptureApplicationTests {
 
     private AssignmentVideoIntervall videoIntervall;
 

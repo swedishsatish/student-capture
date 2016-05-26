@@ -230,8 +230,10 @@ class SubmissionResource {
         submission.setStudentID(studentID);
         submission.setCourseID(courseID);
         submission.setAssignmentID(assignmentID);
+        System.out.println("FAIL FÖRE SETFEEDBACK");
 
         if (!DAO.setFeedbackVideo(submission, teacherFeedbackVideo)) {
+            System.out.println("FAIL I SETFEEDBACKVIDEO");
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
         return httpStatus;
