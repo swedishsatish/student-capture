@@ -22,11 +22,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,14 +42,11 @@ public class AssignmentDAO {
      * @return the generated AssignmentID
      * @throws IllegalArgumentException fails if startDate or endDate is not
      *                        in the right format
-     *
-     * @author dv14oan & tfy13dbd
      */
     public int createAssignment(AssignmentModel assignmentModel)
             throws IllegalArgumentException, IOException {
 
         Integer assignmentID;
-        String courseCode;
 
         // Construct query, depends on if assignment has publishdate or not.
         String insertQueryString = getInsertQueryString(assignmentModel.getAssignmentIntervall().getPublishedDate());
@@ -86,6 +78,7 @@ public class AssignmentDAO {
             //If only one key assumes it is assignmentid.
             assignmentID = keyHolder.getKey().intValue();
         }
+        assignmentModel.setAssignmentID(assignmentID);
 
         try {
             FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
@@ -94,7 +87,7 @@ public class AssignmentDAO {
                     assignmentModel.getRecap(), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
             try {
-                removeAssignment(assignmentModel.getCourseID(), assignmentModel.getAssignmentID());
+                removeAssignment(assignmentModel);
             } catch (IOException e2) {
                 throw new IOException("Could not store assignment and " +
                         "could not delete semi-stored assignment successfully. ");
@@ -133,10 +126,10 @@ public class AssignmentDAO {
      * Update an assignment, both in the database and in the file system.
      *
      * @param assignmentModel The assignment to update to.
-     * @return True if assignment updated, false if failed to update assignment files in the file system.
      * @throws NotFoundException If the corresponding assignment is the database does not exist.
+     * @throws IOException If files could not be stored successfully.
      */
-    public boolean updateAssignment(AssignmentModel assignmentModel) throws NotFoundException {
+    public void updateAssignment(AssignmentModel assignmentModel) throws NotFoundException, IOException {
 
         String updateQuery = "UPDATE Assignment SET " +
                 "CourseID=?, " +
@@ -177,11 +170,9 @@ public class AssignmentDAO {
                     assignmentModel.getRecap(),
                     FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
-            /*throw new IOException("Could not store some data in the edited " +
-                    "assignment correctly. Please try again.");*/
+            throw new IOException("Could not store some data in the edited " +
+                    "assignment correctly. Please try again.");
         }
-
-        return true;
     }
 
     /**
@@ -213,7 +204,6 @@ public class AssignmentDAO {
      *
      * @param assignmentModel the assignment model
      * @return true or false
-     * @author c13bll
      */
     public boolean hasAccess(AssignmentModel assignmentModel) throws ParseException {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
@@ -247,7 +237,6 @@ public class AssignmentDAO {
         return false;
 
     }
-
 
 //    /**
 //     * Fetches info about an assignment from the database.
@@ -306,18 +295,16 @@ public class AssignmentDAO {
     /**
      * Returns a sought assignment from the database.
      * 
-     * @param assignmentId		assignments identifier
+     * @param assignmentID		assignments identifier
      * @return					sought assignment
-     * 
-     * @author tfy12hsm
      */
-	public Optional<AssignmentModel> getAssignment(int assignmentId) {
+	public Optional<AssignmentModel> getAssignment(int assignmentID) {
 		try {
             String getAssignmentStatement = "SELECT * FROM "
                     + "Assignment WHERE AssignmentId=?";
 
 			Map<String, Object> map = databaseConnection.queryForMap(
-	    			getAssignmentStatement, assignmentId);
+	    			getAssignmentStatement, assignmentID);
 			AssignmentModel result = new AssignmentModel(map);
 	    	
 	    	return Optional.of(result);
@@ -331,19 +318,17 @@ public class AssignmentDAO {
     /**
      * Returns a sought, published assignment from the database.
      *
-     * @param assignmentId		assignments identifier
+     * @param assignmentID		assignments identifier
      * @return					sought assignment
-     *
-     * @author tfy12hsm
      */
-    public Optional<AssignmentModel> getPublishedAssignment(int assignmentId) {
+    public Optional<AssignmentModel> getPublishedAssignment(int assignmentID) {
         try {
             String getPublishedAssignmentStatement = "SELECT * FROM "
                     + "Assignment WHERE AssignmentId=? AND "
                     + "published < current_timestamp";
 
             Map<String, Object> map = databaseConnection.queryForMap(
-                    getPublishedAssignmentStatement, assignmentId);
+                    getPublishedAssignmentStatement, assignmentID);
             AssignmentModel result = new AssignmentModel(map);
 
             return Optional.of(result);
@@ -360,8 +345,6 @@ public class AssignmentDAO {
      * @param assignmentID          Assignment identifier
      * @return The AssignmentModel
      * @throws NotFoundException    If the assignment was not found.
-     *
-     * @author dv14oan
      */
     public Optional<AssignmentModel> getAssignmentModel(int assignmentID) throws NotFoundException, IOException {
 
@@ -388,32 +371,33 @@ public class AssignmentDAO {
 
         int courseId = srs.getInt("courseId");
 
-        String description = FilesystemInterface.getAssignmentText(courseId, String.valueOf(assignmentID), FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
-        String recap = FilesystemInterface.getAssignmentText(courseId, String.valueOf(assignmentID), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+        AssignmentModel assignment = new AssignmentModel();
+        assignment.setAssignmentID(assignmentID);
+        assignment.setCourseID(courseId);
+        assignment.setTitle(srs.getString("Title"));
+        assignment.setVideoIntervall(videoIntervall);
+        assignment.setAssignmentIntervall(assignmentIntervalls);
+        assignment.setScale(srs.getString("GradeScale"));
 
-        AssignmentModel am = new AssignmentModel(
-                courseId,                   // CourseId
-                srs.getString("Title"),     // Title
-                description,                // Description
-                videoIntervall,             // videoIntervall
-                assignmentIntervalls,       // assignmentIntervalls
-                srs.getString("GradeScale"),// GradeScale
-                recap);                     // Recap
+        String description = FilesystemInterface.getAssignmentDescription(assignment);
+        assignment.setDescription(description);
 
-        return Optional.of(am);
+        String recap = FilesystemInterface.getAssignmentRecap(assignment);
+        assignment.setRecap(recap);
+
+        return Optional.of(assignment);
     }
 
     /**
      * Removes an assignment from the database.
      *
-     * @param assignmentID  Assignment identifier
+     * @param assignment The assignment to remove
      * @return true if the assignment were removed, else false.
-     *
-     * @author dv14oan
      */
-    public boolean removeAssignment(int courseId, int assignmentID) throws IOException {
-        int rowAffected = databaseConnection.update("DELETE FROM Assignment WHERE AssignmentId = ?", assignmentID);
-        FilesystemInterface.deleteAssignmentFiles(courseId, assignmentID);
+    public boolean removeAssignment(AssignmentModel assignment) throws IOException {
+        int rowAffected = databaseConnection.update("DELETE FROM Assignment WHERE AssignmentId = ?",
+                assignment.getAssignmentID());
+        FilesystemInterface.deleteAssignmentFiles(assignment);
         return rowAffected > 0;
     }
 }

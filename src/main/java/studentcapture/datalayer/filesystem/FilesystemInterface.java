@@ -11,6 +11,8 @@ import studentcapture.assignment.AssignmentModel;
 import studentcapture.submission.Submission;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 /**
@@ -79,21 +81,6 @@ public class FilesystemInterface {
 
 		return responseEntity;
 	}
-
-	/**
-	 * Get assignment description
-	 * @param assignment the assignment to get the description for
-	 * @return the assignment description
-     */
-    public FileInputStream getAssignmentDescription(AssignmentModel assignment) {
-        String path = FilesystemInterface.generatePath(assignment) + FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
-        try {
-            return new FileInputStream(path);
-        } catch (FileNotFoundException e) {
-            System.err.println("No description of the assignment was found.\n");
-            return null;
-        }
-    }
 
 	/**
 	 * Store the students video for an assignment at a course.
@@ -205,28 +192,21 @@ public class FilesystemInterface {
 		fileWriter.close();
 	}
 
-	public static String getAssignmentText(int courseId, String assignmentId, String fileName)
-			throws IOException {
-		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/" + fileName;
-		File file = new File(path);
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		StringBuilder builder = new StringBuilder();
-		String line;
+	public static String getAssignmentRecap(AssignmentModel assignment) {
+		String path = generatePath(assignment) + FilesystemConstants.ASSIGNMENT_RECAP_FILENAME;
+		return readContentFromFile(path);
+	}
 
-		while((line = reader.readLine()) != null) {
-			builder.append(line);
-			builder.append(System.getProperty("line.separator"));
-		}
-
-		return builder.toString().trim();
+	public static String getAssignmentDescription(AssignmentModel assignment) {
+		String path = generatePath(assignment) + FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
+		return readContentFromFile(path);
 	}
 
 
-	public static void deleteAssignmentFiles(int courseId, int assignmentId)
+	public static void deleteAssignmentFiles(AssignmentModel assignment)
 			throws IOException {
-		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/";
-		File file = new File(path);
-		FileUtils.deleteDirectory(file);
+		String path = generatePath(assignment);
+		FileUtils.deleteDirectory(new File(path));
 	}
 
     /**
@@ -236,19 +216,7 @@ public class FilesystemInterface {
      */
 	public static String getFeedbackText(Submission submission) {
 		String path = generatePath(submission)+FilesystemConstants.FEEDBACK_TEXT_FILENAME;
-		String feedbackText = "";
-		try {
-			String line;
-			BufferedReader reader = new BufferedReader(new FileReader(path));
-			while((line = reader.readLine()) != null) {
-				feedbackText += line;
-			}
-		} catch (FileNotFoundException e) {
-			return "";
-		} catch (IOException e) {
-			return "I/O error while reading feedback text file!";
-		}
-		return feedbackText;
+		return readContentFromFile(path);
 	}
 
 	/**
@@ -282,6 +250,20 @@ public class FilesystemInterface {
 			return true;
 		} catch (FileNotFoundException e) {
 			return false;
+		}
+
+	}
+
+	/**
+	 * Read the content of a file
+	 * @param path the path to the file
+     * @return the content of the file or empty string on error
+     */
+	public static String readContentFromFile(String path) {
+		try {
+			return new String(Files.readAllBytes(Paths.get(path)));
+		} catch (IOException e) {
+			return "";
 		}
 
 	}

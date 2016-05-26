@@ -65,7 +65,6 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
                 assignmentIntervalls,
                 GradeScale.U_O_K_G.toString(), // GradeScale
                 "Recap");               // Recap
-        am.setCourseID(testCourseID);
     }
 
     @After
@@ -97,16 +96,16 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     public void shouldCreateAssignmentWithoutPublishdate() throws Exception {
         am.getAssignmentIntervall().setPublishedDate(null);
 
-        int assID = assignmentDAO.createAssignment(am);
-
-        assertEquals(am, assignmentDAO.getAssignmentModel(assID).get());
+        int assignmentID = assignmentDAO.createAssignment(am);
+        am.setAssignmentID(assignmentID);
+        assertEquals(am, assignmentDAO.getAssignmentModel(assignmentID).get());
     }
 
     @Test
     public void shouldGetCorrectAssignment() throws Exception {
-        int assID = assignmentDAO.createAssignment(am);
-
-        assertEquals(am, assignmentDAO.getAssignmentModel(assID).get());
+        int assignmentID = assignmentDAO.createAssignment(am);
+        am.setAssignmentID(assignmentID);
+        assertEquals(am, assignmentDAO.getAssignmentModel(assignmentID).get());
     }
 
     @Test
@@ -129,25 +128,25 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     @Test (expected = NotFoundException.class)
     public void shouldNotGetDeletedAssignment() throws Exception{
         int assID = assignmentDAO.createAssignment(am);
-
-        assignmentDAO.removeAssignment(testCourseID, assID);
+        am.setAssignmentID(assID);
+        assignmentDAO.removeAssignment(am);
 
         assignmentDAO.getAssignmentModel(assID);
     }
 
     @Test
-    public void shouldDeleteOneAnAssignment() throws Exception{
-        int assID = assignmentDAO.createAssignment(am);
-
-        assertTrue(assignmentDAO.removeAssignment(testCourseID, assID));
+    public void shouldDeleteAnAssignment() throws Exception{
+        int assignmentID = assignmentDAO.createAssignment(am);
+        am.setAssignmentID(assignmentID);
+        assertTrue(assignmentDAO.removeAssignment(am));
     }
 
     @Test
     public void shouldNotDeleteAnAssignment() throws Exception {
         int assID = assignmentDAO.createAssignment(am);
-        int noneAssID = assID + 500;
+        am.setAssignmentID(assID+500);
 
-        assertFalse(assignmentDAO.removeAssignment(testCourseID, noneAssID));
+        assertFalse(assignmentDAO.removeAssignment(am));
     }
 
     private String currentDatePlusDaysGenerator(int days){

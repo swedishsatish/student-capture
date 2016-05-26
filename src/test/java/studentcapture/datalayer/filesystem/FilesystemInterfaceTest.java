@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import studentcapture.assignment.AssignmentModel;
 import studentcapture.config.StudentCaptureApplication;
 import studentcapture.submission.Submission;
 
@@ -116,8 +117,7 @@ public class FilesystemInterfaceTest {
                 "Third line in testfile";
         testFile = new MockMultipartFile("mockTestFile",mockString.getBytes());
         FilesystemInterface.storeFeedbackText(submission,testFile);
-
-        assertNotEquals(FilesystemInterface.getFeedbackText(submission),mockString);
+        assertEquals(FilesystemInterface.getFeedbackText(submission),mockString);
     }
     @Test
     public void shouldReturnNoFile() throws Exception {
@@ -147,15 +147,21 @@ public class FilesystemInterfaceTest {
 
         FilesystemInterface.storeAssignmentText(151, assignmentID, "The file contains this",
                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
-        fileContents = FilesystemInterface.getAssignmentText(151, assignmentID,
-                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+        AssignmentModel assignment = new AssignmentModel();
+        assignment.setCourseID(151);
+        assignment.setAssignmentID(Integer.parseInt(assignmentID));
+        fileContents = FilesystemInterface.getAssignmentRecap(assignment);
 
         assertEquals("The file contains this", fileContents);
     }
 
-    @Test(expected = FileNotFoundException.class)
-    public void shouldThrowWhenAssignmentTextDontExist() throws IOException {
-        FilesystemInterface.getAssignmentText(151, assignmentID, FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+    @Test
+    public void shouldReturnEmptyWhenAssignmentTextDontExist() throws IOException {
+        AssignmentModel assignment = new AssignmentModel();
+        assignment.setCourseID(151);
+        assignment.setAssignmentID(Integer.parseInt(assignmentID));
+
+        assertEquals("", FilesystemInterface.getAssignmentRecap(assignment));
     }
 
     @Test
@@ -185,14 +191,18 @@ public class FilesystemInterfaceTest {
 
     @Test
     public void shouldDeleteAssignmentDir() throws Exception {
-        String path = FilesystemConstants.FILESYSTEM_PATH + "/" + 151 + "/" + assignmentID + "/";
+        int courseID = 151;
+        String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/";
         File file = new File(path);
+        AssignmentModel assignment = new AssignmentModel();
+        assignment.setAssignmentID(Integer.parseInt(assignmentID));
+        assignment.setCourseID(courseID);
 
-        FilesystemInterface.storeAssignmentText(151, assignmentID, "This doesn't matter",
+        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "This doesn't matter",
                 FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
-        FilesystemInterface.storeAssignmentText(151, assignmentID, "This doesn't matter",
+        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "This doesn't matter",
                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
-        FilesystemInterface.deleteAssignmentFiles(151, Integer.parseInt(assignmentID));
+        FilesystemInterface.deleteAssignmentFiles(assignment);
 
         assertTrue(!file.exists());
 
