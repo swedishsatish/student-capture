@@ -116,8 +116,7 @@ public class FilesystemInterfaceTest {
                 "Third line in testfile";
         testFile = new MockMultipartFile("mockTestFile",mockString.getBytes());
         FilesystemInterface.storeFeedbackText(submission,testFile);
-
-        assertNotEquals(FilesystemInterface.getFeedbackText(submission),mockString);
+        assertEquals(FilesystemInterface.getFeedbackText(submission),mockString);
     }
     @Test
     public void shouldReturnNoFile() throws Exception {

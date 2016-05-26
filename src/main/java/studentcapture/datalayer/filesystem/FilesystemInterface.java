@@ -11,6 +11,8 @@ import studentcapture.assignment.AssignmentModel;
 import studentcapture.submission.Submission;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 /**
@@ -236,19 +238,7 @@ public class FilesystemInterface {
      */
 	public static String getFeedbackText(Submission submission) {
 		String path = generatePath(submission)+FilesystemConstants.FEEDBACK_TEXT_FILENAME;
-		String feedbackText = "";
-		try {
-			String line;
-			BufferedReader reader = new BufferedReader(new FileReader(path));
-			while((line = reader.readLine()) != null) {
-				feedbackText += line;
-			}
-		} catch (FileNotFoundException e) {
-			return "";
-		} catch (IOException e) {
-			return "I/O error while reading feedback text file!";
-		}
-		return feedbackText;
+		return readContentFromFile(path);
 	}
 
 	/**
@@ -282,6 +272,20 @@ public class FilesystemInterface {
 			return true;
 		} catch (FileNotFoundException e) {
 			return false;
+		}
+
+	}
+
+	/**
+	 * Read the content of a file
+	 * @param path the path to the file
+     * @return the content of the file or empty string on error
+     */
+	public static String readContentFromFile(String path) {
+		try {
+			return new String(Files.readAllBytes(Paths.get(path)));
+		} catch (IOException e) {
+			return "";
 		}
 
 	}
