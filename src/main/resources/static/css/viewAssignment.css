@@ -115,22 +115,3 @@
     top: 0px;
 }
 
-#studentSubmit:disabled
-{
-    background: #bfbfbf
-}
-#studentSubmit
-{
-    background: #40bf40
-}
-
-#withrawbutton:disabled
-{
-    background: #bfbfbf
-}
-
-#withrawbutton
-{
-    background: #cc3333
-}
-

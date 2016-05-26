@@ -20,9 +20,18 @@
  * watch HardwareTest.js for example of use.
  */
 
-var mediaStream;
+var mediaStream = null;
+
+function closeStream() {
+    if(mediaStream != null && typeof mediaStream !== "undefined"){
+        mediaStream.stop();
+        mediaStream = null;
+    }
+}
 
 var Recorder = React.createClass({
+    defaultMinTime: 10,
+    defaultMaxTime: 120,
     componentDidMount: function() {
         var props = this.props;
 
@@ -30,7 +39,6 @@ var Recorder = React.createClass({
         var blobsize;
         var sendTime;
         var forceSubmit = false;
-        var withraw = false;
         var cameraStartOnLoad = (typeof props.camOnLoad === "undefined") ?
                         false : props.camOnLoad == "true";
         var cameraStarted = false;
@@ -39,11 +47,18 @@ var Recorder = React.createClass({
                         !startRecordButtonExists : props.autoRecord == "true";
 
         var replay = props.replay == "true";
-        var stopButton = document.getElementById(props.stopButtonID);
         var previewElement;
         var recordAudio, recordVideo;
 
 
+        var minRecordTime = parseInt(props.minRecordTime);
+        if(isNaN(minRecordTime)) {
+            minRecordTime = this.defaultMinTime;
+        }
+        var maxRecordTime = parseInt(props.maxRecordTime);
+        if(isNaN(maxRecordTime)) {
+            maxRecordTime = this.defaultMaxTime;
+        }
 
         if(startRecordButtonExists) {
             var recordButton = document.getElementById(props.recButtonID);
@@ -70,9 +85,6 @@ var Recorder = React.createClass({
             recordButton.onclick = startRecord;
         }
 
-        /* The onclick function for the stop record button. */
-        stopButton.onclick = stopRecording;
-
         /* Will start recording and start the webcam if not enabled. */
         function startRecord() {
             if(!cameraStarted) {
@@ -94,17 +106,19 @@ var Recorder = React.createClass({
             if(props.siteView == "submission") {
                 if(props.minRecordTime != null) {
                     window.setTimeout(function() {
-                                    stopButton.disabled = false;
-                                }, 1000*parseInt(props.minRecordTime));
+                                    props.setSubmitEnabled(true);
+                                    document.getElementById(props.stopButtonID).onclick = stopRecording;
+                                }, 1000*minRecordTime);
                 }
                 if(props.maxRecordTime != null) {
                     window.setTimeout(function() {
                                     forceSubmit = true;
-                                    stopButton.onclick();
-                                }, 1000*parseInt(props.maxRecordTime));
+                                    document.getElementById(props.stopButtonID).onclick();
+                                }, 1000*maxRecordTime);
                 }
             } else {
-                stopButton.disabled = false;
+                props.setSubmitEnabled(true);
+                document.getElementById(props.stopButtonID).onclick = stopRecording;
             }
 
             if(typeof props.calc !== "undefined") {
@@ -133,11 +147,15 @@ var Recorder = React.createClass({
                     }
                 }
             }, function (stream) {
+                closeStream();
                 mediaStream = stream;
                 previewElement.src = window.URL.createObjectURL(mediaStream);
                 previewElement.removeAttribute("controls");
                 previewElement.setAttribute("muted", "muted");
-                window.setTimeout(function() { previewElement.play(); }, 200);
+                window.setTimeout(function() {
+                    if(previewElement != null)
+                        previewElement.play();
+                }, 400);
 
                 recordAudio = RecordRTC(mediaStream, {
                     onAudioProcessStarted: function () {
@@ -175,7 +193,7 @@ var Recorder = React.createClass({
                 recordButton.disabled = false;
             }
 
-            stopButton.disabled = true;
+            props.setSubmitEnabled(false);
 
             previewElement.src = '';
 
@@ -214,8 +232,9 @@ var Recorder = React.createClass({
                         }
                     }
                 }
-                mediaStream.stop();
-                mediaStream = null;
+
+                closeStream();
+
                 if(typeof props.calc !== "undefined") {
                     /*document.getElementById("test-rec-text").innerHTML = "&#11093;";*/
                     document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
@@ -226,10 +245,11 @@ var Recorder = React.createClass({
                 }
                 cameraStarted = false;
             });
-            var hasModal = document.getElementById("assignment-modal");
+            /*var hasModal = document.getElementById("assignment-modal");
             if (hasModal !== null) {
                 hasModal.style.display = 'none';
-            }
+            }*/
+            props.endFunc();
         }
 
         /* Post to the server */
@@ -316,12 +336,8 @@ var Recorder = React.createClass({
         }
     },
     componentWillUnmount: function () {
-      
-        if(mediaStream != null && typeof mediaStream !== "undefined"){
-            mediaStream.stop();
-            mediaStream = null;
-        }
-
+        console.log("VIDEORECORD UNMOUNTED.");
+        closeStream();
         if(typeof this.props.calc !== "undefined" && typeof $("#you-id")[0] !== "undefined") {
             $("#you-id")[0].pause();
 
