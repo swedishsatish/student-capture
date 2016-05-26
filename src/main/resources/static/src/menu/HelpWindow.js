@@ -39,7 +39,7 @@ window.HelpWindow = React.createClass({
                         <h3>Read the</h3>
                         <button onClick={this.faqClickHandler}>FAQ</button>
 
-                        <h3>or send and</h3>
+                        <h3>or send an</h3>
                         <button onClick={this.emailClickHandler}>E-mail</button>
                     </div>
                 </div>
