@@ -45,17 +45,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
     <script src="src/communicationsLibrary.js"></script>
-    <script src="src/g2/RecordRTC.js"></script>
-    <script src="src/viewAssignment.js" type="text/babel"></script>
-    <script src="src/g2/sorttable.js"></script>
-    <script type="text/babel" src="src/g2/FAQInfo.js"></script>
+    <script src="src/video/RecordRTC.js"></script>
+    <script src="src/submission/sorttable.js"></script>
+    <script type="text/babel" src="src/menu/FAQInfo.js"></script>
     <script src="https://cdn.tinymce.com/4/tinymce.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.ui.timepicker.addon/1.4.5/jquery-ui-timepicker-addon.min.js"></script>
-    <script src="src/g8/tablefilter_all_min.js"></script>
-
-
-
+    <script src="src/submission/tablefilter_all_min.js"></script>
+    <script src="https://cdn.webrtc-experiment.com/DetectRTC.js"></script>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/favicon.png"/>
@@ -66,7 +63,7 @@
 <script>
     window.globalURL = "https://localhost:8443";
 </script>
-<div class="md-modal md-effect-19" id="modal-19">
+<div class="md-modal md-effect-16" id="modal-16">
     <div class="md-content" id="modal-container">
         <button class="md-close">Close</button>
     </div>
@@ -75,41 +72,41 @@
 <div class="container">
     <div class="row">
         <div class="twelve columns header" id="desktopHeader"></div>
-        <script type="text/babel" src="src/profile.js"></script>
+        <script type="text/babel" src="src/menu/profile.js"></script>
     </div>
 
     <div class="three columns" id="desktopNavigation"></div>
 
 
     <div class="nine columns" id="courseContent"></div>
-    <script type="text/babel" src="src/courseContent.js"></script>
+    <script type="text/babel" src="src/mainpage/courseContent.js"></script>
 </div>
 <div class="md-overlay"></div>
-<script type="text/babel" src="src/g2/DynamicMenu.js"></script>
-<script type="text/babel" src="src/g2/CourseInfo.js"></script>
-<script type="text/babel" src="src/g2/EditCourse.js"></script>
-<script type="text/babel" src="src/g2/CreateCourse.js"></script>
-<script type="text/babel" src="src/g6/RenderHandle.js"></script>
-<script type="text/babel" src="src/g6/PermissionCheckBox.js"></script>
-<script type="text/babel" src="src/g6/PassCheckBox.js"></script>
-<script type="text/babel" src="src/g6/CommentBox.js"></script>
-<script type="text/babel" src="src/g6/DropDown.js"></script>
-<script type="text/babel" src="src/g6/SubmitButton.js"></script>
-<script type="text/babel" src="src/g6/BackButton.js"></script>
-<script type="text/babel" src="src/feedbackContent.js"></script>
-<script type="text/babel" src="src/g2/videoRecord.js"></script>
-<script type="text/babel" src="src/g2/HardwareTest.js"></script>
-<script type="text/babel" src="src/g8/StudentList.js"></script>
-<script type="text/babel" src="src/g8/TeacherViewSubmission.js"></script>
-<script type="text/babel" src="src/g8/BlankBox.js"></script>
-<script type="text/babel" src="src/g8/Settings.js"></script>
-<script type="text/babel" src="src/g8/HelpWindow.js"></script>
-<script type="text/babel" src="src/g8/EmailSupportWindow.js"></script>
-<script type="text/babel" src="src/g1/newAssignment.js"></script>
-<script type="text/babel" src="src/viewAssignment.js"></script>
-<script type="text/babel" src="src/feedbackContent.js"></script>
-<script type="text/babel" src="src/g5/TeacherRecordVideo.js"></script>
-<script type="text/babel" src="src/g5/StudentRecordVideo.js"></script>
+<script type="text/babel" src="src/modals/EmptyModal.js"></script>
+<script type="text/babel" src="src/menu/DynamicMenu.js"></script>
+<script type="text/babel" src="src/course/CourseInfo.js"></script>
+<script type="text/babel" src="src/course/EditCourse.js"></script>
+<script type="text/babel" src="src/course/CreateCourse.js"></script>
+<script type="text/babel" src="src/submission/RenderHandle.js"></script>
+<script type="text/babel" src="src/submission/PermissionCheckBox.js"></script>
+<script type="text/babel" src="src/submission/PassCheckBox.js"></script>
+<script type="text/babel" src="src/submission/CommentBox.js"></script>
+<script type="text/babel" src="src/submission/DropDown.js"></script>
+<script type="text/babel" src="src/submission/SubmitButton.js"></script>
+<script type="text/babel" src="src/submission/BackButton.js"></script>
+<script type="text/babel" src="src/submission/feedbackContent.js"></script>
+<script type="text/babel" src="src/video/videoRecord.js"></script>
+<script type="text/babel" src="src/menu/HardwareTest.js"></script>
+<script type="text/babel" src="src/submission/StudentList.js"></script>
+<script type="text/babel" src="src/submission/TeacherViewSubmission.js"></script>
+<script type="text/babel" src="src/submission/BlankBox.js"></script>
+<script type="text/babel" src="src/menu/Settings.js"></script>
+<script type="text/babel" src="src/menu/HelpWindow.js"></script>
+<script type="text/babel" src="src/menu/EmailSupportWindow.js"></script>
+<script type="text/babel" src="src/assignment/newAssignment.js"></script>
+<script type="text/babel" src="src/assignment/viewAssignment.js"></script>
+<script type="text/babel" src="src/submission/TeacherRecordVideo.js"></script>
+<script type="text/babel" src="src/submission/StudentRecordVideo.js"></script>
 
 
 </body>

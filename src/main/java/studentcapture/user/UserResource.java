@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 import studentcapture.login.ErrorFlags;
+import studentcapture.usersettings.SettingsDAO;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,6 +22,9 @@ public class UserResource {
 
     @Autowired
     private UserDAO userDAO;
+
+    //@Autowired
+    private SettingsDAO settingsDAO = new SettingsDAO();
 
     /**
      * Get user object containing all related information of a user,
@@ -42,6 +46,7 @@ public class UserResource {
         if(user == null) {
             URI uri = new URI("/login?failed");            
             HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(uri);
             return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
         }
 
@@ -50,7 +55,7 @@ public class UserResource {
 
     /**
      * Add a new user with given user details
-     * @param user
+     * @param
      * @return
      * @throws URISyntaxException 
      */
@@ -66,14 +71,18 @@ public class UserResource {
         User user = new User(username, firstName, lastName, email, encryptPassword(password));
         
         ErrorFlags status = userDAO.addUser(user);
+        user = userDAO.getUser(username,0);
 
         //Redirect to /login after the registration process is complete
         URI uri;
         HttpHeaders httpHeaders = new HttpHeaders();
-        
+        System.out.println("\nasdadadadad!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+
         //Get the correct status message
         if(status == ErrorFlags.NOERROR){
             uri = new URI("/login?" + status.toString());
+            boolean val = settingsDAO.setDefaultConfig(Integer.parseInt(user.getUserID()));
+
         }else{
             uri = new URI("/login?error=" + status.toString());
         }
@@ -104,7 +113,7 @@ public class UserResource {
      * @param password The input password
      * @return Encrypted password
      */
-    protected String encryptPassword(String password) {
+    private String encryptPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt(11));
     }
 }

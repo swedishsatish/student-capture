@@ -33,7 +33,7 @@ public class AssignmentDAO {
 
     // This template should be used to send queries to the database
     @Autowired
-    protected JdbcTemplate jdbcTemplate;
+    protected JdbcTemplate databaseConnection;
 
     /**
      * Inserts an assignment into the database.
@@ -42,21 +42,18 @@ public class AssignmentDAO {
      * @return the generated AssignmentID
      * @throws IllegalArgumentException fails if startDate or endDate is not
      *                        in the right format
-     *
-     * @author dv14oan & tfy13dbd
      */
     public int createAssignment(AssignmentModel assignmentModel)
-            throws IllegalArgumentException {
+            throws IllegalArgumentException, IOException {
 
         Integer assignmentID;
-        String courseCode;
 
         // Construct query, depends on if assignment has publishdate or not.
         String insertQueryString = getInsertQueryString(assignmentModel.getAssignmentIntervall().getPublishedDate());
 
         // Execute query and fetch generated AssignmentID
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(
+        databaseConnection.update(
                 connection -> {
                     PreparedStatement ps =
                             connection.prepareStatement(insertQueryString,
@@ -88,8 +85,13 @@ public class AssignmentDAO {
             FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
                     assignmentModel.getRecap(), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
-            //TODO: HANDLE THIS
-            System.err.println("IOEXCEPTION");
+            try {
+                removeAssignment(assignmentModel.getCourseID(), assignmentModel.getAssignmentID());
+            } catch (IOException e2) {
+                throw new IOException("Could not store assignment and " +
+                        "could not delete semi-stored assignment successfully. ");
+            }
+            throw new IOException("Could not store assignment successfully.");
         }
 
         return assignmentID;
@@ -123,10 +125,10 @@ public class AssignmentDAO {
      * Update an assignment, both in the database and in the file system.
      *
      * @param assignmentModel The assignment to update to.
-     * @return True if assignment updated, false if failed to update assignment files in the file system.
      * @throws NotFoundException If the corresponding assignment is the database does not exist.
+     * @throws IOException If files could not be stored successfully.
      */
-    public boolean updateAssignment(AssignmentModel assignmentModel) throws NotFoundException {
+    public void updateAssignment(AssignmentModel assignmentModel) throws NotFoundException, IOException {
 
         String updateQuery = "UPDATE Assignment SET " +
                 "CourseID=?, " +
@@ -139,7 +141,7 @@ public class AssignmentDAO {
                 "GradeScale=? " +
                 "WHERE AssignmentID=?;";
 
-        int rowAffected = jdbcTemplate.update(updateQuery,
+        int rowAffected = databaseConnection.update(updateQuery,
                 assignmentModel.getCourseID(),
                 assignmentModel.getTitle(),
                 assignmentModel.getAssignmentIntervall().getStartDate(),
@@ -167,11 +169,9 @@ public class AssignmentDAO {
                     assignmentModel.getRecap(),
                     FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
-            //TODO: Undo DB update...
-            return false;
+            throw new IOException("Could not store some data in the edited " +
+                    "assignment correctly. Please try again.");
         }
-
-        return true;
     }
 
     /**
@@ -203,7 +203,6 @@ public class AssignmentDAO {
      *
      * @param assignmentModel the assignment model
      * @return true or false
-     * @author c13bll
      */
     public boolean hasAccess(AssignmentModel assignmentModel){
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
@@ -215,7 +214,7 @@ public class AssignmentDAO {
 
         //Needs more testing probably...
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(
+        databaseConnection.update(
                 connection -> {
                     PreparedStatement ps =
                             connection.prepareStatement(accessQuery,
@@ -247,7 +246,7 @@ public class AssignmentDAO {
 //        try {
 //            for (String c : columns) {
 //                query = "SELECT " + c + " FROM assignment WHERE (assignmentid = ?);";
-//                tempVal = jdbcTemplate.queryForObject(query, new Object[]{assignmentID}, String.class);
+//                tempVal = databaseConnection.queryForObject(query, new Object[]{assignmentID}, String.class);
 //
 //                if (tempVal == null) {
 //                    tempVal = "Missing value";
@@ -275,29 +274,27 @@ public class AssignmentDAO {
 
 	public String getAssignmentID(String courseID,String assignmentTitle){
     	String sql = "SELECT assignmentID from Assignment WHERE courseID = ? AND Title = ?";
-    	return jdbcTemplate.queryForObject(sql, new Object[]{courseID,assignmentTitle},String.class);
+    	return databaseConnection.queryForObject(sql, new Object[]{courseID,assignmentTitle},String.class);
 	}
 
     public String getCourseIDForAssignment(int assignmentID) {
         String sql = "SELECT courseID from Assignment WHERE assignmentID = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{assignmentID},String.class);
+        return databaseConnection.queryForObject(sql, new Object[]{assignmentID},String.class);
     }
 
     /**
      * Returns a sought assignment from the database.
      * 
-     * @param assignmentId		assignments identifier
+     * @param assignmentID		assignments identifier
      * @return					sought assignment
-     * 
-     * @author tfy12hsm
      */
-	public Optional<AssignmentModel> getAssignment(int assignmentId) {
+	public Optional<AssignmentModel> getAssignment(int assignmentID) {
 		try {
             String getAssignmentStatement = "SELECT * FROM "
                     + "Assignment WHERE AssignmentId=?";
 
-			Map<String, Object> map = jdbcTemplate.queryForMap(
-	    			getAssignmentStatement, assignmentId);
+			Map<String, Object> map = databaseConnection.queryForMap(
+	    			getAssignmentStatement, assignmentID);
 			AssignmentModel result = new AssignmentModel(map);
 	    	
 	    	return Optional.of(result);
@@ -311,19 +308,17 @@ public class AssignmentDAO {
     /**
      * Returns a sought, published assignment from the database.
      *
-     * @param assignmentId		assignments identifier
+     * @param assignmentID		assignments identifier
      * @return					sought assignment
-     *
-     * @author tfy12hsm
      */
-    public Optional<AssignmentModel> getPublishedAssignment(int assignmentId) {
+    public Optional<AssignmentModel> getPublishedAssignment(int assignmentID) {
         try {
             String getPublishedAssignmentStatement = "SELECT * FROM "
                     + "Assignment WHERE AssignmentId=? AND "
                     + "published < current_timestamp";
 
-            Map<String, Object> map = jdbcTemplate.queryForMap(
-                    getPublishedAssignmentStatement, assignmentId);
+            Map<String, Object> map = databaseConnection.queryForMap(
+                    getPublishedAssignmentStatement, assignmentID);
             AssignmentModel result = new AssignmentModel(map);
 
             return Optional.of(result);
@@ -340,15 +335,13 @@ public class AssignmentDAO {
      * @param assignmentID          Assignment identifier
      * @return The AssignmentModel
      * @throws NotFoundException    If the assignment was not found.
-     *
-     * @author dv14oan
      */
     public Optional<AssignmentModel> getAssignmentModel(int assignmentID) throws NotFoundException, IOException {
 
         String getAssignmentStatement = "SELECT * FROM "
                 + "Assignment WHERE AssignmentId=?;";
         Object[] parameters = new Object[]{new Integer(assignmentID)};
-        SqlRowSet srs = jdbcTemplate.queryForRowSet(getAssignmentStatement, parameters);
+        SqlRowSet srs = databaseConnection.queryForRowSet(getAssignmentStatement, parameters);
 
         if (!srs.next()){
             throw new NotFoundException("Assignment not found");
@@ -372,13 +365,13 @@ public class AssignmentDAO {
         String recap = FilesystemInterface.getAssignmentText(courseId, String.valueOf(assignmentID), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
 
         AssignmentModel am = new AssignmentModel(
-                courseId,                   // CourseId
-                srs.getString("Title"),     // Title
-                description,                // Description
-                videoIntervall,             // videoIntervall
-                assignmentIntervalls,       // assignmentIntervalls
-                srs.getString("GradeScale"),// GradeScale
-                recap);                     // Recap
+                courseId,
+                srs.getString("Title"),
+                description,
+                videoIntervall,
+                assignmentIntervalls,
+                srs.getString("GradeScale"),
+                recap);
 
         return Optional.of(am);
     }
@@ -388,11 +381,9 @@ public class AssignmentDAO {
      *
      * @param assignmentID  Assignment identifier
      * @return true if the assignment were removed, else false.
-     *
-     * @author dv14oan
      */
     public boolean removeAssignment(int courseId, int assignmentID) throws IOException {
-        int rowAffected = jdbcTemplate.update("DELETE FROM Assignment WHERE AssignmentId = ?", assignmentID);
+        int rowAffected = databaseConnection.update("DELETE FROM Assignment WHERE AssignmentId = ?", assignmentID);
         FilesystemInterface.deleteAssignmentFiles(courseId, assignmentID);
         return rowAffected > 0;
     }

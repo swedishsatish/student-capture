@@ -19,7 +19,7 @@ public class User {
     private String userID;
     private String token;  //Will be used for recovery of password
 
-    //Needed because of json
+    //Needed for json string. DONT TOUCH!
     public User() {}
 
     public User(String userName, String fName, String lName,
@@ -45,10 +45,6 @@ public class User {
 
     public String getUserName() {
         return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getFirstName() {
@@ -101,14 +97,15 @@ public class User {
 
     @Override
     public boolean equals(Object other) {
-        User user = (User) other;
+        if (other == this) return true;
+        if (!(other instanceof User)) return false;
 
-        return (user.getUserName() == this.getUserName())
-                && (user.getFirstName() == this.firstName)
-                && (user.getLastName() == this.lastName)
-                && (user.getEmail() == this.email)
-                && (user.getPswd()  == this.pswd)
-                && (user.getToken() == this.token);
+        User user = (User) other;
+        return user.getUserName().equals(this.getUserName())
+                && user.getFirstName().equals(this.firstName)
+                && user.getLastName().equals(this.lastName)
+                && user.getEmail().equals(this.email)
+                && user.getPswd().equals(this.pswd);
     }
     
     /**

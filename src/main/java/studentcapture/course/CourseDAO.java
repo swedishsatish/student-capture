@@ -21,9 +21,7 @@ public class CourseDAO {
 
     /**
      * Attempts to add a course to the database.
-     * 	
-     * @author tfy12hsm
-     * 
+     *
      * @param course	added course
      * @return			added course. Includes errorcode if problem has occured
      */
@@ -63,8 +61,6 @@ public class CourseDAO {
      * 
      * @param course	course to compare to
      * @return			course found
-     * 
-     * @author tfy12hsm
      */
     public CourseModel getCourseWithoutID(CourseModel course){
     	try {
@@ -87,8 +83,6 @@ public class CourseDAO {
      *
      * @param course	course to find
      * @return			found course
-     *
-     * @author tfy12hsm
      */
 	public CourseModel getCourse(CourseModel course) {
 		try {
@@ -107,10 +101,8 @@ public class CourseDAO {
 	/**
      * Attempts to retrieve all data regarding a course from the database.
      *
-     * @param courseID	target courses database identification
+     * @param courseId	target courses database identification
      * @return			sought after course
-     * 
-     * @author tfy12hsm
      */
 	public CourseModel getCourse(Integer courseId) {
 		try {
@@ -131,8 +123,6 @@ public class CourseDAO {
 	 * 
 	 * @param course
 	 * @return
-	 * 
-	 * @author tfy12hsm
 	 */
 	public CourseModel updateCourse(CourseModel course) {
 		String changeDescriptionOnCourseStatement = "UPDATE Course SET "
@@ -162,10 +152,8 @@ public class CourseDAO {
     /**
      * Attempts to remove a course from the database.
      *
-     * @param courseID	courses database identification
+     * @param course	courses database identification
      * @return			true if successful, else false
-     * 
-     * @author tfy12hsm
      */
     public CourseModel removeCourse(CourseModel course) {
         String removeCourseStatement = "DELETE FROM Course WHERE CourseID=?";
@@ -197,12 +185,12 @@ public class CourseDAO {
             if(rowsAffected == 1) {
             	return course;
             }
-        } catch (IncorrectResultSizeDataAccessException e){
         } catch (DataAccessException e1){
         	CourseModel errorCourse = new CourseModel();
         	errorCourse.setErrorCode(HttpStatus.CONFLICT.value());
         	return errorCourse;
         }
+
         CourseModel errorCourse = new CourseModel();
     	errorCourse.setErrorCode(HttpStatus.NOT_FOUND.value());
     	return errorCourse;
@@ -219,7 +207,7 @@ public class CourseDAO {
 //        String courseCode;
 //
 //        try {
-//            courseCode = jdbcTemplate.queryForObject(query, new Object[]{course.getCourseId()}, String.class);
+//            courseCode = databaseConnection.queryForObject(query, new Object[]{course.getCourseId()}, String.class);
 //            	
 //            if (courseCode == null) {
 //                courseCode = "Missing value";
