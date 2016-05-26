@@ -80,15 +80,12 @@ public class AssignmentDAO {
         }
         assignmentModel.setAssignmentID(assignmentID);
 
-        try {
-            FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
-                    assignmentModel.getDescription(), FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
-            FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
-                    assignmentModel.getRecap(), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
-        } catch (IOException e) {
+        if (!FilesystemInterface.storeAssignmentRecap(assignmentModel) ||
+                !FilesystemInterface.storeAssignmentDescription(assignmentModel)) {
+            // If the recap or description could not be saved
             try {
                 removeAssignment(assignmentModel);
-            } catch (IOException e2) {
+            } catch (IOException e) {
                 throw new IOException("Could not store assignment and " +
                         "could not delete semi-stored assignment successfully. ");
             }

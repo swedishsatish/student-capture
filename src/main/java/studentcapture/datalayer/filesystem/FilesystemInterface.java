@@ -164,32 +164,23 @@ public class FilesystemInterface {
 	}
 
 	/**
-	 * Stores assignment description or recap depending on the filename parameter
-	 * @param courseId a unique database id
-	 * @param assignmentId a unique database id
-	 * @param contents The contents in the file
-	 * @param fileName the name of the file, (i.e. FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME or
-	 *                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME)
-     * @throws IOException
+	 * Store the assignment recap
+	 * @param assignment the assignment to store the recap for
+	 * @return true if the recap could be saved otherwise false
      */
-	public static void storeAssignmentText(int courseId,
-										   String assignmentId,
-										   String contents,
-										   String fileName) throws IOException {
+	public static boolean storeAssignmentRecap(AssignmentModel assignment) {
+		String path = generatePath(assignment) + FilesystemConstants.ASSIGNMENT_RECAP_FILENAME;
+		return printTextToFile(assignment.getRecap(), path);
+	}
 
-		String dirPath = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/";
-		File dir = new File(dirPath);
-		File file;
-		FileWriter fileWriter;
-
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-
-		file = new File(dirPath + fileName);
-		fileWriter = new FileWriter(file);
-		fileWriter.write(contents);
-		fileWriter.close();
+	/**
+	 * Store the assignment description
+	 * @param assignment the assignment to store the description for
+	 * @return true if the description could be saved otherwise false
+	 */
+	public static boolean storeAssignmentDescription(AssignmentModel assignment) {
+		String path = generatePath(assignment) + FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
+		return printTextToFile(assignment.getDescription(), path);
 	}
 
 	public static String getAssignmentRecap(AssignmentModel assignment) {
