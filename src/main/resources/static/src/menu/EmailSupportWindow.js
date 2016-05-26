@@ -7,31 +7,7 @@
  *@note: This react-class is rendered from HelpWindow.js
  **/
 
-/*
-Taken from profile.js
- */
-function genScripts(){
-    var script1 = document.createElement("script");
-    script1.setAttribute("src","src/g2/classie.js");
-    script1.setAttribute("id","script1");
-    document.body.appendChild(script1);
-    var script2 = document.createElement("script");
-    script2.setAttribute("id","script2");
-    script2.setAttribute("src","src/g2/modalEffects.js");
-    document.body.appendChild(script2);
 
-}
-
-/*
-Taken from profile.js
- */
-function reloadScripts() {
-    var script1 = document.getElementById("script1");
-    var script2 = document.getElementById("script2");
-    document.body.removeChild(script1);
-    document.body.removeChild(script2);
-    genScripts();
-}
 
 /**
  * Window for the user to send an email to support.
@@ -68,7 +44,7 @@ window.EmailSupportWindow = React.createClass({
      */
     backClickHandle: function () {
         ReactDOM.render(<HelpWindow />, document.getElementById('modal-container'));
-        reloadScripts();
+        window.reloadScripts();
     },
     render: function () {
         return (

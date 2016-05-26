@@ -323,7 +323,8 @@ window.RenderMenu = function (preloaded) {
     $.get("course", function (res) {
         // if(res)
         var userID = res.userId;
-
+       // var now = new Date();
+//console.log(Date().now()+now.getTimezoneOffset());
         var SCList = objToList(res.studentCourses);
         var TCList = objToList(res.teacherCourses);
         var name = res.firstName + " " + res.lastName;

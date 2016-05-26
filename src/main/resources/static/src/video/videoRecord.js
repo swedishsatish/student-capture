@@ -315,13 +315,13 @@ var Recorder = React.createClass({
         }
     },
     componentWillUnmount: function () {
-      console.log("no more rec");
-        if(mediaStream != null){
+      
+        if(mediaStream != null && typeof mediaStream !== "undefined"){
             mediaStream.stop();
             mediaStream = null;
         }
 
-        if(typeof this.props.calc !== "undefined") {
+        if(typeof this.props.calc !== "undefined" && typeof $("#you-id")[0] !== "undefined") {
             $("#you-id")[0].pause();
 
         }

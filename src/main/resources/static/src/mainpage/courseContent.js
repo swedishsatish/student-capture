@@ -10,7 +10,7 @@ var StartPage = React.createClass({
 });
 
 
-
+/*
 function submitAssignment() {
     var reqBody = {}
     reqBody["title"] = $("#title").val();
@@ -37,38 +37,7 @@ function submitAssignment() {
     });    
 }
 
-window.CourseContent = React.createClass({
-    render: function() {
-        var id = this.props.id;
-        var type = this.props.type;
-        var title;
-        var content = [];
-        switch(type){
-            case "course":
-                var course = this.props.course;
-                content.push(<h1>{type} {course["name"]}</h1>);
-                break;
-            case "assignment":
-                var courseId = this.props.course;
-                var assignmentId = this.props.assignment;
-                content.push(<h2>{type} (course={courseId})</h2>);
-                content.push(<AssignmentContent course={courseId} assignment={assignmentId}/>)
-                break;
-            case "task":
-                var courseId = this.props.course;
-                var assignmentId = this.props.assignment;
-                content.push(<h3>{type} (course={courseId}) (assignment={assignmentId})</h3>);
-                break;
-            default:
-                content.push(<h4>{type}</h4>);
-                break;
-        }
-        return (
-            <div>{content}</div>
-        );
-    }
-});
-
+*/
 
 window.getQueryVariable = function (variable)
 {
