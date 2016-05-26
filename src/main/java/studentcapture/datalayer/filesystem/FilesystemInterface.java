@@ -203,11 +203,10 @@ public class FilesystemInterface {
 	}
 
 
-	public static void deleteAssignmentFiles(int courseId, int assignmentId)
+	public static void deleteAssignmentFiles(AssignmentModel assignment)
 			throws IOException {
-		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/";
-		File file = new File(path);
-		FileUtils.deleteDirectory(file);
+		String path = generatePath(assignment);
+		FileUtils.deleteDirectory(new File(path));
 	}
 
     /**

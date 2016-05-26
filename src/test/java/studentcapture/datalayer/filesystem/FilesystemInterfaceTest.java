@@ -191,14 +191,18 @@ public class FilesystemInterfaceTest {
 
     @Test
     public void shouldDeleteAssignmentDir() throws Exception {
-        String path = FilesystemConstants.FILESYSTEM_PATH + "/" + 151 + "/" + assignmentID + "/";
+        int courseID = 151;
+        String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/";
         File file = new File(path);
+        AssignmentModel assignment = new AssignmentModel();
+        assignment.setAssignmentID(Integer.parseInt(assignmentID));
+        assignment.setCourseID(courseID);
 
-        FilesystemInterface.storeAssignmentText(151, assignmentID, "This doesn't matter",
+        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "This doesn't matter",
                 FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
-        FilesystemInterface.storeAssignmentText(151, assignmentID, "This doesn't matter",
+        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "This doesn't matter",
                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
-        FilesystemInterface.deleteAssignmentFiles(151, Integer.parseInt(assignmentID));
+        FilesystemInterface.deleteAssignmentFiles(assignment);
 
         assertTrue(!file.exists());
 

@@ -78,6 +78,7 @@ public class AssignmentDAO {
             //If only one key assumes it is assignmentid.
             assignmentID = keyHolder.getKey().intValue();
         }
+        assignmentModel.setAssignmentID(assignmentID);
 
         try {
             FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
@@ -86,7 +87,7 @@ public class AssignmentDAO {
                     assignmentModel.getRecap(), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
             try {
-                removeAssignment(assignmentModel.getCourseID(), assignmentModel.getAssignmentID());
+                removeAssignment(assignmentModel);
             } catch (IOException e2) {
                 throw new IOException("Could not store assignment and " +
                         "could not delete semi-stored assignment successfully. ");
@@ -381,12 +382,13 @@ public class AssignmentDAO {
     /**
      * Removes an assignment from the database.
      *
-     * @param assignmentID  Assignment identifier
+     * @param assignment The assignment to remove
      * @return true if the assignment were removed, else false.
      */
-    public boolean removeAssignment(int courseId, int assignmentID) throws IOException {
-        int rowAffected = databaseConnection.update("DELETE FROM Assignment WHERE AssignmentId = ?", assignmentID);
-        FilesystemInterface.deleteAssignmentFiles(courseId, assignmentID);
+    public boolean removeAssignment(AssignmentModel assignment) throws IOException {
+        int rowAffected = databaseConnection.update("DELETE FROM Assignment WHERE AssignmentId = ?",
+                assignment.getAssignmentID());
+        FilesystemInterface.deleteAssignmentFiles(assignment);
         return rowAffected > 0;
     }
 }
