@@ -25,14 +25,6 @@ CREATE TABLE IF NOT EXISTS CourseInvite (
     PRIMARY KEY (Hex, CourseId)
     );
 
-CREATE TABLE IF NOT EXISTS CourseInvite (
-    Hex          CHAR(16)      NOT NULL, 
-    CourseId     INT           references Course(CourseId),
-    CreationDate Timestamp     NOT NULL,
-    UNIQUE (Hex, CourseId),
-    PRIMARY KEY (Hex, CourseId)
-    );
-
 CREATE TABLE IF NOT EXISTS Participant (
     UserId       INT           references Users(UserId),
     CourseId     INT           references Course(CourseId),

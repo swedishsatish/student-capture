@@ -33,8 +33,9 @@ var PopUpConfirmButton = React.createClass({
         //sendVideo(this.props.getVideo);
         sendData();
         close();
+        document.getElementById("courseContent").innerHTML = "";
         ReactDOM.render(<TeacherViewSubmission courseId={IDs[0].courseID} assignmentId={IDs[0].assignmentID}
-        scale={this.props.scale}/>,document.getElementById('courseContent'));
+        scale={curscale}/>,document.getElementById('courseContent'));
 
     },
     render: function () {
@@ -138,6 +139,7 @@ function submitForm(method) {
         contentType: "application/json",
         url: "assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID,
         data : JSON.stringify(reqBody),
+        async: false,
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
@@ -227,7 +229,7 @@ function  getForm() {
  * @param grade returned grade to check
  * @returns {boolean} true if grade is valid, else false
  */
-function gradeEqualsTo(grade){
+function gradeEqualsTo(grade){ // might be old and not work
     var validGrade=false;
     if(grade == ( "U" || "O" || "K" || "G")){
         validGrade=true;
@@ -262,6 +264,7 @@ var SubmitButton = React.createClass({
     componentWillMount: function(){
         student=this.props.studentArray;
         IDs=this.props.idArray;
+        curscale=this.props.scale;
         if(student[0].studentID){
             getForm();
         }

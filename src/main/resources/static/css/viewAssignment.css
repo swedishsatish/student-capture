@@ -1,7 +1,7 @@
 /*
  * viewAssignment.css
- * Authors: Zacharias Berggren
- *          Joakim Sandman
+ * Authors: dv13zbn
+ *          tm08jsn
  */
 
 /* Style of assignment front page */
@@ -42,7 +42,7 @@
 	transform: translate(-50%, -50%);
 	z-index: 999;
 	color: black !important;
-	background-color: #dddddd;
+	background-color: #fafafa;
 	font-size: 20px;
 	overflow: auto;
 	padding: 50px;
@@ -66,6 +66,7 @@
     width: 100%;
 }
 
+/* Style of countdown container */
 #countDownContainer
 {
     position: relative;
@@ -75,10 +76,11 @@
 #countdown-div
 {
 	font-size: 100px;
-	text-align:center;
+	font-weight: bold;
+	text-align: center;
 	top: 50%;
  	left: 50%;
-	height:150px;
+	height: 150px;
 	color: white;
     text-shadow:
         -1px -1px 0px black,
@@ -94,16 +96,19 @@
 	z-index: 2;
 }
 
+/* Style of video titles */
 #videoTitle
 {
     display: inline-block;
 }
 
+/* Override style of REC symbol */
 #recorder-div > div > #rec-text
 {
 	display: none;
 }
 
+/* Override style of recording frame */
 #studentPreview > #preview
 {
     position: relative;
@@ -128,5 +133,4 @@
 {
     background: #cc3333
 }
-
 

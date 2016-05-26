@@ -1,8 +1,8 @@
 /*
  * viewAssignment.js
- * Authors: Zacharias Berggren
- *          Joakim Sandman
- *          Victor Zars
+ * Authors: dv13zbn
+ *          tm08jsn
+ *          c13vzs
  *
  * Shows the assignment front page and (when the assignment is started)
  * plays the assignment video followed by a countdown and finally records the
@@ -13,6 +13,8 @@
 var assignmentData = {
     minTime: '',
     maxTime: '',
+    startsAt: '',
+    endsAt: '',
     assignmentName: '',
     assignmentID: '',
     courseID: '',
@@ -25,8 +27,6 @@ var assignmentData = {
 window.AssignmentContent = React.createClass({
     getInitialState: function() {
         return {loaded: false,
-                startsAt: '',
-                endsAt: '',
                 assignmentInformation: ''
                 };
     },
@@ -34,10 +34,10 @@ window.AssignmentContent = React.createClass({
         var json = JSON.parse(data);
         assignmentData.minTime = json["videoIntervall"]["minTimeSeconds"];
         assignmentData.maxTime = json["videoIntervall"]["maxTimeSeconds"];
+        assignmentData.startsAt = json["assignmentIntervall"]["startDate"];
+        assignmentData.endsAt = json["assignmentIntervall"]["endDate"];
         assignmentData.assignmentName = json["title"];
         this.setState({loaded: true,
-                       startsAt: json["assignmentIntervall"]["startDate"],
-                       endsAt: json["assignmentIntervall"]["endDate"],
                        assignmentInformation: json["description"]
                        });
     },
@@ -52,8 +52,8 @@ window.AssignmentContent = React.createClass({
             <div id="assignment-div">
                 <div id="assignment-desc">
                     <h1 id="assignment-title">{assignmentData.assignmentName}</h1>
-                    <h5 id="assignment-startAt">Assignment opens: <p id="descriptor">{this.state.startsAt}</p></h5>
-                    <h5 id="assignment-endAt">Assignment closes: <p id="descriptor">{this.state.endsAt}</p></h5>
+                    <h5 id="assignment-startAt">Assignment opens: <p id="descriptor">{assignmentData.startsAt}</p></h5>
+                    <h5 id="assignment-endAt">Assignment closes: <p id="descriptor">{assignmentData.endsAt}</p></h5>
                     <h5 id="assignment-mintime">Minimum answer video duration: <p id="descriptor">{assignmentData.minTime} seconds</p></h5>
                     <h5 id="assignment-maxtime">Maximum answer video duration: <p id="descriptor">{assignmentData.maxTime} seconds</p></h5>
                     <h5 id="assignment-information">
@@ -62,7 +62,7 @@ window.AssignmentContent = React.createClass({
                     </h5>
                 </div>
                 <div id="assignment-interaction">
-                    <But /><br />
+                    {this.state.loaded ? <But /> : <div />}<br />
                     NOTE: Once the assignment starts it cannot be interrupted or paused,<br />
                     remember to test your hardware before you begin!
                 </div>
@@ -133,8 +133,8 @@ var AssignmentStart = React.createClass({
                                         </div>
                                         {recordContent}
                                     </div>
-                                    <br /> Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime}
-                                    <br /> Current video length: {this.state.time}
+                                    <br /> Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime} seconds
+                                    <br /> Current video length: {this.state.time} seconds
                                 </div>
                             </div>
                         </div>
@@ -162,24 +162,50 @@ var AssignmentStart = React.createClass({
  */
 var But = React.createClass({
     getInitialState: function() {
-        return {disabled: false};
+        return {disabled: true,
+                start: false
+                };
     },
     onClick: function() {
-        if (confirm("Once the assignment starts it cannot be interrupted or paused.\n" +
-                    "Are you sure you want to begin the assignment?")) {
-            this.setState({disabled: true});
+        var startDate = new Date(assignmentData.startsAt);
+        var endDate = new Date(assignmentData.endsAt);
+        var currDate = new Date();
+        if ((startDate < currDate) && (currDate < endDate)) {
+            if (confirm("Once the assignment starts it cannot be interrupted or paused.\n" +
+                        "Are you sure you want to begin the assignment?")) {
+                this.setState({start: true});
+            }
+        } else {
+            alert("The assignment is not open for viewing at this time!");
         }
     },
     render: function() {
-        var content = this.state.disabled
-                      ? <AssignmentStart />
-                      : <input
-                            disabled = {this.state.disabled}
-                            type="submit"
-                            id="start-video-button"
-                            value="Start Assignment"
-                            onClick={this.onClick} />;
+        var button = this.state.disabled
+            ? <div
+                  className="button primary-button SCButtonDisabled"
+              >Start Assignment</div>
+            : <div
+                  className="button primary-button SCButton"
+                  onClick={this.onClick}
+              >Start Assignment</div>;
+        var content = this.state.start
+            ? <AssignmentStart />
+            : button;
         return (<div>{content}</div>);
+    },
+    componentDidMount: function() {
+        if (this.state.disabled) {
+            var startDate = new Date(assignmentData.startsAt);
+            var endDate = new Date(assignmentData.endsAt);
+            var currDate = new Date();
+            if (currDate < endDate) {
+                setTimeout(
+                    function() {
+                        this.setState({disabled: false});
+                    }.bind(this), Math.max(startDate - currDate, 0)
+                );
+            }
+        }
     }
 });
 
