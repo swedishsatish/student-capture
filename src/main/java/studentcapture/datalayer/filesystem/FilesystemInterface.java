@@ -83,21 +83,6 @@ public class FilesystemInterface {
 	}
 
 	/**
-	 * Get assignment description
-	 * @param assignment the assignment to get the description for
-	 * @return the assignment description
-     */
-    public FileInputStream getAssignmentDescription(AssignmentModel assignment) {
-        String path = FilesystemInterface.generatePath(assignment) + FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
-        try {
-            return new FileInputStream(path);
-        } catch (FileNotFoundException e) {
-            System.err.println("No description of the assignment was found.\n");
-            return null;
-        }
-    }
-
-	/**
 	 * Store the students video for an assignment at a course.
 	 * If student folder doesn't exist a folder will be created.
 	 *
