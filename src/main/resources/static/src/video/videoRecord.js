@@ -21,6 +21,8 @@
  */
 
 var mediaStream = null;
+var minrecordTimer;
+var maxrecordTimer;
 
 function closeStream() {
     if(mediaStream != null && typeof mediaStream !== "undefined"){
@@ -32,6 +34,7 @@ function closeStream() {
 var Recorder = React.createClass({
     defaultMinTime: 10,
     defaultMaxTime: 120,
+
     componentDidMount: function() {
         var props = this.props;
 
@@ -105,19 +108,20 @@ var Recorder = React.createClass({
             }
             if(props.siteView == "submission") {
                 if(props.minRecordTime != null) {
-                    window.setTimeout(function() {
+                    minrecordTimer = setTimeout(function() {
                                     props.setSubmitEnabled(true);
                                     document.getElementById(props.stopButtonID).onclick = stopRecording;
                                 }, 1000*minRecordTime);
                 }
                 if(props.maxRecordTime != null) {
-                    window.setTimeout(function() {
+                    maxrecordTimer = setTimeout(function() {
                                     forceSubmit = true;
-                                    document.getElementById(props.stopButtonID).onclick();
+                                    if(document.getElementById(props.stopButtonID) != null) {
+                                        document.getElementById(props.stopButtonID).onclick();
+                                    }
                                 }, 1000*maxRecordTime);
                 }
             } else {
-                props.setSubmitEnabled(true);
                 document.getElementById(props.stopButtonID).onclick = stopRecording;
             }
 
@@ -182,18 +186,19 @@ var Recorder = React.createClass({
 
         /* Closes the webcam stream and post to server if auto recording is on. */
         function stopRecording() {
-            if(props.siteView == "submission" && forceSubmit == false) {
-                /* TODO We want confirm on submit but it blocks the timer so no confirm for now until a solution is found. */
-                /*if(!confirm("Are you sure you want to submit your answer?")) {
-                    return;
-                }*/
+            if(props.siteView == "submission") {
+                //props.setSubmitEnabled(false);
+                if(forceSubmit == false) {
+                    /* TODO We want confirm on submit but it blocks the timer so no confirm for now until a solution is found. */
+                    /*if(!confirm("Are you sure you want to submit your answer?")) {
+                        return;
+                    }*/
+                }
             }
 
             if(!shouldAutoRecord){
                 recordButton.disabled = false;
             }
-
-            props.setSubmitEnabled(false);
 
             previewElement.src = '';
 
@@ -237,19 +242,22 @@ var Recorder = React.createClass({
 
                 if(typeof props.calc !== "undefined") {
                     /*document.getElementById("test-rec-text").innerHTML = "&#11093;";*/
-                    document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+                    if(document.getElementById("test-rec-text") != null) {
+                        document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+                    }
                 }
                 else {
                     /*document.getElementById("rec-text").innerHTML = "&#11093;";*/
-                    document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+                    if(document.getElementById("rec-text")) {
+                        document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+                    }
                 }
                 cameraStarted = false;
             });
-            /*var hasModal = document.getElementById("assignment-modal");
-            if (hasModal !== null) {
-                hasModal.style.display = 'none';
-            }*/
-            props.endFunc();
+
+            if(props.siteView == "submission") {
+                props.endFunc();
+            }
         }
 
         /* Post to the server */
@@ -328,20 +336,24 @@ var Recorder = React.createClass({
 
         if(typeof props.calc !== "undefined") {
             /*document.getElementById("test-rec-text").innerHTML = "&#11093;";*/
-            document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+            if(document.getElementById("test-rec-text") != null) {
+                document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+            }
         }
         else {
             /*document.getElementById("rec-text").innerHTML = "&#11093;";*/
-            document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+            if(document.getElementById("rec-text") != null) {
+                document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+            }
         }
     },
     componentWillUnmount: function () {
-        console.log("VIDEORECORD UNMOUNTED.");
         closeStream();
         if(typeof this.props.calc !== "undefined" && typeof $("#you-id")[0] !== "undefined") {
             $("#you-id")[0].pause();
-
         }
+        clearTimeout(minrecordTimer);
+        clearTimeout(maxrecordTimer);
     },
     render: function() {
         var id;

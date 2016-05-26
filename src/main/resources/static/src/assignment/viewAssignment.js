@@ -152,11 +152,11 @@ var AssignmentStart = React.createClass({
         )
     },
     endAssignment: function() {
-        console.log("END ASSIGNMENT!!!!!!!!!!!!!!!!!!!");
         clearInterval(this.interval);
-        this.setState({startCountDown: false});
-        this.setState({startRecording: false});
-        this.setState({disabled:true});
+        this.setState({disabled: true});
+    },
+    componentWillUnmount: function() {
+        clearInterval(this.interval);
     },
     tick: function() {
         if(!this.state.disabled) {
@@ -281,7 +281,6 @@ var CountDown = React.createClass({
         }
     },
     componentWillUnmount: function () {
-        console.log("COUNTDOWN UNMOUNT");
         clearInterval(this.interval);
     }
 });
@@ -318,7 +317,6 @@ var Vid = React.createClass({
         );
     },
     componentWillUnmount: function () {
-        console.log("VID UNMOUNT");
         clearInterval(this.interval);
     },
     componentDidMount: function() {
