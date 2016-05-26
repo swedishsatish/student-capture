@@ -207,7 +207,7 @@ public class CourseDAO {
 //        String courseCode;
 //
 //        try {
-//            courseCode = jdbcTemplate.queryForObject(query, new Object[]{course.getCourseId()}, String.class);
+//            courseCode = databaseConnection.queryForObject(query, new Object[]{course.getCourseId()}, String.class);
 //            	
 //            if (courseCode == null) {
 //                courseCode = "Missing value";

@@ -26,7 +26,7 @@ public class CourseModel {
 	}
 	
 	/**
-	 * Constructor. Creates a CourseModel using data from a jdbcTemplate 
+	 * Constructor. Creates a CourseModel using data from a databaseConnection
 	 * query.
 	 * 
 	 * @param map		map of data gotten from query
