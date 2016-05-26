@@ -16,13 +16,20 @@ window.Feedback = React.createClass({
         };
     },
     componentDidMount: function() {
+        this.getData(this.props.assignment,this.props.user);
+    },
+    getData: function(assignmentid,userid) {
         $.ajax({
             type: "GET",
-            url: "assignments/" + this.props.assignment + "/submissions/" + this.props.user,
+            url: "assignments/" + assignmentid + "/submissions/" + userid,
             timeout: 100000
         }).done(function (data) {
             this.setState({data: data});
         }.bind(this));
+    },
+    componentWillReceiveProps: function(nextProps) {
+        this.getData(nextProps.assignment,nextProps.user);
+        this.setState({source:null});
     },
     handleVideoClick: function () {
         var assignment = this.props.assignment;
@@ -39,14 +46,6 @@ window.Feedback = React.createClass({
             response.submissionDate = new Date((response
                 .submissionDate));
 
-            var gradeColor;
-
-            if (response.grade.grade === 'MVG') {
-                gradeColor = 'green';
-            } else if (response.grade.grade === 'IG') {
-                gradeColor = 'red';
-            }
-
             var videoButContent;
 
             if(!this.state.source) {
@@ -57,19 +56,19 @@ window.Feedback = React.createClass({
 
             return (
                 <div>
-                    <h5 style={{color:gradeColor}}>Grade: {response.grade
-                        .grade}</h5>
-                    <h5>Submission date: {response.submissionDate.toGMTString
-                    ()}</h5>
-                    <h5>Feedback: {response.feedback}</h5>
+                    <h5>Grade: {response.grade.grade}</h5>
+                    <h5>Submission date: {response.submissionDate.toGMTString()}</h5>
                     <h5>Teacher name: {response.teacherName}</h5>
+                    <h5>Feedback: {response.feedback}</h5>
                     <br />
                     {videoButContent}
                 </div>
             )
         }
 
-        return <div>Loading...</div>
+        return (
+            <div>Loading...</div>
+        )
 
     }
 });
