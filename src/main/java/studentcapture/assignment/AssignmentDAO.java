@@ -361,19 +361,21 @@ public class AssignmentDAO {
 
         int courseId = srs.getInt("courseId");
 
-        String description = FilesystemInterface.getAssignmentText(courseId, String.valueOf(assignmentID), FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
-        String recap = FilesystemInterface.getAssignmentText(courseId, String.valueOf(assignmentID), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+        AssignmentModel assignment = new AssignmentModel();
+        assignment.setAssignmentID(assignmentID);
+        assignment.setCourseID(courseId);
+        assignment.setTitle(srs.getString("Title"));
+        assignment.setVideoIntervall(videoIntervall);
+        assignment.setAssignmentIntervall(assignmentIntervalls);
+        assignment.setScale(srs.getString("GradeScale"));
 
-        AssignmentModel am = new AssignmentModel(
-                courseId,
-                srs.getString("Title"),
-                description,
-                videoIntervall,
-                assignmentIntervalls,
-                srs.getString("GradeScale"),
-                recap);
+        String description = FilesystemInterface.getAssignmentDescription(assignment);
+        assignment.setDescription(description);
 
-        return Optional.of(am);
+        String recap = FilesystemInterface.getAssignmentRecap(assignment);
+        assignment.setRecap(recap);
+
+        return Optional.of(assignment);
     }
 
     /**

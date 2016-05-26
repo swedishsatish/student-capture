@@ -192,20 +192,14 @@ public class FilesystemInterface {
 		fileWriter.close();
 	}
 
-	public static String getAssignmentText(int courseId, String assignmentId, String fileName)
-			throws IOException {
-		String path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseId + "/" + assignmentId + "/" + fileName;
-		File file = new File(path);
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		StringBuilder builder = new StringBuilder();
-		String line;
+	public static String getAssignmentRecap(AssignmentModel assignment) {
+		String path = generatePath(assignment) + FilesystemConstants.ASSIGNMENT_RECAP_FILENAME;
+		return readContentFromFile(path);
+	}
 
-		while((line = reader.readLine()) != null) {
-			builder.append(line);
-			builder.append(System.getProperty("line.separator"));
-		}
-
-		return builder.toString().trim();
+	public static String getAssignmentDescription(AssignmentModel assignment) {
+		String path = generatePath(assignment) + FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
+		return readContentFromFile(path);
 	}
 
 

@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import studentcapture.assignment.AssignmentModel;
 import studentcapture.config.StudentCaptureApplication;
 import studentcapture.submission.Submission;
 
@@ -146,15 +147,21 @@ public class FilesystemInterfaceTest {
 
         FilesystemInterface.storeAssignmentText(151, assignmentID, "The file contains this",
                 FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
-        fileContents = FilesystemInterface.getAssignmentText(151, assignmentID,
-                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+        AssignmentModel assignment = new AssignmentModel();
+        assignment.setCourseID(151);
+        assignment.setAssignmentID(Integer.parseInt(assignmentID));
+        fileContents = FilesystemInterface.getAssignmentRecap(assignment);
 
         assertEquals("The file contains this", fileContents);
     }
 
-    @Test(expected = FileNotFoundException.class)
-    public void shouldThrowWhenAssignmentTextDontExist() throws IOException {
-        FilesystemInterface.getAssignmentText(151, assignmentID, FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+    @Test
+    public void shouldReturnEmptyWhenAssignmentTextDontExist() throws IOException {
+        AssignmentModel assignment = new AssignmentModel();
+        assignment.setCourseID(151);
+        assignment.setAssignmentID(Integer.parseInt(assignmentID));
+
+        assertEquals("", FilesystemInterface.getAssignmentRecap(assignment));
     }
 
     @Test

@@ -65,7 +65,6 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
                 assignmentIntervalls,
                 GradeScale.U_O_K_G.toString(), // GradeScale
                 "Recap");               // Recap
-        am.setCourseID(testCourseID);
     }
 
     @After
@@ -97,16 +96,16 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     public void shouldCreateAssignmentWithoutPublishdate() throws Exception {
         am.getAssignmentIntervall().setPublishedDate(null);
 
-        int assID = assignmentDAO.createAssignment(am);
-
-        assertEquals(am, assignmentDAO.getAssignmentModel(assID).get());
+        int assignmentID = assignmentDAO.createAssignment(am);
+        am.setAssignmentID(assignmentID);
+        assertEquals(am, assignmentDAO.getAssignmentModel(assignmentID).get());
     }
 
     @Test
     public void shouldGetCorrectAssignment() throws Exception {
-        int assID = assignmentDAO.createAssignment(am);
-
-        assertEquals(am, assignmentDAO.getAssignmentModel(assID).get());
+        int assignmentID = assignmentDAO.createAssignment(am);
+        am.setAssignmentID(assignmentID);
+        assertEquals(am, assignmentDAO.getAssignmentModel(assignmentID).get());
     }
 
     @Test
