@@ -6,9 +6,7 @@ import java.util.InputMismatchException;
 import java.util.Map;
 
 /**
- * Created by David Björkstrand on 4/25/16.
  * This class is the model for a assignment. I.e. it contains all data needed for an assignment.
- * Add more fields if needed.
  */
 public class AssignmentModel {
 	private Integer assignmentID;
