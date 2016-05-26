@@ -6,13 +6,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
+import studentcapture.config.H2DataSource;
 import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.login.ErrorFlags;
 
+import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -35,9 +34,6 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
 
     @Before
     public void setup() {
-
-
-        //
 
         //Add one user
         String sql = "INSERT INTO users"
@@ -67,48 +63,56 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
      */
     @After
     public void tearDown() {
-        String sql1 = "DELETE FROM Users;";
-        //Reset serialize userid
-        String sql2 = "ALTER TABLE users ALTER COLUMN userid RESTART WITH 1";
-        jdbcMock.update(sql1);
-        jdbcMock.update(sql2);
+        try {
+            H2DataSource.TearDownDataBase(jdbcMock);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+//        String sql1 = "DELETE FROM Users;";
+//        //Reset serialize userid
+//        String sql2 = "ALTER TABLE users ALTER COLUMN userid RESTART WITH 1";
+//        jdbcMock.update(sql1);
+//        jdbcMock.update(sql2);
+
     }
 
     @Test
     public void testGetUserByID() {
-       // printUsersTableTemp();
         User userRes = userDAO.getUser("1",1);
-        System.out.println("username:" + userRes.getUserName());
         assertEquals(userSetup,userRes);
     }
 
 
-  /*  @Test
+    @Test
     public void testAddUser() {
 
-        User user = new User("userPelle","Pelle","Jönsson","pelle@gmail.com",
-                            "mypassword123");
+        User user = new User("userPelle", "Pelle", "Jönsson", "pelle@gmail.com",
+                "mypassword123");
 
         ErrorFlags res = userDAO.addUser(user);
-        User userRes = userDAO.getUser("userPelle",0);
+        User userRes = userDAO.getUser("userPelle", 0);
 
-        assertEquals(ErrorFlags.NOERROR,res);
-        assertEquals(user,userRes);
+        assertEquals(ErrorFlags.NOERROR, res);
+        assertEquals(user, userRes);
     }
-*/
+
     @Test
     public void testAddingUserTwice() {
-        ErrorFlags errorFlags = userDAO.addUser(userSetup);
+        H2DataSource.printTable(jdbcMock,"users");
 
+        ErrorFlags errorFlags = userDAO.addUser(userSetup);
+        H2DataSource.printTable(jdbcMock,"users");
         assertEquals(ErrorFlags.USEREXISTS,errorFlags);
+
     }
 
     @Test
     public void testAddingNullUser() {
         User user = new User("userPelle","Pelle","Jönsson",null,
                              "mypassword123");
-        ErrorFlags errorFlag = userDAO.addUser(user);
 
+        ErrorFlags errorFlag = userDAO.addUser(user);
         assertEquals(ErrorFlags.USERCONTAINNULL, errorFlag);
     }
 
@@ -170,31 +174,6 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
 
         assertEquals(userSetup,user);
         assertTrue(res);
-    }
-
-    /**
-     * Used for debugging purposes.
-     * Usage: Called inside test method.
-     */
-    private void printUsersTableTemp() {
-        System.out.println("!!!!!!!!!!!!!!!!!TABLE!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-
-        String sql = "SELECT * FROM users";
-        List<Map<String,Object>> users = jdbcMock.queryForList(sql);
-
-        if(users != null && !users.isEmpty()) {
-            for(Map<String,Object> user: users) {
-                for(Iterator<Map.Entry<String, Object>> it = user.entrySet().iterator(); it.hasNext();) {
-                    Map.Entry<String,Object> entry = it.next();
-                    String key = entry.getKey();
-                    Object value = entry.getValue();
-                    System.out.println(key + " = " + value);
-                }
-                System.out.println();
-            }
-        }
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-
     }
 
     /*
