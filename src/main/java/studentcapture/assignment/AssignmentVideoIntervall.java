@@ -1,7 +1,7 @@
 package studentcapture.assignment;
 
 /**
- * Created by David Björkstrand on 5/17/16.
+ * Checks min and max time for video submission.
  */
 public class AssignmentVideoIntervall {
 

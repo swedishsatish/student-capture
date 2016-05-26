@@ -62,10 +62,7 @@ public class AssignmentModel {
 		description = (String) map.get("Description");
 		try {
 			scale = GradeScale.valueOf((String) map.get("GradeScale"));
-			if(scale == null) {
-				throw new NullPointerException();
-			}
-		} catch (Exception e) {
+        } catch (Exception e) {
 			scale = GradeScale.U_O_K_G;
 		}
 	}
