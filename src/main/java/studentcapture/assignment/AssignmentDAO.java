@@ -22,6 +22,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -210,7 +215,7 @@ public class AssignmentDAO {
         HttpSession session = attr.getRequest().getSession();
 
         String userID = session.getAttribute("userid").toString();
-        String accessQuery = "SELECT userid FROM participants WHERE userid = ? AND courseid = ? LIMIT 1;";
+        String accessQuery = "SELECT userid FROM participant WHERE userid = ? AND courseid = ? LIMIT 1;";
         List<String> total = databaseConnection.queryForList(accessQuery, new Object[] {userID, assignmentModel.getCourseID()}, String.class);
 
         return !total.isEmpty();

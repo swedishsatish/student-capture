@@ -147,20 +147,17 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         model2.setVideoIntervall(vintervlal2);
 
 
-
-
-
-
-
         courseDAO.addCourse(courseModel);
         printUsersTableTemp("course");
 
 
         try {
+
+
             assignmentDao.createAssignment(model);
             assignmentDao.createAssignment(model2);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.toString();
         }
 
 
@@ -247,7 +244,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
     }
 
     @Test
-    public void shouldNotAcceptAccessingAssignmentVideoTooEarly() throws Exception {
+    public void shouldNotAcceptAccessingAssignmentVideoOutsideTimeframe() throws Exception {
         Map<String, Object> sessionAttrs = new HashMap<>();
         sessionAttrs.put("userid", "1");
 
