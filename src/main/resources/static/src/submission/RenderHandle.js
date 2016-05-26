@@ -46,10 +46,10 @@ var video;
                     </div>
                     <div id="buttonContainer">
                         <div id="backButton">
-                            <BackButton idArray={this.props.idArray} />
+                            <BackButton idArray={this.props.idArray} scale={this.props.scale} />
                         </div>
                         <div id="submitButton">
-                            <SubmitButton studentArray={this.props.studentArray} idArray={this.props.idArray}/>
+                            <SubmitButton scale={this.props.scale} studentArray={this.props.studentArray} idArray={this.props.idArray}/>
                         </div>
 
                     </div>
