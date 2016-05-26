@@ -28,7 +28,6 @@ public class Submission {
     private String status;
     private String teacherName;
     private MultipartFile studentVideo;
-    private MultipartFile feedbackVideo;
 
     public Submission(int studentID, int assignmentID) {
         this.studentID = studentID;
@@ -36,48 +35,6 @@ public class Submission {
     }
 
     public Submission() {
-    }
-
-    /**
-     * Constructor that parses map of database elements.
-     *
-     * @param map map retrieved from database
-     * @author tfy12hsm
-     */
-    public Submission(Map<String, Object> map) {
-        // These three variables (assignmentID, studentID, submissionDate) cannot be null.
-        assignmentID = (Integer) map.get("AssignmentId");
-        studentID = (Integer) map.get("StudentId");
-        submissionDate = (Timestamp) map.get("SubmissionDate");
-
-        try {
-            firstName = (String) map.get("FirstName"); // Upper/lower-case doesn't matter
-        } catch (NullPointerException e) {
-            firstName = null;
-        }
-
-        try {
-            lastName = (String) map.get("LastName");
-        } catch (NullPointerException e) {
-            lastName = null;
-        }
-
-        try {
-            studentPublishConsent = (Boolean) map.get("StudentPublishConsent");
-        } catch (NullPointerException e) {
-            studentPublishConsent = null;
-        }
-
-        try {
-            status = (String) map.get("Status");
-        } catch (NullPointerException e) {
-            status = null;
-        }
-        try {
-            publishStudentSubmission = (Boolean) map.get("PublishStudentSubmission");
-        } catch (NullPointerException e) {
-            publishStudentSubmission = null;
-        }
     }
 
     public String getStatus() {
@@ -94,14 +51,6 @@ public class Submission {
 
     public void setStudentVideo(MultipartFile studentVideo) {
         this.studentVideo = studentVideo;
-    }
-
-    public MultipartFile getFeedbackVideo() {
-        return feedbackVideo;
-    }
-
-    public void setFeedbackVideo(MultipartFile feedbackVideo) {
-        this.feedbackVideo = feedbackVideo;
     }
 
     @Override
@@ -121,7 +70,6 @@ public class Submission {
                 ", status='" + status + '\'' +
                 ", teacherName='" + teacherName + '\'' +
                 ", studentVideo=" + studentVideo +
-                ", feedbackVideo=" + feedbackVideo +
                 '}';
     }
 
@@ -272,7 +220,8 @@ public class Submission {
             return false;
         if (studentVideo != null ? !studentVideo.equals(that.studentVideo) : that.studentVideo != null)
             return false;
-        return feedbackVideo != null ? feedbackVideo.equals(that.feedbackVideo) : that.feedbackVideo == null;
+
+        return true;
 
     }
 }

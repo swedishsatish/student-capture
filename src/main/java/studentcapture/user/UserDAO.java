@@ -12,6 +12,9 @@ import java.sql.Types;
 
 @Repository
 public class UserDAO {
+	
+	public static final int GET_USER_BY_USERNAME = 0;
+	public static final int GET_USER_BY_USERID = 1;
 
     // This template should be used to send queries to the database
     @Autowired
@@ -19,7 +22,6 @@ public class UserDAO {
 
     /**
      * Add a new user to the User-table in the database.
-     * @author Timmy Olsson, c12ton
      *
      * @param user  instance that contains information of the user to be added.
      * @return If an error has occurred a appropriate flag will be returned,
@@ -29,15 +31,12 @@ public class UserDAO {
 
         if(!user.areUserParamsValid()){
             return ErrorFlags.USERCONTAINNULL;
-        }
-
-        if(userNameExist(user.getUserName())) {
+        } else if(userNameExist(user.getUserName())) {
             return ErrorFlags.USEREXISTS;
-        }
-
-        if(emailExists(user.getEmail())) {
+        } else if(emailExists(user.getEmail())) {
             return ErrorFlags.EMAILEXISTS;
         }
+
 
         String sql = "INSERT INTO users"
                 + " (username, firstname, lastname, email, pswd)"
@@ -61,7 +60,6 @@ public class UserDAO {
 
     /**
      * Get user by username.
-     * @author Timmy Olsson, c12ton
      * @param value to be searched for in respect to  given flag
      * @param flag 0 returns user object by giving username
      *             1 returns user object by giving userID.
@@ -104,7 +102,6 @@ public class UserDAO {
 
     /**
      * Updates user with given user object. This is with respect to username
-     * @author Timmy Olsson, c12ton
      *
      * @param user user object to be updated
      * @return true if update was successfull else false
@@ -139,7 +136,6 @@ public class UserDAO {
 
     /**
      * Checks if given username already exists in the database.
-     * @author Timmy Olsson, c12ton
      *
      * @param userName user name for user.
      * @return true if it exists else false
@@ -156,7 +152,6 @@ public class UserDAO {
 
     /**
      * Checks if given email already  exists in the database.
-     * @author Timmy Olsson, c12ton
      *
      * @param email email to be checked if it exist
      * @return  boolean if the email exist or not
@@ -169,39 +164,6 @@ public class UserDAO {
         int[] types = {Types.VARCHAR};
 
         return jdbcTemplate.queryForObject(sql,args,types,Boolean.class);
-    }
-
-    /**
-     * Return email for a user
-     * @author c13elt, sanna
-     *
-     * @param userID
-     * @return
-     */
-    public String getEmail(int userID) {
-        String sql = "SELECT Email FROM users WHERE userID = ?";
-
-        try {
-            return jdbcTemplate.queryForObject(sql,new Object[]{userID},String.class);
-        } catch(Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Change a user's email address
-     * @author c13elt, sanna
-     * @param userID Identifier of the user to modify
-     * @param email The new email address
-     */
-    public boolean setEmail(int userID, String email) {
-        String sql = "UPDATE Users SET Email = ? WHERE UserID = ?";
-        try {
-            jdbcTemplate.update(sql, email, userID);
-            return true;
-        } catch(Exception e) {
-            return false;
-        }
     }
 
 	/**

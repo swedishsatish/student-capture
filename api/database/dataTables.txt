@@ -58,5 +58,12 @@ CREATE TABLE IF NOT EXISTS Config (
     TextSize                    INT             NOT NULL,
     PRIMARY KEY (UserId)
     );
+
+CREATE TABLE IF NOT EXISTS MailScheduler (
+    AssignmentID                INT             references Assignment(AssignmentId) NOT NULL,
+    NotificationDate            timestamp       NOT NULL,
+    PRIMARY KEY (AssignmentId)
+    );
+
 -- serial       4 bytes autoincrementing integer        1 to 2147483647
 -- bigserial    8 bytes large autoincrementing integer  1 to 9223372036854775807

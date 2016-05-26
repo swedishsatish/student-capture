@@ -9,7 +9,6 @@ import java.util.Map;
  * unique. It is used in {@link SessionHandler} to keep track of which user
  * account is bound to which session (sessionkey).
  * 
- * @author tfy12hsm
  *
  */
 public class KeyUserTable {

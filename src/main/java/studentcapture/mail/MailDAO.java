@@ -6,6 +6,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -96,6 +97,30 @@ public class MailDAO {
         return Optional.of(emailList);
     }
 
+    public Optional<List<String>> getNotificationList(){
+        List<String> notificationList;
+        Date currentDate = new Date();
+        try{
+            notificationList = jdbcTemplate.queryForList(getNotificationQuery(),
+                    new Object[]{new Timestamp(currentDate.getTime())}, String.class);
+        } catch (IncorrectResultSizeDataAccessException e){
+            System.out.println("ex");
+            return Optional.empty();
+        } catch (DataAccessException e1){
+            e1.printStackTrace();
+            return Optional.empty();
+        }
+        return Optional.of(notificationList);
+    }
+
+    public void insertNotification(int assID, Date date){
+        try {
+            jdbcTemplate.update(insertNotificationQuery(), assID,new Timestamp(date.getTime()));
+        } catch (DataAccessException e){
+            e.printStackTrace();
+        }
+    }
+
     /**
      * SQL-query for getting the participants emails.
      * @return SQL-query
@@ -128,5 +153,13 @@ public class MailDAO {
      */
     private String getCourseIDQuery(){
         return "SELECT courseID FROM assignment WHERE assignmentID=?;";
+    }
+
+    private String getNotificationQuery() {
+        return "SELECT AssignmentID FROM MailScheduler WHERE (NotificationDate <= ?);";
+    }
+
+    private String insertNotificationQuery(){
+        return "INSERT INTO MailScheduler VALUES (?,?);";
     }
 }

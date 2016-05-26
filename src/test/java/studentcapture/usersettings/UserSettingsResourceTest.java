@@ -94,14 +94,6 @@ public class UserSettingsResourceTest extends StudentCaptureApplicationTests {
                 .andExpect(status().isUnprocessableEntity());
     }
     @Test
-    public void shouldRespondOnUnsupportedId_POST() throws Exception {
-        // id < 1, POST
-        mockMvc.perform(post(requestMappingInvalidID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json_test_string))
-                .andExpect(status().isUnprocessableEntity());
-    }
-    @Test
     public void shouldRespondOnUnsupportedId_PUT() throws Exception {
         // id < 1, PUT
         mockMvc.perform(put(requestMappingInvalidID)
@@ -125,30 +117,6 @@ public class UserSettingsResourceTest extends StudentCaptureApplicationTests {
         doReturn(null).when(aSpy).getUser(any(String.class), any(Integer.class));
 
         mockMvc.perform(get(requestMapping))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void shouldHandleInternalServerError_POST() throws Exception {
-        // simulate .getUser returning null
-        UserDAO ud = new UserDAO();
-        UserDAO aSpy = Mockito.spy(ud);
-        doReturn(null).when(aSpy).getUser(any(String.class), any(Integer.class));
-
-        mockMvc.perform(post(requestMapping)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void shouldHandleInternalServerError_POST_2() throws Exception {
-        // simulate .setUserConfig returning false
-        SettingsDAO sd = new SettingsDAO();
-        SettingsDAO aSpy = Mockito.spy(sd);
-        doReturn(false).when(aSpy).setUserConfig(any(Integer.class), any(Settings.class));
-
-        mockMvc.perform(post(requestMapping)
-                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
     }
 

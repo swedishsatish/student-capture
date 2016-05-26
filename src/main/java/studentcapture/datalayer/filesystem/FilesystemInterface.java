@@ -44,6 +44,7 @@ public class FilesystemInterface {
 	 * @return the generated path
      */
 	public static String generatePath(Submission submission) {
+		System.out.println(submission.getCourseID() + " " + submission.getAssignmentID() + " " + submission.getStudentID() );
 		return FilesystemConstants.FILESYSTEM_PATH + "/" + submission.getCourseID()
 													+ "/" + submission.getAssignmentID()
 	   												+ "/" + submission.getStudentID() + "/";
@@ -78,22 +79,6 @@ public class FilesystemInterface {
 
 		return responseEntity;
 	}
-
-	/**
-	 * Get a input stream to a submission video
-	 * @param submission the submission to get the video for
-	 * @return input stream to the video
-     */
-	public FileInputStream getSubmissionVideo(Submission submission) {
-
-	   	String path = FilesystemInterface.generatePath(submission) + FilesystemConstants.SUBMISSION_VIDEO_FILENAME;
-	   
-	    try {
-			return new FileInputStream(path);
-		} catch (FileNotFoundException e) {
-			return null;
-		}
-   	}
 
 	/**
 	 * Get assignment description
@@ -137,7 +122,6 @@ public class FilesystemInterface {
 	 * @param courseID course id from the database.
 	 * @param assignmentID from database.
 	 * @return true if video was stored successfully, false otherwise.
-	 * @author c13ljn
 	 */
 	public static boolean storeAssignmentVideo(Integer courseID, String assignmentID, MultipartFile source) {
 

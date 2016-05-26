@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.StringMultipartFileEditor;
 import studentcapture.datalayer.filesystem.FilesystemConstants;
 import studentcapture.datalayer.filesystem.FilesystemInterface;
 
@@ -23,11 +22,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -52,7 +46,7 @@ public class AssignmentDAO {
      * @author dv14oan & tfy13dbd
      */
     public int createAssignment(AssignmentModel assignmentModel)
-            throws IllegalArgumentException {
+            throws IllegalArgumentException, IOException {
 
         Integer assignmentID;
         String courseCode;
@@ -94,8 +88,13 @@ public class AssignmentDAO {
             FilesystemInterface.storeAssignmentText(assignmentModel.getCourseID(), assignmentID.toString(),
                     assignmentModel.getRecap(), FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
-            //TODO: HANDLE THIS
-            System.err.println("IOEXCEPTION");
+            try {
+                removeAssignment(assignmentModel.getCourseID(), assignmentModel.getAssignmentID());
+            } catch (IOException e2) {
+                throw new IOException("Could not store assignment and " +
+                        "could not delete semi-stored assignment successfully. ");
+            }
+            throw new IOException("Could not store assignment successfully.");
         }
 
         return assignmentID;
@@ -173,8 +172,8 @@ public class AssignmentDAO {
                     assignmentModel.getRecap(),
                     FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         } catch (IOException e) {
-            //TODO: Undo DB update...
-            return false;
+            throw new IOException("Could not store some data in the edited " +
+                    "assignment correctly. Please try again.");
         }
 
         return true;
@@ -208,21 +207,22 @@ public class AssignmentDAO {
      * Method for checking that the user is enrolled on the course where the video is received.
      *
      * @param assignmentModel the assignment model
-     * @param video
      * @return true or false
      * @author c13bll
      */
     public boolean hasAccess(AssignmentModel assignmentModel) throws ParseException {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession();
+
         String userID = session.getAttribute("userid").toString();
+        String accessQuery = "SELECT userid FROM participants WHERE userid = ? AND courseid = ? LIMIT 1;";
 
         String accessQuery = "SELECT userid FROM participant WHERE userid = ? AND courseid = ? LIMIT 1;";
         List<String> total = jdbcTemplate.queryForList(accessQuery, new Object[] {userID, assignmentModel.getCourseID()}, String.class);
 
         return !total.isEmpty();
 
-
+        return (Integer.getInteger(userID) == keyHolder.getKeys().get("userid"));
     }
 
     /**

@@ -8,7 +8,6 @@ import java.util.Objects;
  * It is used to transport this information between the front end and the 
  * database.
  * 
- * @author tfy12hsm
  */
 public class CourseModel {
 	private Integer courseId;
@@ -27,7 +26,7 @@ public class CourseModel {
 	}
 	
 	/**
-	 * Constructor. Creates a CourseModel using data from a jdbcTemplate 
+	 * Constructor. Creates a CourseModel using data from a databaseConnection
 	 * query.
 	 * 
 	 * @param map		map of data gotten from query
@@ -40,8 +39,6 @@ public class CourseModel {
 	 * Parses a map of database elements and adds them to the 
 	 * 
 	 * @param map		map of database elements
-     * 
-     * @author tfy12hsm
 	 */
 	private void parseMap(Map<String, Object> map) {
 		courseId = (Integer) map.get("CourseId");
@@ -144,9 +141,12 @@ public class CourseModel {
 	public Integer getErrorCode() {
 		return errorCode;
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
+		if (other == this) return true;
+		if (!(other instanceof CourseModel)) return false;
+
 		CourseModel course = (CourseModel) other;
 		return (Objects.equals(getActive(), course.getActive())&&
 				(Objects.equals(course.getCourseDescription(), getCourseDescription()))&&

@@ -19,7 +19,6 @@ public class SettingsDAO {
     protected JdbcTemplate jdbcTemplate;
     /**
      * Returns saved user settings for the config page
-     * @author c13elt, sanna
      * @param userID Identifier of the user to get settings for
      * @return A Settings object containing all the information
      */
@@ -41,7 +40,6 @@ public class SettingsDAO {
     }
     /**
      * Changes a user's settings
-     * @author c13elt, sanna
      * @param userID Identifier of the user to modify
      * @param c An object containing all settings to be changed
      * @return True if everything went well, otherwise false
@@ -59,5 +57,28 @@ public class SettingsDAO {
             jdbcTemplate.update(sqlCreate, userID, c.getLanguage(), c.getMailUpdate(), c.getTextSize());
         }
         return true;
+    }
+
+    /**
+     * Set default settings for a user.
+     * @param userID Identifier of the user to modify
+     * @return True if everything went well, otherwise false
+     */
+    public boolean setDefaultConfig(int userID) {
+        return setUserConfig(userID, defaultSettings());
+    }
+
+    /**
+     * The default user settings.
+     * Should be used when initializing user settings (POST),
+     * and when deleting user settings (DELETE).
+     * @return The default settings object.
+     */
+    private Settings defaultSettings() {
+        Settings settings = new Settings();
+        settings.setLanguage("English");
+        settings.setMailUpdate(true);
+        settings.setTextSize(12);
+        return settings;
     }
 }
