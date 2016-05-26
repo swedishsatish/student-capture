@@ -150,22 +150,19 @@ public class SubmissionDAO {
 	/**
 	 * Remove a submission
 	 *
-	 * @param assID     Unique identifier for the assignment with the submission being removed
-	 * @param studentID Unique identifier for the student whose submission is removed
+	 * @param submission
 	 * @return True if everything went well, otherwise false
 	 */
-	boolean removeSubmission(String assID, String studentID) {
+	boolean removeSubmission(Submission submission) {
 		String removeSubmissionStatement = "DELETE FROM "
 				+ "Submission WHERE (AssignmentId=? AND StudentId=?)";
 		boolean result;
-		int assignmentId = Integer.parseInt(assID);
-		int studentId = Integer.parseInt(studentID);
 
 		try {
 			int rowsAffected = databaseConnection.update(removeSubmissionStatement,
-					assignmentId, studentId);
+					submission.getAssignmentID(), submission.getStudentID());
 			result = rowsAffected == 1;
-		} catch (IncorrectResultSizeDataAccessException e) {
+		} catch (DataAccessException e) {
 			result = false;
 		}
 
