@@ -37,47 +37,6 @@ public class Submission {
     public Submission() {
     }
 
-    /**
-     * Constructor that parses map of database elements.
-     *
-     * @param map map retrieved from database
-     */
-    public Submission(Map<String, Object> map) {
-        // These three variables (assignmentID, studentID, submissionDate) cannot be null.
-        assignmentID = (Integer) map.get("AssignmentId");
-        studentID = (Integer) map.get("StudentId");
-        submissionDate = (Timestamp) map.get("SubmissionDate");
-
-        try {
-            firstName = (String) map.get("FirstName"); // Upper/lower-case doesn't matter
-        } catch (NullPointerException e) {
-            firstName = null;
-        }
-
-        try {
-            lastName = (String) map.get("LastName");
-        } catch (NullPointerException e) {
-            lastName = null;
-        }
-
-        try {
-            studentPublishConsent = (Boolean) map.get("StudentPublishConsent");
-        } catch (NullPointerException e) {
-            studentPublishConsent = null;
-        }
-
-        try {
-            status = (String) map.get("Status");
-        } catch (NullPointerException e) {
-            status = null;
-        }
-        try {
-            publishStudentSubmission = (Boolean) map.get("PublishStudentSubmission");
-        } catch (NullPointerException e) {
-            publishStudentSubmission = null;
-        }
-    }
-
     public String getStatus() {
         return status;
     }
