@@ -12,6 +12,9 @@ import java.sql.Types;
 
 @Repository
 public class UserDAO {
+	
+	public static final int GET_USER_BY_USERNAME = 0;
+	public static final int GET_USER_BY_USERID = 1;
 
     // This template should be used to send queries to the database
     @Autowired

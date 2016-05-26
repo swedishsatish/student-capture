@@ -29,6 +29,9 @@ public class User {
         this.pswd = pswd;
     }
 
+    //Needed for JSON
+    public User() {}
+    
     /**
      * checks if all the params in the user is valid (not null)
      * @return boolean
