@@ -62,6 +62,9 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
     @Autowired
     private JdbcTemplate jdbcMock;
 
+    private int assignment1;
+    private int assignment2;
+
 
     private final static String JSON_TEST_STRING = "{\"title\":\"TheTitle\"," +
             "\"Info\": \"Assignment Info\"," +
@@ -172,8 +175,8 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         try {
 
 
-            assignmentDao.createAssignment(model);
-            assignmentDao.createAssignment(model2);
+            this.assignment1 = assignmentDao.createAssignment(model);
+            this.assignment2 = assignmentDao.createAssignment(model2);
         } catch (IOException e) {
             e.toString();
         }
@@ -250,7 +253,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         Map<String, Object> sessionAttrs = new HashMap<>();
         sessionAttrs.put("userid", "2");
 
-        mvc.perform(get("/assignments/1").sessionAttrs(sessionAttrs)).andExpect(status().isNotFound());
+        mvc.perform(get("/assignments/" + this.assignment1).sessionAttrs(sessionAttrs)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -258,7 +261,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         Map<String, Object> sessionAttrs = new HashMap<>();
         sessionAttrs.put("userid", "1");
 
-        mvc.perform(get("/assignments/1").sessionAttrs(sessionAttrs)).andExpect(status().isOk());
+        mvc.perform(get("/assignments/" + this.assignment1).sessionAttrs(sessionAttrs)).andExpect(status().isOk());
     }
 
     @Test
@@ -266,7 +269,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         Map<String, Object> sessionAttrs = new HashMap<>();
         sessionAttrs.put("userid", "1");
 
-        mvc.perform(get("/assignments/2/video").sessionAttrs(sessionAttrs)).andExpect(status().isNotFound());
+        mvc.perform(get("/assignments/" + this.assignment2 + "/video").sessionAttrs(sessionAttrs)).andExpect(status().isNotFound());
 
     }
 
@@ -275,7 +278,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         Map<String, Object> sessionAttrs = new HashMap<>();
         sessionAttrs.put("userid", "1");
 
-        mvc.perform(get("/assignments/1/video").sessionAttrs(sessionAttrs)).andExpect(status().isOk());
+        mvc.perform(get("/assignments/" + this.assignment1 +  "/video").sessionAttrs(sessionAttrs)).andExpect(status().isOk());
 
     }
 
