@@ -300,6 +300,7 @@ var Recorder = React.createClass({
             }
 
             request.open("POST", url,true);
+            console.log(recordVideo.getBlob());
             request.send(data);
         }
 
