@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import studentcapture.user.User;
 import studentcapture.user.UserDAO;
+import studentcapture.usersettings.SettingsDAO;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,6 +30,9 @@ public class RegistrationController {
 
 	@Autowired
 	private UserDAO userDao;
+	
+	@Autowired
+	private SettingsDAO settingsDAO;
 	
 	/**
 	 * Adds a user to the User DB .
@@ -68,10 +73,16 @@ public class RegistrationController {
         
         ErrorFlags status = userDao.addUser(user);
 
+        user = userDao.getUser(username, UserDAO.GET_USER_BY_USERNAME);
+        
+        
         //Put correct status message in URL.
-        if(status == ErrorFlags.NOERROR){
+        if(status == ErrorFlags.NOERROR && user != null){ 
             uri = new URI("/login?" + status.toString());
-        }else{
+            if (!settingsDAO.setDefaultConfig(Integer.parseInt(user.getUserID()))) {
+            	System.out.println("Error setting default config");
+            }
+        } else{
             //if an error occurred
             uri = new URI("/login?error=" + status.toString());
         }
