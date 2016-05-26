@@ -12,6 +12,8 @@ import studentcapture.lti.LTICommunicator;
 import studentcapture.lti.LTIInvalidGradeException;
 import studentcapture.lti.LTINullPointerException;
 import studentcapture.lti.LTISignatureException;
+import studentcapture.user.User;
+import studentcapture.user.UserDAO;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -178,7 +180,7 @@ class SubmissionResource {
         // TODO User from session
         // TODO check if submission can be submitted (begin/end date)
 
-        updatedSubmission.setStudentID(LoginDAO.getUserIdFromSession(session));
+        updatedSubmission.setStudentID(User.getSessionUserId(session));
         updatedSubmission.setAssignmentID(assignmentID);
         if(studentVideo != null) {
             updatedSubmission.setStudentVideo(studentVideo);

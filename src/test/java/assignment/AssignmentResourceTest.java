@@ -20,7 +20,14 @@ import studentcapture.assignment.AssignmentDAO;
 import studentcapture.assignment.AssignmentDateIntervalls;
 import studentcapture.assignment.AssignmentModel;
 import studentcapture.assignment.AssignmentVideoIntervall;
+import studentcapture.course.participant.Participant;
+import studentcapture.course.participant.ParticipantDAO;
+import studentcapture.user.User;
+import studentcapture.user.UserDAO;
+
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
@@ -37,8 +44,14 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
     private WebApplicationContext context;
 
     private MockMvc mvc;
-@Autowired
+    @Autowired
     private CourseDAO courseDAO;
+
+    @Autowired
+    private ParticipantDAO participandDAO;
+
+    @Autowired
+    private UserDAO userDAO;
 
     @Autowired
     private AssignmentDAO assignmentDao;
@@ -66,7 +79,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
                         build();
 
 
-        String sql3 = "INSERT INTO Users VALUES (3, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword', null);";
+        /*String sql3 = "INSERT INTO Users VALUES (3, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword', null);";
         String sql4 = "INSERT INTO Users VALUES (4, 'derp', 'abcd', 'defg', 'derp@gmail.com', 'MyGloriousPassword', null);";
 
         String sql5 = "INSERT INTO Course VALUES (1, 2016, 'VT', 'ABC', null, true);";
@@ -80,7 +93,82 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         jdbcMock.update(sql4);
         jdbcMock.update(sql5);
         jdbcMock.update(sql6);
-        jdbcMock.update(sql10);
+        jdbcMock.update(sql10);*/
+
+        userDAO.addUser(new User("lalal", "Test", "Testsson", "test@test.test", "uberpassword"));
+        userDAO.addUser(new User("lalfdfal", "Tfdest", "Tedfstsson", "test@tefdst.test", "uberfpassword"));
+
+
+        CourseModel courseModel = new CourseModel();
+        courseModel.setCourseName("HerpDerp");
+        courseModel.setActive(true);
+        courseModel.setTerm("HT16");
+        courseModel.setYear(2016);
+        courseModel.setCourseDescription("DPEPREWSPGSGSG");
+
+
+        AssignmentModel model = new AssignmentModel();
+        model.setTitle("HUEHUEUEh");
+        model.setCourseID(1);
+        model.setScale("IG_G_VG_MVG");
+        model.setRecap("HEUHUEHEH");
+        model.setDescription("HUEHUEHUEUHEUH");
+        AssignmentDateIntervalls interval = new AssignmentDateIntervalls();
+
+        AssignmentVideoIntervall vintervlal = new AssignmentVideoIntervall();
+        vintervlal.setMaxTimeSeconds(500);
+        vintervlal.setMinTimeSeconds(100);
+
+        interval.setEndDate("2016-05-13 12:00:00");
+        interval.setStartDate("2016-05-12 12:00:00");
+        interval.setPublishedDate("2016-05-11 12:00:00");
+        model.setAssignmentIntervall(interval);
+        model.setVideoIntervall(vintervlal);
+
+
+
+        AssignmentModel model2 = new AssignmentModel();
+        model2.setTitle("Assignment 2");
+        model2.setCourseID(1);
+        model2.setScale("IG_G_VG_MVG");
+        model2.setRecap("HEUHUEHEH");
+        model2.setDescription("HUEHUEHUEUHEUH");
+        AssignmentDateIntervalls interval2 = new AssignmentDateIntervalls();
+
+        AssignmentVideoIntervall vintervlal2 = new AssignmentVideoIntervall();
+        vintervlal2.setMaxTimeSeconds(500);
+        vintervlal2.setMinTimeSeconds(100);
+
+        interval2.setEndDate("2016-05-26 13:00:00");
+        interval2.setStartDate("2016-05-26 10:00:00");
+        interval2.setPublishedDate("2016-05-26 10:00:00");
+        model2.setAssignmentIntervall(interval2);
+        model2.setVideoIntervall(vintervlal2);
+
+
+
+
+
+
+
+        courseDAO.addCourse(courseModel);
+        printUsersTableTemp("course");
+
+
+
+        assignmentDao.createAssignment(model);
+        assignmentDao.createAssignment(model2);
+
+        printUsersTableTemp("assignment");
+
+
+        Participant part = new Participant();
+        part.setCourseId(1);
+        part.setUserId(1);
+        part.setFunction("Teacher");
+        participandDAO.addParticipant(part);
+
+
 
     }
 
@@ -93,11 +181,19 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         String sql4 = "DELETE FROM Submission;";
         String sql5 = "DELETE FROM Participant;";
 
+        String sql6 = "ALTER TABLE Course ALTER COLUMN courseid RESTART WITH 1";
+        String sql7 = "ALTER TABLE Assignment ALTER COLUMN assignmentid RESTART WITH 1";
+        String sql8 = "ALTER TABLE Users ALTER COLUMN userid RESTART WITH 1";
+
         jdbcMock.update(sql5);
         jdbcMock.update(sql4);
         jdbcMock.update(sql3);
         jdbcMock.update(sql2);
         jdbcMock.update(sql1);
+        jdbcMock.update(sql6);
+        jdbcMock.update(sql7);
+        jdbcMock.update(sql8);
+
     }
 
 
@@ -132,7 +228,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
 
 
         Map<String, Object> sessionAttrs = new HashMap<>();
-        sessionAttrs.put("userid", "4");
+        sessionAttrs.put("userid", "2");
 
         mvc.perform(get("/assignments/1").sessionAttrs(sessionAttrs)).andExpect(status().isNotFound());
     }
@@ -140,17 +236,47 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
     @Test
     public void shouldReturnOk() throws  Exception {
         Map<String, Object> sessionAttrs = new HashMap<>();
-        sessionAttrs.put("userid", "3");
+        sessionAttrs.put("userid", "1");
 
         mvc.perform(get("/assignments/1").sessionAttrs(sessionAttrs)).andExpect(status().isOk());
     }
 
     @Test
-    public void shouldNotAcceptAccessingAssignmentTooEarly() throws Exception {
+    public void shouldNotAcceptAccessingAssignmentVideoTooEarly() throws Exception {
         Map<String, Object> sessionAttrs = new HashMap<>();
-        sessionAttrs.put("userid", "3");
+        sessionAttrs.put("userid", "1");
 
         mvc.perform(get("/assignments/1/video").sessionAttrs(sessionAttrs)).andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    public void shouldAcceptAccessingAssignmentVideo() throws Exception {
+        Map<String, Object> sessionAttrs = new HashMap<>();
+        sessionAttrs.put("userid", "1");
+
+        mvc.perform(get("/assignments/2/video").sessionAttrs(sessionAttrs)).andExpect(status().isOk());
+
+    }
+
+    private void printUsersTableTemp(String table) {
+        System.out.println("!!!!!!!!!!!!!!!!!TABLE!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+
+        String sql = "SELECT * FROM " + table;
+        List<Map<String,Object>> users = jdbcMock.queryForList(sql);
+
+        if(users != null && !users.isEmpty()) {
+            for(Map<String,Object> user: users) {
+                for(Iterator<Map.Entry<String, Object>> it = user.entrySet().iterator(); it.hasNext();) {
+                    Map.Entry<String,Object> entry = it.next();
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    System.out.println(key + " = " + value);
+                }
+                System.out.println();
+            }
+        }
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 
     }
 

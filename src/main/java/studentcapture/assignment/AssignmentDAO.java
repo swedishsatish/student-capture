@@ -212,11 +212,25 @@ public class AssignmentDAO {
      * @return true or false
      * @author c13bll
      */
-    public boolean hasAccess(AssignmentModel assignmentModel, boolean video) throws ParseException {
+    public boolean hasAccess(AssignmentModel assignmentModel) throws ParseException {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession();
         String userID = session.getAttribute("userid").toString();
 
+        String accessQuery = "SELECT userid FROM participant WHERE userid = ? AND courseid = ? LIMIT 1;";
+        List<String> total = jdbcTemplate.queryForList(accessQuery, new Object[] {userID, assignmentModel.getCourseID()}, String.class);
+
+        return !total.isEmpty();
+
+
+    }
+
+    /**
+     * Method for checking that the the current time is between the assignment allowed timespan
+     * @param assignmentModel
+     * @return
+     */
+    public boolean canDoAssignment(AssignmentModel assignmentModel) throws ParseException {
 
         DateFormat sdf1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
         DateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -225,20 +239,12 @@ public class AssignmentDAO {
         Date assignmentStartDate = sdf2.parse(assignmentModel.getAssignmentIntervall().getStartDate());
         Date assignmentEndDate = sdf2.parse(assignmentModel.getAssignmentIntervall().getEndDate());
 
-
-
-        if(video) {
-            if(currentDate.after(assignmentStartDate) && currentDate.before(assignmentEndDate)) {
-                return true;
-            }
-
-            return false;
+        if(currentDate.after(assignmentStartDate) && currentDate.before(assignmentEndDate)) {
+            return true;
         }
 
-        String accessQuery = "SELECT userid FROM participant WHERE userid = ? AND courseid = ? LIMIT 1;";
-        List<String> total = jdbcTemplate.queryForList(accessQuery, new Object[] {userID, assignmentModel.getCourseID()}, String.class);
+        return false;
 
-        return !total.isEmpty();
     }
 
 
