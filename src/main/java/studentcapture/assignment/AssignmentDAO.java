@@ -155,18 +155,9 @@ public class AssignmentDAO {
         }
 
         // Overwrite description and recap
-        try {
-            FilesystemInterface.storeAssignmentText(
-                    assignmentModel.getCourseID(),
-                    assignmentModel.getAssignmentID().toString(),
-                    assignmentModel.getDescription(),
-                    FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
-            FilesystemInterface.storeAssignmentText(
-                    assignmentModel.getCourseID(),
-                    assignmentModel.getAssignmentID().toString(),
-                    assignmentModel.getRecap(),
-                    FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
-        } catch (IOException e) {
+        if (!FilesystemInterface.storeAssignmentDescription(assignmentModel) ||
+                !FilesystemInterface.storeAssignmentRecap(assignmentModel)) {
+            // if the assignment recap or description could not be saved
             throw new IOException("Could not store some data in the edited " +
                     "assignment correctly. Please try again.");
         }
