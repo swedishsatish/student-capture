@@ -13,6 +13,7 @@
 
 var student;
 var IDs;
+var video;
 var PopUpCancelButton = React.createClass({
     onclick: function () {
         close();
@@ -29,7 +30,8 @@ var PopUpCancelButton = React.createClass({
  */
 var PopUpConfirmButton = React.createClass({
     onclick: function () {
-        sendVideo(this.props.getVideo);
+        //sendVideo(this.props.getVideo);
+       // sendFeedBackVideo();
         sendData();
         close();
         ReactDOM.render(<TeacherViewSubmission courseId={IDs[0].courseID} assignmentId={IDs[0].assignmentID}/>,document.getElementById('courseContent'));
@@ -100,7 +102,7 @@ var PopUpRender = React.createClass({
                 <br/>
                 <div id="popUpButtonContainer">
                     <PopUpCancelButton/>
-                    <PopUpConfirmButton getVideo={this.props.getVideo}/>
+                    <PopUpConfirmButton/>
 
                 </div>
 
@@ -139,55 +141,24 @@ function submitForm(method) {
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
-            console.log("SUCCESS reqBody contains:", fd);
+            console.log("SUCCESS reqBody contains:", reqBody);
             // TODO: check response with if/else, if respons is fail give error message
 
           //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("ERROR: ", e);
-            console.log("ReqBody contains:", fd);
+            console.log("ReqBody contains:", reqBody);
         }, done: function (e) {
             console.log("DONE");
         }
     });
 
 }
+/*
+ * Function that is responsible for sending the teachers feedback video to the student.
+ * Parameters: method, which method that is to be used (POST, PUT , PATCH)
+ */
 
-function submitVideo(method, getVideoFunc) {
-
-        var video = getVideoFunc();
-        var fd = new FormData();
-        console.log(video);
-        if(video != null) {
-            fd.append("studentVideo", video);
-            console.log(video);
-
-        } else {
-            console.log("VIDEO IS NULL");
-        }
-
-    $.ajax({
-        type: method,
-        url: "assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID ,
-        data : fd,
-        contentType: false,
-        processData: false,
-        timeout: 100000,
-        success: function (response) {
-            console.log("VIDEO SUCCESS: ", response);
-            console.log("SUCCESS fd contains:", fd);
-            // TODO: check response with if/else, if respons is fail give error message
-
-          //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
-        }, error: function (e) {
-            console.log("VIDEO ERROR: ", e);
-            console.log("ERROR fd contains:", fd);
-        }, done: function (e) {
-            console.log("DONE");
-        }
-    });
-
-}
 function  getForm(method) {
 
 
@@ -238,7 +209,51 @@ function  getForm(method) {
     });
 
 }
+function sendFeedBackVideo() {
 
+        console.log(IDs);
+        console.log(student);
+
+        var request = {};
+      //  request["feedbackVideo"] = recordVideo.getBlob;//kod för att hämta videon.
+      //  request["courseID"] = IDs[0].courseID;
+
+        var fd = new FormData();
+
+        fd.append("feedbackVideo", recordVideo.getBlob);
+
+        fd.append('courseID', new Blob([JSON.stringify({
+            courseID: IDs[0].courseID
+        })], {
+            type: "application/json"
+        }));
+
+
+        $.ajax({
+            type: "POST",
+            url: "assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID + "/feedbackvideo/",
+            data : fd,
+            contentType: false,
+            processData: false,
+            timeout: 100000,
+            success: function (response) {
+
+                console.log("VIDEO SUCCESS: ", response);
+                console.log("SUCCESS fd contains:", request);
+
+                // TODO: check response with if/else, if respons is fail give error message
+
+            }, error: function (e) {
+
+                console.log("VIDEO ERROR: ", e);
+                console.log("ERROR fd contains:", request);
+
+            }, done: function (e) {
+                console.log("DONE");
+            }
+        });
+
+}
 /**
  * Sending data to database.
  */
@@ -266,6 +281,7 @@ var SubmitButton = React.createClass({
     componentWillMount: function(){
         student=this.props.studentArray;
         IDs=this.props.idArray;
+        video = this.props.getVideo;
         if(student[0].studentID){
             console.log("före get");
             getForm('GET'); // retunerar null??? så kanske inte nått i databas??

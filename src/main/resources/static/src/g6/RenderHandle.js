@@ -26,7 +26,7 @@ var video;
                 <div id="popUpDiv" style={{"display":"none"}}></div>
 
                 <video width="720" height="460" src={videoSource} preload="auto" controls/>
-                <TeacherRecordVideo setVideo={this.setVideo}/>
+                <TeacherRecordVideo studentArray={this.props.studentArray} idArray={this.props.idArray}/>
 
                 <div id="feedBackContainer">
 
@@ -49,7 +49,7 @@ var video;
                             <BackButton idArray={this.props.idArray} />
                         </div>
                         <div id="submitButton">
-                            <SubmitButton getVideo={this.getVideo} studentArray={this.props.studentArray} idArray={this.props.idArray}/>
+                            <SubmitButton studentArray={this.props.studentArray} idArray={this.props.idArray}/>
                         </div>
 
                     </div>
@@ -57,18 +57,6 @@ var video;
             </div>
         )
     },
-
-    setVideo:function(blob) {
-        video = blob;
-        console.log("VIDEO WAS SET");
-
-    },
-
-    getVideo:function() {
-
-       return video;
-
-    }
 
 
 });
