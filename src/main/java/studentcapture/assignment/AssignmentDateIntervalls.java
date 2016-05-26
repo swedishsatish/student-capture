@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
- * Created by David Björkstrand on 5/17/16.
+ * Handles validation of date intervals.
  */
 public class AssignmentDateIntervalls {
 

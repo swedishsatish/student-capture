@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Created by E&S on 4/26/16.
+ * Saves Assignments to the database and the filesystem.
  */
 @Repository
 public class AssignmentDAO {

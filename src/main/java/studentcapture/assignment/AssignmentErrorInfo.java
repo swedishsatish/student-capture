@@ -1,7 +1,7 @@
 package studentcapture.assignment;
 
 /**
- * Created by David Björkstrand on 5/24/16.
+ * Used to sen Error messages to front-end.
  */
 public class AssignmentErrorInfo {
 
