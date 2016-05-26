@@ -13,6 +13,7 @@
 
 var student;
 var IDs;
+var curscale;
 var PopUpCancelButton = React.createClass({
     onclick: function () {
         close();
@@ -32,7 +33,8 @@ var PopUpConfirmButton = React.createClass({
         //sendVideo(this.props.getVideo);
         sendData();
         close();
-        ReactDOM.render(<TeacherViewSubmission courseId={IDs[0].courseID} assignmentId={IDs[0].assignmentID}/>,document.getElementById('courseContent'));
+        ReactDOM.render(<TeacherViewSubmission courseId={IDs[0].courseID} assignmentId={IDs[0].assignmentID}
+        scale={this.props.scale}/>,document.getElementById('courseContent'));
 
     },
     render: function () {

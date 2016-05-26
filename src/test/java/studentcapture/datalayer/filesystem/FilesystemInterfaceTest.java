@@ -130,11 +130,14 @@ public class FilesystemInterfaceTest {
     public void shouldCreateNewFile() throws IOException {
         String path;
         File file;
+        int courseID = 151;
+        AssignmentModel assignment = new AssignmentModel();
+        assignment.setAssignmentID(Integer.parseInt(assignmentID));
+        assignment.setRecap("This is a test");
+        assignment.setCourseID(courseID);
+        FilesystemInterface.storeAssignmentRecap(assignment);
 
-        FilesystemInterface.storeAssignmentText(151, assignmentID, "This is a test",
-                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
-
-        path = FilesystemConstants.FILESYSTEM_PATH + "/" + 151 + "/" + assignmentID + "/" +
+        path = FilesystemConstants.FILESYSTEM_PATH + "/" + courseID + "/" + assignmentID + "/" +
             FilesystemConstants.ASSIGNMENT_RECAP_FILENAME;
         file = new File(path);
 
@@ -145,11 +148,11 @@ public class FilesystemInterfaceTest {
     public void shouldGetFileContentsAsString() throws IOException {
         String fileContents;
 
-        FilesystemInterface.storeAssignmentText(151, assignmentID, "The file contains this",
-                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
         AssignmentModel assignment = new AssignmentModel();
         assignment.setCourseID(151);
         assignment.setAssignmentID(Integer.parseInt(assignmentID));
+        assignment.setRecap("The file contains this");
+        FilesystemInterface.storeAssignmentRecap(assignment);
         fileContents = FilesystemInterface.getAssignmentRecap(assignment);
 
         assertEquals("The file contains this", fileContents);
@@ -172,10 +175,15 @@ public class FilesystemInterfaceTest {
         char[] buf = new char[22];
         String content;
 
-        FilesystemInterface.storeAssignmentText(151, assignmentID, "This should be overwritten",
-                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
-        FilesystemInterface.storeAssignmentText(151, assignmentID, "This should be in file",
-                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
+        AssignmentModel assignment = new AssignmentModel();
+        assignment.setCourseID(151);
+        assignment.setAssignmentID(Integer.parseInt(assignmentID));
+        assignment.setDescription("This should be overwritten");
+
+        FilesystemInterface.storeAssignmentDescription(assignment);
+        assignment.setDescription("This should be in file");
+        FilesystemInterface.storeAssignmentDescription(assignment);
+
 
         path = FilesystemConstants.FILESYSTEM_PATH + "/" + 151 + "/" + assignmentID + "/" +
                 FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME;
@@ -197,11 +205,11 @@ public class FilesystemInterfaceTest {
         AssignmentModel assignment = new AssignmentModel();
         assignment.setAssignmentID(Integer.parseInt(assignmentID));
         assignment.setCourseID(courseID);
+        assignment.setRecap("This doesn't matter");
+        assignment.setDescription("This doesn't matter");
 
-        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "This doesn't matter",
-                FilesystemConstants.ASSIGNMENT_DESCRIPTION_FILENAME);
-        FilesystemInterface.storeAssignmentText(courseID, assignmentID, "This doesn't matter",
-                FilesystemConstants.ASSIGNMENT_RECAP_FILENAME);
+        FilesystemInterface.storeAssignmentRecap(assignment);
+        FilesystemInterface.storeAssignmentDescription(assignment);
         FilesystemInterface.deleteAssignmentFiles(assignment);
 
         assertTrue(!file.exists());

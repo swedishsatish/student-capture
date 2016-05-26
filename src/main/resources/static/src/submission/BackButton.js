@@ -15,7 +15,8 @@ var BackButton = React.createClass({
      * Render TeacherViewSubmission when back button is pressed
      */
     onClick: function() {
-        ReactDOM.render(<TeacherViewSubmission courseId={this.props.idArray[0].courseID} assignmentId={this.props.idArray[0].assignmentID}/>,document.getElementById('courseContent'));
+        ReactDOM.render(<TeacherViewSubmission courseId={this.props.idArray[0].courseID} assignmentId={this.props.idArray[0].assignmentID}
+        scale={this.props.scale}/>,document.getElementById('courseContent'));
 
     },
     // Render function for BackButton
