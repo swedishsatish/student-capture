@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
+import studentcapture.submission.SubmissionDAO;
 
 import java.nio.charset.Charset;
 
@@ -25,6 +26,12 @@ public class StudentCaptureApplicationTests {
 	@Primary
 	public RestTemplate restTemplateMock() {
 		return Mockito.mock(RestTemplate.class);
+	}
+
+	@Bean
+	@Primary
+	public SubmissionDAO submissionDAOMock(){
+		return Mockito.spy(SubmissionDAO.class);
 	}
 
 	@Bean
