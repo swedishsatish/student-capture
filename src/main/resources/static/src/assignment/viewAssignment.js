@@ -115,7 +115,7 @@ var AssignmentStart = React.createClass({
                           <div className="row">
                               <div className="six columns">
                                   <div id="question-div">
-                                      <h3>Question Video</h3>
+                                      <h3 id="videoTitle">Question Video</h3>
                                       <Vid count={this.count}/><br />
                                       {questionContent}
                                   </div>
@@ -123,14 +123,6 @@ var AssignmentStart = React.createClass({
                               <div className="six columns">
                                   <div id="answer-div">
                                       <h3 id="videoTitle">Answer Video</h3>
-                                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                      <svg width="30" height="30">
-                                          <circle cx="15" cy="15" r="11"
-                                          stroke="black" stroke-width="4"
-                                          fill="white" id="recCircle" />
-                                          Rec circle.
-                                      </svg>
-                                      <p id="descriptor">[REC]</p>
                                       <div id="countDownContainer">
                                           <div id="countdown-div">
                                               {countDownContent}
@@ -170,12 +162,8 @@ var AssignmentStart = React.createClass({
     },
     record: function() {
         if(!this.state.disabled) {
-            var rec = document.getElementById("recCircle");
-            if(rec != null) {
-                rec.style.fill = "red";
-                this.setState({startRecording: true});
-                this.interval = setInterval(this.tick, 1000);
-            }
+            this.setState({startRecording: true});
+            this.interval = setInterval(this.tick, 1000);
         }
     }
 });
@@ -305,6 +293,14 @@ var Vid = React.createClass({
     render: function() {
         return (
             <div>
+                <p id="video-space">
+                    <img
+                        className="recLight"
+                        /* src is a 1x1 px transparent gif, used as placeholder */
+                        src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                        alt=""
+                    />
+                </p>
                 <video id="videoPlayer" src={"assignments/" + assignmentData.assignmentID + "/video"}>
                     Cannot show video, it may not be supported by your browser!
                 </video>
