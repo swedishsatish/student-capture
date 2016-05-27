@@ -169,8 +169,6 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
 
 
 
-        printUsersTableTemp("course");
-
 
         try {
 
@@ -181,8 +179,6 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
             e.toString();
         }
 
-
-        printUsersTableTemp("assignment");
 
 
         Participant part = new Participant();

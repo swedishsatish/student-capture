@@ -223,13 +223,7 @@ public class AssignmentDAO {
         Date assignmentStartDate = sdf2.parse(assignmentModel.getAssignmentIntervall().getStartDate());
         Date assignmentEndDate = sdf2.parse(assignmentModel.getAssignmentIntervall().getEndDate());
 
-        System.out.println(currentDate.toString());
-        System.out.println(assignmentStartDate.toString());
-        if(currentDate.after(assignmentStartDate) && currentDate.before(assignmentEndDate)) {
-            return true;
-        }
-
-        return false;
+        return currentDate.after(assignmentStartDate) && currentDate.before(assignmentEndDate);
 
     }
 
