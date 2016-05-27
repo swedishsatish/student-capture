@@ -43,14 +43,10 @@ window.BlankBox = React.createClass({
                     this.stat = status;
                 }.bind(this)
             });
-            this.forceUpdate();
         //}
-        var hasModal = document.getElementById("assignment-modal");
-        if (hasModal !== null) {
-            hasModal.style.display = 'none';
-        }
-        document.getElementById("studentSubmit").onclick = function() {};
 
+        document.getElementById("studentSubmit").onclick = function() {};
+        this.props.endFunc();
     },
     /**
      * Renderfunction for studentlist, renders the list on a div
@@ -81,7 +77,7 @@ window.BlankBox = React.createClass({
         } else { // the button to render
             return (
                 <div>
-                    <button id="withrawbutton" onClick={this.handleClick}>Withdraw</button>
+                    <div id="withrawbutton"  className="button primary-button SCButton" onClick={this.handleClick}>Withdraw</div>
                 </div>
             );
         }

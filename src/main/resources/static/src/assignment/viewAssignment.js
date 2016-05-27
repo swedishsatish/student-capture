@@ -79,7 +79,8 @@ var AssignmentStart = React.createClass({
     getInitialState: function() {
         return {startCountDown: false,
                 startRecording: false,
-                time: 0
+                time: 0,
+                disabled: false
                 };
     },
     render: function() {
@@ -97,63 +98,85 @@ var AssignmentStart = React.createClass({
                                   studentID={assignmentData.studentID}
                                   minRecordTime={assignmentData.minTime}
                                   maxRecordTime={assignmentData.maxTime}
+                                  endFunc={this.endAssignment}
                                   />
                               </div>
                             : <StudentRecordVideo autoRecord="false"
                                 courseID={assignmentData.courseID}
                                 assignmentID={assignmentData.assignmentID}
-                                studentID={assignmentData.studentID} />;
+                                studentID={assignmentData.studentID}
+                                endFunc={this.endAssignment} />;
+        var content = this.state.disabled
+            ? <div></div>
+            : <div id="assignment-modal">
+                  <div className="modal-dialog">
+                      <div id="assignment-content" className="modal-content">
+                          <h2 id="assignment-title">{assignmentData.assignmentName}</h2>
+                          <div className="row">
+                              <div className="six columns">
+                                  <div id="question-div">
+                                      <h3>Question Video</h3>
+                                      <Vid count={this.count}/><br />
+                                      {questionContent}
+                                  </div>
+                              </div>
+                              <div className="six columns">
+                                  <div id="answer-div">
+                                      <h3 id="videoTitle">Answer Video</h3>
+                                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                      <svg width="30" height="30">
+                                          <circle cx="15" cy="15" r="11"
+                                          stroke="black" stroke-width="4"
+                                          fill="white" id="recCircle" />
+                                          Rec circle.
+                                      </svg>
+                                      <p id="descriptor">[REC]</p>
+                                      <div id="countDownContainer">
+                                          <div id="countdown-div">
+                                              {countDownContent}
+                                          </div>
+                                          {recordContent}
+                                      </div>
+                                      <br /> Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime} seconds
+                                      <br /> Current video length: {this.state.time} seconds
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
         return (
-            <div id="assignment-modal">
-                <div className="modal-dialog">
-                    <div id="assignment-content" className="modal-content">
-                        <h2 id="assignment-title">{assignmentData.assignmentName}</h2>
-                        <div className="row">
-                            <div className="six columns">
-                                <div id="question-div">
-                                    <h3>Question Video</h3>
-                                    <Vid count={this.count}/><br />
-                                    {questionContent}
-                                </div>
-                            </div>
-                            <div className="six columns">
-                                <div id="answer-div">
-                                    <h3 id="videoTitle">Answer Video</h3>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <svg width="30" height="30">
-                                        <circle cx="15" cy="15" r="11"
-                                        stroke="black" stroke-width="4"
-                                        fill="white" id="recCircle" />
-                                        Rec circle.
-                                    </svg>
-                                    <p id="descriptor">[REC]</p>
-                                    <div id="countDownContainer">
-                                        <div id="countdown-div">
-                                            {countDownContent}
-                                        </div>
-                                        {recordContent}
-                                    </div>
-                                    <br /> Allowed video length: {assignmentData.minTime}-{assignmentData.maxTime} seconds
-                                    <br /> Current video length: {this.state.time} seconds
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div>
+                {content}
             </div>
         )
     },
+    endAssignment: function() {
+        clearInterval(this.interval);
+        this.setState({disabled: true});
+    },
+    componentWillUnmount: function() {
+        clearInterval(this.interval);
+    },
     tick: function() {
-        this.setState({time: this.state.time + 1});
+        if(!this.state.disabled) {
+            if(document.getElementById("answer-div") != null) {
+                this.setState({time: this.state.time + 1});
+            }
+        }
     },
     count: function() {
         this.setState({startCountDown: true});
     },
     record: function() {
-        var rec = document.getElementById("recCircle");
-        rec.style.fill = "red";
-        this.setState({startRecording: true});
-        this.interval = setInterval(this.tick, 1000);
+        if(!this.state.disabled) {
+            var rec = document.getElementById("recCircle");
+            if(rec != null) {
+                rec.style.fill = "red";
+                this.setState({startRecording: true});
+                this.interval = setInterval(this.tick, 1000);
+            }
+        }
     }
 });
 
@@ -238,7 +261,8 @@ var Question = React.createClass({
  */
 var CountDown = React.createClass({
     getInitialState: function() {
-        return {timeLeft: 3};
+        return {timeLeft: 3,
+                enabled: true};
     },
     render: function() {
         return <div>{this.state.timeLeft}</div>;
@@ -247,12 +271,17 @@ var CountDown = React.createClass({
         this.interval = setInterval(this.tick, 1000);
     },
     tick: function() {
-        this.setState({timeLeft: this.state.timeLeft - 1});
-        if(this.state.timeLeft <= 0) {
-            this.setState({timeLeft: ''});
-            clearInterval(this.interval);
-            this.props.record();
+        if(this.state.enabled) {
+            this.setState({timeLeft: this.state.timeLeft - 1});
+            if(this.state.timeLeft <= 0) {
+                this.setState({timeLeft: ''});
+                clearInterval(this.interval);
+                this.props.record();
+            }
         }
+    },
+    componentWillUnmount: function () {
+        clearInterval(this.interval);
     }
 });
 
@@ -266,6 +295,9 @@ var Vid = React.createClass({
         return {currTime: 0,
                 totalTime: 0
                 };
+    },
+    componentDidMount: function() {
+        setState(this.getInitialState());
     },
     render: function() {
         return (
@@ -283,6 +315,9 @@ var Vid = React.createClass({
                 </div>
             </div>
         );
+    },
+    componentWillUnmount: function () {
+        clearInterval(this.interval);
     },
     componentDidMount: function() {
         var vid = document.getElementById("videoPlayer");
@@ -303,15 +338,19 @@ var Vid = React.createClass({
     },
     onPause : function () {
         var vid = document.getElementById("videoPlayer");
-        vid.play();
+        if(vid != null) {
+            vid.play();
+        }
     },
     onEnded: function() {
         var vid = document.getElementById("videoPlayer");
-        this.setState({currTime: Math.ceil(vid.duration)});
-        vid.removeEventListener("pause", this.onPause, false);
-        vid.pause();
-        clearInterval(this.interval);
-        this.props.count();
+        if(vid != null) {
+            this.setState({currTime: Math.ceil(vid.duration)});
+            vid.removeEventListener("pause", this.onPause, false);
+            vid.pause();
+            clearInterval(this.interval);
+            this.props.count();
+        }
     }
 });
 

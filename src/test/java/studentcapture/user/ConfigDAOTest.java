@@ -26,9 +26,9 @@ public class ConfigDAOTest extends StudentCaptureApplicationTests {
      */
     @Before
     public void setUp() {
-        String sql1 = "INSERT INTO Users VALUES (1, 'mkyong', 'abcd', 'defg', 'mkyong@gmail.com', 'MyPassword',null);";
+        String sql1 = "INSERT INTO Users VALUES (1, 'mkyong', 'abcd', 'defg', 'mkyong@gmail.com', 'MyPassword',null, false);";
         String sql2 = "INSERT INTO Config VALUES (1, 'Klingon', true, 10);";
-        String sql3 = "INSERT INTO Users VALUES (2, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword',null);";
+        String sql3 = "INSERT INTO Users VALUES (2, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword',null, false);";
 
 
         jdbcMock.update(sql1);

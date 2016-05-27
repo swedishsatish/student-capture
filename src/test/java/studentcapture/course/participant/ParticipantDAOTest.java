@@ -28,12 +28,12 @@ public class ParticipantDAOTest extends StudentCaptureApplicationTests {
      */
     @Before
     public void setUp() {
-        String sql1 = "INSERT INTO Users VALUES (1, 'pelle', 'pelle', 'pellesson', 'pelle@gmail.com', 'MyPassword',null);";
-        String sql2 = "INSERT INTO Users VALUES (5, 'alle', 'alle','allesson', 'alle@gmail.com', 'MyPassword',null);";
+        String sql1 = "INSERT INTO Users VALUES (1, 'pelle', 'pelle', 'pellesson', 'pelle@gmail.com', 'MyPassword',null, false);";
+        String sql2 = "INSERT INTO Users VALUES (5, 'alle', 'alle','allesson', 'alle@gmail.com', 'MyPassword',null, false);";
         String sql3 = "INSERT INTO Course VALUES (2,2016,'VT', '1234', 'ABC', true);";
         String sql4 = "INSERT INTO Participant VALUES (1,2, 'student');";
         String sql5 = "INSERT INTO Participant VALUES (5,2, 'teacher');";
-        String sql10 = "INSERT INTO Users VALUES (10, 'kalle', 'Carl', 'carlsson', 'calle@gmail.com', 'MyPassword',null);";
+        String sql10 = "INSERT INTO Users VALUES (10, 'kalle', 'Carl', 'carlsson', 'calle@gmail.com', 'MyPassword',null, false);";
 
 
         jdbcMock.update(sql1);

@@ -3,6 +3,10 @@
  */
 
 var StudentRecordVideo = React.createClass({
+    submitbutton: <div id="studentSubmit" className="button primary-button SCButtonDisabled" >Submit answer</div>,
+    componentDidMount: function() {
+        this.setEnabled(false);
+    },
     formDataBuilder: function (blob, fileName) {
         var fd = new FormData();
 
@@ -30,7 +34,7 @@ var StudentRecordVideo = React.createClass({
         return (
             <div>
                 <div id="recorder-div">
-                    <Recorder contID="studentPreview"
+                    <Recorder id="recorder" contID="studentPreview"
                               playCallback={this.playVideo}
                               postURL={submissionURL}
                               formDataBuilder={this.formDataBuilder}
@@ -38,15 +42,25 @@ var StudentRecordVideo = React.createClass({
                               siteView="submission" fileName="submission.webm"
                               camOnLoad="true" maxRecordTime={this.props.maxRecordTime}
                               minRecordTime={this.props.minRecordTime}
+                              endFunc={this.props.endFunc}
+                              setSubmitEnabled={this.setEnabled}
                     />
                 </div>
-                <button id="studentSubmit" className="recControls" disabled>Submit answer</button>
+                {this.submitbutton}
                 <BlankBox postURL={submissionURL}
                             assignmentID={this.props.assignmentID}
                             studentID={this.props.studentID}
-                            courseID={this.props.courseID}/>
+                            courseID={this.props.courseID}
+                            endFunc={this.props.endFunc} />
             </div>
         );
+    },
+    setEnabled: function(enabled) {
+        if(enabled) {
+            this.submitbutton = <div id="studentSubmit" className="button primary-button SCButton" >Submit answer</div>
+        } else {
+            this.submitbutton = <div id="studentSubmit" className="button primary-button SCButtonDisabled" >Submit answer</div>
+        }
     },
     componentDidMount: function() {
         var vid = document.getElementById("recorder-div");

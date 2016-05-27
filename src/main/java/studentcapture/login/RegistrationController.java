@@ -69,7 +69,7 @@ public class RegistrationController {
 		}
 		
 		User user = new User(username, firstName, lastName, email,
-		        encryptPassword(password));
+		        encryptPassword(password), false);
         
         ErrorFlags status = userDao.addUser(user);
 
@@ -79,11 +79,9 @@ public class RegistrationController {
         //Put correct status message in URL.
         if(status == ErrorFlags.NOERROR && user != null){ 
             uri = new URI("/login?" + status.toString());
-            /*
             if (!settingsDAO.setDefaultConfig(Integer.parseInt(user.getUserID()))) {
             	System.out.println("Error setting default config");
             }
-            */
         } else{
             //if an error occurred
             uri = new URI("/login?error=" + status.toString());

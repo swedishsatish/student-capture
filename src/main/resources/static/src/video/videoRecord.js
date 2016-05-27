@@ -20,9 +20,21 @@
  * watch HardwareTest.js for example of use.
  */
 
-var mediaStream;
+var mediaStream = null;
+var minrecordTimer;
+var maxrecordTimer;
+
+function closeStream() {
+    if(mediaStream != null && typeof mediaStream !== "undefined"){
+        mediaStream.stop();
+        mediaStream = null;
+    }
+}
 
 var Recorder = React.createClass({
+    defaultMinTime: 10,
+    defaultMaxTime: 120,
+
     componentDidMount: function() {
         var props = this.props;
 
@@ -30,7 +42,6 @@ var Recorder = React.createClass({
         var blobsize;
         var sendTime;
         var forceSubmit = false;
-        var withraw = false;
         var cameraStartOnLoad = (typeof props.camOnLoad === "undefined") ?
                         false : props.camOnLoad == "true";
         var cameraStarted = false;
@@ -39,11 +50,18 @@ var Recorder = React.createClass({
                         !startRecordButtonExists : props.autoRecord == "true";
 
         var replay = props.replay == "true";
-        var stopButton = document.getElementById(props.stopButtonID);
         var previewElement;
         var recordAudio, recordVideo;
-        //var mediaStream;
 
+
+        var minRecordTime = parseInt(props.minRecordTime);
+        if(isNaN(minRecordTime)) {
+            minRecordTime = this.defaultMinTime;
+        }
+        var maxRecordTime = parseInt(props.maxRecordTime);
+        if(isNaN(maxRecordTime)) {
+            maxRecordTime = this.defaultMaxTime;
+        }
 
         if(startRecordButtonExists) {
             var recordButton = document.getElementById(props.recButtonID);
@@ -70,9 +88,6 @@ var Recorder = React.createClass({
             recordButton.onclick = startRecord;
         }
 
-        /* The onclick function for the stop record button. */
-        stopButton.onclick = stopRecording;
-
         /* Will start recording and start the webcam if not enabled. */
         function startRecord() {
             if(!cameraStarted) {
@@ -93,18 +108,21 @@ var Recorder = React.createClass({
             }
             if(props.siteView == "submission") {
                 if(props.minRecordTime != null) {
-                    window.setTimeout(function() {
-                                    stopButton.disabled = false;
-                                }, 1000*parseInt(props.minRecordTime));
+                    minrecordTimer = setTimeout(function() {
+                                    props.setSubmitEnabled(true);
+                                    document.getElementById(props.stopButtonID).onclick = stopRecording;
+                                }, 1000*minRecordTime);
                 }
                 if(props.maxRecordTime != null) {
-                    window.setTimeout(function() {
+                    maxrecordTimer = setTimeout(function() {
                                     forceSubmit = true;
-                                    stopButton.onclick();
-                                }, 1000*parseInt(props.maxRecordTime));
+                                    if(document.getElementById(props.stopButtonID) != null) {
+                                        document.getElementById(props.stopButtonID).onclick();
+                                    }
+                                }, 1000*maxRecordTime);
                 }
             } else {
-                stopButton.disabled = false;
+                document.getElementById(props.stopButtonID).onclick = stopRecording;
             }
 
             if(typeof props.calc !== "undefined") {
@@ -133,11 +151,15 @@ var Recorder = React.createClass({
                     }
                 }
             }, function (stream) {
+                closeStream();
                 mediaStream = stream;
                 previewElement.src = window.URL.createObjectURL(mediaStream);
                 previewElement.removeAttribute("controls");
                 previewElement.setAttribute("muted", "muted");
-                window.setTimeout(function() { previewElement.play(); }, 200);
+                window.setTimeout(function() {
+                    if(previewElement != null)
+                        previewElement.play();
+                }, 400);
 
                 recordAudio = RecordRTC(mediaStream, {
                     onAudioProcessStarted: function () {
@@ -164,18 +186,19 @@ var Recorder = React.createClass({
 
         /* Closes the webcam stream and post to server if auto recording is on. */
         function stopRecording() {
-            if(props.siteView == "submission" && forceSubmit == false) {
-                /* TODO We want confirm on submit but it blocks the timer so no confirm for now until a solution is found. */
-                /*if(!confirm("Are you sure you want to submit your answer?")) {
-                    return;
-                }*/
+            if(props.siteView == "submission") {
+                //props.setSubmitEnabled(false);
+                if(forceSubmit == false) {
+                    /* TODO We want confirm on submit but it blocks the timer so no confirm for now until a solution is found. */
+                    /*if(!confirm("Are you sure you want to submit your answer?")) {
+                        return;
+                    }*/
+                }
             }
 
             if(!shouldAutoRecord){
                 recordButton.disabled = false;
             }
-
-            stopButton.disabled = true;
 
             previewElement.src = '';
 
@@ -190,9 +213,9 @@ var Recorder = React.createClass({
                     previewElement.setAttribute("controls","controls");
                     previewElement.removeAttribute("muted");
                 }
-                if(props.siteView == "feedback") {
+                /*if(props.siteView == "feedback") {
                     props.setVideo(recordVideo.getBlob());
-                }
+                }*/
 
                 if(postbutton == null) {
                     if(props.siteView !== null) {
@@ -214,21 +237,26 @@ var Recorder = React.createClass({
                         }
                     }
                 }
-                mediaStream.stop();
-                mediaStream = null;
+
+                closeStream();
+
                 if(typeof props.calc !== "undefined") {
                     /*document.getElementById("test-rec-text").innerHTML = "&#11093;";*/
-                    document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+                    if(document.getElementById("test-rec-text") != null) {
+                        document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+                    }
                 }
                 else {
                     /*document.getElementById("rec-text").innerHTML = "&#11093;";*/
-                    document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+                    if(document.getElementById("rec-text")) {
+                        document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+                    }
                 }
                 cameraStarted = false;
             });
-            var hasModal = document.getElementById("assignment-modal");
-            if (hasModal !== null) {
-                hasModal.style.display = 'none';
+
+            if(props.siteView == "submission") {
+                props.endFunc();
             }
         }
 
@@ -300,6 +328,7 @@ var Recorder = React.createClass({
             }
 
             request.open("POST", url,true);
+            console.log(recordVideo.getBlob());
             request.send(data);
         }
 
@@ -307,24 +336,24 @@ var Recorder = React.createClass({
 
         if(typeof props.calc !== "undefined") {
             /*document.getElementById("test-rec-text").innerHTML = "&#11093;";*/
-            document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+            if(document.getElementById("test-rec-text") != null) {
+                document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+            }
         }
         else {
             /*document.getElementById("rec-text").innerHTML = "&#11093;";*/
-            document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+            if(document.getElementById("rec-text") != null) {
+                document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+            }
         }
     },
     componentWillUnmount: function () {
-      
-        if(mediaStream != null && typeof mediaStream !== "undefined"){
-            mediaStream.stop();
-            mediaStream = null;
-        }
-
+        closeStream();
         if(typeof this.props.calc !== "undefined" && typeof $("#you-id")[0] !== "undefined") {
             $("#you-id")[0].pause();
-
         }
+        clearTimeout(minrecordTimer);
+        clearTimeout(maxrecordTimer);
     },
     render: function() {
         var id;
