@@ -31,7 +31,7 @@ public class StudentCaptureApplicationTests {
 	@Primary
 	public JdbcTemplate jdbcTemplateMock() {
 
-		return new JdbcTemplate(H2DataSource.dataSource());
+		return new JdbcTemplate(H2DB.dataSource());
 	}
 
 	public final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),

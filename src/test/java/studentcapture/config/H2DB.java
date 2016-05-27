@@ -3,6 +3,7 @@ package studentcapture.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import studentcapture.user.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -13,7 +14,7 @@ import java.util.*;
  *
  */
 @Configuration
-public class H2DataSource {
+public class H2DB {
 
     private static ArrayList<String>tables;
 
@@ -71,37 +72,36 @@ public class H2DataSource {
     }
 
 
+    //WORK IN PROGRESS!!!
+    /**
+     * Populates the h2 database.
+     * @param jdbcMock
+     */
+    public static void setUp(JdbcTemplate jdbcMock) {
+
+        //Used to add user.
+        String sql = "INSERT INTO users" + " (username, firstname, lastname, email, pswd)"
+                     +" VALUES (?, ?, ?, ?, ?)";
+
+        try {
+            Object[] args = new Object[] {"testUser", "testFName", "testLName",
+                    "testEmail@example.com",
+                    "testPassword123"};
+            jdbcMock.update(sql,args);
+
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    //NEEDS TO BE TESTED MORE! MIGHT BREAK DEPENDENCIES...
     /**
      *  Used to clear everything in all tables, including serialize.
      * @param jdbcMock
      */
     public static void TearDownDataBase(JdbcTemplate jdbcMock) throws SQLException {
-
-//        ArrayList<String> queriesRmTable = new ArrayList<>();
-//
-////        queriesRmTable.add("DELETE FROM Administrator");
-////        queriesRmTable.add("DELETE FROM MailScheduler");
-////        queriesRmTable.add("DELETE FROM Submission");
-////        queriesRmTable.add("DELETE FROM Config");
-////        queriesRmTable.add("DELETE FROM Assignment");
-////        queriesRmTable.add("DELETE FROM Participant");
-////        queriesRmTable.add("DELETE FROM CourseInvite");
-////        queriesRmTable.add("DELETE FROM Course");
-//        queriesRmTable.add("DELETE FROM Users");
-//
-////        ArrayList<String> queriesResetSer = new ArrayList<>();
-////        queriesResetSer.add("ALTER TABLE Assignment ALTER COLUMN AssignmentId RESTART WITH 1");
-////        queriesResetSer.add("ALTER TABLE Course ALTER COLUMN CourseId RESTART WITH 1");
-////        queriesResetSer.add("ALTER TABLE Users ALTER COLUMN UserId RESTART WITH 1");
-//
-//
-//        for(String table:queriesRmTable) {
-//            jdbcMock.update(table);
-//        }
-//
-////        for(String serial:queriesResetSer) {
-////            jdbcMock.update(serial);
-////        }
 
         //Creadit:http://stackoverflow.com/questions/8523423/reset-embedded-h2-database-periodically
         Connection c = jdbcMock.getDataSource().getConnection();
