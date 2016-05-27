@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.client.RestTemplate;
 import studentcapture.submission.SubmissionDAO;
 
 import java.nio.charset.Charset;
@@ -21,12 +20,6 @@ import java.nio.charset.Charset;
 @WebAppConfiguration
 @Configuration
 public class StudentCaptureApplicationTests {
-
-	@Bean
-	@Primary
-	public RestTemplate restTemplateMock() {
-		return Mockito.mock(RestTemplate.class);
-	}
 
 	@Bean
 	@Primary

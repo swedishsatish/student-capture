@@ -6,7 +6,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import studentcapture.config.StudentCaptureApplicationTests;
 
@@ -26,13 +25,10 @@ public class ParticipantResourceTest extends StudentCaptureApplicationTests {
 
     private MockMvc mockMvc;
 
-    @Autowired
-    private RestTemplate templateMock;
 
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        Mockito.reset(templateMock);
         courseID = "1200";
     }
 
