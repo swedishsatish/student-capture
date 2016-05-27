@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import studentcapture.config.H2DataSource;
+import studentcapture.config.H2DB;
 import studentcapture.config.StudentCaptureApplicationTests;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -162,7 +162,7 @@ public class LoginTest extends StudentCaptureApplicationTests{
     @After
     public void tearDown() {
     	try {
-			H2DataSource.TearDownDataBase(jdbcMock);
+			H2DB.TearDownDataBase(jdbcMock);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

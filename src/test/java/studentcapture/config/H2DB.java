@@ -95,6 +95,8 @@ public class H2DB {
         }
     }
 
+
+    //NEEDS TO BE TESTED MORE! MIGHT BREAK DEPENDENCIES...
     /**
      *  Used to clear everything in all tables, including serialize.
      * @param jdbcMock
