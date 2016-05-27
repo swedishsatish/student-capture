@@ -3,6 +3,7 @@
  * @author: dv13trm, c14gls, group 6
  */
 var video;
+
 /**
  * Renders all the different built components for the GUI in prioritizing order.
  * For example: First it renders Recorder, then CommentBox and so on.
@@ -17,15 +18,18 @@ var video;
         console.log(this.props.studentArray);
         var id_array = this.props.idArray;
         var student = this.props.studentArray;
-        var filenm = '/submission.webm';
-        var videoSource = "assignments/" + id_array[0].assignmentID + "/submissions/" + student[0].studentID + "/videos" + filenm;
+        var path = "assignments/" + id_array[0].assignmentID + "/submissions/" + student[0].studentID + "/videos/";
+        var studentSubmission = path + 'submission.webm';
+        var teacherFeedbackURL = path + 'feedback.webm';
+
 
         return(
             <div class="row">
                 <div id="blanket" style={{"display":"none"}}></div>
                 <div id="popUpDiv" style={{"display":"none"}}></div>
 
-                <video width="720" height="460" src={videoSource} preload="auto" controls/>
+                <video id="teacherRecord" width="40%" src={studentSubmission} preload="auto" controls/>
+                <video id="teacherRecord" width="40%" src={teacherFeedbackURL} preload="auto" controls/>
                 <TeacherRecordVideo studentArray={this.props.studentArray} idArray={this.props.idArray}/>
 
                 <div id="feedBackContainer">
