@@ -58,7 +58,7 @@ window.AssignmentContent = React.createClass({
                     <h5 id="assignment-maxtime">Maximum answer video duration: <p id="descriptor">{assignmentData.maxTime} seconds</p></h5>
                     <h5 id="assignment-information">
                         Assignment information:<br />
-                        <p id="descriptor">{this.state.assignmentInformation}</p>
+                        <p id="descriptor" dangerouslySetInnerHTML={{__html: this.state.assignmentInformation}} />
                     </h5>
                 </div>
                 <div id="assignment-interaction">
@@ -243,7 +243,7 @@ var Question = React.createClass({
         return (
             <div>
                 Question summary: <br/>
-                {this.state.question}
+               <p dangerouslySetInnerHTML={{__html: this.state.question}} />
             </div>
         );
     },
@@ -257,27 +257,30 @@ var Question = React.createClass({
 
 /*
  * Shows the countdown and then signal parent to start recording.
- * TODO: Set countdown time to 10 (or read from json).
  */
 var CountDown = React.createClass({
     getInitialState: function() {
-        return {timeLeft: 3,
-                enabled: true};
+        return {timeLeft: 10,
+                visible: true};
     },
     render: function() {
-        return <div>{this.state.timeLeft}</div>;
+        var content = this.state.visible
+            ? <div>
+                  <p id="countdown-text">Recording starts in<br /></p>
+                  {this.state.timeLeft}
+              </div>
+            : <div />;
+        return <div>{content}</div>;
     },
     componentDidMount: function() {
         this.interval = setInterval(this.tick, 1000);
     },
     tick: function() {
-        if(this.state.enabled) {
-            this.setState({timeLeft: this.state.timeLeft - 1});
-            if(this.state.timeLeft <= 0) {
-                this.setState({timeLeft: ''});
-                clearInterval(this.interval);
-                this.props.record();
-            }
+        this.setState({timeLeft: this.state.timeLeft - 1});
+        if(this.state.timeLeft <= 0) {
+            this.setState({timeLeft: '', visible: false});
+            clearInterval(this.interval);
+            this.props.record();
         }
     },
     componentWillUnmount: function () {
@@ -288,7 +291,7 @@ var CountDown = React.createClass({
 /*
  * Shows the assignment video (which autoplays), progress bar and time passed.
  * Then signals parent to start countdown and show question summary.
- * TODO: fix infinity for short video.
+ * TODO: fix infinity for video.
  */
 var Vid = React.createClass({
     getInitialState: function() {
