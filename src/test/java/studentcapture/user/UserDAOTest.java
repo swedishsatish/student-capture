@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
-import studentcapture.config.H2DataSource;
+import studentcapture.config.H2DB;
 import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.login.ErrorFlags;
 
@@ -64,7 +64,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @After
     public void tearDown() {
         try {
-            H2DataSource.TearDownDataBase(jdbcMock);
+            H2DB.TearDownDataBase(jdbcMock);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -99,10 +99,10 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testAddingUserTwice() {
-        H2DataSource.printTable(jdbcMock,"users");
+        H2DB.printTable(jdbcMock,"users");
 
         ErrorFlags errorFlags = userDAO.addUser(userSetup);
-        H2DataSource.printTable(jdbcMock,"users");
+        H2DB.printTable(jdbcMock,"users");
         assertEquals(ErrorFlags.USEREXISTS,errorFlags);
 
     }
