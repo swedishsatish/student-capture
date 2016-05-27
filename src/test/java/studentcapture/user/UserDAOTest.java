@@ -41,7 +41,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
                 +" VALUES (?, ?, ?, ?, ?)";
 
         userSetup = new User("testUser","testFName","testLName",
-                             "testEmail@example.com","testPassword123");
+                             "testEmail@example.com","testPassword123", false);
 
         Object[] args = new Object[] {userSetup.getUserName(), userSetup.getFirstName(),
                             userSetup.getLastName(),userSetup.getEmail(),
@@ -88,10 +88,10 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     public void testAddUser() {
 
         User user = new User("userPelle", "Pelle", "Jönsson", "pelle@gmail.com",
-                "mypassword123");
+                "mypassword123", false);
 
         ErrorFlags res = userDAO.addUser(user);
-        User userRes = userDAO.getUser("userPelle", 0);
+        User userRes = userDAO.getUser("userPelle", UserDAO.GET_USER_BY_USERNAME);
 
         assertEquals(ErrorFlags.NOERROR, res);
         assertEquals(user, userRes);
@@ -110,7 +110,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @Test
     public void testAddingNullUser() {
         User user = new User("userPelle","Pelle","Jönsson",null,
-                             "mypassword123");
+                             "mypassword123", false);
 
         ErrorFlags errorFlag = userDAO.addUser(user);
         assertEquals(ErrorFlags.USERCONTAINNULL, errorFlag);
@@ -138,7 +138,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @Test
     public void testUpdateNonExistingUser() {
         User user = new User("testUserNotExists","newFirstName","newLname",
-                "newemai@gmail.com","new_pswd_1fdsgasda213fC");
+                "newemai@gmail.com","new_pswd_1fdsgasda213fC", false);
         boolean res = userDAO.updateUser(user);
         assertFalse(res);
     }
@@ -146,7 +146,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @Test
     public void testAddingEmailTwice() {
         User user = new User("testNewUser","newFirstName","newLname",
-                             userSetup.getEmail(),"newpswd");
+                             userSetup.getEmail(),"newpswd", false);
 
         ErrorFlags res = userDAO.addUser(user);
         assertEquals(ErrorFlags.EMAILEXISTS,res);
@@ -174,6 +174,18 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
 
         assertEquals(userSetup,user);
         assertTrue(res);
+    }
+    
+    @Test
+    public void testIsTeacher() {
+    	
+    	User user = new User("userPelle", "Pelle", "Jönsson", "pelle@gmail.com",
+                "mypassword123", true);
+    	
+    	ErrorFlags result = userDAO.addUser(user);
+    	user = userDAO.getUser(user.getUserName(), UserDAO.GET_USER_BY_USERNAME);
+    	
+    	assertTrue(user.isTeacher());
     }
 
     /*

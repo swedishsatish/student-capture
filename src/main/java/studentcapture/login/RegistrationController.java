@@ -69,7 +69,7 @@ public class RegistrationController {
 		}
 		
 		User user = new User(username, firstName, lastName, email,
-		        encryptPassword(password));
+		        encryptPassword(password), false);
         
         ErrorFlags status = userDao.addUser(user);
 

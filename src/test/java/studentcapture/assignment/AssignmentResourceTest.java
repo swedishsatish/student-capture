@@ -86,7 +86,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
                         build();
 
 
-        /*String sql3 = "INSERT INTO Users VALUES (3, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword', null);";
+        /*String sql3 = "INSERT INTO Users VALUES (3, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword', null, false);";
         String sql4 = "INSERT INTO Users VALUES (4, 'derp', 'abcd', 'defg', 'derp@gmail.com', 'MyGloriousPassword', null);";
 
         String sql5 = "INSERT INTO Course VALUES (1, 2016, 'VT', 'ABC', null, true);";
@@ -102,8 +102,8 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         jdbcMock.update(sql6);
         jdbcMock.update(sql10);*/
 
-        userDAO.addUser(new User("lalal", "Test", "Testsson", "test@test.test", "uberpassword"));
-        userDAO.addUser(new User("lalfdfal", "Tfdest", "Tedfstsson", "test@tefdst.test", "uberfpassword"));
+        userDAO.addUser(new User("lalal", "Test", "Testsson", "test@test.test", "uberpassword", false));
+        userDAO.addUser(new User("lalfdfal", "Tfdest", "Tedfstsson", "test@tefdst.test", "uberfpassword", false));
 
 
         CourseModel courseModel = new CourseModel();

@@ -68,7 +68,7 @@ public class UserResource {
             @RequestParam(value="username", required = true)            String username,
             @RequestParam(value="password", required = true)            String password) throws URISyntaxException {
        
-        User user = new User(username, firstName, lastName, email, encryptPassword(password));
+        User user = new User(username, firstName, lastName, email, encryptPassword(password), false);
         
         ErrorFlags status = userDAO.addUser(user);
         user = userDAO.getUser(username,0);
