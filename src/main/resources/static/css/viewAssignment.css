@@ -99,7 +99,7 @@
 /* Style of countdown text */
 #countdown-text
 {
-    font-size: 20px;
+    font-size: 30px;
 	color: white;
     text-shadow:
         -1px -1px 0px black,
@@ -118,10 +118,10 @@
     display: inline-block;
 }
 
-/* Override style of REC symbol */
-#recorder-div > div > #rec-text
+/* Space above video to compensate for REC light */
+#video-space
 {
-	display: none;
+	margin-top: 10px;
 }
 
 /* Override style of recording frame */

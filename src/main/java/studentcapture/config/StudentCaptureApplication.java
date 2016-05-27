@@ -2,9 +2,7 @@ package studentcapture.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.*;
 import java.security.cert.CertificateException;
@@ -17,13 +15,6 @@ public class StudentCaptureApplication {
 	public static void main(String[] args) {
 		enableSelfSignedHTTPSCertificate();
 		SpringApplication.run(StudentCaptureApplication.class, args);
-	}
-
-
-	//TODO Group 4: Philip Pålsson Why is this method here?
-	@Bean
-	public RestTemplate createTemplateMock(){
-		return new RestTemplate();
 	}
 
 	//The below method and classes is used to temporarily enableSelfSignedHTTPSCertificate https/ssl verification to allow https
