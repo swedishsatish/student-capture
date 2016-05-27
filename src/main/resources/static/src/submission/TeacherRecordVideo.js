@@ -5,22 +5,10 @@
 var TeacherRecordVideo = React.createClass({
     formDataBuilder: function (blob, fileName) {
             var fd = new FormData();
-
             var id_array = this.props.idArray;
             var student = this.props.studentArray;
 
             fd.append("feedbackVideo", blob);
-            fd.append('submission', new Blob([JSON.stringify({
-                        // Submission data
-                        studentID: student[0].studentID,
-                        assignmentID: id_array[0].assignmentID,
-                        courseID: id_array[0].courseID,
-
-
-            })], {
-                type: "application/json"
-            }));
-
             return fd;
        },
     playVideo: function (fName) {
@@ -49,7 +37,7 @@ var TeacherRecordVideo = React.createClass({
                 <div className="row">
                     <div className="four columns u-pull-left">
                         <button id="teacherRecordButton" className="recControls">Record</button>
-                        <button id="teacherStopButton" className="recControls" disabled>Stop</button>
+                        <button id="teacherStopButton" className="recControls" >Stop</button>
                         <button id="postTeacherVideo" className="recControls" disabled>POST</button>
                     </div>
                 </div>
