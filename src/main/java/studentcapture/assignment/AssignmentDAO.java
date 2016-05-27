@@ -187,11 +187,6 @@ public class AssignmentDAO {
 
     /**
      *
-     * !!!!
-     * THIS METHOD IS NOT IN USE
-     *
-     * WILL BE USED AFTER DEMO
-     * !!!!
      *
      * Method for checking that the user is enrolled on the course where the video is received.
      *
