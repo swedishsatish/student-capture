@@ -7,16 +7,36 @@
 /* Style of assignment front page */
 #assignment-div
 {
-	width: 70%;
+	width: 82%;
 	margin: auto;
 	text-align: center;
+}
+
+/* Horizontal line below assignment description */
+#assignment-desc
+{
+    border-bottom: 1px solid #dddddd;
+    margin-bottom: 10px;
+}
+
+/* Style of assignment data titles */
+#assignment-data
+{
+    text-align: left;
 }
 
 /* Style of data on front page */
 #descriptor
 {
-    display: inline;
     margin-left: 2rem;
+}
+
+/* Style of note label */
+#note-div
+{
+	background-color: rgba(255, 0, 0, 0.2);
+	font-weight: bold;
+    margin-bottom: 10px;
 }
 
 /* Style of assignment modal */
