@@ -117,8 +117,12 @@ public class MailDAO {
     public void insertNotification(int assID, Date date){
         Timestamp timestamp = new Timestamp(date.getTime());
         try {
-            jdbcTemplate.update(updateNotificationQuery(), timestamp, assID);
-            jdbcTemplate.update(insertNotificationQuery(),assID,timestamp,assID);
+            if(getNotificationList().get().isEmpty()){
+                jdbcTemplate.update(insertToEmptyTableQuery(),assID,timestamp);
+            } else {
+                jdbcTemplate.update(updateNotificationQuery(), timestamp, assID);
+                jdbcTemplate.update(insertNotificationQuery(), assID, timestamp, assID);
+            }
         } catch (DataAccessException e){
             e.printStackTrace();
         }
@@ -170,5 +174,9 @@ public class MailDAO {
         return "INSERT INTO MailScheduler(assignmentID,notificationDate) " +
                 "SELECT ?, ? FROM MailScheduler "+
                 "WHERE NOT EXISTS (SELECT assignmentID FROM MailScheduler WHERE assignmentID=?);";
+    }
+
+    private String insertToEmptyTableQuery(){
+        return "INSERT INTO MailScheduler VALUES(?,?);";
     }
 }
