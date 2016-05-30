@@ -3,7 +3,6 @@ package studentcapture.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import studentcapture.user.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -77,7 +76,7 @@ public class H2DB {
      * Populates the h2 database.
      * @param jdbcMock
      */
-    public static void setUp(JdbcTemplate jdbcMock) {
+    public static void PopulateDB(JdbcTemplate jdbcMock) {
 
         //Used to add user.
         String sql = "INSERT INTO users" + " (username, firstname, lastname, email, pswd)"
@@ -101,7 +100,7 @@ public class H2DB {
      *  Used to clear everything in all tables, including serialize.
      * @param jdbcMock
      */
-    public static void TearDownDataBase(JdbcTemplate jdbcMock) throws SQLException {
+    public static void TearDownDB(JdbcTemplate jdbcMock) throws SQLException {
 
         //Creadit:http://stackoverflow.com/questions/8523423/reset-embedded-h2-database-periodically
         Connection c = jdbcMock.getDataSource().getConnection();

@@ -19,6 +19,7 @@ public class HierarchyModel {
 	private int userId;
 	private String firstName;
 	private String lastName;
+	private Boolean isTeacher;
 	private Map<Integer, CoursePackage> teacherCourses;
 	private Map<Integer, CoursePackage> studentCourses;
 	private List<CoursePackage> teacherCoursesList;
@@ -129,6 +130,20 @@ public class HierarchyModel {
 		this.studentCoursesList = studentCoursesList;
 	}
 	
+    /**
+	 * @return the isTeacher
+	 */
+	public Boolean getIsTeacher() {
+		return isTeacher;
+	}
+
+	/**
+	 * @param isTeacher the isTeacher to set
+	 */
+	public void setIsTeacher(Boolean isTeacher) {
+		this.isTeacher = isTeacher;
+	}
+	
 	public void moveMapsToLists() {
 		teacherCoursesList = new ArrayList<>(teacherCourses.values());
 		teacherCoursesList.forEach(CoursePackage::moveMapsToLists);
@@ -139,8 +154,8 @@ public class HierarchyModel {
 		teacherCourses = null;
 		studentCourses = null;
 	}
-	
-    /**
+
+	/**
      * Used to collect data related to a course in a users course-assignment
      * hierarchy.
      *
