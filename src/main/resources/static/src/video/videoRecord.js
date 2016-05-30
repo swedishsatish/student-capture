@@ -123,6 +123,7 @@ var Recorder = React.createClass({
                 }
             } else {
                 document.getElementById(props.stopButtonID).onclick = stopRecording;
+                document.getElementById(props.stopButtonID).disabled = false;
             }
 
             if(typeof props.calc !== "undefined") {
