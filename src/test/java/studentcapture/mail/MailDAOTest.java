@@ -164,5 +164,14 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
         assertEquals(size,assidList.size());
     }
 
+    @Test
+    public void testInsertToEmptyTable(){
+        String sqlDelete = "DELETE FROM MailScheduler;";
+        String sqlGetList = "SELECT AssignmentID FROM MailScheduler";
+        jdbcMock.update(sqlDelete);
+        mailDAO.insertNotification(2,new Date());
+        int size = jdbcMock.queryForList(sqlGetList,Integer.class).size();
+        assertEquals(1,size);
+    }
 
 }

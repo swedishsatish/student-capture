@@ -123,6 +123,7 @@ var Recorder = React.createClass({
                 }
             } else {
                 document.getElementById(props.stopButtonID).onclick = stopRecording;
+                document.getElementById(props.stopButtonID).disabled = false;
             }
 
             if(typeof props.calc !== "undefined") {
@@ -199,6 +200,7 @@ var Recorder = React.createClass({
             if(!shouldAutoRecord){
                 recordButton.disabled = false;
             }
+            document.getElementById(props.stopButtonID).disabled = true;
 
             previewElement.src = '';
 
@@ -289,10 +291,14 @@ var Recorder = React.createClass({
                 if (request.readyState == 4 && request.status == 200) {
                     callback(request.responseText);
                     alert("Your video has been uploaded successfully!");
+                    if(props.siteView == "submission") {
+                        location.reload(); // Maby not best solution.
+                    }
                 } else if(request.readyState == 4 && request.status != 200) {
                     if(request.responseText.length < 10) {
                         // Error message should be longer than 10 characters
                         alert("Failed to upload video.");
+
                     } else if(request.responseText.includes("Exception")) {
                         // Do not print out exception (should not occur....)
                         alert("Failed to upload video.");
