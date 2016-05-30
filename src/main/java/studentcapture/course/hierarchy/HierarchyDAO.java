@@ -23,9 +23,7 @@ import java.util.Optional;
 @Repository
 
 /**
- * Now with slightly less code smell.
- *
- *
+ * HierarchyDAO is used to 
  */
 public class HierarchyDAO {
 

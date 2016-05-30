@@ -210,6 +210,14 @@ public class ParticipantDAO {
         return result;
     }
     
+    public boolean hasTeacherPermission(Integer userId) {
+    	String statement = "SELECT isteacher FROM Users WHERE (UserId=?) AND "
+    			+ "(isteacher=true)";
+    	List<Map<String, Object>> result = jdbcTemplate.queryForList(
+    			statement, userId);
+    	return (result.size() > 0);
+    }
+    
     public boolean isParticipantOnCourse(Integer userId, Integer courseId) {
     	String statement = "SELECT * FROM Participant WHERE (UserId=?) AND "
     			+ "(CourseId=?)";
