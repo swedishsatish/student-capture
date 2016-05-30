@@ -162,7 +162,7 @@ public class LoginTest extends StudentCaptureApplicationTests{
     @After
     public void tearDown() {
     	try {
-			H2DB.TearDownDataBase(jdbcMock);
+			H2DB.TearDownDB(jdbcMock);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

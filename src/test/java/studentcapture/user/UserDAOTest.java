@@ -64,7 +64,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @After
     public void tearDown() {
         try {
-            H2DB.TearDownDataBase(jdbcMock);
+            H2DB.TearDownDB(jdbcMock);
         } catch (SQLException e) {
             e.printStackTrace();
         }
