@@ -50,16 +50,22 @@ public class RegistrationController {
 	 */
 	@RequestMapping(value = "/register", method = RequestMethod.POST) 
 	public ResponseEntity<Object> register(
-	    	@RequestParam(value="firstname")           String firstName,
-			@RequestParam(value="lastname")            String lastName,
-			@RequestParam(value="email")               String email,
-			@RequestParam(value="username")            String username,
-			@RequestParam(value="password")            String password,
-			@RequestParam(value="confirmpassword")     String confirmpassword) 
+	    	@RequestParam(value="firstname")           				String firstName,
+			@RequestParam(value="lastname")            				String lastName,
+			@RequestParam(value="email")               				String email,
+			@RequestParam(value="username")            				String username,
+			@RequestParam(value="password")            				String password,
+			@RequestParam(value="confirmpassword")     				String confirmpassword,
+			@RequestParam(value="isTeacher", required = false) 		String isTeacher) 
 			        throws URISyntaxException {
 	    //Redirect URI
 		URI uri;
         HttpHeaders httpHeaders = new HttpHeaders();
+        boolean isTeach = false;
+        
+        if(isTeacher != null) {
+        	isTeach = true;
+        }
         
         //Return if user fails to confirm the password
 		if (!password.equals(confirmpassword)) {
@@ -67,9 +73,8 @@ public class RegistrationController {
 			httpHeaders.setLocation(uri);
 			return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
 		}
-		
 		User user = new User(username, firstName, lastName, email,
-		        encryptPassword(password), false);
+		        encryptPassword(password), isTeach);
         
         ErrorFlags status = userDao.addUser(user);
 
