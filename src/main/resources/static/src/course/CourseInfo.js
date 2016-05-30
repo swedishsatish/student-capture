@@ -13,7 +13,7 @@ function getCourseHash(courseID) {
         success : function(res) {
             
             document.getElementById("courseHashDiv").innerHTML = "Course url: " +
-                                                        window.location.protocol +
+                                                        window.location.protocol + "//" +
                                                         window.location.host +
                                                         window.location.pathname + "?param="+  res.hex;
         }, error : function(e) {

@@ -305,7 +305,14 @@ var DynamicMenu = React.createClass({
                         </ul>
                     </div>
         }
-
+        var newItem = "";
+        if(this.props.isTeacher){
+            var newItem =   <li className="active course menuItem navigationText">
+                <div onClick={this.handleClick.bind(this,uid)}>
+                    + New Course
+                </div>
+            </li>;
+        }
 
         return (
             <div>
@@ -313,11 +320,7 @@ var DynamicMenu = React.createClass({
                 {stud}
                 <br/>
                 <ul>
-                    <li className="active course menuItem navigationText">
-                        <div onClick={this.handleClick.bind(this,uid)}>
-                            + New Course
-                        </div>
-                    </li>
+                    {newItem}
                 </ul>
             </div>
         );
@@ -333,12 +336,12 @@ window.RenderMenu = function (preloaded) {
     $.get("course", function (res) {
         // if(res)
         var userID = res.userId;
-
+        //console.log(res);
         var SCList = objToList(res.studentCourses);
         var TCList = objToList(res.teacherCourses);
         var name = res.firstName + " " + res.lastName;
         preload = preloaded;
-        ReactDOM.render(<DynamicMenu tList={TCList} sList={SCList} uid={userID} />, document.getElementById("desktopNavigation"));
+        ReactDOM.render(<DynamicMenu tList={TCList} sList={SCList} uid={userID} isTeacher={res.isTeacher}/>, document.getElementById("desktopNavigation"));
 
 
 
