@@ -200,6 +200,7 @@ var Recorder = React.createClass({
             if(!shouldAutoRecord){
                 recordButton.disabled = false;
             }
+            document.getElementById(props.stopButtonID).disabled = true;
 
             previewElement.src = '';
 
