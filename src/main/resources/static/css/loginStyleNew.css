@@ -81,15 +81,17 @@ body {
 
 #teacherBox{
     margin-left:4%;
-    margin-right: 2px;
+    margin-right:4px;
 }
 
-h6 {
+#teacherText {
     color:white;
+    display:inline;
+
 }
 
 #registerPage {
-	top: calc(50% - 176px)
+	top: calc(50% - 218px)
 }
 
 #lostPasswordPage {
