@@ -16,7 +16,7 @@ import java.sql.Types;
 import static org.junit.Assert.*;
 
 /**
- * Created by tfy12hsm.
+ * 
  */
 public class UserDAOTest extends StudentCaptureApplicationTests {
 

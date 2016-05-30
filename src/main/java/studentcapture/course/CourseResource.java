@@ -48,6 +48,9 @@ public class CourseResource {
     		HttpSession session,
     		@RequestBody
     		CourseModel course) {
+		if(!participantDAO.hasTeacherPermission(
+    			User.getSessionUserId(session)))
+    		throw new ResourceUnauthorizedException();
 		CourseModel result1 = courseDAO.addCourse(course);
     	if(result1.getCourseId()==null) {
     		if(result1.getErrorCode()==HttpStatus.CONFLICT.value())
