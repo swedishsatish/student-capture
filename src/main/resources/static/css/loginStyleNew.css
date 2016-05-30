@@ -79,6 +79,15 @@ body {
 	background-color: #107D91;
 }
 
+#teacherBox{
+    margin-left:4%;
+    margin-right: 2px;
+}
+
+h6 {
+    color:white;
+}
+
 #registerPage {
 	top: calc(50% - 176px)
 }
