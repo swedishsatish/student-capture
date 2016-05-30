@@ -291,10 +291,14 @@ var Recorder = React.createClass({
                 if (request.readyState == 4 && request.status == 200) {
                     callback(request.responseText);
                     alert("Your video has been uploaded successfully!");
+                    if(props.siteView == "submission") {
+                        location.reload(); // Maby not best solution.
+                    }
                 } else if(request.readyState == 4 && request.status != 200) {
                     if(request.responseText.length < 10) {
                         // Error message should be longer than 10 characters
                         alert("Failed to upload video.");
+
                     } else if(request.responseText.includes("Exception")) {
                         // Do not print out exception (should not occur....)
                         alert("Failed to upload video.");

@@ -36,6 +36,8 @@ window.BlankBox = React.createClass({
                     this.result = data.result;
                     this.withdrew = 1;
                     this.stat = status;
+                    alert("You have withdrawn from this assignment.");
+                    location.reload(); // Maby not best solution.
                 }.bind(this),
                 error: function (xhr, status, err) {
                     this.withdrew = 2;
@@ -47,6 +49,7 @@ window.BlankBox = React.createClass({
 
         document.getElementById("studentSubmit").onclick = function() {};
         this.props.endFunc();
+
     },
     /**
      * Renderfunction for studentlist, renders the list on a div
