@@ -57,7 +57,7 @@ var TeacherViewSubmission = React.createClass({
         this.nWithdrawals = 0;
         this.nDone = 0;
         this.nParticipants = 0;
-        this.nParticipants = this.submissionsArray.length;
+        this.nParticipants = this.participantsArray.length;
         for (var i=0;i<this.submissionsArray.length;i++) {
             if(this.submissionsArray[i].status) {
                 if (this.submissionsArray[i].status.toLowerCase() == "answer") {

@@ -42,15 +42,20 @@ var StudentList = React.createClass({
     },
 
     render: function () {
+
         var tmp = this;
         var userList = this.submissions.map(function (user) {
             console.log(user);
+            var path = "assignments/" + user.assignmentID + "/submissions/" + user.studentID + "/videos/";
+            var studentSubmission = path + 'submission.webm';
             var date = new Date(user.submissionDate);
-            var sourceVid = user.studentVideo==null ? "http://techslides.com/demos/sample-videos/small.mp4" : user.studentVideo;
             return (
                 <tr onClick={tmp.clickhandle.bind(tmp,user)}>
+                    <video id="thumbNail" height="54" width="96" src={sourceVid} preload="auto"/>
                     <video width="96" height="54" class="clip-thumbnail">
-                        <source src={sourceVid} type="video/mp4"/> </video>
+                        <source src={studentSubmission} type="video/webm"/>
+                        <source src="images/placeholder.webm" type="video/webm"/>
+                    </video>
                     <td>{user.firstName + " " + user.lastName}</td>
                     <td>{date.getFullYear() + "-" + (date.getMonth()+1/*Months start from 0)*/ + "-" + date.getDate())}</td>
                     <td>{user.grade.grade}</td>
