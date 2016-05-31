@@ -44,7 +44,7 @@ var StudentList = React.createClass({
     render: function () {
 
         var tmp = this;
-        var userList = this.submissions.map(function (user) {
+        var userList = this.participants.map(function (user) {
             console.log(user);
             var studentSubmission=null;
             var path = "assignments/" + user.assignmentID + "/submissions/" + user.studentID + "/videos/";
