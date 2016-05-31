@@ -45,25 +45,7 @@ var PopUpConfirmButton = React.createClass({
         )
     }
 });
-/**
- * Pass text for popup window, will get status from
- * checkbox then either put PASS or NOT PASSED in text.
- */
-var PopUpPassBox = React.createClass({
-    render: function () {
-        if(document.getElementById('ifStudentPass').checked){
-            return(
-                <p id="popUpPass">PASS</p>
-            )
-        }else{
-            return(
-                <p id="popUpFail">NOT PASSED</p>
-            )
-        }
-    }
 
-
-});
 /**
  * Grade for popup window, will get grade teacher selected
  * from previous window and put that into confirmation text.
@@ -98,8 +80,8 @@ var PopUpRender = React.createClass({
         return(
             <div class="row">
                 <p id="smallLetter">You are about to give</p>
-                <PopUpStudentName/> <p id="smallLetter">a</p>
-                <PopUpPassBox/> <p id="smallLetter">with grade</p> <PopUpGrade/>
+                <PopUpStudentName/>
+                <p id="smallLetter">grade</p> <PopUpGrade/>
                 <br/>
                 <div id="popUpButtonContainer">
                     <PopUpCancelButton/>
@@ -130,7 +112,6 @@ function submitForm(method) {
     reqBody["grade"] = {};
     reqBody["grade"]["grade"] = document.getElementById('dropDownMenu').value;
     reqBody["grade"]["teacherID"] = "7777777"; //TODO: Fix this grade: document.getElementById('dropDownMenu').value;
-    reqBody[""] = document.getElementById('ifStudentPass').checked;
     reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
     reqBody["courseID"] = IDs[0].courseID;
 
@@ -212,7 +193,6 @@ function  getForm() {
 
             document.getElementById('PermissionFromStudent').disabled = response["studentPublishConsent"] ? false : true;
             document.getElementById('PermissionFromStudent').checked = response["publishStudentSubmission"] ? true : false;
-            document.getElementById('ifStudentPass').checked = response["studentPass"] ? true : false;
 
         }, error: function (e) {
             console.log("FAIL HUE");
@@ -326,10 +306,10 @@ var SubmitButton = React.createClass({
             }
         }
         var blanket = document.getElementById('blanket');
-        blanket.style.height = blanket_height + 'px';
+        //blanket.style.height = blanket_height + 'px';
         var popUpDiv = document.getElementById(popUpDivVar);
-        popUpDiv_height=blanket_height/2-200;//200 is half popup's height
-        popUpDiv.style.top = popUpDiv_height + 'px';
+        //popUpDiv_height=blanket_height/2-200;//200 is half popup's height
+        //popUpDiv.style.top = popUpDiv_height + 'px';
     },
     /**
      * Calculates window position based on window size.
@@ -353,9 +333,9 @@ var SubmitButton = React.createClass({
                 window_width = document.body.parentNode.scrollWidth;
             }
         }
-        var popUpDiv = document.getElementById(popUpDivVar);
-        window_width=window_width/2-200;//200 is half popup's width
-        popUpDiv.style.left = window_width + 'px';
+        //var popUpDiv = document.getElementById(popUpDivVar);
+        //window_width=window_width/2-200;//200 is half popup's width
+        //popUpDiv.style.left = window_width + 'px';
     },
     /**
      * onclick function for submit button.

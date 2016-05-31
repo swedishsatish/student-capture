@@ -28,11 +28,28 @@ var video;
                 <div id="blanket" style={{"display":"none"}}></div>
                 <div id="popUpDiv" style={{"display":"none"}}></div>
 
-                <video id="teacherRecord" width="40%" src={studentSubmission} preload="auto" controls/>
-                <video id="teacherRecord" width="40%" src={teacherFeedbackURL} preload="auto" controls/>
-                <TeacherRecordVideo studentArray={this.props.studentArray} idArray={this.props.idArray}/>
+
 
                 <div id="feedBackContainer">
+
+                <table style={{"Border":"1px solid black", "width":"100%"}}>
+                    <tr><td>
+                        Student
+                    </td><td>
+                        Feedback
+                    </td><td>
+                        New feedback
+                    </td></tr>
+                    <tr><td>
+                        <video id="studentVideo" style={{"width":"80%"}} src={studentSubmission} preload="auto" controls/>
+                    </td><td>
+                        <video id="teacherRecordFeedback" style={{"width":"80%"}} src={teacherFeedbackURL} preload="auto" controls/>
+                    </td><td>
+                        <TeacherRecordVideo studentArray={this.props.studentArray} idArray={this.props.idArray}/>
+                    </td></tr>
+                </table>
+
+
 
                     <div id="submissioncontainer">
                         <div id="commentbox">
@@ -41,7 +58,6 @@ var video;
                         <div id="gradeAndPassContainer">
                             <div id="passbox">
                                 <PermissionCheckBox/>
-                                <PassCheckBox />
                             </div>
                             <div id="dropDown">
                                 <DropDown scale={this.props.scale}/>
