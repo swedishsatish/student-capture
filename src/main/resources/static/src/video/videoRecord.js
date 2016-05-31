@@ -123,15 +123,16 @@ var Recorder = React.createClass({
                 }
             } else {
                 document.getElementById(props.stopButtonID).onclick = stopRecording;
+                document.getElementById(props.stopButtonID).disabled = false;
             }
 
             if(typeof props.calc !== "undefined") {
                 /*document.getElementById("test-rec-text").innerHTML = "&#x1f534;";*/
-                document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/notRec.png\'>";
+                document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
             }
             else {
                 /*document.getElementById("rec-text").innerHTML = "&#x1f534;";*/
-                document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/notRec.png\'>";
+                document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
             }
         }
 
@@ -199,6 +200,7 @@ var Recorder = React.createClass({
             if(!shouldAutoRecord){
                 recordButton.disabled = false;
             }
+            document.getElementById(props.stopButtonID).disabled = true;
 
             previewElement.src = '';
 
@@ -243,13 +245,13 @@ var Recorder = React.createClass({
                 if(typeof props.calc !== "undefined") {
                     /*document.getElementById("test-rec-text").innerHTML = "&#11093;";*/
                     if(document.getElementById("test-rec-text") != null) {
-                        document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+                        document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/notRec.png\'>";
                     }
                 }
                 else {
                     /*document.getElementById("rec-text").innerHTML = "&#11093;";*/
                     if(document.getElementById("rec-text")) {
-                        document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+                        document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/notRec.png\'>";
                     }
                 }
                 cameraStarted = false;
@@ -289,10 +291,14 @@ var Recorder = React.createClass({
                 if (request.readyState == 4 && request.status == 200) {
                     callback(request.responseText);
                     alert("Your video has been uploaded successfully!");
+                    if(props.siteView == "submission") {
+                        location.reload(); // Maby not best solution.
+                    }
                 } else if(request.readyState == 4 && request.status != 200) {
                     if(request.responseText.length < 10) {
                         // Error message should be longer than 10 characters
                         alert("Failed to upload video.");
+
                     } else if(request.responseText.includes("Exception")) {
                         // Do not print out exception (should not occur....)
                         alert("Failed to upload video.");
@@ -337,13 +343,13 @@ var Recorder = React.createClass({
         if(typeof props.calc !== "undefined") {
             /*document.getElementById("test-rec-text").innerHTML = "&#11093;";*/
             if(document.getElementById("test-rec-text") != null) {
-                document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+                document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/notRec.png\'>";
             }
         }
         else {
             /*document.getElementById("rec-text").innerHTML = "&#11093;";*/
             if(document.getElementById("rec-text") != null) {
-                document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/rec.png\'>";
+                document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/notRec.png\'>";
             }
         }
     },

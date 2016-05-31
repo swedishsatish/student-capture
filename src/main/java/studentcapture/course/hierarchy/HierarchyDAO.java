@@ -23,9 +23,7 @@ import java.util.Optional;
 @Repository
 
 /**
- * Now with slightly less code smell.
- *
- *
+ * HierarchyDAO is used to 
  */
 public class HierarchyDAO {
 
@@ -82,6 +80,7 @@ public class HierarchyDAO {
             hierarchy.setUserId((int) map.get("UserId"));
             hierarchy.setFirstName((String) map.get("FirstName"));
             hierarchy.setLastName((String) map.get("LastName"));
+            hierarchy.setIsTeacher((boolean) map.get("isTeacher"));
     }
 
     /**

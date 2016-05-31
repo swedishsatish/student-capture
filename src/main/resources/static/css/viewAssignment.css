@@ -7,16 +7,36 @@
 /* Style of assignment front page */
 #assignment-div
 {
-	width: 70%;
+	width: 82%;
 	margin: auto;
 	text-align: center;
+}
+
+/* Horizontal line below assignment description */
+#assignment-desc
+{
+    border-bottom: 1px solid #dddddd;
+    margin-bottom: 10px;
+}
+
+/* Style of assignment data titles */
+#assignment-data
+{
+    text-align: left;
 }
 
 /* Style of data on front page */
 #descriptor
 {
-    display: inline;
     margin-left: 2rem;
+}
+
+/* Style of note label */
+#note-div
+{
+	background-color: rgba(255, 0, 0, 0.2);
+	font-weight: bold;
+    margin-bottom: 10px;
 }
 
 /* Style of assignment modal */
@@ -96,16 +116,32 @@
 	z-index: 2;
 }
 
+/* Style of countdown text */
+#countdown-text
+{
+    font-size: 30px;
+	color: white;
+    text-shadow:
+        -1px -1px 0px black,
+         0px -1px 0px black,
+         1px -1px 0px black,
+        -1px  0px 0px black,
+         1px  0px 0px black,
+        -1px  1px 0px black,
+         0px  1px 0px black,
+         1px  1px 0px black;
+}
+
 /* Style of video titles */
 #videoTitle
 {
     display: inline-block;
 }
 
-/* Override style of REC symbol */
-#recorder-div > div > #rec-text
+/* Space above video to compensate for REC light */
+#video-space
 {
-	display: none;
+	margin-top: 10px;
 }
 
 /* Override style of recording frame */

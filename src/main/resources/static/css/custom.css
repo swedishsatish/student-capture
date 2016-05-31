@@ -124,7 +124,7 @@ input[type=text]:disabled {
     height:40px;
     line-height:40px;
     border-radius: 10px;
-    background-color: #424242;
+    background-color: #808080;
     border: 2px solid #FAFAFA;
     color:#FAFAFA;
 }

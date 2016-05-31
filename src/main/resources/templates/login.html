@@ -101,6 +101,9 @@
                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$"
                        required="required" />
 
+                <input type="checkbox" id="teacherBox" name="isTeacher"/>
+                <p id="teacherText">I'm a teacher</p><br/>
+
                 <button type="button" id="cnclBtn" class="SCButton bckBtn loginField nameField">
                     Cancel
                 </button>
@@ -136,7 +139,7 @@
         <div id="modalBtn" class="twelve columns">
 
         	<p id="sysReqs">This service requires a webcamera and a microphone. Hardware-tests are available when logged in.<br/>
-                It is HIGHLY recommended you use Chrome on Windows or OSX, other environments are not supported. &nbsp;
+                It is HIGHLY recommended you use Chrome on Windows, OSX or Linux, other environments are not supported. &nbsp;
                 <span id="readMore">Read more.</span></p>
         </div>
 
@@ -151,7 +154,7 @@
             </div>
             <div id="modalBody" class="modal-body">
 
-                <p>This service requires a modern browser with JavaScript enabled.<br />Chrome is highly recommended, other browsers are not officially supported.<br />An automatic hardware test is displayed below:</p>
+                <p>This service requires a modern browser with JavaScript enabled.<br />Chrome are highly recommended, other browsers are not officially supported.<br />An automatic hardware test is displayed below:</p>
                 <table id="testTable"></table>
                 <p>More thorough tests are available once logged in.</p>
 

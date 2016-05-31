@@ -18,18 +18,20 @@ public class User {
     private String pswd;
     private String userID;
     private String token;  //Will be used for recovery of password
+    private boolean isTeacher;
 
     //Needed for json string. DONT TOUCH!
     public User() {}
 
     public User(String userName, String fName, String lName,
-                String email,String pswd) {
+                String email,String pswd, boolean isTeacher) {
 
         this.userName = userName;
         this.firstName = fName;
         this.lastName = lName;
         this.email = email;
         this.pswd = pswd;
+        this.isTeacher = isTeacher;
     }
 
     /**
@@ -94,8 +96,16 @@ public class User {
     public void setToken(String token) {
         this.token = token;
     }
+    
+    public boolean isTeacher() {
+		return isTeacher;
+	}
 
-    @Override
+	public void setTeacher(boolean isTeacher) {
+		this.isTeacher = isTeacher;
+	}
+
+	@Override
     public boolean equals(Object other) {
         if (other == this) return true;
         if (!(other instanceof User)) return false;

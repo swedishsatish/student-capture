@@ -50,7 +50,6 @@ class SubmissionResource {
         if (submission.isPresent()){
             return new ResponseEntity<>(submission.get(), HttpStatus.OK);
         }
-
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -216,16 +215,15 @@ class SubmissionResource {
      * POST, it should be PATCH) received as a part of the POST.
      * @param assignmentID          The assignmentID of the video
      * @param studentID             The studentID of submission that will receive feedback-Video.
-     * @param courseID              The course of the submission-feedback-video.
      * @param teacherFeedbackVideo  The multipartVideo.
      * @return                      Will only return HTTPStatus if saving went successful or not.
      */
     @RequestMapping(value = "{studentID}/feedbackvideo/", method = RequestMethod.POST)
     public HttpStatus storeFeedback(@PathVariable("assignmentID") int assignmentID,
                                     @PathVariable("studentID") int studentID,
-                                    @RequestPart(value = "courseID") Integer courseID,
-                                    @RequestPart(value = "feedbackVideo") MultipartFile teacherFeedbackVideo){
-
+                                    @RequestPart(value = "feedbackVideo") MultipartFile teacherFeedbackVideo
+                                    ){
+        int courseID = DAO.getCourseIDFromAssignmentID(assignmentID);
         Submission submission = new Submission();
         HttpStatus httpStatus = OK;
 

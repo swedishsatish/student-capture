@@ -2,13 +2,6 @@
  * Created by Ludvig on 2016-05-12.
  */
 
-/**
- * generates random course id, ONLY TEMPORARY will be redundant
- * @returns {number}
- */
-var generateCourseID = function () {
-    return Math.floor((Math.random() * 1000000000) + 1);
-}
 
 
 window.CreateCourse = React.createClass({
@@ -34,7 +27,7 @@ window.CreateCourse = React.createClass({
     handleClick: function (uid,event) {
 
         var course = {
-            courseId: generateCourseID(),
+
             year: parseInt($("#course-year").val(),10),
             term: $("#course-term").val(),
             courseName: $("#course-name").val(),

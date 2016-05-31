@@ -36,9 +36,9 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
      */
     @Before
     public void setUp() throws Exception {
-        String sql1 = "INSERT INTO Users VALUES (1, 'mkyong', 'abcd', 'defg', 'mkyong@gmail.com', 'MyPassword',null);";
-        String sql2 = "INSERT INTO Users VALUES (2, 'alex', 'abcd', 'defg', 'alex@yahoo.com', 'SecretPassword', null);";
-        String sql3 = "INSERT INTO Users VALUES (3, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword', null);";
+        String sql1 = "INSERT INTO Users VALUES (1, 'mkyong', 'abcd', 'defg', 'mkyong@gmail.com', 'MyPassword',null, false);";
+        String sql2 = "INSERT INTO Users VALUES (2, 'alex', 'abcd', 'defg', 'alex@yahoo.com', 'SecretPassword', null, false);";
+        String sql3 = "INSERT INTO Users VALUES (3, 'joel', 'abcd', 'defg', 'joel@gmail.com', 'MyGloriousPassword', null, false);";
         String sql4 = "INSERT INTO Course VALUES (1, 2016, 'VT', 'ABC', null, true);";
         String sql5 = "INSERT INTO Assignment VALUES (1, 1, 'OU1', '2016-05-13 10:00:00', '2016-05-13 12:00:00', 60, 180, null, 'XYZ');";
         String sql6 = "INSERT INTO Submission VALUES (1, 1, null, null, '2016-05-13 11:00:00', null, null, null, null, null);";
@@ -164,5 +164,14 @@ public class MailDAOTest extends StudentCaptureApplicationTests{
         assertEquals(size,assidList.size());
     }
 
+    @Test
+    public void testInsertToEmptyTable(){
+        String sqlDelete = "DELETE FROM MailScheduler;";
+        String sqlGetList = "SELECT AssignmentID FROM MailScheduler";
+        jdbcMock.update(sqlDelete);
+        mailDAO.insertNotification(2,new Date());
+        int size = jdbcMock.queryForList(sqlGetList,Integer.class).size();
+        assertEquals(1,size);
+    }
 
 }

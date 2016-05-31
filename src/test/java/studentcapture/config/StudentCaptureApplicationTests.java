@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.client.RestTemplate;
+import studentcapture.submission.SubmissionDAO;
 
 import java.nio.charset.Charset;
 
@@ -23,15 +23,15 @@ public class StudentCaptureApplicationTests {
 
 	@Bean
 	@Primary
-	public RestTemplate restTemplateMock() {
-		return Mockito.mock(RestTemplate.class);
+	public SubmissionDAO submissionDAOMock(){
+		return Mockito.spy(SubmissionDAO.class);
 	}
 
 	@Bean
 	@Primary
 	public JdbcTemplate jdbcTemplateMock() {
 
-		return new JdbcTemplate(H2DataSource.dataSource());
+		return new JdbcTemplate(H2DB.dataSource());
 	}
 
 	public final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),

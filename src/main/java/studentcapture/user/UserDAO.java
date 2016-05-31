@@ -39,18 +39,18 @@ public class UserDAO {
 
 
         String sql = "INSERT INTO users"
-                + " (username, firstname, lastname, email, pswd)"
-                + " VALUES (?, ?, ?, ?, ?)";
+                + " (username, firstname, lastname, email, pswd, isteacher)"
+                + " VALUES (?, ?, ?, ?, ?, ?)";
         //Preparing statement
         Object[] args = new Object[] {user.getUserName(),user.getFirstName(),
                                       user.getLastName(),user.getEmail(),
-                                      user.getPswd()};
+                                      user.getPswd(), user.isTeacher()};
 
-        int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
-                                      Types.VARCHAR,Types.VARCHAR};
+//        int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
+//                                      Types.VARCHAR,Types.VARCHAR};
         //Execute
         try {
-            jdbcTemplate.update(sql, args,types);
+            jdbcTemplate.update(sql, args);
         } catch (DataIntegrityViolationException e) {
 			return ErrorFlags.USEREXISTS;
 		}
@@ -176,7 +176,7 @@ public class UserDAO {
         public Object mapRow(ResultSet rs, int i) throws SQLException {
             User user = new User(rs.getString("username"),rs.getString("firstname"),
                                  rs.getString("lastname"),rs.getString("email"),
-                                 rs.getString("pswd"));
+                                 rs.getString("pswd"), rs.getBoolean("isteacher"));
 
             user.setUserID(rs.getString("userid"));
             user.setToken(rs.getString("token"));

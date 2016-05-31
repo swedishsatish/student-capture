@@ -276,7 +276,7 @@ public class SubmissionDAO {
 	 * @param assignmentID the id of the assignment.
 	 * @return the course id.
      */
-	private Integer getCourseIDFromAssignmentID(int assignmentID){
+	public Integer getCourseIDFromAssignmentID(int assignmentID){
 		try{
 			String getCourseId = "SELECT CourseId FROM Assignment WHERE AssignmentId=?";
 			return databaseConnection.queryForObject(getCourseId, new Object[]{assignmentID}, Integer.class);

@@ -1,5 +1,7 @@
 package studentcapture.login;
 
+import java.sql.SQLException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +14,9 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import studentcapture.config.StudentCaptureApplicationTests;
 
+import studentcapture.config.H2DB;
+import studentcapture.config.StudentCaptureApplicationTests;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -158,10 +161,11 @@ public class LoginTest extends StudentCaptureApplicationTests{
      */
     @After
     public void tearDown() {
-        String sql1 = "DELETE FROM Users;";
-        //Reset serialize userid
-        String sql2 = "ALTER TABLE users ALTER COLUMN userid RESTART WITH 1";
-        jdbcMock.update(sql1);
-        jdbcMock.update(sql2);
+    	try {
+			H2DB.TearDownDB(jdbcMock);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }

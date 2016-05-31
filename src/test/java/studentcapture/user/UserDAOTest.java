@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.context.WebApplicationContext;
-import studentcapture.config.H2DataSource;
+import studentcapture.config.H2DB;
 import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.login.ErrorFlags;
 
@@ -16,7 +16,7 @@ import java.sql.Types;
 import static org.junit.Assert.*;
 
 /**
- * Created by tfy12hsm.
+ * 
  */
 public class UserDAOTest extends StudentCaptureApplicationTests {
 
@@ -41,7 +41,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
                 +" VALUES (?, ?, ?, ?, ?)";
 
         userSetup = new User("testUser","testFName","testLName",
-                             "testEmail@example.com","testPassword123");
+                             "testEmail@example.com","testPassword123", false);
 
         Object[] args = new Object[] {userSetup.getUserName(), userSetup.getFirstName(),
                             userSetup.getLastName(),userSetup.getEmail(),
@@ -64,7 +64,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @After
     public void tearDown() {
         try {
-            H2DataSource.TearDownDataBase(jdbcMock);
+            H2DB.TearDownDB(jdbcMock);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -88,10 +88,10 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     public void testAddUser() {
 
         User user = new User("userPelle", "Pelle", "Jönsson", "pelle@gmail.com",
-                "mypassword123");
+                "mypassword123", false);
 
         ErrorFlags res = userDAO.addUser(user);
-        User userRes = userDAO.getUser("userPelle", 0);
+        User userRes = userDAO.getUser("userPelle", UserDAO.GET_USER_BY_USERNAME);
 
         assertEquals(ErrorFlags.NOERROR, res);
         assertEquals(user, userRes);
@@ -99,10 +99,10 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
 
     @Test
     public void testAddingUserTwice() {
-        H2DataSource.printTable(jdbcMock,"users");
+        H2DB.printTable(jdbcMock,"users");
 
         ErrorFlags errorFlags = userDAO.addUser(userSetup);
-        H2DataSource.printTable(jdbcMock,"users");
+        H2DB.printTable(jdbcMock,"users");
         assertEquals(ErrorFlags.USEREXISTS,errorFlags);
 
     }
@@ -110,7 +110,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @Test
     public void testAddingNullUser() {
         User user = new User("userPelle","Pelle","Jönsson",null,
-                             "mypassword123");
+                             "mypassword123", false);
 
         ErrorFlags errorFlag = userDAO.addUser(user);
         assertEquals(ErrorFlags.USERCONTAINNULL, errorFlag);
@@ -138,7 +138,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @Test
     public void testUpdateNonExistingUser() {
         User user = new User("testUserNotExists","newFirstName","newLname",
-                "newemai@gmail.com","new_pswd_1fdsgasda213fC");
+                "newemai@gmail.com","new_pswd_1fdsgasda213fC", false);
         boolean res = userDAO.updateUser(user);
         assertFalse(res);
     }
@@ -146,7 +146,7 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     @Test
     public void testAddingEmailTwice() {
         User user = new User("testNewUser","newFirstName","newLname",
-                             userSetup.getEmail(),"newpswd");
+                             userSetup.getEmail(),"newpswd", false);
 
         ErrorFlags res = userDAO.addUser(user);
         assertEquals(ErrorFlags.EMAILEXISTS,res);
@@ -174,6 +174,18 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
 
         assertEquals(userSetup,user);
         assertTrue(res);
+    }
+    
+    @Test
+    public void testIsTeacher() {
+    	
+    	User user = new User("userPelle", "Pelle", "Jönsson", "pelle@gmail.com",
+                "mypassword123", true);
+    	
+    	ErrorFlags result = userDAO.addUser(user);
+    	user = userDAO.getUser(user.getUserName(), UserDAO.GET_USER_BY_USERNAME);
+    	
+    	assertTrue(user.isTeacher());
     }
 
     /*
