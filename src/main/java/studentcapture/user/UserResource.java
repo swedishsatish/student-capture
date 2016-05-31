@@ -88,7 +88,7 @@ public class UserResource {
         }
         httpHeaders.setLocation(uri);
 
-        return new ResponseEntity(httpHeaders, HttpStatus.FOUND);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
     }
 
     /**
@@ -98,14 +98,14 @@ public class UserResource {
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity updateUser(@RequestBody User user) {
+    public ResponseEntity<?> updateUser(@RequestBody User user) {
         boolean success = userDAO.updateUser(user);
 
         if(!success) {
-            return new ResponseEntity(HttpStatus.FOUND);
+            return new ResponseEntity<>(HttpStatus.FOUND);
         }
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     
     /**
