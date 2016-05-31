@@ -124,13 +124,10 @@ function submitForm(method) {
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
-            console.log("SUCCESS reqBody contains:", reqBody);
 
         }, error: function (e) {
             console.log("ERROR: ", e);
-            console.log("ReqBody contains:", reqBody);
         }, done: function (e) {
-            console.log("DONE");
         }
     });
 
@@ -140,13 +137,8 @@ function submitVideo(method, getVideoFunc) {
 
         var video = getVideoFunc();
         var fd = new FormData();
-        console.log(video);
         if(video != null) {
             fd.append("studentVideo", video);
-            console.log(video);
-
-        } else {
-            console.log("VIDEO IS NULL");
         }
 
     $.ajax({
@@ -158,13 +150,11 @@ function submitVideo(method, getVideoFunc) {
         timeout: 100000,
         success: function (response) {
             console.log("VIDEO SUCCESS: ", response);
-            console.log("SUCCESS fd contains:", fd);
             // TODO: check response with if/else, if respons is fail give error message
 
           //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("VIDEO ERROR: ", e);
-            console.log("ERROR fd contains:", fd);
         }, done: function (e) {
             console.log("DONE");
         }
@@ -175,29 +165,17 @@ function submitVideo(method, getVideoFunc) {
  * Collect data from database
  */
 function  getForm() {
-
-    console.log("start");
-    console.log("assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID);
-
-
-    $.ajax({
+ $.ajax({
         url: "assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID,
         timeout: 100000,
         success: function (response) {
-            console.log(response);
             document.getElementById('teachercomments').value = response["status"] == null ? "" : response["feedback"];
             document.getElementById('dropDownMenu').value = (gradeEqualsTo(response["grade"]["grade"])) ? "U" : response["grade"]["grade"];
-            console.log("response[studentPublishConsent] :"+response["studentPublishConsent"]);
-            console.log("1CheckIf:"+response["studentPublishConsent"] ? "false" : "true");
-            console.log("2CheckIf:"+response["studentPublishConsent"] ? "1" : "2");
-
             document.getElementById('PermissionFromStudent').disabled = response["studentPublishConsent"] ? false : true;
             document.getElementById('PermissionFromStudent').checked = response["publishStudentSubmission"] ? true : false;
 
         }, error: function (e) {
-            console.log("FAIL HUE");
             console.log("ERROR: ", e);
-            console.log("ReqBody contains:", reqBody);
         }, done: function (e) {
             console.log("DONE");
         }

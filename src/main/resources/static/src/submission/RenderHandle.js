@@ -15,7 +15,6 @@ var video;
      */
 
     render: function () {
-        console.log(this.props.studentArray);
         var id_array = this.props.idArray;
         var student = this.props.studentArray;
         var path = "assignments/" + id_array[0].assignmentID + "/submissions/" + student[0].studentID + "/videos/";
