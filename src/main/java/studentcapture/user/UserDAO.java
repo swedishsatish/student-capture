@@ -46,9 +46,6 @@ public class UserDAO {
                                       user.getLastName(),user.getEmail(),
                                       user.getPswd(), user.isTeacher()};
 
-//        int[] types = new int[]{Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
-//                                      Types.VARCHAR,Types.VARCHAR};
-        //Execute
         try {
             jdbcTemplate.update(sql, args);
         } catch (DataIntegrityViolationException e) {
@@ -74,14 +71,11 @@ public class UserDAO {
         Object[] args;
         int[] types;
 
-        int GET_USER_BY_ID = 1;
-        int GET_USER_BY_USERNAME = 0;
-
         if(flag == GET_USER_BY_USERNAME) {
             args = new Object[]{value};
             types = new int[]{Types.VARCHAR};
             sql = "SELECT  * FROM users WHERE username = ?";
-        } else if(flag == GET_USER_BY_ID) {
+        } else if(flag == GET_USER_BY_USERID) {
             args = new Object[]{Integer.parseInt(value)};
             types = new int[]{Types.INTEGER};
             sql = "SELECT  * FROM users WHERE userid = ?";

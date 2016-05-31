@@ -40,16 +40,22 @@
 * Container for feedback data
 */
 #feedBackContainer {
-    width: 50%;
+    width: 100%;
     margin-left: auto ;
     margin-right: auto ;
+}
+
+#videoHolder {
+
+    display:flex;
 }
 /*
 * Container for textfield, grade and passedstatus------------------------------------------------------
 */
 #submissioncontainer{
     display: flex;
-    width: auto;
+    margin: 0 auto;
+    width: 33%;
 }
 /*
 *Textarea style
@@ -99,6 +105,8 @@
 */
 #buttonContainer {
     display:flex;
+    margin: 0 auto;
+    width: 33%;
 }
 /*
 *Button styles------------------------------------------------------------------------------------------
@@ -158,12 +166,17 @@ button{
  */
 
 #popUpDiv {
-    position:relative;
+    position:fixed;
     background-size: 100%;
     background-color: #2D728F;
-    width:30%;
-    height: 40%;
-    top: 50%;
+    width:15%;
+    top: 33%;
+    left: 301px;
+    margin: 0 auto;
+    right: 0px;
+    min-width: 300px;
+
+
     /*set to a negative number 1/2 of your height*/
     /*The popup is by default centered for coursecontent, but it looks better if its centered for the whole screen
     margin left 35% centers it to the whole screen. */
@@ -219,7 +232,18 @@ button{
 }
 
 #teacherRecord {
-    margin-left: 26%;
+
+    width: 80%
+
+}
+
+#studentVideo {
+    width: 80%
+}
+
+#teacherRecordFeedback {
+
+    width: 80%;
 }
 #teststudentvideo{
     margin-left: 26%;
@@ -227,7 +251,9 @@ button{
 #teacherRecorder > #preview
 {
     position: relative;
+    margin-bottom: 10%;
     top: 0px;
+    margin-top: 0%;
 }
 
 #tmpDiv {
