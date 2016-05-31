@@ -19,6 +19,8 @@ var StudentList = React.createClass({
         var table11_Props = {
             filters_row_index: 1,
             col_0: "none",
+            col_3: "none",
+            input_watermark: 'Search...',
             remember_grid_values: true
         };
         setFilterGrid("students-table", table11_Props);
