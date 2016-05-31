@@ -37,6 +37,14 @@ var NewAssignment = React.createClass({
                 minDate: 0
             });
 
+        if (tinymce.get('description') != null) {
+            var description = tinymce.get('description').getContent();
+        }
+
+        if (tinymce.get('recap') != null) {
+            var recap = tinymce.get('recap').getContent();
+        }
+
         tinymce.remove();
         tinymce.init({
             selector: 'textarea.inputField',
@@ -60,6 +68,14 @@ var NewAssignment = React.createClass({
                 '//www.tinymce.com/css/codepen.min.css'
             ]
         });
+
+        if (description != null) {
+            tinymce.get('description').setContent(description);
+        }
+
+        if (recap != null) {
+            tinymce.get('recap').setContent(recap);
+        }
 
         if (this.props.edit) {
             this.getAssignmentData();
@@ -175,17 +191,17 @@ var NewAssignment = React.createClass({
                     <div id="dates">
                         <div className="DTContainer">
                             <p className="DTText">start:</p>
-                            <input id="startDate" type="button" value="yyyy-mm-dd 00:00"/>
+                            <input className="datePicker" id="startDate" type="button" value="yyyy-mm-dd 00:00"/>
                         </div>
 
                         <div className="DTContainer">
                             <p className="DTText">submit by:</p>
-                            <input id="endDate" type="button" value="yyyy-mm-dd 00:00"/>
+                            <input className="datePicker" id="endDate" type="button" value="yyyy-mm-dd 00:00"/>
                         </div>
 
                         <div className="DTContainer" id="rightDTContainer">
                             <p className="DTText">publish by:</p>
-                            <input id="publish" type="button" value="yyyy-mm-dd 00:00"/>
+                            <input className="datePicker" id="publish" type="button" value="yyyy-mm-dd 00:00"/>
                         </div>
                     </div>
 

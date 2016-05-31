@@ -94,7 +94,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
 
     @Test
     public void shouldCreateAssignmentWithoutPublishdate() throws Exception {
-        am.getAssignmentIntervall().setPublishedDate(null);
+        am.getAssignmentIntervall().setPublishedDate("yyyy-mm-dd 00:00");
 
         int assignmentID = assignmentDAO.createAssignment(am);
         am.setAssignmentID(assignmentID);
@@ -112,7 +112,7 @@ public class AssignmentDAOTest extends StudentCaptureApplicationTests {
     public void shouldNotGetCorrectAssignment() throws Exception {
         int assID = assignmentDAO.createAssignment(am);
 
-        am.setTitle("");
+        am.setTitle("Other title");
 
         assertNotEquals(am, assignmentDAO.getAssignmentModel(assID));
     }

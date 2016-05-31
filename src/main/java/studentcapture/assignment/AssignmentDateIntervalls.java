@@ -24,10 +24,14 @@ public class AssignmentDateIntervalls {
         publishedDateIsSet = false;
     }
 
-    public void setStartDate(String startDate) throws DateTimeParseException, IllegalArgumentException {
-        startDateIsSet = true;
-        this.startDate = LocalDateTime.parse(startDate, FORMATTER);
-        validate();
+    public void setStartDate(String startDate) throws IllegalArgumentException {
+        try {
+            startDateIsSet = true;
+            this.startDate = LocalDateTime.parse(startDate, FORMATTER);
+            validate();
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("You must set a start date");
+        }
     }
     
     public void setStartDateHard(String startDate) throws DateTimeParseException, IllegalArgumentException {
@@ -40,10 +44,14 @@ public class AssignmentDateIntervalls {
         return FORMATTER.format(startDate);
     }
 
-    public void setEndDate(String endDate) throws DateTimeParseException, IllegalArgumentException {
-        endDateIsSet = true;
-        this.endDate = LocalDateTime.parse(endDate, FORMATTER);
-        validate();
+    public void setEndDate(String endDate) throws IllegalArgumentException {
+        try {
+            endDateIsSet = true;
+            this.endDate = LocalDateTime.parse(endDate, FORMATTER);
+            validate();
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("You must set a end date");
+        }
     }
 
     public void setEndDateHard(String endDate) throws DateTimeParseException, IllegalArgumentException {
@@ -57,7 +65,7 @@ public class AssignmentDateIntervalls {
     }
 
     public void setPublishedDate(String publishedDate) throws DateTimeParseException, IllegalArgumentException {
-        if (publishedDate != null) {
+        if (!publishedDate.equals("yyyy-mm-dd 00:00")) {
             publishedDateIsSet = true;
             this.publishedDate = LocalDateTime.parse(publishedDate, FORMATTER);
             validate();
