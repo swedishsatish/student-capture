@@ -20,7 +20,7 @@ var StudentList = React.createClass({
             filters_row_index: 1,
             col_0: "none",
             col_3: "none",
-            input_watermark: 'Search...',
+            input_watermark: [null,'Filter by name','Filter by date yyyy-m-d',null],
             remember_grid_values: true
         };
         setFilterGrid("students-table", table11_Props);
