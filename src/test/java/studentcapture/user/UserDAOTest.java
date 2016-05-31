@@ -68,13 +68,6 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-//        String sql1 = "DELETE FROM Users;";
-//        //Reset serialize userid
-//        String sql2 = "ALTER TABLE users ALTER COLUMN userid RESTART WITH 1";
-//        jdbcMock.update(sql1);
-//        jdbcMock.update(sql2);
-
     }
 
     @Test

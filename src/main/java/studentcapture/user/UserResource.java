@@ -23,8 +23,9 @@ public class UserResource {
     @Autowired
     private UserDAO userDAO;
 
-    //@Autowired
-    private SettingsDAO settingsDAO = new SettingsDAO();
+
+    @Autowired
+    private SettingsDAO settingsDAO;
 
     /**
      * Get user object containing all related information of a user,
@@ -61,12 +62,12 @@ public class UserResource {
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity addUser(
-            @RequestParam(value="firstname", required = true)           String firstName,
-            @RequestParam(value="lastname", required = true)            String lastName,
-            @RequestParam(value="email", required = true)               String email,
-            @RequestParam(value="username", required = true)            String username,
-            @RequestParam(value="password", required = true)            String password) throws URISyntaxException {
+    public ResponseEntity<?> addUser(
+            @RequestParam(value="firstname")           String firstName,
+            @RequestParam(value="lastname")            String lastName,
+            @RequestParam(value="email")               String email,
+            @RequestParam(value="username")            String username,
+            @RequestParam(value="password")            String password) throws URISyntaxException {
        
         User user = new User(username, firstName, lastName, email, encryptPassword(password), false);
         
@@ -76,18 +77,17 @@ public class UserResource {
         //Redirect to /login after the registration process is complete
         URI uri;
         HttpHeaders httpHeaders = new HttpHeaders();
-        System.out.println("\nasdadadadad!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 
         //Get the correct status message
         if(status == ErrorFlags.NOERROR){
             uri = new URI("/login?" + status.toString());
-            boolean val = settingsDAO.setDefaultConfig(Integer.parseInt(user.getUserID()));
+            settingsDAO.setDefaultConfig(Integer.parseInt(user.getUserID()));
 
         }else{
             uri = new URI("/login?error=" + status.toString());
         }
         httpHeaders.setLocation(uri);
-        
+
         return new ResponseEntity(httpHeaders, HttpStatus.FOUND);
     }
 
@@ -102,7 +102,7 @@ public class UserResource {
         boolean success = userDAO.updateUser(user);
 
         if(!success) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(HttpStatus.FOUND);
         }
 
         return new ResponseEntity(HttpStatus.OK);
