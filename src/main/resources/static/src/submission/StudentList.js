@@ -46,8 +46,10 @@ var StudentList = React.createClass({
         var tmp = this;
         var userList = this.submissions.map(function (user) {
             console.log(user);
+            var studentSubmission=null;
             var path = "assignments/" + user.assignmentID + "/submissions/" + user.studentID + "/videos/";
-            var studentSubmission = path + 'submission.webm';
+            studentSubmission = path + 'submission.webm';
+            console.log(studentSubmission);
             var date = new Date(user.submissionDate);
             var sourceVid = studentSubmission==null ? "images/placeholder.webm" : studentSubmission;
             return (
