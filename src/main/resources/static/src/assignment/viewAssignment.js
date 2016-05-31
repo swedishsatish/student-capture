@@ -97,7 +97,7 @@ var AssignmentStart = React.createClass({
                                ? <CountDown record={this.record} />
                                : <div />;
         var recordContent = this.state.startRecording
-                            ? <div>
+                            ?
                                   <StudentRecordVideo autoRecord="true"
                                   courseID={assignmentData.courseID}
                                   assignmentID={assignmentData.assignmentID}
@@ -106,12 +106,14 @@ var AssignmentStart = React.createClass({
                                   maxRecordTime={assignmentData.maxTime}
                                   endFunc={this.endAssignment}
                                   />
-                              </div>
+
                             : <StudentRecordVideo autoRecord="false"
-                                courseID={assignmentData.courseID}
-                                assignmentID={assignmentData.assignmentID}
-                                studentID={assignmentData.studentID}
-                                endFunc={this.endAssignment} />;
+                                    courseID={assignmentData.courseID}
+                                    assignmentID={assignmentData.assignmentID}
+                                    studentID={assignmentData.studentID}
+                                    minRecordTime={assignmentData.minTime}
+                                    maxRecordTime={assignmentData.maxTime}
+                                    endFunc={this.endAssignment} />;
         var content = this.state.disabled
             ? <div></div>
             : <div id="assignment-modal">
