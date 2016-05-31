@@ -1,11 +1,16 @@
 /* by Filip Golles & Simon Lundmark 2016-05-04 */
 
+
+/*CSS file for the login page*/
+
+/*Make html and body as big as possible*/
 html, body {
 	margin:0;
 	width:100%;
 	max-height:100vh;
 }
 
+/*The background for all browsers*/
 body {
 	background: rgb(79, 159, 174);
 	background: -moz-linear-gradient(81deg, rgb(79, 159, 174) 49.9%, rgb(7, 97, 114) 50%);
@@ -16,26 +21,31 @@ body {
 	background-repeat: no-repeat;
 }
 
+/*Margin and width of the Student Capture logo*/
 .loginLogo {
 	margin-left:3%;
 	margin-right:3%;
 	width:94%;
 }
 
+/*Make the div as big as it needs to be*/
 #loginDiv {
 	height:100%;
 }
 
+/*Center all the text in the div*/
 #loginPage {
 	text-align: center;
 }
 
+/*Make the register button stay on a fixed position*/
 #registerButton {
 	position:fixed;
 	top:60px;
 	right:10px;
 }
 
+/*code to the next comment is self describable*/
 #loginButton {
 	margin-left:4%;
 	margin-right:4%;
@@ -72,6 +82,7 @@ body {
 	margin-left:1%;
 }
 
+/*Center the div*/
 .forms {
 	border-radius: 20px;
 	position:absolute;
@@ -87,13 +98,14 @@ body {
 #teacherText {
     color:white;
     display:inline;
-
 }
 
+/*center div*/
 #registerPage {
 	top: calc(50% - 218px)
 }
 
+/*center div*/
 #lostPasswordPage {
 	top: calc(50% - 135px)
 }
@@ -113,6 +125,7 @@ body {
 	text-align: center;
 }
 
+/*adjustments and style for tooltip*/
 .tooltip{
 	width:300px;
 	display: none;
@@ -124,10 +137,12 @@ body {
    	border-radius: 6px;
 }
 
+/*position of tooltip*/
 #uNameTip {
 	bottom:100px;
 }
 
+/*position of tooltip*/
 #firstPassTip {
 	bottom:74px;
 }
