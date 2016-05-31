@@ -13,6 +13,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 import org.thymeleaf.util.DateUtils;
 import studentcapture.assignment.GradeScale;
+import studentcapture.config.H2DB;
 import studentcapture.config.StudentCaptureApplicationTests;
 import studentcapture.course.CourseDAO;
 import studentcapture.course.CourseDAOTest;
@@ -27,6 +28,7 @@ import studentcapture.user.User;
 import studentcapture.user.UserDAO;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -194,25 +196,30 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
 
     @After
     public void tearDown() {
-        String sql1 = "DELETE FROM Users;";
-        String sql2 = "DELETE FROM Course;";
-        String sql3 = "DELETE FROM Assignment;";
-        String sql4 = "DELETE FROM Submission;";
-        String sql5 = "DELETE FROM Participant;";
+//        String sql1 = "DELETE FROM Users;";
+//        String sql2 = "DELETE FROM Course;";
+//        String sql3 = "DELETE FROM Assignment;";
+//        String sql4 = "DELETE FROM Submission;";
+//        String sql5 = "DELETE FROM Participant;";
+//
+//        String sql6 = "ALTER TABLE Course ALTER COLUMN courseid RESTART WITH 1;";
+//        String sql7 = "ALTER TABLE Assignment ALTER COLUMN assignmentid RESTART WITH 1;";
+//        String sql8 = "ALTER TABLE Users ALTER COLUMN userid RESTART WITH 1;";
+//
+//        jdbcMock.update(sql5);
+//        jdbcMock.update(sql4);
+//        jdbcMock.update(sql3);
+//        jdbcMock.update(sql2);
+//        jdbcMock.update(sql1);
+//        jdbcMock.update(sql6);
+//        jdbcMock.update(sql7);
+//        jdbcMock.update(sql8);
 
-        String sql6 = "ALTER TABLE Course ALTER COLUMN courseid RESTART WITH 1;";
-        String sql7 = "ALTER TABLE Assignment ALTER COLUMN assignmentid RESTART WITH 1;";
-        String sql8 = "ALTER TABLE Users ALTER COLUMN userid RESTART WITH 1;";
-
-        jdbcMock.update(sql5);
-        jdbcMock.update(sql4);
-        jdbcMock.update(sql3);
-        jdbcMock.update(sql2);
-        jdbcMock.update(sql1);
-        jdbcMock.update(sql6);
-        jdbcMock.update(sql7);
-        jdbcMock.update(sql8);
-
+        try {
+            H2DB.TearDownDB(jdbcMock);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
