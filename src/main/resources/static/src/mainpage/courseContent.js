@@ -1,4 +1,6 @@
-
+/**
+ * start page content
+ */
 var StartPage = React.createClass({
     render: function () {
         return <div>
@@ -9,36 +11,11 @@ var StartPage = React.createClass({
 
 });
 
-
-/*
-function submitAssignment() {
-    var reqBody = {}
-    reqBody["title"] = $("#title").val();
-    reqBody["info"] = $("#info").val();
-    reqBody["minTimeSeconds"] = $("#minTimeSeconds").val();
-    reqBody["maxTimeSeconds"] = $("#maxTimeSeconds").val();
-    reqBody["startDate"] = $("#startDate").val();
-    reqBody["endDate"] = $("#endDate").val();
-    reqBody["isPublished"] = $("#isPublished").is(':checked');
-    $.ajax({
-        type : "POST",
-        contentType : "application/json",
-        url : "assignment",
-        data : JSON.stringify(reqBody),
-        timeout : 100000,
-        success : function(response) {
-            console.log("SUCCESS: ", response);
-            ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
-        }, error : function(e) {
-            console.log("ERROR: ", e);
-        }, done : function(e) {
-            console.log("DONE");
-        }
-    });    
-}
-
-*/
-
+/**
+ * get variables from url
+ * @param variable
+ * @returns {*}
+ */
 window.getQueryVariable = function (variable)
 {
     var query = window.location.search.substring(1);
@@ -50,6 +27,11 @@ window.getQueryVariable = function (variable)
     return(false);
 }
 
+/**
+ * if queryvariable param dont exist, render start page.
+ * otherwise go to specific course.
+ *
+ */
 var qv = getQueryVariable("param")
 if(qv == false){
     ReactDOM.render(<StartPage />, document.getElementById('courseContent'));

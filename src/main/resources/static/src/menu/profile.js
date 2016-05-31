@@ -1,4 +1,6 @@
-
+/**
+ * generate modal scripts
+ */
 function genScripts(){
 	var script1 = document.createElement("script");
 	script1.setAttribute("src","src/modals/classie.js");
@@ -13,6 +15,9 @@ function genScripts(){
 	
 }
 
+/**
+ * remove and regenerate modal scripts.
+ */
 window.reloadScripts = function() {
 	var script1 = document.getElementById("script1");
 	var script2 = document.getElementById("script2");
