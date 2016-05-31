@@ -58,8 +58,6 @@ var TeacherViewSubmission = React.createClass({
         this.nDone = 0;
         this.nParticipants = 0;
         this.nParticipants = this.submissionsArray.length;
-        console.log(this.submissionsArray);
-        console.log(this.participantsArray);
         for (var i=0;i<this.submissionsArray.length;i++) {
             if(this.submissionsArray[i].status) {
                 if (this.submissionsArray[i].status.toLowerCase() == "answer") {
@@ -75,7 +73,6 @@ var TeacherViewSubmission = React.createClass({
 
 
     render: function () {
-        console.log(this.participantsArray.length);
         var idArray=[{courseID:this.props.courseId,
                      assignmentID:this.props.assignmentId}];
         this.calculateSubmissions();
