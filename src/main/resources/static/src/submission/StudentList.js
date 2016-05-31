@@ -51,7 +51,6 @@ var StudentList = React.createClass({
             var date = new Date(user.submissionDate);
             return (
                 <tr onClick={tmp.clickhandle.bind(tmp,user)}>
-                    <td>Thumbnail></td>
                     <video width="96" height="54" class="clip-thumbnail">
                         <source src={studentSubmission} type="video/webm"/>
                         <source src="images/placeholder.webm" type="video/webm"/>
@@ -69,7 +68,7 @@ var StudentList = React.createClass({
                     <table className="u-full-width sortable" id="students-table">
                         <thead>
                         <tr >
-
+                            <th></th>
                             <th>Student</th>
                             <th>Date</th>
                             <th>Grade</th>
