@@ -247,6 +247,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
     public void shouldReturnOk() throws  Exception {
         Map<String, Object> sessionAttrs = new HashMap<>();
         sessionAttrs.put("userid", "1");
+
         mvc.perform(get("/assignments/" + this.assignment1).sessionAttrs(sessionAttrs)).andExpect(status().isOk());
     }
 

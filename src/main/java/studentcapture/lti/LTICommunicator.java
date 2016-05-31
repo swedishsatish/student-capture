@@ -21,7 +21,7 @@ public class LTICommunicator {
     public static void setGrade(Submission submission)
                 throws LTINullPointerException, LTIInvalidGradeException,
                        LTISignatureException {
-
+        throw new LTINullPointerException("LTI not Implemented");
         //TODO: Find the LMS of the feedback.
         //TODO: Find the Student LMS token.
         //TODO: Set grade in LMS with LTI.

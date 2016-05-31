@@ -21,16 +21,10 @@ var PassCheckBox = React.createClass({
     render: function() {
         return (
 
-            <div id="passchecklabel">
-                <label for="passchecklabel">
-                    <input id="ifStudentPass" type="checkbox"
+                    <input id="ifStudentPass" type="hidden"
+                           value="1"
                            checkBox={this.state.checkBox}
                            onClick={this.handleClick}/>
-
-                    Passed!
-                </label>
-
-            </div>
         );
     },
     //Changes from checked to unchecked and vice-versa.
