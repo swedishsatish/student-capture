@@ -84,7 +84,6 @@ public class AssignmentResource {
         try {
             if (assignmentDAO.hasAccess(assignment.get()) && assignmentDAO.canDoAssignment(assignment.get())) {
                 return new ResponseEntity<>(assignmentDAO.getAssignmentVideo(assignmentID).getBody(), HttpStatus.OK);
-
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -97,6 +96,9 @@ public class AssignmentResource {
     /**
      * Gets the assignment model corresponding to the specified assignment.
      *
+     * IF the time is outside the interval where you can do the assignment
+     * the recap will not be sent. This is a fast "fix" for a bigger problem.
+     *
      * @param assignmentID Unique assignment identifier.
      * @return The assignment and Http status OK
      * or Http status NOT_FOUND.
@@ -108,9 +110,17 @@ public class AssignmentResource {
 
         if (assignment.isPresent()) {
             try {
-                if (assignmentDAO.hasAccess(assignment.get())) {
-                    return new ResponseEntity<>(assignment.get(), HttpStatus.OK);
-
+                AssignmentModel assignmentModel = assignment.get();
+                if (assignmentDAO.hasAccess(assignmentModel)) {
+                    if(assignmentDAO.canDoAssignment(assignmentModel)) {
+                        return new ResponseEntity<>(assignmentModel, HttpStatus.OK);
+                    } else {
+                        // "remove" the recap
+                        assignmentModel.setRecap("");
+                        return new ResponseEntity<>(assignmentModel, HttpStatus.OK);
+                    }
+                } else {
+                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
