@@ -249,7 +249,7 @@ public class AssignmentResourceTest extends StudentCaptureApplicationTests {
         Map<String, Object> sessionAttrs = new HashMap<>();
         sessionAttrs.put("userid", "2");
 
-        mvc.perform(get("/assignments/" + this.assignment1).sessionAttrs(sessionAttrs)).andExpect(status().isNotFound());
+        mvc.perform(get("/assignments/" + this.assignment1).sessionAttrs(sessionAttrs)).andExpect(status().isForbidden());
     }
 
     @Test
