@@ -39,13 +39,13 @@ var StudentList = React.createClass({
     componentWillMount: function () {
         this.submissions = this.props.submissions;
         this.participants = this.props.participants;
+        console.log(this.participants);
     },
 
     render: function () {
 
         var tmp = this;
         var userList = this.submissions.map(function (user) {
-            console.log(user);
             var path = "assignments/" + user.assignmentID + "/submissions/" + user.studentID + "/videos/";
             var studentSubmission = path + 'submission.webm';
             var date = new Date(user.submissionDate);
