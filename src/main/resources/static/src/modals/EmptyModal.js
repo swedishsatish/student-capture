@@ -1,5 +1,9 @@
 /**
- * Created by Ludvig on 2016-05-25.
+ * @author Ludvig Boström, c13lbm
+ */
+
+/**
+ * empty modal used to clear modals on close.
  */
 var EmptyModal = React.createClass({
     render: function () {

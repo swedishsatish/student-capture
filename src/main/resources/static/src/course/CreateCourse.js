@@ -1,5 +1,6 @@
 /**
- * Created by Ludvig on 2016-05-12.
+ * @author Ludvig Boström, c13lbm
+ *         Mattias Jonsson, c13mjn
  */
 
 

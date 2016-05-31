@@ -1,5 +1,5 @@
 /**
- * Created by c13lbm on 4/27/16.
+ * @author Ludvig Boström, c13lbm
  */
 
 

@@ -111,10 +111,11 @@ public class UserSettingsResource {
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
-        // TODO: Set default settings.
+        // no front-end functionality
+        // here: Set default settings.
 
         return new ResponseEntity<>(
-                "User settings set.",
+                "Not yet implemented.",
                 HttpStatus.OK);
     }
 

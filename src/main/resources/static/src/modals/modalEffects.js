@@ -1,6 +1,6 @@
 /**
  * modalEffects.js v1.0.0
- * http://www.codrops.com
+ * http://tympanus.net/codrops/2013/06/25/nifty-modal-window-effects/
  *
  * Licensed under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
@@ -15,9 +15,7 @@ var ModalEffects = (function() {
 		var overlay = document.querySelector( '.md-overlay' );
 
 		[].slice.call( document.querySelectorAll( '.md-trigger' ) ).forEach( function( el, i ) {
-
-			//var modal = document.querySelector( '#' + el.getAttribute( 'data-modal' ) ),
-			//	close = modal.querySelector( '.md-close' );
+			
 			var modal = document.getElementsByClassName("md-modal")[0];
 			var close = document.getElementsByClassName("md-close")[0];
 			function removeModal( hasPerspective ) {
