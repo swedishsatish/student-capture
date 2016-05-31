@@ -1,4 +1,9 @@
 /**
+ *@author Ludvig Boström <c13lbm>
+ *@revision: Fredrik Mörtberg <c13fmg>
+ */
+
+/**
  * Props params:
  *
  * playCallback:    Function to be called with response from server. should take one parameter.

@@ -17,10 +17,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * TODO: Refactor UserDAO spy.
- *
- * Created by andreassavva on 2016-05-12.
- * @Author tfy12ajn
+ * fix: Refactor UserDAO spy.
+ * Created by group 8 on 2016-05-12.
  */
 public class UserSettingsResourceTest extends StudentCaptureApplicationTests {
 
@@ -133,34 +131,12 @@ public class UserSettingsResourceTest extends StudentCaptureApplicationTests {
     }
 
 
-    /** TODO: Result (return) tests. */
+    /** fix: Result (return) tests. */
 
     /*
     @Test
     public void shouldRespondCorrectly_GET() throws Exception {
-        // use get and compare result with expected
-        User user = new User();
-        user.setEmail("test@email.test");
-
-        UserDAO ud = new UserDAO();
-        UserDAO aSpy = Mockito.spy(ud);
-        doReturn(user).when(aSpy).getUser(any(String.class), any(Integer.class));
-
-        SettingsDAO sd = new SettingsDAO();
-        SettingsDAO anotherSpy = Mockito.spy(sd);
-        doReturn(settings).when(anotherSpy).getUserConfig(any(Integer.class));
-
-
-        mockMvc.perform(get(requestMapping)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(json_test_string))
-                .andExpect(status().isOk());
-
-
-        //java.lang.AssertionError: Response content
-        //Expected :{"language":"english","email":"test@email.test","mailUpdate":true,"textSize":12}
-        //Actual   :Could not get user from DAO.
-
     }
     */
+
 }
