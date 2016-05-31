@@ -203,6 +203,7 @@ var NewAssignment = React.createClass({
                         <div className="DTContainer" id="grading">
                             <p className="DTText">grading:</p>
                             <select id="scale">
+                                <option value="INADEQUATE_ADEQUATE">Adequate, Inadequate</option>
                                 <option value="_1_2_3_4_5">1,2,3,4,5</option>
                                 <option value="IG_G_VG_MVG">IG,G,VG,MVG</option>
                                 <option value="U_O_K_G">U,O,K,G</option>
