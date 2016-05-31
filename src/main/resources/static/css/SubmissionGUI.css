@@ -158,12 +158,14 @@ button{
  */
 
 #popUpDiv {
-    position:relative;
+    position:fixed;
     background-size: 100%;
     background-color: #2D728F;
     width:30%;
-    height: 40%;
+    height: 50%;
     top: 50%;
+
+
     /*set to a negative number 1/2 of your height*/
     /*The popup is by default centered for coursecontent, but it looks better if its centered for the whole screen
     margin left 35% centers it to the whole screen. */
