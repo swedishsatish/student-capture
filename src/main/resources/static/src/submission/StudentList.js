@@ -49,10 +49,10 @@ var StudentList = React.createClass({
             var path = "assignments/" + user.assignmentID + "/submissions/" + user.studentID + "/videos/";
             var studentSubmission = path + 'submission.webm';
             var date = new Date(user.submissionDate);
-            var sourceVid = studentSubmission==null ? "http://techslides.com/demos/sample-videos/small.mp4" : studentSubmission;
+            var sourceVid = studentSubmission==null ? "images/placeholder.mp4" : studentSubmission;
             return (
                 <tr onClick={tmp.clickhandle.bind(tmp,user)}>
-                    <video id="thumbNail" width="54px" src={sourceVid} preload="auto"/>
+                    <video id="thumbNail" height="54px" width="54px" src={sourceVid} preload="auto"/>
                     <td>{user.firstName + " " + user.lastName}</td>
                     <td>{date.getFullYear() + "-" + (date.getMonth()+1/*Months start from 0)*/ + "-" + date.getDate())}</td>
                     <td>{user.grade.grade}</td>
