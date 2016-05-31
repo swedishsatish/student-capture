@@ -96,7 +96,7 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
 						fw = new FileWriter("stresstest.txt", true);
 						BufferedWriter bw = new BufferedWriter(fw);
 				    	PrintWriter out = new PrintWriter(bw);
-				    	out.append("LOGOUT EVENT:::" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME) + "  Username " + arg0.getSession().getAttribute("username") + "\n");
+				    	out.append("LOGOUT EVENT:::" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME) + " | Username " + arg0.getSession().getAttribute("username") + "\n");
 				    	out.close();
 					} catch (IOException e) {
 						System.out.println("ERROR WHEN WRITING TO FILE");

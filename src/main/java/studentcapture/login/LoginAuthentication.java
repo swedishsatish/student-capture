@@ -72,11 +72,11 @@ class LoginAuthentication implements AuthenticationProvider {
 		    Authentication a = new UsernamePasswordAuthenticationToken(username, password, authorities);
 		    updateSession(username);	   
 		    redirection();
-		    		    log("USER: " + username + 
-		    			" SESSION ID: " + attr.getSessionId() + "\n");
+		    		    log("|USER: " + username + 
+		    			"| SESSION ID: " + attr.getSessionId() + "\n");
 		    return a;
 		}
-		log("FAILED TO LOGIN! Username: " + username + "Password: " + password + " SESSION: " + attr.getSessionId());
+		log("FAILED TO LOGIN! | Username: " + username + "| Password: " + password + "| SESSION: " + attr.getSessionId());
 		return null;
 	}
 
