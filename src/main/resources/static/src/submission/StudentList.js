@@ -32,7 +32,7 @@ var StudentList = React.createClass({
             "courseID":user.courseID,
             "assignmentID":user.assignmentID,
             "teacherName":user.teacherName}];
-        document.getElementById("courseContent").innerHTML = ""; //TODO: find better solution.
+        document.getElementById("courseContent").innerHTML = "";
         ReactDOM.render(<RenderHandle studentArray={student} idArray={this.props.idArray} scale={this.props.scale} />, document.getElementById("courseContent"));
     },
 
@@ -44,11 +44,13 @@ var StudentList = React.createClass({
     render: function () {
         var tmp = this;
         var userList = this.submissions.map(function (user) {
+            console.log(user);
             var date = new Date(user.submissionDate);
+            var sourceVid = user.studentVideo==null ? "http://techslides.com/demos/sample-videos/small.mp4" : user.studentVideo;
             return (
                 <tr onClick={tmp.clickhandle.bind(tmp,user)}>
                     <video width="96" height="54" class="clip-thumbnail">
-                        <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4"/> </video>
+                        <source src={sourceVid} type="video/mp4"/> </video>
                     <td>{user.firstName + " " + user.lastName}</td>
                     <td>{date.getFullYear() + "-" + (date.getMonth()+1/*Months start from 0)*/ + "-" + date.getDate())}</td>
                     <td>{user.grade.grade}</td>

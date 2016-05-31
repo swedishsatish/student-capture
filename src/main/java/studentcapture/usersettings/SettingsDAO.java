@@ -29,7 +29,7 @@ public class SettingsDAO {
         try {
             map = jdbcTemplate.queryForMap(query, userID);
         } catch(IncorrectResultSizeDataAccessException e) {
-            System.out.println("\nIncorrectStuff " + e);
+            System.out.println("\nIncorrectResultSizeDataAccess " + e);
         } catch(DataAccessException e) {
             System.out.println("\nDataAccess " + e);
         }

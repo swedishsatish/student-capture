@@ -1,10 +1,12 @@
 /**
- * Created by Ludvig on 2016-05-18.
+ * @author Ludvig Boström, c13lbm
+ *         Mattias Jonsson, c13mjn
  */
 
-
-
 window.EditCourse = React.createClass({
+    /**
+     * When rendered initiate tinymce.
+     */
     componentDidMount: function () {
 
         tinymce.init({ selector:'#course-description',
@@ -18,6 +20,10 @@ window.EditCourse = React.createClass({
 
         tinymce.get('course-description').setContent(this.props.course.courseDescription);
     },
+    /**
+     * when updating page info.
+     * @param nextProps new properties.
+     */
     componentWillReceiveProps: function (nextProps) {
        
         if(nextProps.course.active){
@@ -26,11 +32,19 @@ window.EditCourse = React.createClass({
 
         tinymce.get('course-description').setContent(nextProps.course.courseDescription);
     },
+    /**
+     * When content will unrender remove tinymce from textarea.
+     */
     componentWillUnmount: function () {
         console.log("leaving");
         tinymce.get('course-description').setContent('');
         tinymce.EditorManager.editors = [];
     },
+    /**
+     * send course to server.
+     * @param courseID
+     * @param event
+     */
     handleClick: function (courseID,event) {
 
         var course = {
@@ -65,6 +79,9 @@ window.EditCourse = React.createClass({
 
 
     },
+    /**
+     * error if this function is removed.
+     */
     changed: function () {
 
     },

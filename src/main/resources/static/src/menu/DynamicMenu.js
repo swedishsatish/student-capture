@@ -1,5 +1,5 @@
 /**
- * Created by Ludvig on 2016-05-10.
+ * @author Ludvig Boström, c13lbm
  */
 
 /**
@@ -273,8 +273,10 @@ var DynamicMenu = React.createClass({
     searchClick: function (userID,event) {
         ReactDOM.render(<SearchCourse/>,document.getElementById("courseContent"))
     },
+
+
     /**
-     * Makes separate lists for student/teacher courses.
+     * Makes separate lists for student/teacher courses. Only gives teachers the option to create course.
      * @returns {XML}
      */
     render: function () {
@@ -349,6 +351,9 @@ window.RenderMenu = function (preloaded) {
     });
 };
 
+/**
+ * If menu will have a specific course preselected.
+ */
 var preload;
 if(window.getQueryVariable("param") == false){
     RenderMenu();
