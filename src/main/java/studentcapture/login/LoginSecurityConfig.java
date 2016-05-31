@@ -1,11 +1,15 @@
 package studentcapture.login;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.header.writers.frameoptions.AllowFromStrategy;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
  
 /**
  * Spring Security Login configuration.
@@ -43,9 +47,25 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //Global access required for fonts/images/style and login services.
+        
+    	http.headers().frameOptions().disable();
+    	
+    	http.headers().addHeaderWriter(new XFrameOptionsHeaderWriter(new AllowFromStrategy() {
+			
+			@Override
+			public String getAllowFromValue(HttpServletRequest arg0) {
+				//return "http://int-nat.cs.umu.se:20003";
+				return "https://grytvante:8443";
+			}
+		}));
+    	    	
+    	//Global access required for fonts/images/style and login services.
     	http
     	    .authorizeRequests()
+    	    	//register page for lti 2
+    	     	.antMatchers("/lti/register/**").permitAll()
+    	     	//console for h2 database settings
+    	     	.antMatchers("/console/**").permitAll()
         	    .antMatchers("/css/**", "/src/**", "/images/**").permitAll()
         	    .antMatchers("/login**").permitAll()
         	    .antMatchers("/register").permitAll()
