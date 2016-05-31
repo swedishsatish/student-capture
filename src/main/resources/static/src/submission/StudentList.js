@@ -39,7 +39,6 @@ var StudentList = React.createClass({
     componentWillMount: function () {
         this.submissions = this.props.submissions;
         this.participants = this.props.participants;
-        console.log(this.participants);
     },
 
     render: function () {
