@@ -51,7 +51,6 @@ var StudentList = React.createClass({
             var date = new Date(user.submissionDate);
             return (
                 <tr onClick={tmp.clickhandle.bind(tmp,user)}>
-                    <video id="thumbNail" height="54" width="96" src={sourceVid} preload="auto"/>
                     <video width="96" height="54" class="clip-thumbnail">
                         <source src={studentSubmission} type="video/webm"/>
                         <source src="images/placeholder.webm" type="video/webm"/>
