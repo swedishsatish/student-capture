@@ -185,9 +185,9 @@ function stopRecording() {
 
         if(postbutton == null) {
             if(props.siteView !== null) {
-                PostVideoBlob(recordVideo.getBlob(), props.siteView);
+                BuildRequestAndPost(recordVideo.getBlob(), props.siteView);
             } else {
-                PostVideoBlob(recordVideo.getBlob());
+                BuildRequestAndPost(recordVideo.getBlob());
             }
         }
         else {
@@ -197,9 +197,9 @@ function stopRecording() {
             postbutton.disabled = false;
             postbutton.onclick = function () {
                 if(props.siteView !== null) {
-                    PostVideoBlob(recordVideo.getBlob(), props.siteView);
+                    BuildRequestAndPost(recordVideo.getBlob(), props.siteView);
                 } else {
-                    PostVideoBlob(recordVideo.getBlob());
+                    BuildRequestAndPost(recordVideo.getBlob());
                 }
             }
         }
@@ -228,7 +228,7 @@ function stopRecording() {
 
 
 /* Post to the server */
-function PostVideoBlob(videoBlob, siteView) {
+function BuildRequestAndPost(videoBlob, siteView) {
     // FormData - data to be sent to the server
     var formData = props.formDataBuilder(videoBlob,props.fileName);
 
