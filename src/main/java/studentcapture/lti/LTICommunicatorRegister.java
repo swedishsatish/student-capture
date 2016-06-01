@@ -29,11 +29,12 @@ import java.util.Map;
  * @version 0.1, 04/29/16
  */
 @RestController
-@RequestMapping(value = "lti")
+@RequestMapping(value = "lti1")
 public class LTICommunicatorRegister {
 
 
-    @Autowired
+    //Out commented during development
+	//@Autowired
     private RestTemplate requestSender;
 
 
