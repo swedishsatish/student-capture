@@ -10,7 +10,7 @@ import java.util.*;
 
 /**
  * Configurates the  h2 database. And manage it.
- *
+ * @author c12ton
  */
 @Configuration
 public class H2DB {
@@ -70,14 +70,15 @@ public class H2DB {
         return tables;
     }
 
-    //NEEDS TO BE TESTED MORE! MIGHT BREAK DEPENDENCIES...
     /**
      *  Used to clear everything in all tables, including serialize.
+     *  Refrence: http://stackoverflow.com/questions/8523423/
+     *            reset-embedded-h2-database-periodically
      * @param jdbcMock
+     *
      */
     public static void TearDownDB(JdbcTemplate jdbcMock) throws SQLException {
 
-        //Creadit:http://stackoverflow.com/questions/8523423/reset-embedded-h2-database-periodically
         Connection c = jdbcMock.getDataSource().getConnection();
         Statement s = c.createStatement();
 

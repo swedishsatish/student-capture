@@ -12,9 +12,11 @@ import studentcapture.config.StudentCaptureApplicationTests;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-// TODO Inte säker på hur bättre tester ska göras / hur de fungerar mot databasen. (ska kolla upp det)
+/*
+  do this? - Autowire a bean in StudentCaptureApplicationTests, otherwise tests run against actual db
+*/
 public class ParticipantResourceTest extends StudentCaptureApplicationTests {
+    /*
     private String courseID;
     private String getPath(String courseID){
         return "/courses/"+courseID+"/participants";
@@ -39,9 +41,9 @@ public class ParticipantResourceTest extends StudentCaptureApplicationTests {
                 .andExpect(status().isOk());
     }
 
-    /*
-      internalServerError since not working against actual db??
-     */
+
+     // internalServerError since not working against actual db??
+
     @Test
     public void GETshouldRespondOkWhenUserIDPathIsSet() throws Exception {
         String userID = "/100";
@@ -106,29 +108,6 @@ public class ParticipantResourceTest extends StudentCaptureApplicationTests {
                 .param("userRole","ScaryDog")
                 .param("userID","100"))
                 .andExpect(status().isBadRequest());
-    }
-
-
-
-
-    /*
-    @Test
-    public void shouldRespondWithListParticipant() throws Exception {
-        URI targetUrl = getUri(courseID);
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("UserId",100);
-        map.put("CourseId",courseID);
-        map.put("Function","teacher");
-        Participant participant = new Participant(map);
-        List<Participant> list = new ArrayList<>();
-        list.add(participant);
-        when(templateMock.getForObject(targetUrl, List.class)).thenReturn(list);
-        mockMvc.perform(get(getPath(courseID))
-                .param("courseID",courseID)
-                .param("userRole","teacher")
-                .param("userID","100"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$Participant[0].UserId").value("100"));
     }
     */
 }

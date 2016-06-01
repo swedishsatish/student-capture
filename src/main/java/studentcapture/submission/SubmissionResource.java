@@ -13,6 +13,7 @@ import studentcapture.lti.LTINullPointerException;
 import studentcapture.lti.LTISignatureException;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -64,6 +65,9 @@ class SubmissionResource {
     public ResponseEntity<InputStreamResource> getVideo(@PathVariable("assignmentID") int assignmentID,
                                                         @PathVariable("studentID") int studentID,
                                                         @PathVariable("fileName") String fileName) {
+
+
+
         if(fileName.equals("feedback") || fileName.equals("submission")){
             return DAO.getVideo(new Submission(studentID, assignmentID), fileName + ".webm");
         }else{
@@ -78,9 +82,20 @@ class SubmissionResource {
      * @return A list of submissions for the assignment
      */
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") int assignmentID){
+    public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") int assignmentID,
+                                                              @RequestParam(value = "permission",required = false) Boolean studentConsent){
+
         List<Submission> list = DAO.getAllSubmissions(assignmentID);
         HttpStatus status = HttpStatus.OK;
+        if(studentConsent && list != null){
+            List<Submission> parsedList = new ArrayList<>();
+            for(Submission s : list){
+                if(s.getStudentPublishConsent()){
+                    parsedList.add(s);
+                }
+            }
+            return new ResponseEntity<>(parsedList, status);
+        }
         if (list == null) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
