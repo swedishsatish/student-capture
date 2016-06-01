@@ -190,12 +190,12 @@ var NewAssignment = React.createClass({
 
                     <div id="dates">
                         <div className="DTContainer">
-                            <p className="DTText">start:</p>
+                            <p className="DTText">assignment opens:</p>
                             <input className="datePicker" id="startDate" type="button" value="yyyy-mm-dd 00:00"/>
                         </div>
 
                         <div className="DTContainer">
-                            <p className="DTText">submit by:</p>
+                            <p className="DTText">assignment closes:</p>
                             <input className="datePicker" id="endDate" type="button" value="yyyy-mm-dd 00:00"/>
                         </div>
 

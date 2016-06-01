@@ -51,6 +51,7 @@
 .DTText {
     font-size: 62%;
     margin-bottom: 0;
+    text-indent: 10px;
 }
 
 #minTimeSeconds, #maxTimeSeconds {
