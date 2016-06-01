@@ -49,7 +49,7 @@ window.Feedback = React.createClass({
             var videoButContent;
 
             if(!this.state.source) {
-                videoButContent = <button onClick={this.handleVideoClick}>Get Video</button>;
+                videoButContent = <div onClick={this.handleVideoClick} className="button primary-button SCButton">Get Video</div>;
             } else {
                 videoButContent = <div><video width="720" height="460" src={this.state.source} preload="auto" controls/></div>;
             }
