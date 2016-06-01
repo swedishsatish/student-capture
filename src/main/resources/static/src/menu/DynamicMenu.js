@@ -128,11 +128,11 @@ var Options = React.createClass({
                         Delete Assignment
                     </div>
                 </li>
-                <li className="active course menuItem navigationText">
+                {/*<li className="active course menuItem navigationText">
                     <div onClick={this.galleryClick}>
                         Submission Gallery
                     </div>
-                </li>
+                </li>*/}
             </ul>
         );
     }
@@ -199,9 +199,9 @@ var Assignment = React.createClass({
         var options = "";
         if(this.state.showChildren && this.props.role == "teacher"){
             options = <Options assignment={assignment} courseId={this.props.courseId} uid={this.props.uid}/>;
-        } else if(this.state.showChildren && this.props.role == "student"){
+        } /*else if(this.state.showChildren && this.props.role == "student"){
             options = <StudentOptions assignment={assignment} courseId={this.props.courseId} uid={this.props.uid}/>;
-        }
+        }*/
 
         if(sDate <= now &&
             eDate >= now)
