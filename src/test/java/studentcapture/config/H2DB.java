@@ -15,9 +15,6 @@ import java.util.*;
 @Configuration
 public class H2DB {
 
-    private static ArrayList<String>tables;
-
-
     /**
      * Creates local memory based database in current process.
      * @return
