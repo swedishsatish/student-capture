@@ -133,6 +133,7 @@ window.Settings = React.createClass({
                         <option value="English" id="langEnglish">English</option>
                         <option value="Swedish" id="langSwedish">Swedish</option>
                     </select><br />
+                    <h6 id="settingsNote">Note: Changing language and fontsize currently has no impact on the system</h6>
                 </div>
                 <br />
                 ​
