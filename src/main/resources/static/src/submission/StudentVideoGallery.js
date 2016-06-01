@@ -10,9 +10,9 @@ var StudentVideoGallery = React.createClass({
 
     componentWillMount: function() {
             $.ajax({
-                url: "assignments/"+this.props.assID+"/submissions/",
+                url: "assignments/"+this.props.assID+"/submissions/?&permission=true",
                 type: "GET",
-                async: false,
+                async: true,
                 success: function (data, status) {
                     this.submissionsArray = data;
                 }.bind(this),
@@ -26,15 +26,15 @@ var StudentVideoGallery = React.createClass({
         var i = -1;
         var namesList = this.submissionsArray.map(function(value){
             if (value.studentPublishConsent) {
-                var submissionURL = "assignments/"+assID+"/submissions/"+value.studentID+"/videos/submission";
+                var submissionURL = "assignments/"+assID+"/submissions/"+value.studentID+"/videos/submission/?&permission=true";
                 if (value.status == "answer") {
                     i++;
-                    return <div className="videogalleryitem" key={i}>{value.firstName + " "+value.lastName}<br/><video controls src={submissionURL}></video></div>;
+                    return <div className="videogalleryitem" key={Math.random()}>{value.firstName + " "+value.lastName}<br/><video controls src={submissionURL}></video></div>;
                 }
             }
         });
 
-        return  <div><h2>Submission Gallery</h2><br/><div className="videogallery">{ namesList }</div></div>
+        return  <div key={Math.random()}><h2>Submission Gallery</h2><br/><div className="videogallery" key={Math.random()}>{ namesList }</div></div>
     }
 
 

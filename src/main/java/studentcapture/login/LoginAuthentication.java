@@ -19,15 +19,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import studentcapture.user.User;
 import studentcapture.user.UserDAO;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -62,8 +54,6 @@ class LoginAuthentication implements AuthenticationProvider {
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
 		String username = auth.getName().trim();
 		String password = auth.getCredentials().toString();
-		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-
 		if(checkUser(username, password)) {
 		    //Set role
 		    Collection<? extends GrantedAuthority> authorities = 
@@ -72,11 +62,8 @@ class LoginAuthentication implements AuthenticationProvider {
 		    Authentication a = new UsernamePasswordAuthenticationToken(username, password, authorities);
 		    updateSession(username);	   
 		    redirection();
-		    		    log("|USER: " + username + 
-		    			"| SESSION ID: " + attr.getSessionId() + "\n");
 		    return a;
 		}
-		log("FAILED TO LOGIN! | Username: " + username + "| Password: " + password + "| SESSION: " + attr.getSessionId());
 		return null;
 	}
 
@@ -129,20 +116,5 @@ class LoginAuthentication implements AuthenticationProvider {
 				}
 	    	}
 	    }
-	}
-	
-	private void log(String s) {
-		FileWriter fw;
-		try {
-			fw = new FileWriter("stresstest.txt", true);
-			BufferedWriter bw = new BufferedWriter(fw);
-	    	PrintWriter out = new PrintWriter(bw);
-	    	out.append("LOGIN EVENT:::" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME) + "   " + s + "\n");
-	    	out.close();
-		} catch (IOException e) {
-			System.out.println("ERROR WHEN WRITING TO FILE");
-			e.printStackTrace();
-		}
-    	
 	}
 }

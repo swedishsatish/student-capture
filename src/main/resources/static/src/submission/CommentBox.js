@@ -30,10 +30,7 @@ var CommentBox = React.createClass({
      * @param event text areas event.
      */
     onClick: function (event) {
-        if(!hasEdited){
-            this.setState({value: ''});
-            hasEdited=true;
-        }
+        hasEdited=true;
     },
     /**
      * Render function for comment box.
