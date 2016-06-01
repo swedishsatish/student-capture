@@ -13,7 +13,7 @@ var TeacherViewSubmission = React.createClass({
     nDone: 0, //Totala antalet som gjort uppgiften
     nParticipants: 0, //Totala antalet i kurslistan
 
-    submissionsArray: null, //Alla som har submittat
+        submissionsArray: null, //Alla som har submittat
     participantsArray: null, //Hela kurslistan
 
 

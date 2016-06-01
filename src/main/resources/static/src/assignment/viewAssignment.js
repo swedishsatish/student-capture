@@ -18,7 +18,8 @@ var assignmentData = {
     assignmentName: '',
     assignmentID: '',
     courseID: '',
-    studentID: ''
+    studentID: '',
+    studentConsent: ''
 }
 
 /*
@@ -29,6 +30,25 @@ window.AssignmentContent = React.createClass({
         return {loaded: false,
                 assignmentInformation: ''
                 };
+    },
+    toggleCheckBox: function() {
+        var consentToggle;
+
+
+          if ($('#allowViewVideo').prop('checked')) {
+
+            console.log('is checked');
+            assignmentData.studentConsent=true;
+
+
+            }
+            else {
+
+            console.log('unchecked');
+            assignmentData.studentConsent=false;
+            }
+
+
     },
     jsonReady: function(data) {
         var json = JSON.parse(data);
@@ -70,6 +90,7 @@ window.AssignmentContent = React.createClass({
                         NOTE: Once the assignment starts it cannot be interrupted or paused,<br />
                         remember to test your hardware before you begin!
                     </div>
+                    <input id="allowViewVideo" type="checkbox" value="FALSE" onChange={this.toggleCheckBox} />Allow course participants to view video after recording
                     {this.state.loaded ? <But /> : <div />}
                 </div>
             </div>
@@ -103,6 +124,7 @@ var AssignmentStart = React.createClass({
                                   studentID={assignmentData.studentID}
                                   minRecordTime={assignmentData.minTime}
                                   maxRecordTime={assignmentData.maxTime}
+                                  studentConsent={assignmentData.studentConsent}
                                   endFunc={this.endAssignment}
                               />
                             : <StudentRecordVideo autoRecord="false"

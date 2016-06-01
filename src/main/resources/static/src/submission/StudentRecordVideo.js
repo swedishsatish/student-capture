@@ -17,10 +17,10 @@ var StudentRecordVideo = React.createClass({
             studentID: this.props.studentID,
             assignmentID: this.props.assignmentID,
             courseID: this.props.courseID,
+            studentPublishConsent: this.props.studentConsent,
         })], {
             type: "application/json"
         }));
-
         return fd;
     },
     playVideo: function (fName) {
