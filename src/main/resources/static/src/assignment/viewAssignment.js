@@ -18,8 +18,7 @@ var assignmentData = {
     assignmentName: '',
     assignmentID: '',
     courseID: '',
-    studentID: '',
-    studentConsent: ''
+    studentID: ''
 }
 
 /*
@@ -90,7 +89,7 @@ window.AssignmentContent = React.createClass({
                         NOTE: Once the assignment starts it cannot be interrupted or paused,<br />
                         remember to test your hardware before you begin!
                     </div>
-                    <input id="allowViewVideo" type="checkbox" value="FALSE" onChange={this.toggleCheckBox} />Allow course participants to view video after recording
+                    {/*<input id="allowViewVideo" type="checkbox" value="FALSE" onChange={this.toggleCheckBox} />Allow course participants to view video after recording*/}
                     {this.state.loaded ? <But /> : <div />}
                 </div>
             </div>
@@ -124,7 +123,6 @@ var AssignmentStart = React.createClass({
                                   studentID={assignmentData.studentID}
                                   minRecordTime={assignmentData.minTime}
                                   maxRecordTime={assignmentData.maxTime}
-                                  studentConsent={assignmentData.studentConsent}
                                   endAssignment={this.endAssignment}
                               />
                             : <StudentRecordVideo autoRecord="false"
