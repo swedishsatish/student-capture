@@ -41,7 +41,7 @@ body {
 /*Make the register button stay on a fixed position*/
 #registerButton {
 	position:fixed;
-	top:60px;
+	top:84px;
 	right:10px;
 }
 
@@ -201,7 +201,7 @@ input:invalid{
 	position: absolute;
 	top:0;
 	background-color: #424242;
-	height:50px;
+	height:75px;
 	text-align: center;
 	overflow-y:auto;
 	cursor: pointer;
