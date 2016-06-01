@@ -112,7 +112,7 @@ function submitForm(method) {
     reqBody["grade"] = {};
     reqBody["grade"]["grade"] = document.getElementById('dropDownMenu').value;
     reqBody["grade"]["teacherID"] = "7777777"; //TODO: Fix this grade: document.getElementById('dropDownMenu').value;
-    reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
+    //reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
     reqBody["courseID"] = IDs[0].courseID;
 
     $.ajax({
@@ -171,8 +171,8 @@ function  getForm() {
         success: function (response) {
             document.getElementById('teachercomments').value = response["status"] == null ? "" : response["feedback"];
             document.getElementById('dropDownMenu').value = (gradeEqualsTo(response["grade"]["grade"])) ? "U" : response["grade"]["grade"];
-            document.getElementById('PermissionFromStudent').disabled = response["studentPublishConsent"] ? false : true;
-            document.getElementById('PermissionFromStudent').checked = response["publishStudentSubmission"] ? true : false;
+            //document.getElementById('PermissionFromStudent').disabled = response["studentPublishConsent"] ? false : true;
+           // document.getElementById('PermissionFromStudent').checked = response["publishStudentSubmission"] ? true : false;
 
         }, error: function (e) {
             console.log("ERROR: ", e);
@@ -323,14 +323,11 @@ var SubmitButton = React.createClass({
     onClick: function() {
         if(document.getElementById('teachercomments').value===''){
             var saftyCheck = confirm("Are you sure you want to leave comment box empty?");
-            if(saftyCheck){
-                this.popUpConfirmation('popUpDiv');
-            }else{
-                void(0);
+            if(!saftyCheck){
+                return;
             }
-        }else{
-            this.popUpConfirmation('popUpDiv');
         }
+        this.popUpConfirmation('popUpDiv');
     },
     /**
      * Render function for submitbutton.
@@ -338,7 +335,7 @@ var SubmitButton = React.createClass({
      */
     render: function () {
         return (
-            <button id="submitbutton" onClick={this.onClick}>Submit</button>
+            <div className="button primary-button SCButton" onClick={this.onClick}>Submit</div>
         );
     }
 });

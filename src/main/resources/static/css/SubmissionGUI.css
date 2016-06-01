@@ -112,7 +112,34 @@
 *Button styles------------------------------------------------------------------------------------------
 */
 button{
-    background-color: #F49E4C;
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 10px;
+        background-color: #EC7E15;
+        border: 2px solid #FAFAFA;
+        color: #FAFAFA;
+}
+
+
+.teacherButtonContainer {
+display: inline-block;
+    width: 70%;
+    margin-left: 33%;
+
+
+}
+
+#test1 {
+
+    position: relative;
+        margin-left: 20%;
+        margin-right: 20%;
+        width: 60%;
+        background-color: #2E8697;
+        border: 2px solid #2E8697;
+        border-radius: 10px;
+
 }
 /*
 * Back button
@@ -241,6 +268,11 @@ button{
     width: 80%
 }
 
+.testTable {
+
+    background-color: black;
+}
+
 #teacherRecordFeedback {
 
     width: 80%;
@@ -248,15 +280,51 @@ button{
 #teststudentvideo{
     margin-left: 26%;
 }
-#teacherRecorder > #preview
-{
+
+#teacherRecorder > #preview {
     position: relative;
-    margin-bottom: 10%;
     top: 0px;
     margin-top: 0%;
+    border: 2px solid #2E8697;
+    border-radius: 10px;
+    margin-left: 20%;
+    margin-bottom: 0%;
 }
 
 #tmpDiv {
 
     height: 20%;
+}
+
+#allVideos{
+
+    display: flex;
+}
+
+#studentVid {
+
+    width: 40%;
+}
+
+#teacherFeedback {
+
+    width: 40%;
+}
+
+#newFeedback{
+    height: 60%;
+    width: 40%;
+    text-align:center;
+
+}
+
+#studentTitle{
+    font-size: 125%;
+    text-align: center;
+
+}
+
+.feedbackvideofiller {
+    width: 100%;
+    height: 62px;
 }

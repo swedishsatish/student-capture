@@ -23,8 +23,7 @@ var BackButton = React.createClass({
     render: function() {
 
         return(
-            <button id="backbutton" onClick={this.onClick}>Back</button>
-
+               <div className="button primary-button SCButton" onClick={this.onClick}>Back</div>
         );
     }
 });

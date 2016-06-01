@@ -27,17 +27,15 @@ var TeacherRecordVideo = React.createClass({
                                   recButtonID="teacherRecordButton"
                                   stopButtonID="teacherStopButton"
                                   fileName="feedback.webm" replay="true"
-                                  postButtonID="postTeacherVideo"
                                   siteView="feedback" camOnLoad="true"
                                   contID="teacherRecorder"
                         />
                     </div>
                 </div>
                 <div className="row">
-                    <div className="u-pull-left">
+                    <div className="teacherButtonContainer">
                         <button id="teacherRecordButton" className="recControls">Record</button>
                         <button id="teacherStopButton" className="recControls" >Stop</button>
-                        <button id="postTeacherVideo" className="recControls" disabled>POST</button>
                     </div>
                 </div>
             </div>
