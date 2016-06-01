@@ -18,9 +18,8 @@ var StudentList = React.createClass({
         sorttable.makeSortable(newTableObject);
         var table11_Props = {
             filters_row_index: 1,
-            col_0: "none",
-            col_3: "none",
-            input_watermark: [null,'Filter by name','Filter by date yyyy-m-d',null],
+            col_2: "none",
+            input_watermark: ['Filter by name','Filter by date yyyy-m-d',null],
             remember_grid_values: true
         };
         setFilterGrid("students-table", table11_Props);
@@ -53,14 +52,13 @@ var StudentList = React.createClass({
             var date = new Date(user.submissionDate);
             return (
                 <tr onClick={tmp.clickhandle.bind(tmp,user)}>
-                    
+                    <td>{user.firstName + " " + user.lastName}</td>
+                    <td>{date.getFullYear() + "-" + (date.getMonth()+1/*Months start from 0)*/ + "-" + date.getDate())}</td>
+                    <td>{user.grade.grade}</td>
                     <video width="96" height="54" class="clip-thumbnail">
                         <source src={studentSubmission} type="video/webm"/>
                         <source src="images/placeholder.webm" type="video/webm"/>
                     </video>
-                    <td>{user.firstName + " " + user.lastName}</td>
-                    <td>{date.getFullYear() + "-" + (date.getMonth()+1/*Months start from 0)*/ + "-" + date.getDate())}</td>
-                    <td>{user.grade.grade}</td>
                 </tr>
             );
 
@@ -71,11 +69,9 @@ var StudentList = React.createClass({
                     <table className="u-full-width sortable" id="students-table">
                         <thead>
                         <tr >
-                            <th>Video</th>
                             <th>Student</th>
                             <th>Date</th>
                             <th>Grade</th>
-
                         </tr>
                         </thead>
                         <tbody>
