@@ -83,7 +83,7 @@ class SubmissionResource {
      */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Submission>> getAllSubmissions(@PathVariable("assignmentID") int assignmentID,
-                                                              @RequestParam(value = "permission",required = false) Boolean studentConsent){
+                                                              @RequestParam(value = "permission",required = false) boolean studentConsent){
 
         List<Submission> list = DAO.getAllSubmissions(assignmentID);
         HttpStatus status = HttpStatus.OK;
