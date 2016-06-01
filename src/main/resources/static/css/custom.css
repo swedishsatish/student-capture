@@ -214,3 +214,15 @@ img.recLight {
 	height:20px;
 }
 
+.videogallery {
+
+    display:flex;
+    flex-wrap:wrap;
+
+
+}
+
+.videogalleryitem {
+margin-right: 20px;
+
+}

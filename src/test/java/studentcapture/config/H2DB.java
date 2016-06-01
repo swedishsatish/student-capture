@@ -70,31 +70,6 @@ public class H2DB {
         return tables;
     }
 
-
-    //WORK IN PROGRESS!!!
-    /**
-     * Populates the h2 database.
-     * @param jdbcMock
-     */
-    public static void PopulateDB(JdbcTemplate jdbcMock) {
-
-        //Used to add user.
-        String sql = "INSERT INTO users" + " (username, firstname, lastname, email, pswd)"
-                     +" VALUES (?, ?, ?, ?, ?)";
-
-        try {
-            Object[] args = new Object[] {"testUser", "testFName", "testLName",
-                    "testEmail@example.com",
-                    "testPassword123"};
-            jdbcMock.update(sql,args);
-
-
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
     //NEEDS TO BE TESTED MORE! MIGHT BREAK DEPENDENCIES...
     /**
      *  Used to clear everything in all tables, including serialize.

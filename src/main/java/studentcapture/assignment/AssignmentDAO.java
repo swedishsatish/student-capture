@@ -57,23 +57,44 @@ public class AssignmentDAO {
         String insertQueryString = getInsertQueryString(assignmentModel.getAssignmentIntervall().getPublishedDate());
 
         // Execute query and fetch generated AssignmentID
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        databaseConnection.update(
-                connection -> {
-                    PreparedStatement ps =
-                            connection.prepareStatement(insertQueryString,
-                                    Statement.RETURN_GENERATED_KEYS);
-                    ps.setInt(1, assignmentModel.getCourseID());
-                    ps.setString(2, assignmentModel.getTitle());
-                    ps.setString(3, assignmentModel.getAssignmentIntervall().getStartDate());
-                    ps.setString(4, assignmentModel.getAssignmentIntervall().getEndDate());
-                    ps.setInt(5, assignmentModel.getVideoIntervall().getMinTimeSeconds());
-                    ps.setInt(6, assignmentModel.getVideoIntervall().getMaxTimeSeconds());
-                    ps.setString(7, assignmentModel.getAssignmentIntervall().getPublishedDate());
-                    ps.setString(8, assignmentModel.getScale());
-                    return ps;
-                },
-                keyHolder);
+
+        KeyHolder keyHolder;
+        if (assignmentModel.getAssignmentIntervall().getPublishedDate() == null) {
+            keyHolder = new GeneratedKeyHolder();
+            databaseConnection.update(
+                    connection -> {
+                        PreparedStatement ps =
+                                connection.prepareStatement(insertQueryString,
+                                        Statement.RETURN_GENERATED_KEYS);
+                        ps.setInt(1, assignmentModel.getCourseID());
+                        ps.setString(2, assignmentModel.getTitle());
+                        ps.setString(3, assignmentModel.getAssignmentIntervall().getStartDate());
+                        ps.setString(4, assignmentModel.getAssignmentIntervall().getEndDate());
+                        ps.setInt(5, assignmentModel.getVideoIntervall().getMinTimeSeconds());
+                        ps.setInt(6, assignmentModel.getVideoIntervall().getMaxTimeSeconds());
+                        ps.setString(7, assignmentModel.getScale());
+                        return ps;
+                    },
+                    keyHolder);
+        } else {
+            keyHolder = new GeneratedKeyHolder();
+            databaseConnection.update(
+                    connection -> {
+                        PreparedStatement ps =
+                                connection.prepareStatement(insertQueryString,
+                                        Statement.RETURN_GENERATED_KEYS);
+                        ps.setInt(1, assignmentModel.getCourseID());
+                        ps.setString(2, assignmentModel.getTitle());
+                        ps.setString(3, assignmentModel.getAssignmentIntervall().getStartDate());
+                        ps.setString(4, assignmentModel.getAssignmentIntervall().getEndDate());
+                        ps.setInt(5, assignmentModel.getVideoIntervall().getMinTimeSeconds());
+                        ps.setInt(6, assignmentModel.getVideoIntervall().getMaxTimeSeconds());
+                        ps.setString(7, assignmentModel.getAssignmentIntervall().getPublishedDate());
+                        ps.setString(8, assignmentModel.getScale());
+                        return ps;
+                    },
+                    keyHolder);
+        }
 
         // Return generated AssignmentID
         //This is a work around, keyHolder has several keys which it shouldn't
@@ -106,9 +127,9 @@ public class AssignmentDAO {
         if(published == null) {
             insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
                     "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +
-                    "Published, GradeScale) VALUES (DEFAULT ,?,?, " +
+                    "GradeScale) VALUES (DEFAULT ,?,?, " +
                     "to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'), " +
-                    "to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'),?,?,?,?);";
+                    "to_timestamp(?, 'YYYY-MM-DD HH24:MI:SS'),?,?,?);";
         } else {
             insertQueryString = "INSERT INTO Assignment (AssignmentID, " +
                     "CourseID, Title, StartDate, EndDate, MinTime, MaxTime, " +

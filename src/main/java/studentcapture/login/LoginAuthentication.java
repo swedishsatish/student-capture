@@ -54,7 +54,6 @@ class LoginAuthentication implements AuthenticationProvider {
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
 		String username = auth.getName().trim();
 		String password = auth.getCredentials().toString();
-
 		if(checkUser(username, password)) {
 		    //Set role
 		    Collection<? extends GrantedAuthority> authorities = 

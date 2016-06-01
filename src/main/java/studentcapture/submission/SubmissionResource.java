@@ -195,7 +195,7 @@ class SubmissionResource {
         } else {
             submission.setStatus("blank");
         }
-        if(DAO.addSubmission(submission, true)) {
+        if(DAO.addSubmission(submission, submission.getStudentPublishConsent())) {
             returnStatus = HttpStatus.OK;
         } else {
             returnStatus = HttpStatus.FORBIDDEN;

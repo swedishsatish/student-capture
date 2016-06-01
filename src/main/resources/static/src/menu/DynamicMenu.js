@@ -1,5 +1,5 @@
 /**
- * Created by Ludvig on 2016-05-10.
+ * @author Ludvig Boström, c13lbm
  */
 
 /**
@@ -20,6 +20,34 @@ var objToList = function (obj) {
 
 }
 
+var StudentOptions = React.createClass({
+
+
+    galleryClick: function () {
+
+        var assID = this.props.assignment.assignment.assignmentID;
+        var courseID = this.props.courseId;
+        var userID = this.props.courseId;
+
+        ReactDOM.render(<StudentVideoGallery userID={userID} courseID={courseID} assID={assID} />,
+                    document.getElementById('courseContent'));
+
+    },
+    render: function () {
+        return (
+            <ul>
+                <li className="active course menuItem navigationText">
+                  <div onClick={this.galleryClick}>
+                      Submission Gallery
+                  </div>
+                </li>
+            </ul>
+        );
+    }
+
+
+});
+
 
 var Options = React.createClass({
 
@@ -33,7 +61,7 @@ var Options = React.createClass({
         if(objToList(this.props.assignment.submissions).length == 0 &&
             eDate >= now){
 
-            ReactDOM.render(<AssignmentContent uid={this.props.uid} course={courseID} assignment={assID}/>,
+                ReactDOM.render(<AssignmentContent uid={this.props.uid} course={courseID} assignment={assID}/>,
                 document.getElementById('courseContent'));
         }
         else {
@@ -70,6 +98,18 @@ var Options = React.createClass({
             }
         });
     },
+    galleryClick: function () {
+
+        var assID = this.props.assignment.assignment.assignmentID;
+        var courseID = this.props.courseId;
+        var userID = this.props.courseId;
+        this.forceUpdate();
+
+        ReactDOM.render(<StudentVideoGallery userID={userID} courseID={courseID} assID={assID} />,
+                    document.getElementById('courseContent'));
+
+    },
+
     render: function () {
         return (
             <ul>
@@ -88,6 +128,11 @@ var Options = React.createClass({
                         Delete Assignment
                     </div>
                 </li>
+                {/*<li className="active course menuItem navigationText">
+                    <div onClick={this.galleryClick}>
+                        Submission Gallery
+                    </div>
+                </li>*/}
             </ul>
         );
     }
@@ -154,7 +199,10 @@ var Assignment = React.createClass({
         var options = "";
         if(this.state.showChildren && this.props.role == "teacher"){
             options = <Options assignment={assignment} courseId={this.props.courseId} uid={this.props.uid}/>;
-        }
+        } /*else if(this.state.showChildren && this.props.role == "student"){
+            options = <StudentOptions assignment={assignment} courseId={this.props.courseId} uid={this.props.uid}/>;
+        }*/
+
         if(sDate <= now &&
             eDate >= now)
             classname += " active";
@@ -220,22 +268,22 @@ var Course = React.createClass({
     getInitialState : function() {
         return { showChildren : false };
     },
-    
+
     handleClick: function(course,event) {
         var role = this.props.role;
         $.get("course/" + course.course.courseId,function (res) {
             ReactDOM.render(<CourseInfo course={res} role={role}/>,document.getElementById("courseContent"));
-            
-            
+
+
         });
 
-       
-    
-        
-        this.setState({showChildren:!this.state.showChildren});
-       
 
-        
+
+
+        this.setState({showChildren:!this.state.showChildren});
+
+
+
     },
     render: function (){
         var course = this.props.course;
@@ -273,8 +321,10 @@ var DynamicMenu = React.createClass({
     searchClick: function (userID,event) {
         ReactDOM.render(<SearchCourse/>,document.getElementById("courseContent"))
     },
+
+
     /**
-     * Makes separate lists for student/teacher courses.
+     * Makes separate lists for student/teacher courses. Only gives teachers the option to create course.
      * @returns {XML}
      */
     render: function () {
@@ -349,6 +399,9 @@ window.RenderMenu = function (preloaded) {
     });
 };
 
+/**
+ * If menu will have a specific course preselected.
+ */
 var preload;
 if(window.getQueryVariable("param") == false){
     RenderMenu();

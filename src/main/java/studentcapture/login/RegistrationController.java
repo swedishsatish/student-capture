@@ -43,6 +43,7 @@ public class RegistrationController {
 	 * @param username,        The login name of the user
 	 * @param password,        The password for the user.
 	 * @param confirmpassword, Second check if the password matches.
+	 * @param isTeacher,       if the user should be a teacher
 	 * @return Response,       Returns response with a redirect URL and 
 	 *                         HTTP status
 	 * @throws URISyntaxException, Should never cast a Exception of this kind 
@@ -62,7 +63,6 @@ public class RegistrationController {
 		URI uri;
         HttpHeaders httpHeaders = new HttpHeaders();
         boolean isTeach = false;
-        
         if(isTeacher != null) {
         	isTeach = true;
         }

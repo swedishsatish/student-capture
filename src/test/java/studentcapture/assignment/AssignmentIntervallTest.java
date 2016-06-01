@@ -29,7 +29,7 @@ public class AssignmentIntervallTest extends StudentCaptureApplicationTests {
         assignmentIntervalls.setPublishedDate(published);
     }
 
-    @Test(expected = DateTimeParseException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldThrowWhenCreateWithFaultyDates() {
         // Faulty date format
         String startDate = "20161019 111212";

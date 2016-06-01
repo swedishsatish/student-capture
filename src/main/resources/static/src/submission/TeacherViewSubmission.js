@@ -13,7 +13,7 @@ var TeacherViewSubmission = React.createClass({
     nDone: 0, //Totala antalet som gjort uppgiften
     nParticipants: 0, //Totala antalet i kurslistan
 
-    submissionsArray: null, //Alla som har submittat
+        submissionsArray: null, //Alla som har submittat
     participantsArray: null, //Hela kurslistan
 
 
@@ -57,9 +57,7 @@ var TeacherViewSubmission = React.createClass({
         this.nWithdrawals = 0;
         this.nDone = 0;
         this.nParticipants = 0;
-        this.nParticipants = this.submissionsArray.length;
-        console.log(this.submissionsArray);
-        console.log(this.participantsArray);
+        this.nParticipants = this.participantsArray.length;
         for (var i=0;i<this.submissionsArray.length;i++) {
             if(this.submissionsArray[i].status) {
                 if (this.submissionsArray[i].status.toLowerCase() == "answer") {
@@ -75,7 +73,6 @@ var TeacherViewSubmission = React.createClass({
 
 
     render: function () {
-        console.log(this.participantsArray.length);
         var idArray=[{courseID:this.props.courseId,
                      assignmentID:this.props.assignmentId}];
         this.calculateSubmissions();

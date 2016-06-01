@@ -15,7 +15,6 @@ var video;
      */
 
     render: function () {
-        console.log(this.props.studentArray);
         var id_array = this.props.idArray;
         var student = this.props.studentArray;
         var path = "assignments/" + id_array[0].assignmentID + "/submissions/" + student[0].studentID + "/videos/";
@@ -28,21 +27,37 @@ var video;
                 <div id="blanket" style={{"display":"none"}}></div>
                 <div id="popUpDiv" style={{"display":"none"}}></div>
 
-                <video id="teacherRecord" width="40%" src={studentSubmission} preload="auto" controls/>
-                <video id="teacherRecord" width="40%" src={teacherFeedbackURL} preload="auto" controls/>
-                <TeacherRecordVideo studentArray={this.props.studentArray} idArray={this.props.idArray}/>
+
 
                 <div id="feedBackContainer">
+
+
+                <div id="allVideos">
+
+                   <div id="studentVid">
+                        <h1 id ="studentTitle">Student Video</h1>
+                       <div className="feedbackvideofiller"> </div>
+                            <video id="video-container" style={{"width":"80%"}} src={studentSubmission} preload="auto" controls/>
+                    </div>
+
+                   <div id="teacherFeedback">
+                   <h1 id="studentTitle">My Feedback Video</h1>
+                    <div className="feedbackvideofiller"> </div>
+                        <video id="video-container" style={{"width":"80%"}} src={teacherFeedbackURL} preload="auto" controls />
+                    </div>
+                    <div id="newFeedback">
+                        <h1 id="studentTitle">New Feedback Video</h1>
+                   <TeacherRecordVideo studentArray={this.props.studentArray} idArray={this.props.idArray}/>
+                   </div>
+
+                </div>
 
                     <div id="submissioncontainer">
                         <div id="commentbox">
                             <CommentBox />
                         </div>
                         <div id="gradeAndPassContainer">
-                            <div id="passbox">
-                                <PermissionCheckBox/>
-                                <PassCheckBox />
-                            </div>
+
                             <div id="dropDown">
                                 <DropDown scale={this.props.scale}/>
                             </div>
