@@ -18,6 +18,8 @@ var StudentList = React.createClass({
         sorttable.makeSortable(newTableObject);
         var table11_Props = {
             filters_row_index: 1,
+            col_2: "none",
+            input_watermark: ['Filter by name','Filter by date yyyy-m-d',null],
             remember_grid_values: true
         };
         setFilterGrid("students-table", table11_Props);
@@ -32,7 +34,7 @@ var StudentList = React.createClass({
             "courseID":user.courseID,
             "assignmentID":user.assignmentID,
             "teacherName":user.teacherName}];
-        document.getElementById("courseContent").innerHTML = ""; //TODO: find better solution.
+        document.getElementById("courseContent").innerHTML = "";
         ReactDOM.render(<RenderHandle studentArray={student} idArray={this.props.idArray} scale={this.props.scale} />, document.getElementById("courseContent"));
     },
 
@@ -42,16 +44,21 @@ var StudentList = React.createClass({
     },
 
     render: function () {
+
         var tmp = this;
         var userList = this.submissions.map(function (user) {
+            var path = "assignments/" + user.assignmentID + "/submissions/" + user.studentID + "/videos/";
+            var studentSubmission = path + 'submission.webm';
             var date = new Date(user.submissionDate);
             return (
                 <tr onClick={tmp.clickhandle.bind(tmp,user)}>
-                    <video width="96" height="54" class="clip-thumbnail">
-                        <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4"/> </video>
                     <td>{user.firstName + " " + user.lastName}</td>
                     <td>{date.getFullYear() + "-" + (date.getMonth()+1/*Months start from 0)*/ + "-" + date.getDate())}</td>
                     <td>{user.grade.grade}</td>
+                    <video width="96" height="54" class="clip-thumbnail">
+                        <source src={studentSubmission} type="video/webm"/>
+                        <source src="images/placeholder.webm" type="video/webm"/>
+                    </video>
                 </tr>
             );
 
@@ -62,11 +69,9 @@ var StudentList = React.createClass({
                     <table className="u-full-width sortable" id="students-table">
                         <thead>
                         <tr >
-
                             <th>Student</th>
                             <th>Date</th>
                             <th>Grade</th>
-
                         </tr>
                         </thead>
                         <tbody>

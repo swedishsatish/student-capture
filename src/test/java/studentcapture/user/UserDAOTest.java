@@ -68,13 +68,6 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-//        String sql1 = "DELETE FROM Users;";
-//        //Reset serialize userid
-//        String sql2 = "ALTER TABLE users ALTER COLUMN userid RESTART WITH 1";
-//        jdbcMock.update(sql1);
-//        jdbcMock.update(sql2);
-
     }
 
     @Test
@@ -187,52 +180,4 @@ public class UserDAOTest extends StudentCaptureApplicationTests {
     	
     	assertTrue(user.isTeacher());
     }
-
-    /*
-    @Test
-    public void getCourseAssignmentHierarchyUserInformationTest() {
-    	String getUserStatement = "SELECT * FROM Users WHERE "
-        		+ "UserId=?";
-    	String getTeacherHierarchyStatement = "SELECT * FROM Participant AS par"
-				+ " LEFT JOIN Course AS cou ON par.courseId="
-	    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
-	    		+ "ass.courseId LEFT JOIN Submission AS sub ON "
-	    		+ "ass.assignmentId=sub.assignmentId WHERE par.userId=? AND "
-	    		+ "par.function='Teacher'";
-    	String getStudentHierarchyStatement = "SELECT * FROM "
-	    		+ "Participant AS par LEFT JOIN Course AS cou ON par.courseId="
-	    		+ "cou.courseId LEFT JOIN Assignment AS ass ON cou.courseId="
-	    		+ "ass.courseId LEFT JOIN Submission AS sub ON par.userId="
-	    		+ "sub.studentId AND ass.assignmentId=sub.assignmentId WHERE "
-	    		+ "par.userId=? AND par.function='Student'";
-
-    	Timestamp ts = new Timestamp(System.currentTimeMillis());
-
-    	Map responseFromMockUser = new HashMap();
-    	responseFromMockUser.put("UserId", 1);
-    	responseFromMockUser.put("FirstName", "nameFirst");
-    	responseFromMockUser.put("LastName", "nameLast");
-    	when(jdbcMock.queryForMap(getUserStatement, 1)).
-        		thenReturn(responseFromMockUser);
-
-    	Map responseFromMockStudent = new HashMap();
-    	List<Map<String, Object>> listFromMockStudent = new ArrayList<>();
-    	listFromMockStudent.add(responseFromMockStudent);
-    	when(jdbcMock.queryForList(getUserStatement, 1)).
-			thenReturn(listFromMockStudent);
-
-    	Map responseFromMockTeacher = new HashMap();
-    	List<Map<String, Object>> listFromMockTeacher = new ArrayList<>();
-    	listFromMockStudent.add(responseFromMockTeacher);
-    	when(jdbcMock.queryForList(getUserStatement, 1)).
-			thenReturn(listFromMockTeacher);
-
-    	CourseAssignmentHierarchy result =
-    			user.getCourseAssignmentHierarchy("1").get();
-
-    	assertEquals(result.userId,1);
-        assertEquals(result.firstName,"nameFirst");
-        assertEquals(result.lastName,"nameLast");
-    }
-	*/
 }

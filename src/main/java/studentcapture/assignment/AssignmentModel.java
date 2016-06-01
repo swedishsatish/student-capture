@@ -101,8 +101,12 @@ public class AssignmentModel {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitle(String title) throws IllegalArgumentException {
+        if (title.equals("")) {
+            throw new IllegalArgumentException("Title can't be empty");
+        } else {
+            this.title = title;
+        }
     }
 
     public String getDescription() {

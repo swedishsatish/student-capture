@@ -45,25 +45,7 @@ var PopUpConfirmButton = React.createClass({
         )
     }
 });
-/**
- * Pass text for popup window, will get status from
- * checkbox then either put PASS or NOT PASSED in text.
- */
-var PopUpPassBox = React.createClass({
-    render: function () {
-        if(document.getElementById('ifStudentPass').checked){
-            return(
-                <p id="popUpPass">PASS</p>
-            )
-        }else{
-            return(
-                <p id="popUpFail">NOT PASSED</p>
-            )
-        }
-    }
 
-
-});
 /**
  * Grade for popup window, will get grade teacher selected
  * from previous window and put that into confirmation text.
@@ -98,8 +80,8 @@ var PopUpRender = React.createClass({
         return(
             <div class="row">
                 <p id="smallLetter">You are about to give</p>
-                <PopUpStudentName/> <p id="smallLetter">a</p>
-                <PopUpPassBox/> <p id="smallLetter">with grade</p> <PopUpGrade/>
+                <PopUpStudentName/>
+                <p id="smallLetter">grade</p> <PopUpGrade/>
                 <br/>
                 <div id="popUpButtonContainer">
                     <PopUpCancelButton/>
@@ -130,8 +112,7 @@ function submitForm(method) {
     reqBody["grade"] = {};
     reqBody["grade"]["grade"] = document.getElementById('dropDownMenu').value;
     reqBody["grade"]["teacherID"] = "7777777"; //TODO: Fix this grade: document.getElementById('dropDownMenu').value;
-    reqBody[""] = document.getElementById('ifStudentPass').checked;
-    reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
+    //reqBody["publishStudentSubmission"] = document.getElementById('PermissionFromStudent').checked;
     reqBody["courseID"] = IDs[0].courseID;
 
     $.ajax({
@@ -143,13 +124,10 @@ function submitForm(method) {
         timeout: 100000,
         success: function (response) {
             console.log("SUCCESS: ", response);
-            console.log("SUCCESS reqBody contains:", reqBody);
 
         }, error: function (e) {
             console.log("ERROR: ", e);
-            console.log("ReqBody contains:", reqBody);
         }, done: function (e) {
-            console.log("DONE");
         }
     });
 
@@ -159,13 +137,8 @@ function submitVideo(method, getVideoFunc) {
 
         var video = getVideoFunc();
         var fd = new FormData();
-        console.log(video);
         if(video != null) {
             fd.append("studentVideo", video);
-            console.log(video);
-
-        } else {
-            console.log("VIDEO IS NULL");
         }
 
     $.ajax({
@@ -177,13 +150,11 @@ function submitVideo(method, getVideoFunc) {
         timeout: 100000,
         success: function (response) {
             console.log("VIDEO SUCCESS: ", response);
-            console.log("SUCCESS fd contains:", fd);
             // TODO: check response with if/else, if respons is fail give error message
 
           //  ReactDOM.render(<div>HEJ</div>, document.getElementById('courseContent'));
         }, error: function (e) {
             console.log("VIDEO ERROR: ", e);
-            console.log("ERROR fd contains:", fd);
         }, done: function (e) {
             console.log("DONE");
         }
@@ -194,30 +165,17 @@ function submitVideo(method, getVideoFunc) {
  * Collect data from database
  */
 function  getForm() {
-
-    console.log("start");
-    console.log("assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID);
-
-
-    $.ajax({
+ $.ajax({
         url: "assignments/" + IDs[0].assignmentID + "/submissions/" + student[0].studentID,
         timeout: 100000,
         success: function (response) {
-            console.log(response);
             document.getElementById('teachercomments').value = response["status"] == null ? "" : response["feedback"];
             document.getElementById('dropDownMenu').value = (gradeEqualsTo(response["grade"]["grade"])) ? "U" : response["grade"]["grade"];
-            console.log("response[studentPublishConsent] :"+response["studentPublishConsent"]);
-            console.log("1CheckIf:"+response["studentPublishConsent"] ? "false" : "true");
-            console.log("2CheckIf:"+response["studentPublishConsent"] ? "1" : "2");
-
-            document.getElementById('PermissionFromStudent').disabled = response["studentPublishConsent"] ? false : true;
-            document.getElementById('PermissionFromStudent').checked = response["publishStudentSubmission"] ? true : false;
-            document.getElementById('ifStudentPass').checked = response["studentPass"] ? true : false;
+            //document.getElementById('PermissionFromStudent').disabled = response["studentPublishConsent"] ? false : true;
+           // document.getElementById('PermissionFromStudent').checked = response["publishStudentSubmission"] ? true : false;
 
         }, error: function (e) {
-            console.log("FAIL HUE");
             console.log("ERROR: ", e);
-            console.log("ReqBody contains:", reqBody);
         }, done: function (e) {
             console.log("DONE");
         }
@@ -326,10 +284,10 @@ var SubmitButton = React.createClass({
             }
         }
         var blanket = document.getElementById('blanket');
-        blanket.style.height = blanket_height + 'px';
+        //blanket.style.height = blanket_height + 'px';
         var popUpDiv = document.getElementById(popUpDivVar);
-        popUpDiv_height=blanket_height/2-200;//200 is half popup's height
-        popUpDiv.style.top = popUpDiv_height + 'px';
+        //popUpDiv_height=blanket_height/2-200;//200 is half popup's height
+        //popUpDiv.style.top = popUpDiv_height + 'px';
     },
     /**
      * Calculates window position based on window size.
@@ -353,9 +311,9 @@ var SubmitButton = React.createClass({
                 window_width = document.body.parentNode.scrollWidth;
             }
         }
-        var popUpDiv = document.getElementById(popUpDivVar);
-        window_width=window_width/2-200;//200 is half popup's width
-        popUpDiv.style.left = window_width + 'px';
+        //var popUpDiv = document.getElementById(popUpDivVar);
+        //window_width=window_width/2-200;//200 is half popup's width
+        //popUpDiv.style.left = window_width + 'px';
     },
     /**
      * onclick function for submit button.
@@ -365,14 +323,11 @@ var SubmitButton = React.createClass({
     onClick: function() {
         if(document.getElementById('teachercomments').value===''){
             var saftyCheck = confirm("Are you sure you want to leave comment box empty?");
-            if(saftyCheck){
-                this.popUpConfirmation('popUpDiv');
-            }else{
-                void(0);
+            if(!saftyCheck){
+                return;
             }
-        }else{
-            this.popUpConfirmation('popUpDiv');
         }
+        this.popUpConfirmation('popUpDiv');
     },
     /**
      * Render function for submitbutton.
@@ -380,7 +335,7 @@ var SubmitButton = React.createClass({
      */
     render: function () {
         return (
-            <button id="submitbutton" onClick={this.onClick}>Submit</button>
+            <div className="button primary-button SCButton" onClick={this.onClick}>Submit</div>
         );
     }
 });

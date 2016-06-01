@@ -17,10 +17,10 @@ var StudentRecordVideo = React.createClass({
             studentID: this.props.studentID,
             assignmentID: this.props.assignmentID,
             courseID: this.props.courseID,
+            studentPublishConsent: this.props.studentConsent,
         })], {
             type: "application/json"
         }));
-
         return fd;
     },
     playVideo: function (fName) {
@@ -42,7 +42,7 @@ var StudentRecordVideo = React.createClass({
                               siteView="submission" fileName="submission.webm"
                               camOnLoad="true" maxRecordTime={this.props.maxRecordTime}
                               minRecordTime={this.props.minRecordTime}
-                              endFunc={this.props.endFunc}
+                              endAssignment={this.props.endAssignment}
                               setSubmitEnabled={this.setEnabled}
                     />
                 </div>
@@ -51,7 +51,7 @@ var StudentRecordVideo = React.createClass({
                             assignmentID={this.props.assignmentID}
                             studentID={this.props.studentID}
                             courseID={this.props.courseID}
-                            endFunc={this.props.endFunc} />
+                            endAssignment={this.props.endAssignment} />
             </div>
         );
     },
