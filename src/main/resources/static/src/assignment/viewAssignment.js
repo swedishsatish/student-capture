@@ -125,7 +125,7 @@ var AssignmentStart = React.createClass({
                                   minRecordTime={assignmentData.minTime}
                                   maxRecordTime={assignmentData.maxTime}
                                   studentConsent={assignmentData.studentConsent}
-                                  endFunc={this.endAssignment}
+                                  endAssignment={this.endAssignment}
                               />
                             : <StudentRecordVideo autoRecord="false"
                                     courseID={assignmentData.courseID}
@@ -133,7 +133,7 @@ var AssignmentStart = React.createClass({
                                     studentID={assignmentData.studentID}
                                     minRecordTime={assignmentData.minTime}
                                     maxRecordTime={assignmentData.maxTime}
-                                    endFunc={this.endAssignment}
+                                    endAssignment={this.endAssignment}
                               />;
         var content = this.state.disabled
             ? <div></div>

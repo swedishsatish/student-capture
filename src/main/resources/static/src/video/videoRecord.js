@@ -185,9 +185,9 @@ function stopRecording() {
 
         if(postbutton == null) {
             if(props.siteView !== null) {
-                PostBlob(recordVideo.getBlob(), props.siteView);
+                PostVideoBlob(recordVideo.getBlob(), props.siteView);
             } else {
-                PostBlob(recordVideo.getBlob());
+                PostVideoBlob(recordVideo.getBlob());
             }
         }
         else {
@@ -197,9 +197,9 @@ function stopRecording() {
             postbutton.disabled = false;
             postbutton.onclick = function () {
                 if(props.siteView !== null) {
-                    PostBlob(recordVideo.getBlob(), props.siteView);
+                    PostVideoBlob(recordVideo.getBlob(), props.siteView);
                 } else {
-                    PostBlob(recordVideo.getBlob());
+                    PostVideoBlob(recordVideo.getBlob());
                 }
             }
         }
@@ -222,19 +222,19 @@ function stopRecording() {
     });
 
     if(props.siteView == "submission") {
-        props.endFunc();
+        props.endAssignment();
     }
 }
 
 
 /* Post to the server */
-function PostBlob(blob, siteView) {
+function PostVideoBlob(videoBlob, siteView) {
     // FormData - data to be sent to the server
-    var formData = props.formDataBuilder(blob,props.fileName);
+    var formData = props.formDataBuilder(videoBlob,props.fileName);
 
     //used for hw testing
     if(typeof props.calc !== "undefined") {
-      blobsize = blob.size / 1048576;
+      blobsize = videoBlob.size / 1048576;
       sendTime = Date.now();
     }
 
@@ -242,20 +242,20 @@ function PostBlob(blob, siteView) {
     if(typeof props.httpCallback !== "undefined") {
         props.httpCallback(formData);
     } else {
-        //call xhr with full url, data and callback function
-        xhr(props.postURL, formData, props.playCallback);
+        // send data to the server
+        sendRequestToServer(props.postURL, formData, props.playCallback);
     }
 }
 
 /* Function for sending XMLHttpRequests. */
-function xhr(url, data, callback) {
+function sendRequestToServer(url, data, callback) {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (request.readyState == 4 && request.status == 200) {
             callback(request.responseText);
             alert("Your video has been uploaded successfully!");
             if(props.siteView == "submission") {
-                location.reload(); // Maby not best solution.
+                location.reload(); // Maby not best solution. Reload the page.
             }
         } else if(request.readyState == 4 && request.status != 200) {
             if(request.responseText.length < 10) {
@@ -304,17 +304,14 @@ function xhr(url, data, callback) {
 var Recorder = React.createClass({
     componentDidMount: function() {
         props = this.props;
-
-        forceSubmit = false;
         cameraStartOnLoad = (typeof props.camOnLoad === "undefined") ?
                         false : props.camOnLoad == "true";
-        cameraStarted = false;
         startRecordButtonExists = (typeof props.recButtonID !== "undefined");
         shouldAutoRecord = (typeof props.autoRecord === "undefined") ?
                         !startRecordButtonExists : props.autoRecord == "true";
-
         replay = props.replay == "true";
 
+        /* Min and max time for the submission */
         minRecordTime = parseInt(props.minRecordTime);
         if(isNaN(minRecordTime)) {
             minRecordTime = defaultMinTime;
@@ -326,7 +323,7 @@ var Recorder = React.createClass({
 
         if(startRecordButtonExists) {
             recordButton = document.getElementById(props.recButtonID);
-            if(cameraStartOnLoad)
+            if(cameraStartOnLoad && recordButton != null)
                 recordButton.disabled = true;
         }
 
@@ -345,25 +342,24 @@ var Recorder = React.createClass({
         }
 
         /* The onclick function for the start record button if it exists. */
-        if(startRecordButtonExists) {
+        if(startRecordButtonExists && recordButton != null) {
             recordButton.onclick = startRecord;
         }
 
         /* Showing recording-light on load (not recording) */
-
         if(typeof props.calc !== "undefined") {
-            /*document.getElementById("test-rec-text").innerHTML = "&#11093;";*/
             if(document.getElementById("test-rec-text") != null) {
                 document.getElementById("test-rec-text").innerHTML = "<img class='recLight' src=\'images/notRec.png\'>";
             }
         }
         else {
-            /*document.getElementById("rec-text").innerHTML = "&#11093;";*/
             if(document.getElementById("rec-text") != null) {
                 document.getElementById("rec-text").innerHTML = "<img class='recLight' src=\'images/notRec.png\'>";
             }
         }
     },
+    /* This is called when this component has new props and here we start recording
+     * when the props autoRecord is set to true. */
     shouldComponentUpdate: function(nextProps, nextState) {
         if(nextProps.autoRecord == "true" && this.props.autoRecord == "false") {
             startRecord();
@@ -371,6 +367,7 @@ var Recorder = React.createClass({
         }
         return false;
     },
+    /* Clear the video stream and clear timers. This is done before component unmounts. */
     componentWillUnmount: function () {
         closeStream();
         if(typeof this.props.calc !== "undefined" && typeof $("#you-id")[0] !== "undefined") {
