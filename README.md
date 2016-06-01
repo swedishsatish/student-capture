@@ -7,11 +7,6 @@ Student Capture [![Production Build Status](https://travis-ci.org/student-captur
 
 ![Splash page](docs/img/splash-screen.png)
 
-# Try it out!
-
-You can try out the current state of Student Capture at
-[https://www8.cs.umu.se/~c13lbm/](https://www8.cs.umu.se/~c13lbm/)
-
 # Getting started
 
 The first few sections describe the project, refer to the later
